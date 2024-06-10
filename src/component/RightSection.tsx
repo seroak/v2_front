@@ -64,21 +64,15 @@ interface ActivateItem {
 // 초기 데이터 설정
 const dummy_json: DummyItem[] = [
   { type: "variable", depth: 1, value: 4, name: "a" },
-  { type: "variable", depth: 1, value: 5, name: "a" },
-  { id: 2, type: "for", depth: 1, start: 0, end: 1, cur: 0 },
-  { id: 3, type: "for", depth: 2, start: 0, end: 1, cur: 0 },
-  {
-    id: 8,
-    type: "print",
-    depth: 2,
-    expr: '" * " * (i + 1)',
-    animation: [0, 2, 4],
-  },
-  { id: 4, type: "if", depth: 2 },
-  { type: "variable", depth: 1, value: 5, name: "b" },
-  { id: 5, type: "for", depth: 3, start: 0, end: 1, cur: 0 },
-  { id: 6, type: "else", depth: 2 },
-  { id: 7, type: "for", depth: 3, start: 0, end: 1, cur: 0 },
+  { id: 1, type: "for", depth: 1, start: 0, end: 3, cur: 0 },
+  { id: 2, type: "for", depth: 2, start: 0, end: 1, cur: 0 },
+  { id: 3, type: "print", depth: 3, expr: "1", animation: [0] },
+  { id: 1, type: "for", depth: 1, start: 0, end: 3, cur: 1 },
+  { id: 2, type: "for", depth: 2, start: 0, end: 1, cur: 0 },
+  { id: 3, type: "print", depth: 3, expr: "1", animation: [0] },
+  { id: 1, type: "for", depth: 1, start: 0, end: 3, cur: 2 },
+  { id: 2, type: "for", depth: 2, start: 0, end: 1, cur: 0 },
+  { id: 3, type: "print", depth: 3, expr: "1", animation: [0] },
 ];
 
 const RightSection: React.FC = () => {
@@ -234,6 +228,7 @@ const RightSection: React.FC = () => {
                     key={print.id}
                     expr={print.expr}
                     animation={print.animation}
+                    lightOn={print.lightOn}
                   />
                   {renderComponent(item.child)}
                 </React.Fragment>
@@ -246,15 +241,22 @@ const RightSection: React.FC = () => {
                   start={forItem.start}
                   end={forItem.end}
                   cur={forItem.cur}
+                  lightOn={forItem.lightOn}
                 >
                   {renderComponent(forItem.child)}
                 </ForBox>
               );
             case "if":
-              return <IfBox key={item.id}>{renderComponent(item.child)}</IfBox>;
+              return (
+                <IfBox key={item.id} lightOn={item.lightOn}>
+                  {renderComponent(item.child)}
+                </IfBox>
+              );
             case "else":
               return (
-                <ElseBox key={item.id}>{renderComponent(item.child)}</ElseBox>
+                <ElseBox key={item.id} lightOn={item.lightOn}>
+                  {renderComponent(item.child)}
+                </ElseBox>
               );
             default:
               return null;

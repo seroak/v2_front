@@ -1,6 +1,7 @@
 "use client";
 import { ReactNode } from "react";
 import styles from "./ForBox.module.css";
+import cx from "classnames";
 
 type Props = {
   children?: ReactNode;
@@ -9,11 +10,12 @@ type Props = {
   start: number;
   end: number;
   cur: number;
+  lightOn: boolean;
 };
-function ForBox({ children, start, end, cur }: Props) {
+function ForBox({ children, start, end, cur, lightOn }: Props) {
   return (
     <div className={styles.for_box}>
-      <div className={styles.for_border}>
+      <div className={cx(styles.for_border, lightOn && styles.highlight)}>
         <span className={styles.for_text}>for</span>
         <span className={styles.for_cur}>cur</span>
         <div className={styles.number_cur}>
