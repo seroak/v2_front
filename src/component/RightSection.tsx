@@ -9,38 +9,55 @@ import PrintBox from "./PrintBox";
 interface ObjectItem {
   id: number;
   type: string;
-  depth: number;
+  depth?: number;
   lightOn: boolean;
   child: AnyObjectItem[];
 }
-
+interface State {
+  objects: AnyObjectItem[];
+}
+interface ListItem {
+  depth: number;
+  value: number;
+  name: string;
+}
 interface DummyItem {
   id?: number;
   type: string;
-  depth: number;
+  depth?: number;
   value?: number;
   name?: string;
   start?: number;
   end?: number;
   cur?: number;
   expr?: string;
-  animation?: number[];
+  highlight?: number[];
+  condition?: ConditionItem;
+  list?: ListItem[];
 }
 
-// 서브타입 정의
+interface ConditionItem {
+  name: string;
+  start: number;
+  end: number;
+  cur: number;
+}
+
+// Subtype definitions
 interface VariableItem extends ObjectItem {
   value: number;
   name: string;
 }
 interface PrintItem extends ObjectItem {
   expr: string;
-  animation: number[];
+  highlight: number[];
 }
 
 interface ForItem extends ObjectItem {
   start: number;
   end: number;
   cur: number;
+  name: string;
 }
 
 interface IfItem extends ObjectItem {}
@@ -49,45 +66,103 @@ interface ElseItem extends ObjectItem {}
 
 interface End extends ObjectItem {}
 
-type AnyObjectItem = VariableItem | ForItem | IfItem | ElseItem | End;
+type AnyObjectItem =
+  | VariableItem
+  | PrintItem
+  | ForItem
+  | IfItem
+  | ElseItem
+  | End;
 
-// 상태 인터페이스 정의
-interface State {
-  objects: AnyObjectItem[];
-}
-// activate 스택 타입 정의
+// Activate stack type definition
 interface ActivateItem {
   id: number;
   depth: number;
 }
 
-// 초기 데이터 설정
-const dummy_json: DummyItem[] = [
-  { type: "variable", depth: 1, value: 4, name: "a" },
-  { id: 1, type: "for", depth: 1, start: 0, end: 3, cur: 0 },
-  { id: 2, type: "for", depth: 2, start: 0, end: 1, cur: 0 },
-  { id: 3, type: "print", depth: 3, expr: "1", animation: [0] },
-  { id: 1, type: "for", depth: 1, start: 0, end: 3, cur: 1 },
-  { id: 2, type: "for", depth: 2, start: 0, end: 1, cur: 0 },
-  { id: 3, type: "print", depth: 3, expr: "1", animation: [0] },
-  { id: 1, type: "for", depth: 1, start: 0, end: 3, cur: 2 },
-  { id: 2, type: "for", depth: 2, start: 0, end: 1, cur: 0 },
-  { id: 3, type: "print", depth: 3, expr: "1", animation: [0] },
+// Initial data setup
+const dummy_json: DummyItem[] | { type: string; list?: ListItem[] }[] = [
+  {
+    type: "varList",
+    list: [
+      { depth: 1, value: 12, name: "a" },
+      { depth: 1, value: 14, name: "b" },
+    ],
+  },
+  {
+    id: 1,
+    type: "for",
+    depth: 1,
+    condition: { name: "i", start: 0, end: 3, cur: 0 },
+  },
+  {
+    id: 2,
+    type: "for",
+    depth: 2,
+    condition: { name: "j", start: 0, end: 1, cur: 0 },
+  },
+  {
+    id: 3,
+    type: "print",
+    depth: 3,
+    expr: "'*' * i + 1",
+    highlight: [0, 1, 2, 4, 5],
+  },
+  {
+    id: 3,
+    type: "print",
+    depth: 3,
+    expr: "'*' * 2",
+    highlight: [0, 1, 2, 4, 5],
+  },
+  {
+    id: 3,
+    type: "print",
+    depth: 3,
+    expr: "'**'",
+    highlight: [0, 1, 2, 3],
+  },
+  {
+    id: 1,
+    type: "for",
+    depth: 1,
+    condition: { name: "i", start: 0, end: 3, cur: 1 },
+  },
+  {
+    id: 2,
+    type: "for",
+    depth: 2,
+    condition: { name: "j", start: 0, end: 1, cur: 0 },
+  },
+  { id: 3, type: "print", depth: 3, expr: "1", highlight: [0] },
+  {
+    id: 1,
+    type: "for",
+    depth: 1,
+    condition: { name: "i", start: 0, end: 3, cur: 2 },
+  },
+  {
+    id: 2,
+    type: "for",
+    depth: 2,
+    condition: { name: "j", start: 0, end: 1, cur: 0 },
+  },
+  { id: 3, type: "print", depth: 3, expr: "1", highlight: [0] },
 ];
 
 const RightSection: React.FC = () => {
   const [idx, setIdx] = useState<number>(0);
-  const [usedId, setUsedId] = useState<number[]>([]); // 사용한 id 리스트
+  const [usedId, setUsedId] = useState<number[]>([]); // List of used ids
   const [data, setData] = useState<State>({
-    // 조건문 시각화 리스트
+    // Visualization list for conditions
     objects: [{ id: 0, type: "start", depth: 0, lightOn: false, child: [] }],
   });
-  const [varData, setVarData] = useState<DummyItem[]>([]); // 변수 시각화 리스트
-  const [usedName, setUsedName] = useState<string[]>([]); // 사용한 변수 name 리스트
-  const [activate, setActivate] = useState<ActivateItem[]>([]); // 활성화 스택 리스트
+  const [varData, setVarData] = useState<DummyItem[]>([]); // Visualization list for variables
+  const [usedName, setUsedName] = useState<string[]>([]); // List of used variable names
+  const [activate, setActivate] = useState<ActivateItem[]>([]); // Active stack list
 
   const createNewObject = (idx: number): AnyObjectItem => {
-    const baseObject: AnyObjectItem = {
+    const baseObject: ObjectItem = {
       id: dummy_json[idx].id!,
       type: dummy_json[idx].type,
       depth: dummy_json[idx].depth,
@@ -99,22 +174,23 @@ const RightSection: React.FC = () => {
       case "print":
         return {
           ...baseObject,
-          expr: dummy_json[idx].expr,
-          animation: dummy_json[idx].animation,
+          expr: dummy_json[idx].expr!,
+          highlight: dummy_json[idx].highlight!,
         } as PrintItem;
       case "for":
         return {
           ...baseObject,
-          start: dummy_json[idx].start!,
-          end: dummy_json[idx].end!,
-          cur: dummy_json[idx].cur!,
+          start: dummy_json[idx].condition!.start,
+          end: dummy_json[idx].condition!.end,
+          cur: dummy_json[idx].condition!.cur,
+          name: dummy_json[idx].condition!.name,
         } as ForItem;
       case "if":
         return baseObject as IfItem;
       case "else":
         return baseObject as ElseItem;
       default:
-        return baseObject;
+        return baseObject as End;
     }
   };
 
@@ -124,20 +200,19 @@ const RightSection: React.FC = () => {
     newObject: AnyObjectItem
   ): AnyObjectItem[] => {
     let updated = false;
-    return items.reduceRight<AnyObjectItem[]>((acc, item) => {
+    return items.map((item) => {
       if (!updated && item.depth === targetDepth - 1) {
         updated = true;
-        acc.unshift({ ...item, child: [...item.child, newObject] });
+        return { ...item, child: [...item.child, newObject] };
       } else if (item.child && item.child.length > 0) {
-        acc.unshift({
+        return {
           ...item,
           child: addChild(item.child, targetDepth, newObject),
-        });
+        };
       } else {
-        acc.unshift(item);
+        return item;
       }
-      return acc;
-    }, []);
+    });
   };
 
   const updateChild = (
@@ -161,7 +236,6 @@ const RightSection: React.FC = () => {
     newActivate: ActivateItem[]
   ): AnyObjectItem[] => {
     return new_data.map((item) => {
-      // 활성화 스택에 해당 id가 있는 경우
       if (newActivate.some((data) => data.id === item.id)) {
         return {
           ...item,
@@ -204,7 +278,6 @@ const RightSection: React.FC = () => {
     for (let element of activate) {
       if (element.depth >= targetDepth) {
         tmp.push({ id: targetId, depth: targetDepth });
-
         return tmp;
       } else {
         tmp.push(element);
@@ -227,7 +300,7 @@ const RightSection: React.FC = () => {
                   <PrintBox
                     key={print.id}
                     expr={print.expr}
-                    animation={print.animation}
+                    highlight={print.highlight}
                     lightOn={print.lightOn}
                   />
                   {renderComponent(item.child)}
@@ -241,6 +314,7 @@ const RightSection: React.FC = () => {
                   start={forItem.start}
                   end={forItem.end}
                   cur={forItem.cur}
+                  name={forItem.name}
                   lightOn={forItem.lightOn}
                 >
                   {renderComponent(forItem.child)}
@@ -283,40 +357,32 @@ const RightSection: React.FC = () => {
       return;
     }
 
-    // 변수인 경우
-    if (dummy_json[idx].type === "variable") {
-      // 변수가 한번 사용한 적이 있을때
-      if (usedName.includes(dummy_json[idx].name!)) {
-        const targetName = dummy_json[idx].name!;
-        const updatedData = updateVar(targetName, varData, dummy_json[idx]);
-        setVarData(updatedData);
-      } else {
-        setVarData((prevData) => [
-          ...prevData,
-          { ...dummy_json[idx] } as DummyItem,
-        ]);
-        setUsedName((prevName) => [...prevName, dummy_json[idx].name!]);
-      }
+    // For variables
+    if (dummy_json[idx].type === "varList") {
+      dummy_json[idx].list.forEach((element) => {
+        if (usedName.includes(element.name!)) {
+          const targetName = element.name!;
+          const updatedData = updateVar(targetName, varData, element);
+          setVarData(updatedData);
+        } else {
+          setVarData((prevData) => [...prevData, { ...element } as DummyItem]);
+          setUsedName((prevName) => [...prevName, element.name!]);
+        }
+      });
     } else {
-      // 코드 흐름 생성
       const newObject = createNewObject(idx);
       if (usedId.includes(dummy_json[idx].id!)) {
         const targetId = dummy_json[idx].id!;
         new_data = updateChild(data.objects, targetId, newObject);
       } else {
         setUsedId((prevIds) => [...prevIds, dummy_json[idx].id!]);
-
         const targetDepth: number = dummy_json[idx].depth;
-
         new_data = addChild(data.objects, targetDepth, newObject);
       }
       const targetId: number = dummy_json[idx].id!;
       const targetDepth: number = dummy_json[idx].depth;
       const newActivate = updateActivate(activate, targetDepth, targetId);
-      console.log("시각화 트리", new_data);
-      console.log("활성화 트리", newActivate);
       const turnLightOnNewData = turnLightOn(new_data, newActivate);
-      console.log(turnLightOnNewData);
       setActivate(newActivate);
       setData({ objects: turnLightOnNewData });
     }
