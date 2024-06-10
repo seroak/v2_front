@@ -2,8 +2,8 @@
 
 import cx from "classnames";
 import styles from "./PrintBox.module.css";
-type Props = { expr: string; animation: number[]; lightOn: boolean };
-function printBox({ expr, animation, lightOn }: Props) {
+type Props = { expr: string; highlight: number[]; lightOn: boolean };
+function printBox({ expr, highlight, lightOn }: Props) {
   return (
     <div className={styles.print_box}>
       <div className={cx(styles.print_border, lightOn && styles.highlight)}>
@@ -12,7 +12,9 @@ function printBox({ expr, animation, lightOn }: Props) {
           {expr.split("").map((char, index) => (
             <span
               key={index}
-              className={cx(animation.includes(index) && styles.font_highlight)}
+              className={cx(
+                lightOn && highlight.includes(index) && styles.font_highlight
+              )}
             >
               {char}
             </span>
