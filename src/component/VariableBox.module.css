@@ -30,3 +30,7 @@
   background-color: #ffffff; /* 텍스트 위에 테두리가 있어도 글씨가 보이도록 배경색 지정 */
   padding: 0 5px; /* 좌우 여백 추가 */
 }
+.highlight {
+  border: 2px solid rgb(255, 60, 222);
+  border-width: thick;
+}

@@ -1,11 +1,4 @@
-/* page.module.css */
-.main {
-  display: flex;
-  flex-direction: column;
-  padding: 6rem;
-  min-height: 100vh;
-}
-
+/* Resizable.module.css */
 .container {
   display: flex;
   flex-direction: row;
@@ -28,5 +21,5 @@
   cursor: col-resize;
   background-color: #ccc;
   z-index: 1;
-  height: 100%; /* 높이 추가 */
+  height: 100%;
 }

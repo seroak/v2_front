@@ -5,6 +5,7 @@ import VariableBox from "./VariableBox";
 import IfBox from "./IfBox";
 import ElseBox from "./ElseBox";
 import PrintBox from "./PrintBox";
+import _ from "lodash";
 
 interface ObjectItem {
   id: number;
@@ -90,6 +91,20 @@ const dummy_json: DummyItem[] | { type: string; list?: ListItem[] }[] = [
     ],
   },
   {
+    type: "varList",
+    list: [
+      { depth: 1, value: 13, name: "a" },
+      { depth: 1, value: 13, name: "b" },
+    ],
+  },
+  {
+    type: "varList",
+    list: [
+      { depth: 1, value: 13, name: "a" },
+      { depth: 1, value: 13, name: "c" },
+    ],
+  },
+  {
     id: 1,
     type: "for",
     depth: 1,
@@ -157,8 +172,8 @@ const RightSection: React.FC = () => {
     // Visualization list for conditions
     objects: [{ id: 0, type: "start", depth: 0, lightOn: false, child: [] }],
   });
-  const [varData, setVarData] = useState<DummyItem[]>([]); // Visualization list for variables
-  const [usedName, setUsedName] = useState<string[]>([]); // List of used variable names
+  const [varData, setVarData] = useState<DummyItem[]>([]); // 변수 데이터 시각화 리스트
+  const [usedName, setUsedName] = useState<string[]>([]); // 사용한 변수 데이터 name 모아두는 리스트
   const [activate, setActivate] = useState<ActivateItem[]>([]); // Active stack list
 
   const createNewObject = (idx: number): AnyObjectItem => {
@@ -344,7 +359,12 @@ const RightSection: React.FC = () => {
     return (
       <>
         {items.map((item) => (
-          <VariableBox key={item.name} value={item.value!} name={item.name!} />
+          <VariableBox
+            key={item.name}
+            value={item.value!}
+            name={item.name!}
+            lightOn={item.lightOn}
+          />
         ))}
       </>
     );
@@ -357,15 +377,18 @@ const RightSection: React.FC = () => {
       return;
     }
 
+    let copyData = _.cloneDeep(varData);
+    console.log(copyData);
     // For variables
     if (dummy_json[idx].type === "varList") {
       dummy_json[idx].list.forEach((element) => {
         if (usedName.includes(element.name!)) {
           const targetName = element.name!;
-          const updatedData = updateVar(targetName, varData, element);
-          setVarData(updatedData);
+          const updatedData = updateVar(targetName, copyData, element);
+          copyData = updatedData;
+          console.log(updatedData);
         } else {
-          setVarData((prevData) => [...prevData, { ...element } as DummyItem]);
+          copyData.push(element);
           setUsedName((prevName) => [...prevName, element.name!]);
         }
       });
@@ -386,7 +409,26 @@ const RightSection: React.FC = () => {
       setActivate(newActivate);
       setData({ objects: turnLightOnNewData });
     }
+    console.log("copyData", copyData);
+    let tmpItemName;
+    if (dummy_json[idx].list === undefined) {
+      tmpItemName = [];
+    } else {
+      tmpItemName = dummy_json[idx].list?.map((element) => {
+        return element.name;
+      });
+    }
 
+    console.log("tmpItemName", tmpItemName);
+    copyData = copyData.map((element) => {
+      if (tmpItemName.includes(element.name)) {
+        return { ...element, lightOn: true };
+      } else {
+        return { ...element, lightOn: false };
+      }
+    });
+    console.log(copyData);
+    setVarData(copyData);
     setIdx(idx + 1);
   };
 
