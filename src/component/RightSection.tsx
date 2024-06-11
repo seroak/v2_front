@@ -144,6 +144,13 @@ const dummy_json: DummyItem[] | { type: string; list?: ListItem[] }[] = [
     condition: { name: "i", start: 0, end: 3, cur: 1 },
   },
   {
+    type: "varList",
+    list: [
+      { depth: 1, value: 5, name: "g" },
+      { depth: 1, value: 6, name: "h" },
+    ],
+  },
+  {
     id: 2,
     type: "for",
     depth: 2,
@@ -433,7 +440,10 @@ const RightSection: React.FC = () => {
 
   return (
     <div style={{ backgroundColor: "#f4f4f4", width: "100%" }}>
-      <ul>{renderComponentVar(varData)}</ul>
+      <div>
+        <ul style={{ display: "flex" }}>{renderComponentVar(varData)}</ul>
+      </div>
+
       <ul>{renderComponent(data.objects[0].child)}</ul>
       <button onClick={handleClick}>특정 객체 child에 객체 생성</button>
     </div>
