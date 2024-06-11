@@ -11,7 +11,7 @@
 
 .editorContainer {
   width: 100%;
-  max-width: 1200px; /* 최대 너비 설정 */
+
   padding: 1rem;
   border: 1px solid #ccc;
   display: flex;

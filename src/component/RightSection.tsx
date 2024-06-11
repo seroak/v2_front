@@ -433,7 +433,7 @@ const RightSection: React.FC = () => {
   };
 
   return (
-    <div>
+    <div style={{ backgroundColor: "#f4f4f4", width: "100%" }}>
       <ul>{renderComponentVar(varData)}</ul>
       <ul>{renderComponent(data.objects[0].child)}</ul>
       <button onClick={handleClick}>특정 객체 child에 객체 생성</button>
