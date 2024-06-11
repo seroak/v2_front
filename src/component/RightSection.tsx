@@ -291,11 +291,9 @@ const RightSection: React.FC = () => {
     let tmp: ActivateItem[] = [];
 
     for (let element of activate) {
-      if (element.depth >= targetDepth) {
+      if (element.depth === targetDepth) {
         tmp.push({ id: targetId, depth: targetDepth });
         return tmp;
-      } else {
-        tmp.push(element);
       }
     }
     tmp.push({ id: targetId, depth: targetDepth });
@@ -404,8 +402,10 @@ const RightSection: React.FC = () => {
       }
       const targetId: number = dummy_json[idx].id!;
       const targetDepth: number = dummy_json[idx].depth;
+      console.log("activate", activate);
       const newActivate = updateActivate(activate, targetDepth, targetId);
       const turnLightOnNewData = turnLightOn(new_data, newActivate);
+      console.log("turnLightOnNewData", turnLightOnNewData);
       setActivate(newActivate);
       setData({ objects: turnLightOnNewData });
     }
@@ -419,7 +419,6 @@ const RightSection: React.FC = () => {
       });
     }
 
-    console.log("tmpItemName", tmpItemName);
     copyData = copyData.map((element) => {
       if (tmpItemName.includes(element.name)) {
         return { ...element, lightOn: true };
@@ -427,7 +426,7 @@ const RightSection: React.FC = () => {
         return { ...element, lightOn: false };
       }
     });
-    console.log(copyData);
+
     setVarData(copyData);
     setIdx(idx + 1);
   };
