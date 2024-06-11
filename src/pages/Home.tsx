@@ -9,7 +9,7 @@ export default function Home() {
 
   return (
     <main className={style.main}>
-      <h1>김유진 에디터</h1>
+      <h1>Haeya 에디터</h1>
       <Resizable left={<CodeEditor />} right={<RightSection />} />
     </main>
   );

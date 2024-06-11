@@ -18,18 +18,18 @@ function ForBox({ children, start, end, cur, name, lightOn }: Props) {
     <div className={styles.for_box}>
       <div className={cx(styles.for_border, lightOn && styles.highlight)}>
         <span className={styles.for_text}>for</span>
-        <span className={styles.for_cur}>{name}</span>
+        <span className={styles.textName}>{name}</span>
         <div className={styles.number_cur}>
-          <span>{cur}</span>
+          <span className={styles.text}>{cur}</span>
         </div>
 
-        <span className={styles.for_start}>start</span>
+        <span className={styles.textStart}>start</span>
         <div className={styles.number_start}>
-          <span>{start}</span>
+          <span className={styles.text}>{start}</span>
         </div>
-        <span className={styles.for_end}>end</span>
+        <span className={styles.textEnd}>end</span>
         <div className={styles.number_end}>
-          <span>{end}</span>
+          <span className={styles.text}>{end}</span>
         </div>
         {children && <div>{children}</div>}
       </div>
