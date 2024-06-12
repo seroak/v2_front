@@ -2,7 +2,7 @@
 import styles from "./VariableBox.module.css";
 import cx from "classnames";
 type Props = {
-  value: number;
+  value: string;
   name: string;
   lightOn: boolean;
 };

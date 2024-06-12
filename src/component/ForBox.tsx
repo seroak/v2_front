@@ -10,15 +10,15 @@ type Props = {
   start: number;
   end: number;
   cur: number;
-  name: string;
+  target: string;
   lightOn: boolean;
 };
-function ForBox({ children, start, end, cur, name, lightOn }: Props) {
+function ForBox({ children, start, end, cur, target, lightOn }: Props) {
   return (
     <div className={styles.for_box}>
       <div className={cx(styles.for_border, lightOn && styles.highlight)}>
         <span className={styles.for_text}>for</span>
-        <span className={styles.textName}>{name}</span>
+        <span className={styles.textName}>{target}</span>
         <div className={styles.number_cur}>
           <span className={styles.text}>{cur}</span>
         </div>

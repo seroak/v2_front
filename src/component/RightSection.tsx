@@ -17,11 +17,7 @@ interface ObjectItem {
 interface State {
   objects: AnyObjectItem[];
 }
-interface ListItem {
-  depth: number;
-  value: number;
-  name: string;
-}
+
 interface DummyItem {
   id?: number;
   type: string;
@@ -32,23 +28,28 @@ interface DummyItem {
   end?: number;
   cur?: number;
   expr?: string;
-  highlight?: number[];
+  highlight?: number[] | string[];
   condition?: ConditionItem;
-  list?: ListItem[];
+  variable_list?: VariableList[];
 }
-
-interface ConditionItem {
+interface VarItem extends DummyItem {
+  lightOn?: boolean;
+}
+interface VariableList {
   name: string;
+  expr: string;
+  depth: number;
+}
+interface ConditionItem {
+  target: string;
   start: number;
   end: number;
   cur: number;
+  step: number;
 }
 
 // Subtype definitions
-interface VariableItem extends ObjectItem {
-  value: number;
-  name: string;
-}
+
 interface PrintItem extends ObjectItem {
   expr: string;
   highlight: number[];
@@ -58,7 +59,7 @@ interface ForItem extends ObjectItem {
   start: number;
   end: number;
   cur: number;
-  name: string;
+  target: string;
 }
 
 interface IfItem extends ObjectItem {}
@@ -67,13 +68,7 @@ interface ElseItem extends ObjectItem {}
 
 interface End extends ObjectItem {}
 
-type AnyObjectItem =
-  | VariableItem
-  | PrintItem
-  | ForItem
-  | IfItem
-  | ElseItem
-  | End;
+type AnyObjectItem = PrintItem | ForItem | IfItem | ElseItem | End;
 
 // Activate stack type definition
 interface ActivateItem {
@@ -82,94 +77,119 @@ interface ActivateItem {
 }
 
 // Initial data setup
-const dummy_json: DummyItem[] | { type: string; list?: ListItem[] }[] = [
+const dummy_json: DummyItem[] = [
   {
-    type: "varList",
-    list: [
-      { depth: 1, value: 12, name: "a" },
-      { depth: 1, value: 14, name: "b" },
+    variable_list: [
+      {
+        depth: 1,
+        expr: "3",
+        name: "a",
+      },
     ],
-  },
-  {
     type: "varList",
-    list: [
-      { depth: 1, value: 13, name: "a" },
-      { depth: 1, value: 13, name: "b" },
-    ],
-  },
-  {
-    type: "varList",
-    list: [
-      { depth: 1, value: 13, name: "a" },
-      { depth: 1, value: 13, name: "c" },
-    ],
   },
   {
     id: 1,
-    type: "for",
     depth: 1,
-    condition: { name: "i", start: 0, end: 3, cur: 0 },
+    condition: {
+      target: "i",
+      cur: 0,
+      start: 0,
+      end: 3,
+      step: 1,
+    },
+    highlight: ["target", "cur", "start", "end", "step"],
+    type: "for",
   },
   {
     id: 2,
-    type: "for",
     depth: 2,
-    condition: { name: "j", start: 0, end: 1, cur: 0 },
+    expr: "'*' * (i + 1)",
+    highlight: [],
+    type: "print",
   },
   {
-    id: 3,
+    id: 2,
+    depth: 2,
+    expr: "'*' * (0 + 1)",
+    highlight: [7],
     type: "print",
-    depth: 3,
-    expr: "'*' * i + 1",
-    highlight: [0, 1, 2, 4, 5],
   },
   {
-    id: 3,
+    id: 2,
+    depth: 2,
+    expr: "*",
+    highlight: [0],
     type: "print",
-    depth: 3,
-    expr: "'*' * 2",
-    highlight: [0, 1, 2, 4, 5],
-  },
-  {
-    id: 3,
-    type: "print",
-    depth: 3,
-    expr: "'**'",
-    highlight: [0, 1, 2, 3],
   },
   {
     id: 1,
-    type: "for",
     depth: 1,
-    condition: { name: "i", start: 0, end: 3, cur: 1 },
-  },
-  {
-    type: "varList",
-    list: [
-      { depth: 1, value: 5, name: "g" },
-      { depth: 1, value: 6, name: "h" },
-    ],
+    condition: {
+      target: "i",
+      cur: 1,
+      start: 0,
+      end: 3,
+      step: 1,
+    },
+    highlight: ["cur"],
+    type: "for",
   },
   {
     id: 2,
-    type: "for",
     depth: 2,
-    condition: { name: "j", start: 0, end: 1, cur: 0 },
+    expr: "'*' * (i + 1)",
+    highlight: [],
+    type: "print",
   },
-  { id: 3, type: "print", depth: 3, expr: "1", highlight: [0] },
+  {
+    id: 2,
+    depth: 2,
+    expr: "'*' * (1 + 1)",
+    highlight: [7],
+    type: "print",
+  },
+  {
+    id: 2,
+    depth: 2,
+    expr: "**",
+    highlight: [0, 1],
+    type: "print",
+  },
   {
     id: 1,
-    type: "for",
     depth: 1,
-    condition: { name: "i", start: 0, end: 3, cur: 2 },
+    condition: {
+      target: "i",
+      cur: 2,
+      start: 0,
+      end: 3,
+      step: 1,
+    },
+    highlight: ["cur"],
+    type: "for",
   },
   {
     id: 2,
-    type: "for",
     depth: 2,
-    condition: { name: "j", start: 0, end: 1, cur: 0 },
+    expr: "'*' * (i + 1)",
+    highlight: [],
+    type: "print",
   },
-  { id: 3, type: "print", depth: 3, expr: "1", highlight: [0] },
+  {
+    id: 2,
+    depth: 2,
+    expr: "'*' * (2 + 1)",
+    highlight: [7],
+    type: "print",
+  },
+  {
+    id: 2,
+    depth: 2,
+    expr: "***",
+    highlight: [0, 1, 2],
+    type: "print",
+  },
 ];
 
 const RightSection: React.FC = () => {
@@ -205,7 +225,7 @@ const RightSection: React.FC = () => {
           start: dummy_json[idx].condition!.start,
           end: dummy_json[idx].condition!.end,
           cur: dummy_json[idx].condition!.cur,
-          name: dummy_json[idx].condition!.name,
+          target: dummy_json[idx].condition!.target,
         } as ForItem;
       case "if":
         return baseObject as IfItem;
@@ -334,7 +354,7 @@ const RightSection: React.FC = () => {
                   start={forItem.start}
                   end={forItem.end}
                   cur={forItem.cur}
-                  name={forItem.name}
+                  target={forItem.target}
                   lightOn={forItem.lightOn}
                 >
                   {renderComponent(forItem.child)}
@@ -360,15 +380,15 @@ const RightSection: React.FC = () => {
     );
   };
 
-  const renderComponentVar = (items: DummyItem[]): JSX.Element | null => {
+  const renderComponentVar = (items: VarItem[]): JSX.Element | null => {
     return (
       <>
         {items.map((item) => (
           <VariableBox
             key={item.name}
-            value={item.value!}
+            value={item.expr!}
             name={item.name!}
-            lightOn={item.lightOn}
+            lightOn={item.lightOn!}
           />
         ))}
       </>
@@ -386,7 +406,7 @@ const RightSection: React.FC = () => {
     console.log(copyData);
     // For variables
     if (dummy_json[idx].type === "varList") {
-      dummy_json[idx].list.forEach((element) => {
+      dummy_json[idx].variable_list?.forEach((element) => {
         if (usedName.includes(element.name!)) {
           const targetName = element.name!;
           const updatedData = updateVar(targetName, copyData, element);
@@ -404,11 +424,11 @@ const RightSection: React.FC = () => {
         new_data = updateChild(data.objects, targetId, newObject);
       } else {
         setUsedId((prevIds) => [...prevIds, dummy_json[idx].id!]);
-        const targetDepth: number = dummy_json[idx].depth;
+        const targetDepth: number = dummy_json[idx].depth!;
         new_data = addChild(data.objects, targetDepth, newObject);
       }
       const targetId: number = dummy_json[idx].id!;
-      const targetDepth: number = dummy_json[idx].depth;
+      const targetDepth: number = dummy_json[idx].depth!;
       console.log("activate", activate);
       const newActivate = updateActivate(activate, targetDepth, targetId);
       const turnLightOnNewData = turnLightOn(new_data, newActivate);
@@ -418,16 +438,16 @@ const RightSection: React.FC = () => {
     }
     console.log("copyData", copyData);
     let tmpItemName;
-    if (dummy_json[idx].list === undefined) {
+    if (dummy_json[idx].variable_list === undefined) {
       tmpItemName = [];
     } else {
-      tmpItemName = dummy_json[idx].list?.map((element) => {
+      tmpItemName = dummy_json[idx].variable_list?.map((element) => {
         return element.name;
       });
     }
 
     copyData = copyData.map((element) => {
-      if (tmpItemName.includes(element.name)) {
+      if (tmpItemName?.includes(element.name)) {
         return { ...element, lightOn: true };
       } else {
         return { ...element, lightOn: false };
