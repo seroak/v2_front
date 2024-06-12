@@ -57,9 +57,14 @@ interface PrintItem extends ObjectItem {
 
 interface ForItem extends ObjectItem {
   start: number;
+  startLightOn: boolean;
   end: number;
+  endLightOn: boolean;
   cur: number;
+  curLightOn: boolean;
   target: string;
+  step: number;
+  stepLightOn: boolean;
 }
 
 interface IfItem extends ObjectItem {}
@@ -104,19 +109,40 @@ const dummy_json: DummyItem[] = [
   {
     id: 2,
     depth: 2,
-    expr: "'*' * (i + 1)",
+    expr: "' ' * (a - (i + 1))",
     highlight: [],
     type: "print",
   },
   {
     id: 2,
     depth: 2,
+    expr: "' ' * (3 - (0 + 1))",
+    highlight: [7, 12],
+    type: "print",
+  },
+  {
+    id: 2,
+    depth: 2,
+    expr: "  ",
+    highlight: [0, 1],
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
+    expr: "'*' * (i + 1)",
+    highlight: [],
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
     expr: "'*' * (0 + 1)",
     highlight: [7],
     type: "print",
   },
   {
-    id: 2,
+    id: 3,
     depth: 2,
     expr: "*",
     highlight: [0],
@@ -138,19 +164,40 @@ const dummy_json: DummyItem[] = [
   {
     id: 2,
     depth: 2,
-    expr: "'*' * (i + 1)",
+    expr: "' ' * (a - (i + 1))",
     highlight: [],
     type: "print",
   },
   {
     id: 2,
     depth: 2,
+    expr: "' ' * (3 - (1 + 1))",
+    highlight: [7, 12],
+    type: "print",
+  },
+  {
+    id: 2,
+    depth: 2,
+    expr: " ",
+    highlight: [0],
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
+    expr: "'*' * (i + 1)",
+    highlight: [],
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
     expr: "'*' * (1 + 1)",
     highlight: [7],
     type: "print",
   },
   {
-    id: 2,
+    id: 3,
     depth: 2,
     expr: "**",
     highlight: [0, 1],
@@ -172,19 +219,40 @@ const dummy_json: DummyItem[] = [
   {
     id: 2,
     depth: 2,
-    expr: "'*' * (i + 1)",
+    expr: "' ' * (a - (i + 1))",
     highlight: [],
     type: "print",
   },
   {
     id: 2,
     depth: 2,
+    expr: "' ' * (3 - (2 + 1))",
+    highlight: [7, 12],
+    type: "print",
+  },
+  {
+    id: 2,
+    depth: 2,
+    expr: "",
+    highlight: [],
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
+    expr: "'*' * (i + 1)",
+    highlight: [],
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
     expr: "'*' * (2 + 1)",
     highlight: [7],
     type: "print",
   },
   {
-    id: 2,
+    id: 3,
     depth: 2,
     expr: "***",
     highlight: [0, 1, 2],
@@ -226,6 +294,7 @@ const RightSection: React.FC = () => {
           end: dummy_json[idx].condition!.end,
           cur: dummy_json[idx].condition!.cur,
           target: dummy_json[idx].condition!.target,
+          step: dummy_json[idx].condition!.step,
         } as ForItem;
       case "if":
         return baseObject as IfItem;
@@ -295,7 +364,6 @@ const RightSection: React.FC = () => {
       }
     });
   };
-
   const updateVar = (
     targetName: string,
     varData: DummyItem[],
@@ -355,6 +423,7 @@ const RightSection: React.FC = () => {
                   end={forItem.end}
                   cur={forItem.cur}
                   target={forItem.target}
+                  step={forItem.step}
                   lightOn={forItem.lightOn}
                 >
                   {renderComponent(forItem.child)}
