@@ -25,6 +25,7 @@ const CodeEditor: React.FC = () => {
         console.log("Response data:", data);
         // 처리 로직 추가
       } else {
+        // todo
         console.error("Server error:", response.statusText);
       }
     } catch (error) {
