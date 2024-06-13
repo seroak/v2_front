@@ -78,6 +78,7 @@ type AnyObjectItem = PrintItem | ForItem | IfItem | ElseItem | End;
 interface ActivateItem {
   id: number;
   depth: number;
+  type: string;
 }
 
 // Initial data setup
@@ -310,6 +311,7 @@ const RightSection: React.FC = () => {
             stepLightOn = true;
           }
         });
+        console.log(curLightOn);
         return {
           ...baseObject,
           start: dummy_json[idx].condition!.start,
@@ -317,6 +319,10 @@ const RightSection: React.FC = () => {
           cur: dummy_json[idx].condition!.cur,
           target: dummy_json[idx].condition!.target,
           step: dummy_json[idx].condition!.step,
+          startLightOn: startLightOn,
+          endLightOn: endLightOn,
+          curLightOn: curLightOn,
+          stepLightOn: stepLightOn,
         } as ForItem;
       case "if":
         return baseObject as IfItem;
@@ -342,21 +348,21 @@ const RightSection: React.FC = () => {
           ...item,
           child: addChild(item.child, targetDepth, newObject),
         };
+      } else {
+        return item;
       }
-      return item;
     });
   };
 
   const updateChild = (
     items: AnyObjectItem[],
-    targetId: number,
     newObject: AnyObjectItem
   ): AnyObjectItem[] => {
     return items.map((item) => {
-      if (item.id === targetId) {
+      if (item.id === newObject.id) {
         return { ...item, ...newObject, child: item.child };
       } else if (item.child && item.child.length > 0) {
-        return { ...item, child: updateChild(item.child, targetId, newObject) };
+        return { ...item, child: updateChild(item.child, newObject) };
       } else {
         return item;
       }
@@ -364,11 +370,13 @@ const RightSection: React.FC = () => {
   };
 
   const turnLightOn = (
-    new_data: AnyObjectItem[],
-    newActivate: ActivateItem[]
+    new_data: AnyObjectItem[], //비주얼 스택
+    newActivate: ActivateItem[] //활성화 스택
   ): AnyObjectItem[] => {
     return new_data.map((item) => {
       if (newActivate.some((data) => data.id === item.id)) {
+        // 수정해야하는 위치일때
+
         return {
           ...item,
           lightOn: true,
@@ -385,6 +393,7 @@ const RightSection: React.FC = () => {
       }
     });
   };
+
   const updateVar = (
     targetName: string,
     varData: DummyItem[],
@@ -401,19 +410,26 @@ const RightSection: React.FC = () => {
 
   const updateActivate = (
     activate: ActivateItem[],
-    targetDepth: number,
-    targetId: number
+    newObject: ObjectItem
   ): ActivateItem[] => {
     let tmp: ActivateItem[] = [];
 
     for (let element of activate) {
-      if (element.depth === targetDepth) {
-        tmp.push({ id: targetId, depth: targetDepth });
+      if (element.depth === newObject.depth) {
+        tmp.push({
+          id: newObject.id,
+          depth: newObject.depth,
+          type: newObject.type,
+        });
         return tmp;
       }
     }
-    tmp.push({ id: targetId, depth: targetDepth });
 
+    tmp.push({
+      id: newObject.id,
+      depth: newObject.depth!,
+      type: newObject.type,
+    });
     return tmp;
   };
 
@@ -437,14 +453,19 @@ const RightSection: React.FC = () => {
               );
             case "for":
               const forItem = item as ForItem;
+              console.log(forItem.curLightOn);
               return (
                 <ForBox
                   key={forItem.id}
                   start={forItem.start}
+                  startLightOn={forItem.startLightOn}
                   end={forItem.end}
+                  endLightOn={forItem.endLightOn}
                   cur={forItem.cur}
+                  curLightOn={forItem.curLightOn}
                   target={forItem.target}
                   step={forItem.step}
+                  stepLightOn={forItem.stepLightOn}
                   lightOn={forItem.lightOn}
                 >
                   {renderComponent(forItem.child)}
@@ -486,14 +507,13 @@ const RightSection: React.FC = () => {
   };
 
   const handleClick = () => {
-    let new_data: AnyObjectItem[] = [];
+    let newData: AnyObjectItem[] = [];
     if (idx >= dummy_json.length) {
       console.log("더이상 데이터가 없습니다");
       return;
     }
 
     let copyData = _.cloneDeep(varData);
-    console.log(copyData);
     // For variables
     if (dummy_json[idx].type === "varList") {
       dummy_json[idx].variable_list?.forEach((element) => {
@@ -509,22 +529,24 @@ const RightSection: React.FC = () => {
     } else {
       const newObject = createNewObject(idx);
       if (usedId.includes(dummy_json[idx].id!)) {
-        const targetId = dummy_json[idx].id!;
+        // 한번 visual list에 들어가서 수정하는 입력일 때
 
         // updateChild(비주얼 스택, 넣어야하는 위치를 알려주는 id, 넣어야하는 data)
-        new_data = updateChild(visual.objects, targetId, newObject);
+        newData = updateChild(visual.objects, newObject);
       } else {
+        // 처음 visual list에 들어가서 더해야하는 입력일 때
         const targetDepth: number = dummy_json[idx].depth!;
 
         // 한번 사용한 id는 저장해준다
         setUsedId((prevIds) => [...prevIds, dummy_json[idx].id!]);
         // addChild(비주얼 스택, 넣어야하는 위치를 알려주는 depth, 넣어야하는 data)
-        new_data = addChild(visual.objects, targetDepth, newObject);
+        newData = addChild(visual.objects, targetDepth, newObject);
       }
-      const targetId: number = dummy_json[idx].id!;
-      const targetDepth: number = dummy_json[idx].depth!;
-      const newActivate = updateActivate(activate, targetDepth, targetId);
-      const turnLightOnNewData = turnLightOn(new_data, newActivate);
+
+      const newActivate = updateActivate(activate, newObject);
+      console.log("newData", newData);
+      console.log("newActivate", newActivate);
+      const turnLightOnNewData = turnLightOn(newData, newActivate);
 
       setActivate(newActivate);
       setVisual({ objects: turnLightOnNewData });
