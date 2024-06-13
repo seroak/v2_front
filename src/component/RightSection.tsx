@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import ForBox from "./ForBox";
 import VariableBox from "./VariableBox";
@@ -57,9 +56,14 @@ interface PrintItem extends ObjectItem {
 
 interface ForItem extends ObjectItem {
   start: number;
+  startLightOn: boolean;
   end: number;
+  endLightOn: boolean;
   cur: number;
+  curLightOn: boolean;
   target: string;
+  step: number;
+  stepLightOn: boolean;
 }
 
 interface IfItem extends ObjectItem {}
@@ -74,6 +78,7 @@ type AnyObjectItem = PrintItem | ForItem | IfItem | ElseItem | End;
 interface ActivateItem {
   id: number;
   depth: number;
+  type: string;
 }
 
 // Initial data setup
@@ -96,7 +101,7 @@ const dummy_json: DummyItem[] = [
       cur: 0,
       start: 0,
       end: 3,
-      step: 1,
+      step: 2,
     },
     highlight: ["target", "cur", "start", "end", "step"],
     type: "for",
@@ -104,19 +109,40 @@ const dummy_json: DummyItem[] = [
   {
     id: 2,
     depth: 2,
-    expr: "'*' * (i + 1)",
+    expr: "' ' * (a - (i + 1))",
     highlight: [],
     type: "print",
   },
   {
     id: 2,
     depth: 2,
+    expr: "' ' * (3 - (0 + 1))",
+    highlight: [7, 12],
+    type: "print",
+  },
+  {
+    id: 2,
+    depth: 2,
+    expr: "  ",
+    highlight: [0, 1],
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
+    expr: "'*' * (i + 1)",
+    highlight: [],
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
     expr: "'*' * (0 + 1)",
     highlight: [7],
     type: "print",
   },
   {
-    id: 2,
+    id: 3,
     depth: 2,
     expr: "*",
     highlight: [0],
@@ -130,7 +156,7 @@ const dummy_json: DummyItem[] = [
       cur: 1,
       start: 0,
       end: 3,
-      step: 1,
+      step: 2,
     },
     highlight: ["cur"],
     type: "for",
@@ -138,19 +164,40 @@ const dummy_json: DummyItem[] = [
   {
     id: 2,
     depth: 2,
-    expr: "'*' * (i + 1)",
+    expr: "' ' * (a - (i + 1))",
     highlight: [],
     type: "print",
   },
   {
     id: 2,
     depth: 2,
+    expr: "' ' * (3 - (1 + 1))",
+    highlight: [7, 12],
+    type: "print",
+  },
+  {
+    id: 2,
+    depth: 2,
+    expr: " ",
+    highlight: [0],
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
+    expr: "'*' * (i + 1)",
+    highlight: [],
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
     expr: "'*' * (1 + 1)",
     highlight: [7],
     type: "print",
   },
   {
-    id: 2,
+    id: 3,
     depth: 2,
     expr: "**",
     highlight: [0, 1],
@@ -172,19 +219,40 @@ const dummy_json: DummyItem[] = [
   {
     id: 2,
     depth: 2,
-    expr: "'*' * (i + 1)",
+    expr: "' ' * (a - (i + 1))",
     highlight: [],
     type: "print",
   },
   {
     id: 2,
     depth: 2,
+    expr: "' ' * (3 - (2 + 1))",
+    highlight: [7, 12],
+    type: "print",
+  },
+  {
+    id: 2,
+    depth: 2,
+    expr: "",
+    highlight: [],
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
+    expr: "'*' * (i + 1)",
+    highlight: [],
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
     expr: "'*' * (2 + 1)",
     highlight: [7],
     type: "print",
   },
   {
-    id: 2,
+    id: 3,
     depth: 2,
     expr: "***",
     highlight: [0, 1, 2],
@@ -194,14 +262,14 @@ const dummy_json: DummyItem[] = [
 
 const RightSection: React.FC = () => {
   const [idx, setIdx] = useState<number>(0);
-  const [usedId, setUsedId] = useState<number[]>([]); // List of used ids
-  const [data, setData] = useState<State>({
-    // Visualization list for conditions
+  const [usedId, setUsedId] = useState<number[]>([]); // 한 번사용한 id를 저장하는 리스트
+  const [visual, setVisual] = useState<State>({
+    // 시각화전에 데이터를 담아두는 리스트 객체
     objects: [{ id: 0, type: "start", depth: 0, lightOn: false, child: [] }],
   });
   const [varData, setVarData] = useState<DummyItem[]>([]); // 변수 데이터 시각화 리스트
   const [usedName, setUsedName] = useState<string[]>([]); // 사용한 변수 데이터 name 모아두는 리스트
-  const [activate, setActivate] = useState<ActivateItem[]>([]); // Active stack list
+  const [activate, setActivate] = useState<ActivateItem[]>([]); // 애니메이션을 줄 때 사용하는 리스트
 
   const createNewObject = (idx: number): AnyObjectItem => {
     const baseObject: ObjectItem = {
@@ -220,12 +288,41 @@ const RightSection: React.FC = () => {
           highlight: dummy_json[idx].highlight!,
         } as PrintItem;
       case "for":
+        // for문 highlight 객체로 변환
+        let targetLightON: boolean = false;
+        let curLightOn = false;
+        let startLightOn = false;
+        let endLightOn = false;
+        let stepLightOn = false;
+        dummy_json[idx].highlight?.map((item) => {
+          if (item === "target") {
+            targetLightON = true;
+          }
+          if (item === "cur") {
+            curLightOn = true;
+          }
+          if (item === "start") {
+            startLightOn = true;
+          }
+          if (item === "end") {
+            endLightOn = true;
+          }
+          if (item === "step") {
+            stepLightOn = true;
+          }
+        });
+        console.log(curLightOn);
         return {
           ...baseObject,
           start: dummy_json[idx].condition!.start,
           end: dummy_json[idx].condition!.end,
           cur: dummy_json[idx].condition!.cur,
           target: dummy_json[idx].condition!.target,
+          step: dummy_json[idx].condition!.step,
+          startLightOn: startLightOn,
+          endLightOn: endLightOn,
+          curLightOn: curLightOn,
+          stepLightOn: stepLightOn,
         } as ForItem;
       case "if":
         return baseObject as IfItem;
@@ -259,14 +356,13 @@ const RightSection: React.FC = () => {
 
   const updateChild = (
     items: AnyObjectItem[],
-    targetId: number,
     newObject: AnyObjectItem
   ): AnyObjectItem[] => {
     return items.map((item) => {
-      if (item.id === targetId) {
+      if (item.id === newObject.id) {
         return { ...item, ...newObject, child: item.child };
       } else if (item.child && item.child.length > 0) {
-        return { ...item, child: updateChild(item.child, targetId, newObject) };
+        return { ...item, child: updateChild(item.child, newObject) };
       } else {
         return item;
       }
@@ -274,11 +370,13 @@ const RightSection: React.FC = () => {
   };
 
   const turnLightOn = (
-    new_data: AnyObjectItem[],
-    newActivate: ActivateItem[]
+    new_data: AnyObjectItem[], //비주얼 스택
+    newActivate: ActivateItem[] //활성화 스택
   ): AnyObjectItem[] => {
     return new_data.map((item) => {
       if (newActivate.some((data) => data.id === item.id)) {
+        // 수정해야하는 위치일때
+
         return {
           ...item,
           lightOn: true,
@@ -312,19 +410,26 @@ const RightSection: React.FC = () => {
 
   const updateActivate = (
     activate: ActivateItem[],
-    targetDepth: number,
-    targetId: number
+    newObject: ObjectItem
   ): ActivateItem[] => {
     let tmp: ActivateItem[] = [];
 
     for (let element of activate) {
-      if (element.depth === targetDepth) {
-        tmp.push({ id: targetId, depth: targetDepth });
+      if (element.depth === newObject.depth) {
+        tmp.push({
+          id: newObject.id,
+          depth: newObject.depth,
+          type: newObject.type,
+        });
         return tmp;
       }
     }
-    tmp.push({ id: targetId, depth: targetDepth });
 
+    tmp.push({
+      id: newObject.id,
+      depth: newObject.depth!,
+      type: newObject.type,
+    });
     return tmp;
   };
 
@@ -348,13 +453,19 @@ const RightSection: React.FC = () => {
               );
             case "for":
               const forItem = item as ForItem;
+              console.log(forItem.curLightOn);
               return (
                 <ForBox
                   key={forItem.id}
                   start={forItem.start}
+                  startLightOn={forItem.startLightOn}
                   end={forItem.end}
+                  endLightOn={forItem.endLightOn}
                   cur={forItem.cur}
+                  curLightOn={forItem.curLightOn}
                   target={forItem.target}
+                  step={forItem.step}
+                  stepLightOn={forItem.stepLightOn}
                   lightOn={forItem.lightOn}
                 >
                   {renderComponent(forItem.child)}
@@ -396,14 +507,13 @@ const RightSection: React.FC = () => {
   };
 
   const handleClick = () => {
-    let new_data: AnyObjectItem[] = [];
+    let newData: AnyObjectItem[] = [];
     if (idx >= dummy_json.length) {
       console.log("더이상 데이터가 없습니다");
       return;
     }
 
     let copyData = _.cloneDeep(varData);
-    console.log(copyData);
     // For variables
     if (dummy_json[idx].type === "varList") {
       dummy_json[idx].variable_list?.forEach((element) => {
@@ -411,7 +521,6 @@ const RightSection: React.FC = () => {
           const targetName = element.name!;
           const updatedData = updateVar(targetName, copyData, element);
           copyData = updatedData;
-          console.log(updatedData);
         } else {
           copyData.push(element);
           setUsedName((prevName) => [...prevName, element.name!]);
@@ -420,23 +529,29 @@ const RightSection: React.FC = () => {
     } else {
       const newObject = createNewObject(idx);
       if (usedId.includes(dummy_json[idx].id!)) {
-        const targetId = dummy_json[idx].id!;
-        new_data = updateChild(data.objects, targetId, newObject);
+        // 한번 visual list에 들어가서 수정하는 입력일 때
+
+        // updateChild(비주얼 스택, 넣어야하는 위치를 알려주는 id, 넣어야하는 data)
+        newData = updateChild(visual.objects, newObject);
       } else {
-        setUsedId((prevIds) => [...prevIds, dummy_json[idx].id!]);
+        // 처음 visual list에 들어가서 더해야하는 입력일 때
         const targetDepth: number = dummy_json[idx].depth!;
-        new_data = addChild(data.objects, targetDepth, newObject);
+
+        // 한번 사용한 id는 저장해준다
+        setUsedId((prevIds) => [...prevIds, dummy_json[idx].id!]);
+        // addChild(비주얼 스택, 넣어야하는 위치를 알려주는 depth, 넣어야하는 data)
+        newData = addChild(visual.objects, targetDepth, newObject);
       }
-      const targetId: number = dummy_json[idx].id!;
-      const targetDepth: number = dummy_json[idx].depth!;
-      console.log("activate", activate);
-      const newActivate = updateActivate(activate, targetDepth, targetId);
-      const turnLightOnNewData = turnLightOn(new_data, newActivate);
-      console.log("turnLightOnNewData", turnLightOnNewData);
+
+      const newActivate = updateActivate(activate, newObject);
+      console.log("newData", newData);
+      console.log("newActivate", newActivate);
+      const turnLightOnNewData = turnLightOn(newData, newActivate);
+
       setActivate(newActivate);
-      setData({ objects: turnLightOnNewData });
+      setVisual({ objects: turnLightOnNewData });
     }
-    console.log("copyData", copyData);
+
     let tmpItemName;
     if (dummy_json[idx].variable_list === undefined) {
       tmpItemName = [];
@@ -464,7 +579,7 @@ const RightSection: React.FC = () => {
         <ul style={{ display: "flex" }}>{renderComponentVar(varData)}</ul>
       </div>
 
-      <ul>{renderComponent(data.objects[0].child)}</ul>
+      <ul>{renderComponent(visual.objects[0].child)}</ul>
       <button onClick={handleClick}>특정 객체 child에 객체 생성</button>
     </div>
   );
