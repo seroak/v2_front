@@ -100,7 +100,7 @@ const dummy_json: DummyItem[] = [
       cur: 0,
       start: 0,
       end: 3,
-      step: 1,
+      step: 2,
     },
     highlight: ["target", "cur", "start", "end", "step"],
     type: "for",
@@ -155,7 +155,7 @@ const dummy_json: DummyItem[] = [
       cur: 1,
       start: 0,
       end: 3,
-      step: 1,
+      step: 2,
     },
     highlight: ["cur"],
     type: "for",
@@ -268,7 +268,7 @@ const RightSection: React.FC = () => {
   });
   const [varData, setVarData] = useState<DummyItem[]>([]); // 변수 데이터 시각화 리스트
   const [usedName, setUsedName] = useState<string[]>([]); // 사용한 변수 데이터 name 모아두는 리스트
-  const [activate, setActivate] = useState<ActivateItem[]>([]); // Active stack list
+  const [activate, setActivate] = useState<ActivateItem[]>([]); // 애니메이션을 줄 때 사용하는 리스트
 
   const createNewObject = (idx: number): AnyObjectItem => {
     const baseObject: ObjectItem = {
