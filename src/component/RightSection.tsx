@@ -287,6 +287,29 @@ const RightSection: React.FC = () => {
           highlight: dummy_json[idx].highlight!,
         } as PrintItem;
       case "for":
+        // for문 highlight 객체로 변환
+        let targetLightON: boolean = false;
+        let curLightOn = false;
+        let startLightOn = false;
+        let endLightOn = false;
+        let stepLightOn = false;
+        dummy_json[idx].highlight?.map((item) => {
+          if (item === "target") {
+            targetLightON = true;
+          }
+          if (item === "cur") {
+            curLightOn = true;
+          }
+          if (item === "start") {
+            startLightOn = true;
+          }
+          if (item === "end") {
+            endLightOn = true;
+          }
+          if (item === "step") {
+            stepLightOn = true;
+          }
+        });
         return {
           ...baseObject,
           start: dummy_json[idx].condition!.start,
