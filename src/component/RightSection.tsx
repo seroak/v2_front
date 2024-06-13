@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import ForBox from "./ForBox";
 import VariableBox from "./VariableBox";
@@ -262,9 +261,9 @@ const dummy_json: DummyItem[] = [
 
 const RightSection: React.FC = () => {
   const [idx, setIdx] = useState<number>(0);
-  const [usedId, setUsedId] = useState<number[]>([]); // List of used ids
-  const [data, setData] = useState<State>({
-    // Visualization list for conditions
+  const [usedId, setUsedId] = useState<number[]>([]); // 한 번사용한 id를 저장하는 리스트
+  const [visual, setVisual] = useState<State>({
+    // 시각화전에 데이터를 담아두는 리스트 객체
     objects: [{ id: 0, type: "start", depth: 0, lightOn: false, child: [] }],
   });
   const [varData, setVarData] = useState<DummyItem[]>([]); // 변수 데이터 시각화 리스트
@@ -320,9 +319,8 @@ const RightSection: React.FC = () => {
           ...item,
           child: addChild(item.child, targetDepth, newObject),
         };
-      } else {
-        return item;
       }
+      return item;
     });
   };
 
@@ -480,7 +478,6 @@ const RightSection: React.FC = () => {
           const targetName = element.name!;
           const updatedData = updateVar(targetName, copyData, element);
           copyData = updatedData;
-          console.log(updatedData);
         } else {
           copyData.push(element);
           setUsedName((prevName) => [...prevName, element.name!]);
@@ -490,22 +487,26 @@ const RightSection: React.FC = () => {
       const newObject = createNewObject(idx);
       if (usedId.includes(dummy_json[idx].id!)) {
         const targetId = dummy_json[idx].id!;
-        new_data = updateChild(data.objects, targetId, newObject);
+
+        // updateChild(비주얼 스택, 넣어야하는 위치를 알려주는 id, 넣어야하는 data)
+        new_data = updateChild(visual.objects, targetId, newObject);
       } else {
-        setUsedId((prevIds) => [...prevIds, dummy_json[idx].id!]);
         const targetDepth: number = dummy_json[idx].depth!;
-        new_data = addChild(data.objects, targetDepth, newObject);
+
+        // 한번 사용한 id는 저장해준다
+        setUsedId((prevIds) => [...prevIds, dummy_json[idx].id!]);
+        // addChild(비주얼 스택, 넣어야하는 위치를 알려주는 depth, 넣어야하는 data)
+        new_data = addChild(visual.objects, targetDepth, newObject);
       }
       const targetId: number = dummy_json[idx].id!;
       const targetDepth: number = dummy_json[idx].depth!;
-      console.log("activate", activate);
       const newActivate = updateActivate(activate, targetDepth, targetId);
       const turnLightOnNewData = turnLightOn(new_data, newActivate);
-      console.log("turnLightOnNewData", turnLightOnNewData);
+
       setActivate(newActivate);
-      setData({ objects: turnLightOnNewData });
+      setVisual({ objects: turnLightOnNewData });
     }
-    console.log("copyData", copyData);
+
     let tmpItemName;
     if (dummy_json[idx].variable_list === undefined) {
       tmpItemName = [];
@@ -533,7 +534,7 @@ const RightSection: React.FC = () => {
         <ul style={{ display: "flex" }}>{renderComponentVar(varData)}</ul>
       </div>
 
-      <ul>{renderComponent(data.objects[0].child)}</ul>
+      <ul>{renderComponent(visual.objects[0].child)}</ul>
       <button onClick={handleClick}>특정 객체 child에 객체 생성</button>
     </div>
   );
