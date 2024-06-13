@@ -12,7 +12,7 @@ const CodeEditor: React.FC = () => {
 
     try {
       console.log(code);
-      const response = await fetch("http://127.0.0.1:5000/", {
+      const response = await fetch("/api/code", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +25,6 @@ const CodeEditor: React.FC = () => {
         console.log("Response data:", data);
         // 처리 로직 추가
       } else {
-        // todo
         console.error("Server error:", response.statusText);
       }
     } catch (error) {

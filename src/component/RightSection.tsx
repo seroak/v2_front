@@ -311,7 +311,7 @@ const RightSection: React.FC = () => {
             stepLightOn = true;
           }
         });
-        console.log(curLightOn);
+
         return {
           ...baseObject,
           start: dummy_json[idx].condition!.start,
@@ -453,7 +453,7 @@ const RightSection: React.FC = () => {
               );
             case "for":
               const forItem = item as ForItem;
-              console.log(forItem.curLightOn);
+
               return (
                 <ForBox
                   key={forItem.id}
@@ -530,7 +530,6 @@ const RightSection: React.FC = () => {
       const newObject = createNewObject(idx);
       if (usedId.includes(dummy_json[idx].id!)) {
         // 한번 visual list에 들어가서 수정하는 입력일 때
-
         // updateChild(비주얼 스택, 넣어야하는 위치를 알려주는 id, 넣어야하는 data)
         newData = updateChild(visual.objects, newObject);
       } else {
@@ -544,8 +543,6 @@ const RightSection: React.FC = () => {
       }
 
       const newActivate = updateActivate(activate, newObject);
-      console.log("newData", newData);
-      console.log("newActivate", newActivate);
       const turnLightOnNewData = turnLightOn(newData, newActivate);
 
       setActivate(newActivate);
