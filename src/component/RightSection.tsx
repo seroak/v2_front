@@ -259,7 +259,7 @@ const dummy_json: DummyItem[] = [
     type: "print",
   },
 ];
-
+//todo
 const RightSection: React.FC = () => {
   const [idx, setIdx] = useState<number>(0);
   const [usedId, setUsedId] = useState<number[]>([]); // 한 번사용한 id를 저장하는 리스트
