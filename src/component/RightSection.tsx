@@ -112,6 +112,7 @@ const dummy_json: DummyItem[] = [
     depth: 2,
     expr: "' ' * (a // 2 - i)",
     highlight: [],
+    console: null,
     type: "print",
   },
   {
@@ -119,6 +120,7 @@ const dummy_json: DummyItem[] = [
     depth: 2,
     expr: "' ' * (6 // 2 - 0)",
     highlight: [7, 16],
+    console: null,
     type: "print",
   },
   {
@@ -126,6 +128,7 @@ const dummy_json: DummyItem[] = [
     depth: 2,
     expr: "   ",
     highlight: [0, 1, 2],
+    console: "   ",
     type: "print",
   },
   {
@@ -133,6 +136,7 @@ const dummy_json: DummyItem[] = [
     depth: 2,
     expr: "'*' * (2 * i + 1)",
     highlight: [],
+    console: null,
     type: "print",
   },
   {
@@ -140,6 +144,7 @@ const dummy_json: DummyItem[] = [
     depth: 2,
     expr: "'*' * (2 * 0 + 1)",
     highlight: [11],
+    console: null,
     type: "print",
   },
   {
@@ -147,11 +152,12 @@ const dummy_json: DummyItem[] = [
     depth: 2,
     expr: "*",
     highlight: [0],
+    console: "*\n",
     type: "print",
   },
   {
     id: 1,
-    depth: 2,
+    depth: 1,
     condition: {
       target: "i",
       cur: 1,
@@ -163,50 +169,56 @@ const dummy_json: DummyItem[] = [
     type: "for",
   },
   {
-    id: 4,
-    depth: 3,
+    id: 2,
+    depth: 2,
     expr: "' ' * (a // 2 - i)",
     highlight: [],
+    console: null,
     type: "print",
   },
   {
-    id: 4,
-    depth: 3,
+    id: 2,
+    depth: 2,
     expr: "' ' * (6 // 2 - 1)",
     highlight: [7, 16],
+    console: null,
     type: "print",
   },
   {
-    id: 4,
-    depth: 3,
+    id: 2,
+    depth: 2,
     expr: "  ",
     highlight: [0, 1],
+    console: "  ",
     type: "print",
   },
   {
-    id: 5,
-    depth: 3,
+    id: 3,
+    depth: 2,
     expr: "'*' * (2 * i + 1)",
     highlight: [],
+    console: null,
     type: "print",
   },
   {
-    id: 5,
-    depth: 3,
+    id: 3,
+    depth: 2,
     expr: "'*' * (2 * 1 + 1)",
     highlight: [11],
+    console: null,
     type: "print",
   },
   {
-    id: 5,
-    depth: 3,
+    id: 3,
+    depth: 2,
     expr: "***",
     highlight: [0, 1, 2],
+    console: "***\n",
     type: "print",
   },
   {
     id: 1,
-    depth: 3,
+    depth: 1,
     condition: {
       target: "i",
       cur: 2,
@@ -218,50 +230,56 @@ const dummy_json: DummyItem[] = [
     type: "for",
   },
   {
-    id: 6,
-    depth: 4,
+    id: 2,
+    depth: 2,
     expr: "' ' * (a // 2 - i)",
     highlight: [],
+    console: null,
     type: "print",
   },
   {
-    id: 6,
-    depth: 4,
+    id: 2,
+    depth: 2,
     expr: "' ' * (6 // 2 - 2)",
     highlight: [7, 16],
+    console: null,
     type: "print",
   },
   {
-    id: 6,
-    depth: 4,
+    id: 2,
+    depth: 2,
     expr: " ",
     highlight: [0],
+    console: " ",
     type: "print",
   },
   {
-    id: 7,
-    depth: 4,
+    id: 3,
+    depth: 2,
     expr: "'*' * (2 * i + 1)",
     highlight: [],
+    console: null,
     type: "print",
   },
   {
-    id: 7,
-    depth: 4,
+    id: 3,
+    depth: 2,
     expr: "'*' * (2 * 2 + 1)",
     highlight: [11],
+    console: null,
     type: "print",
   },
   {
-    id: 7,
-    depth: 4,
+    id: 3,
+    depth: 2,
     expr: "*****",
     highlight: [0, 1, 2, 3, 4],
+    console: "*****\n",
     type: "print",
   },
   {
-    id: 8,
-    depth: 4,
+    id: 4,
+    depth: 1,
     condition: {
       target: "i",
       cur: 0,
@@ -273,50 +291,56 @@ const dummy_json: DummyItem[] = [
     type: "for",
   },
   {
-    id: 9,
-    depth: 5,
+    id: 5,
+    depth: 2,
     expr: "' ' * (i + 2)",
     highlight: [],
+    console: null,
     type: "print",
   },
   {
-    id: 9,
-    depth: 5,
+    id: 5,
+    depth: 2,
     expr: "' ' * (0 + 2)",
     highlight: [7],
+    console: null,
     type: "print",
   },
   {
-    id: 9,
-    depth: 5,
+    id: 5,
+    depth: 2,
     expr: "  ",
     highlight: [0, 1],
+    console: "  ",
     type: "print",
   },
   {
-    id: 10,
-    depth: 5,
+    id: 6,
+    depth: 2,
     expr: "'*' * (a // 2 * 2 - 3 - 2 * i)",
     highlight: [],
+    console: null,
     type: "print",
   },
   {
-    id: 10,
-    depth: 5,
+    id: 6,
+    depth: 2,
     expr: "'*' * (6 // 2 * 2 - 3 - 2 * 0)",
     highlight: [7, 28],
+    console: null,
     type: "print",
   },
   {
-    id: 10,
-    depth: 5,
+    id: 6,
+    depth: 2,
     expr: "***",
     highlight: [0, 1, 2],
+    console: "***\n",
     type: "print",
   },
   {
-    id: 8,
-    depth: 5,
+    id: 4,
+    depth: 1,
     condition: {
       target: "i",
       cur: 1,
@@ -328,49 +352,54 @@ const dummy_json: DummyItem[] = [
     type: "for",
   },
   {
-    id: 11,
-    depth: 6,
+    id: 5,
+    depth: 2,
     expr: "' ' * (i + 2)",
     highlight: [],
+    console: null,
     type: "print",
   },
   {
-    id: 11,
-    depth: 6,
+    id: 5,
+    depth: 2,
     expr: "' ' * (1 + 2)",
     highlight: [7],
+    console: null,
     type: "print",
   },
   {
-    id: 11,
-    depth: 6,
+    id: 5,
+    depth: 2,
     expr: "   ",
     highlight: [0, 1, 2],
+    console: "   ",
     type: "print",
   },
   {
-    id: 12,
-    depth: 6,
+    id: 6,
+    depth: 2,
     expr: "'*' * (a // 2 * 2 - 3 - 2 * i)",
     highlight: [],
+    console: null,
     type: "print",
   },
   {
-    id: 12,
-    depth: 6,
+    id: 6,
+    depth: 2,
     expr: "'*' * (6 // 2 * 2 - 3 - 2 * 1)",
     highlight: [7, 28],
+    console: null,
     type: "print",
   },
   {
-    id: 12,
-    depth: 6,
+    id: 6,
+    depth: 2,
     expr: "*",
     highlight: [0],
+    console: "*\n",
     type: "print",
   },
 ];
-
 const RightSection: React.FC = () => {
   const [idx, setIdx] = useState<number>(0);
   const [usedId, setUsedId] = useState<number[]>([]); // 한 번사용한 id를 저장하는 리스트
@@ -445,24 +474,25 @@ const RightSection: React.FC = () => {
   };
 
   const addChild = (
-    items: AnyObjectItem[], //비주얼 스택
-    targetDepth: number, //넣어야하는 위치를 알려주는 depth
-    newObject: AnyObjectItem //넣어야하는 data
+    items: AnyObjectItem[],
+    targetDepth: number,
+    newObject: AnyObjectItem
   ): AnyObjectItem[] => {
     let updated = false;
-    return items.map((item) => {
+    return items.reduceRight<AnyObjectItem[]>((acc, item) => {
       if (!updated && item.depth === targetDepth - 1) {
         updated = true;
-        return { ...item, child: [...item.child, newObject] };
+        acc.unshift({ ...item, child: [...item.child, newObject] });
       } else if (item.child && item.child.length > 0) {
-        return {
+        acc.unshift({
           ...item,
           child: addChild(item.child, targetDepth, newObject),
-        };
+        });
       } else {
-        return item;
+        acc.unshift(item);
       }
-    });
+      return acc;
+    }, []);
   };
 
   const updateChild = (
@@ -659,7 +689,7 @@ const RightSection: React.FC = () => {
 
       const newActivate = updateActivate(activate, newObject);
       const turnLightOnNewData = turnLightOn(newData, newActivate);
-
+      console.log(turnLightOnNewData);
       setActivate(newActivate);
       setVisual({ objects: turnLightOnNewData });
     }
@@ -680,7 +710,7 @@ const RightSection: React.FC = () => {
         return { ...element, lightOn: false };
       }
     });
-
+    console.log(copyData);
     setVarData(copyData);
     setIdx(idx + 1);
   };
