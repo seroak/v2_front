@@ -10,7 +10,7 @@ const CodeEditor: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: async (code) => {
-      const response = await fetch("/api/code", {
+      const response = await fetch("http://localhost:8000/api/code", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
