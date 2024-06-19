@@ -93,8 +93,8 @@ const RightSection: React.FC = () => {
   const [varData, setVarData] = useState<DummyItem[]>([]); // 변수 데이터 시각화 리스트
   const [usedName, setUsedName] = useState<string[]>([]); // 사용한 변수 데이터 name 모아두는 리스트
   const [activate, setActivate] = useState<ActivateItem[]>([]); // 애니메이션을 줄 때 사용하는 리스트
-  const CodeContext = React.createContext<DummyItem[]>([]);
-  const codeData = useContext(CodeContext);
+
+  const { codeData } = useContext(CodeContext);
   const createNewObject = (idx: number): AnyObjectItem => {
     const baseObject: ObjectItem = {
       id: codeData[idx].id!,
