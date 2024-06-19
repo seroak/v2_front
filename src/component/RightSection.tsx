@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import ForBox from "./ForBox";
 import VariableBox from "./VariableBox";
 import IfBox from "./IfBox";
 import ElseBox from "./ElseBox";
 import PrintBox from "./PrintBox";
+import { CodeContext } from "../pages/Home";
 import _ from "lodash";
 
 interface ObjectItem {
@@ -82,324 +83,6 @@ interface ActivateItem {
   type: string;
 }
 
-// Initial data setup
-const dummy_json: DummyItem[] = [
-  {
-    variables: [
-      {
-        depth: 1,
-        expr: "6",
-        name: "a",
-      },
-    ],
-    type: "assignViz",
-  },
-  {
-    id: 1,
-    depth: 1,
-    condition: {
-      target: "i",
-      cur: 0,
-      start: 0,
-      end: 3,
-      step: 1,
-    },
-    highlight: ["target", "cur", "start", "end", "step"],
-    type: "for",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "' ' * (a // 2 - i)",
-    highlight: [],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "' ' * (6 // 2 - 0)",
-    highlight: [7, 16],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "   ",
-    highlight: [0, 1, 2],
-    console: "   ",
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "'*' * (2 * i + 1)",
-    highlight: [],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "'*' * (2 * 0 + 1)",
-    highlight: [11],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "*",
-    highlight: [0],
-    console: "*\n",
-    type: "print",
-  },
-  {
-    id: 1,
-    depth: 1,
-    condition: {
-      target: "i",
-      cur: 1,
-      start: 0,
-      end: 3,
-      step: 1,
-    },
-    highlight: ["cur"],
-    type: "for",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "' ' * (a // 2 - i)",
-    highlight: [],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "' ' * (6 // 2 - 1)",
-    highlight: [7, 16],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "  ",
-    highlight: [0, 1],
-    console: "  ",
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "'*' * (2 * i + 1)",
-    highlight: [],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "'*' * (2 * 1 + 1)",
-    highlight: [11],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "***",
-    highlight: [0, 1, 2],
-    console: "***\n",
-    type: "print",
-  },
-  {
-    id: 1,
-    depth: 1,
-    condition: {
-      target: "i",
-      cur: 2,
-      start: 0,
-      end: 3,
-      step: 1,
-    },
-    highlight: ["cur"],
-    type: "for",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "' ' * (a // 2 - i)",
-    highlight: [],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "' ' * (6 // 2 - 2)",
-    highlight: [7, 16],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: " ",
-    highlight: [0],
-    console: " ",
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "'*' * (2 * i + 1)",
-    highlight: [],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "'*' * (2 * 2 + 1)",
-    highlight: [11],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "*****",
-    highlight: [0, 1, 2, 3, 4],
-    console: "*****\n",
-    type: "print",
-  },
-  {
-    id: 4,
-    depth: 1,
-    condition: {
-      target: "i",
-      cur: 0,
-      start: 0,
-      end: 2,
-      step: 1,
-    },
-    highlight: ["target", "cur", "start", "end", "step"],
-    type: "for",
-  },
-  {
-    id: 5,
-    depth: 2,
-    expr: "' ' * (i + 2)",
-    highlight: [],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 5,
-    depth: 2,
-    expr: "' ' * (0 + 2)",
-    highlight: [7],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 5,
-    depth: 2,
-    expr: "  ",
-    highlight: [0, 1],
-    console: "  ",
-    type: "print",
-  },
-  {
-    id: 6,
-    depth: 2,
-    expr: "'*' * (a // 2 * 2 - 3 - 2 * i)",
-    highlight: [],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 6,
-    depth: 2,
-    expr: "'*' * (6 // 2 * 2 - 3 - 2 * 0)",
-    highlight: [7, 28],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 6,
-    depth: 2,
-    expr: "***",
-    highlight: [0, 1, 2],
-    console: "***\n",
-    type: "print",
-  },
-  {
-    id: 4,
-    depth: 1,
-    condition: {
-      target: "i",
-      cur: 1,
-      start: 0,
-      end: 2,
-      step: 1,
-    },
-    highlight: ["cur"],
-    type: "for",
-  },
-  {
-    id: 5,
-    depth: 2,
-    expr: "' ' * (i + 2)",
-    highlight: [],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 5,
-    depth: 2,
-    expr: "' ' * (1 + 2)",
-    highlight: [7],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 5,
-    depth: 2,
-    expr: "   ",
-    highlight: [0, 1, 2],
-    console: "   ",
-    type: "print",
-  },
-  {
-    id: 6,
-    depth: 2,
-    expr: "'*' * (a // 2 * 2 - 3 - 2 * i)",
-    highlight: [],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 6,
-    depth: 2,
-    expr: "'*' * (6 // 2 * 2 - 3 - 2 * 1)",
-    highlight: [7, 28],
-    console: null,
-    type: "print",
-  },
-  {
-    id: 6,
-    depth: 2,
-    expr: "*",
-    highlight: [0],
-    console: "*\n",
-    type: "print",
-  },
-];
 const RightSection: React.FC = () => {
   const [idx, setIdx] = useState<number>(0);
   const [usedId, setUsedId] = useState<number[]>([]); // 한 번사용한 id를 저장하는 리스트
@@ -410,22 +93,23 @@ const RightSection: React.FC = () => {
   const [varData, setVarData] = useState<DummyItem[]>([]); // 변수 데이터 시각화 리스트
   const [usedName, setUsedName] = useState<string[]>([]); // 사용한 변수 데이터 name 모아두는 리스트
   const [activate, setActivate] = useState<ActivateItem[]>([]); // 애니메이션을 줄 때 사용하는 리스트
-
+  const CodeContext = React.createContext<DummyItem[]>([]);
+  const codeData = useContext(CodeContext);
   const createNewObject = (idx: number): AnyObjectItem => {
     const baseObject: ObjectItem = {
-      id: dummy_json[idx].id!,
-      type: dummy_json[idx].type,
-      depth: dummy_json[idx].depth,
+      id: codeData[idx].id!,
+      type: codeData[idx].type,
+      depth: codeData[idx].depth,
       lightOn: false,
       child: [],
     };
 
-    switch (dummy_json[idx].type) {
+    switch (codeData[idx].type) {
       case "print":
         return {
           ...baseObject,
-          expr: dummy_json[idx].expr!,
-          highlight: dummy_json[idx].highlight!,
+          expr: codeData[idx].expr!,
+          highlight: codeData[idx].highlight!,
         } as PrintItem;
       case "for":
         // for문 highlight 객체로 변환
@@ -434,7 +118,7 @@ const RightSection: React.FC = () => {
         let startLightOn = false;
         let endLightOn = false;
         let stepLightOn = false;
-        dummy_json[idx].highlight?.map((item) => {
+        codeData[idx].highlight?.map((item) => {
           if (item === "target") {
             targetLightON = true;
           }
@@ -454,11 +138,11 @@ const RightSection: React.FC = () => {
 
         return {
           ...baseObject,
-          start: dummy_json[idx].condition!.start,
-          end: dummy_json[idx].condition!.end,
-          cur: dummy_json[idx].condition!.cur,
-          target: dummy_json[idx].condition!.target,
-          step: dummy_json[idx].condition!.step,
+          start: codeData[idx].condition!.start,
+          end: codeData[idx].condition!.end,
+          cur: codeData[idx].condition!.cur,
+          target: codeData[idx].condition!.target,
+          step: codeData[idx].condition!.step,
           startLightOn: startLightOn,
           endLightOn: endLightOn,
           curLightOn: curLightOn,
@@ -653,15 +337,16 @@ const RightSection: React.FC = () => {
 
   const handleClick = () => {
     let newData: AnyObjectItem[] = [];
-    if (idx >= dummy_json.length) {
+    console.log(codeData);
+    if (idx >= codeData.length) {
       console.log("더이상 데이터가 없습니다");
       return;
     }
 
     let copyData = _.cloneDeep(varData);
     // For variables
-    if (dummy_json[idx].type === "assignViz") {
-      dummy_json[idx].variables?.forEach((element) => {
+    if (codeData[idx].type === "assignViz") {
+      codeData[idx].variables?.forEach((element) => {
         if (usedName.includes(element.name!)) {
           const targetName = element.name!;
           const updatedData = updateVar(targetName, copyData, element);
@@ -673,16 +358,16 @@ const RightSection: React.FC = () => {
       });
     } else {
       const newObject = createNewObject(idx);
-      if (usedId.includes(dummy_json[idx].id!)) {
+      if (usedId.includes(codeData[idx].id!)) {
         // 한번 visual list에 들어가서 수정하는 입력일 때
         // updateChild(비주얼 스택, 넣어야하는 위치를 알려주는 id, 넣어야하는 data)
         newData = updateChild(visual.objects, newObject);
       } else {
         // 처음 visual list에 들어가서 더해야하는 입력일 때
-        const targetDepth: number = dummy_json[idx].depth!;
+        const targetDepth: number = codeData[idx].depth!;
 
         // 한번 사용한 id는 저장해준다
-        setUsedId((prevIds) => [...prevIds, dummy_json[idx].id!]);
+        setUsedId((prevIds) => [...prevIds, codeData[idx].id!]);
         // addChild(비주얼 스택, 넣어야하는 위치를 알려주는 depth, 넣어야하는 data)
         newData = addChild(visual.objects, targetDepth, newObject);
       }
@@ -695,10 +380,10 @@ const RightSection: React.FC = () => {
     }
 
     let tmpItemName;
-    if (dummy_json[idx].variables === undefined) {
+    if (codeData[idx].variables === undefined) {
       tmpItemName = [];
     } else {
-      tmpItemName = dummy_json[idx].variables?.map((element) => {
+      tmpItemName = codeData[idx].variables?.map((element) => {
         return element.name;
       });
     }
