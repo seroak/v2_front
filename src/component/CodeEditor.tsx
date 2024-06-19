@@ -10,7 +10,7 @@ const CodeEditor: React.FC = () => {
   const { codeData, setCodeData } = useContext(CodeContext);
   const mutation = useMutation({
     mutationFn: async (code) => {
-      const response = await fetch("http://localhost:8000/api/code", {
+      const response = await fetch("http://localhost:8000/v1/python", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
