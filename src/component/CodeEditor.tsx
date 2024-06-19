@@ -1,35 +1,40 @@
 import React, { useState } from "react";
 import Editor from "@monaco-editor/react";
 import styles from "./codeEditor.module.css";
+import { useMutation } from "@tanstack/react-query";
 
 const CodeEditor: React.FC = () => {
   const [code, setCode] = useState<string>(
     ["def hello_world():", '    print("Hello, World!")'].join("\n")
   );
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    try {
-      console.log(code);
-      const response = await fetch("/api/code", {
+  const mutation = useMutation({
+    mutationFn: async (code) => {
+      const response = await fetch("http://localhost:8000/api/code", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ code }),
       });
+      const result = await response.json();
+      return result;
+    },
+    onError: (error) => {
+      console.error("Error:", error); // 오류 발생 시 콘솔에 출력
+    },
+  });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Response data:", data);
-        // 처리 로직 추가
-      } else {
-        console.error("Server error:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Fetch error:", error);
-    }
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    mutation.mutate(code, {
+      onSuccess: (data) => {
+        console.log("Success:", data); // 성공 시 콘솔에 출력
+      },
+      onError: (error) => {
+        console.error("Submit Error:", error); // 제출 오류 시 콘솔에 출력
+      },
+    });
   };
 
   return (

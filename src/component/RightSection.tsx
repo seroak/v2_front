@@ -29,7 +29,7 @@ interface DummyItem {
   expr?: string;
   highlight?: number[] | string[];
   condition?: ConditionItem;
-  variable_list?: VariableList[];
+  variables?: VariableList[];
 }
 interface VarItem extends DummyItem {
   lightOn?: boolean;
@@ -38,6 +38,7 @@ interface VariableList {
   name: string;
   expr: string;
   depth: number;
+  type?: string;
 }
 interface ConditionItem {
   target: string;
@@ -84,14 +85,14 @@ interface ActivateItem {
 // Initial data setup
 const dummy_json: DummyItem[] = [
   {
-    variable_list: [
+    variables: [
       {
         depth: 1,
-        expr: "3",
+        expr: "6",
         name: "a",
       },
     ],
-    type: "varList",
+    type: "assignViz",
   },
   {
     id: 1,
@@ -101,7 +102,7 @@ const dummy_json: DummyItem[] = [
       cur: 0,
       start: 0,
       end: 3,
-      step: 2,
+      step: 1,
     },
     highlight: ["target", "cur", "start", "end", "step"],
     type: "for",
@@ -109,36 +110,41 @@ const dummy_json: DummyItem[] = [
   {
     id: 2,
     depth: 2,
-    expr: "' ' * (a - (i + 1))",
+    expr: "' ' * (a // 2 - i)",
     highlight: [],
+    console: null,
     type: "print",
   },
   {
     id: 2,
     depth: 2,
-    expr: "' ' * (3 - (0 + 1))",
-    highlight: [7, 12],
+    expr: "' ' * (6 // 2 - 0)",
+    highlight: [7, 16],
+    console: null,
     type: "print",
   },
   {
     id: 2,
     depth: 2,
-    expr: "  ",
-    highlight: [0, 1],
+    expr: "   ",
+    highlight: [0, 1, 2],
+    console: "   ",
     type: "print",
   },
   {
     id: 3,
     depth: 2,
-    expr: "'*' * (i + 1)",
+    expr: "'*' * (2 * i + 1)",
     highlight: [],
+    console: null,
     type: "print",
   },
   {
     id: 3,
     depth: 2,
-    expr: "'*' * (0 + 1)",
-    highlight: [7],
+    expr: "'*' * (2 * 0 + 1)",
+    highlight: [11],
+    console: null,
     type: "print",
   },
   {
@@ -146,6 +152,7 @@ const dummy_json: DummyItem[] = [
     depth: 2,
     expr: "*",
     highlight: [0],
+    console: "*\n",
     type: "print",
   },
   {
@@ -156,7 +163,7 @@ const dummy_json: DummyItem[] = [
       cur: 1,
       start: 0,
       end: 3,
-      step: 2,
+      step: 1,
     },
     highlight: ["cur"],
     type: "for",
@@ -164,43 +171,49 @@ const dummy_json: DummyItem[] = [
   {
     id: 2,
     depth: 2,
-    expr: "' ' * (a - (i + 1))",
+    expr: "' ' * (a // 2 - i)",
     highlight: [],
+    console: null,
     type: "print",
   },
   {
     id: 2,
     depth: 2,
-    expr: "' ' * (3 - (1 + 1))",
-    highlight: [7, 12],
+    expr: "' ' * (6 // 2 - 1)",
+    highlight: [7, 16],
+    console: null,
     type: "print",
   },
   {
     id: 2,
     depth: 2,
-    expr: " ",
-    highlight: [0],
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "'*' * (i + 1)",
-    highlight: [],
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "'*' * (1 + 1)",
-    highlight: [7],
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "**",
+    expr: "  ",
     highlight: [0, 1],
+    console: "  ",
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
+    expr: "'*' * (2 * i + 1)",
+    highlight: [],
+    console: null,
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
+    expr: "'*' * (2 * 1 + 1)",
+    highlight: [11],
+    console: null,
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
+    expr: "***",
+    highlight: [0, 1, 2],
+    console: "***\n",
     type: "print",
   },
   {
@@ -219,47 +232,174 @@ const dummy_json: DummyItem[] = [
   {
     id: 2,
     depth: 2,
-    expr: "' ' * (a - (i + 1))",
+    expr: "' ' * (a // 2 - i)",
     highlight: [],
+    console: null,
     type: "print",
   },
   {
     id: 2,
     depth: 2,
-    expr: "' ' * (3 - (2 + 1))",
-    highlight: [7, 12],
+    expr: "' ' * (6 // 2 - 2)",
+    highlight: [7, 16],
+    console: null,
     type: "print",
   },
   {
     id: 2,
     depth: 2,
-    expr: "",
-    highlight: [],
+    expr: " ",
+    highlight: [0],
+    console: " ",
     type: "print",
   },
   {
     id: 3,
     depth: 2,
-    expr: "'*' * (i + 1)",
+    expr: "'*' * (2 * i + 1)",
     highlight: [],
+    console: null,
     type: "print",
   },
   {
     id: 3,
     depth: 2,
-    expr: "'*' * (2 + 1)",
+    expr: "'*' * (2 * 2 + 1)",
+    highlight: [11],
+    console: null,
+    type: "print",
+  },
+  {
+    id: 3,
+    depth: 2,
+    expr: "*****",
+    highlight: [0, 1, 2, 3, 4],
+    console: "*****\n",
+    type: "print",
+  },
+  {
+    id: 4,
+    depth: 1,
+    condition: {
+      target: "i",
+      cur: 0,
+      start: 0,
+      end: 2,
+      step: 1,
+    },
+    highlight: ["target", "cur", "start", "end", "step"],
+    type: "for",
+  },
+  {
+    id: 5,
+    depth: 2,
+    expr: "' ' * (i + 2)",
+    highlight: [],
+    console: null,
+    type: "print",
+  },
+  {
+    id: 5,
+    depth: 2,
+    expr: "' ' * (0 + 2)",
     highlight: [7],
+    console: null,
     type: "print",
   },
   {
-    id: 3,
+    id: 5,
+    depth: 2,
+    expr: "  ",
+    highlight: [0, 1],
+    console: "  ",
+    type: "print",
+  },
+  {
+    id: 6,
+    depth: 2,
+    expr: "'*' * (a // 2 * 2 - 3 - 2 * i)",
+    highlight: [],
+    console: null,
+    type: "print",
+  },
+  {
+    id: 6,
+    depth: 2,
+    expr: "'*' * (6 // 2 * 2 - 3 - 2 * 0)",
+    highlight: [7, 28],
+    console: null,
+    type: "print",
+  },
+  {
+    id: 6,
     depth: 2,
     expr: "***",
     highlight: [0, 1, 2],
+    console: "***\n",
+    type: "print",
+  },
+  {
+    id: 4,
+    depth: 1,
+    condition: {
+      target: "i",
+      cur: 1,
+      start: 0,
+      end: 2,
+      step: 1,
+    },
+    highlight: ["cur"],
+    type: "for",
+  },
+  {
+    id: 5,
+    depth: 2,
+    expr: "' ' * (i + 2)",
+    highlight: [],
+    console: null,
+    type: "print",
+  },
+  {
+    id: 5,
+    depth: 2,
+    expr: "' ' * (1 + 2)",
+    highlight: [7],
+    console: null,
+    type: "print",
+  },
+  {
+    id: 5,
+    depth: 2,
+    expr: "   ",
+    highlight: [0, 1, 2],
+    console: "   ",
+    type: "print",
+  },
+  {
+    id: 6,
+    depth: 2,
+    expr: "'*' * (a // 2 * 2 - 3 - 2 * i)",
+    highlight: [],
+    console: null,
+    type: "print",
+  },
+  {
+    id: 6,
+    depth: 2,
+    expr: "'*' * (6 // 2 * 2 - 3 - 2 * 1)",
+    highlight: [7, 28],
+    console: null,
+    type: "print",
+  },
+  {
+    id: 6,
+    depth: 2,
+    expr: "*",
+    highlight: [0],
+    console: "*\n",
     type: "print",
   },
 ];
-
 const RightSection: React.FC = () => {
   const [idx, setIdx] = useState<number>(0);
   const [usedId, setUsedId] = useState<number[]>([]); // 한 번사용한 id를 저장하는 리스트
@@ -339,24 +479,25 @@ const RightSection: React.FC = () => {
     newObject: AnyObjectItem
   ): AnyObjectItem[] => {
     let updated = false;
-    return items.map((item) => {
+    return items.reduceRight<AnyObjectItem[]>((acc, item) => {
       if (!updated && item.depth === targetDepth - 1) {
         updated = true;
-        return { ...item, child: [...item.child, newObject] };
+        acc.unshift({ ...item, child: [...item.child, newObject] });
       } else if (item.child && item.child.length > 0) {
-        return {
+        acc.unshift({
           ...item,
           child: addChild(item.child, targetDepth, newObject),
-        };
+        });
       } else {
-        return item;
+        acc.unshift(item);
       }
-    });
+      return acc;
+    }, []);
   };
 
   const updateChild = (
-    items: AnyObjectItem[],
-    newObject: AnyObjectItem
+    items: AnyObjectItem[], //비주얼 스택
+    newObject: AnyObjectItem //넣어야하는 data
   ): AnyObjectItem[] => {
     return items.map((item) => {
       if (item.id === newObject.id) {
@@ -409,8 +550,8 @@ const RightSection: React.FC = () => {
   };
 
   const updateActivate = (
-    activate: ActivateItem[],
-    newObject: ObjectItem
+    activate: ActivateItem[], //활성화 스택
+    newObject: ObjectItem //넣어야하는 data
   ): ActivateItem[] => {
     let tmp: ActivateItem[] = [];
 
@@ -433,7 +574,9 @@ const RightSection: React.FC = () => {
     return tmp;
   };
 
-  const renderComponent = (items: AnyObjectItem[]): JSX.Element | null => {
+  const renderComponent = (
+    items: AnyObjectItem[] //비주얼 스택
+  ): JSX.Element | null => {
     return (
       <>
         {items.map((item) => {
@@ -491,7 +634,9 @@ const RightSection: React.FC = () => {
     );
   };
 
-  const renderComponentVar = (items: VarItem[]): JSX.Element | null => {
+  const renderComponentVar = (
+    items: VarItem[] //변수시각화 리스트
+  ): JSX.Element | null => {
     return (
       <>
         {items.map((item) => (
@@ -515,8 +660,8 @@ const RightSection: React.FC = () => {
 
     let copyData = _.cloneDeep(varData);
     // For variables
-    if (dummy_json[idx].type === "varList") {
-      dummy_json[idx].variable_list?.forEach((element) => {
+    if (dummy_json[idx].type === "assignViz") {
+      dummy_json[idx].variables?.forEach((element) => {
         if (usedName.includes(element.name!)) {
           const targetName = element.name!;
           const updatedData = updateVar(targetName, copyData, element);
@@ -544,16 +689,16 @@ const RightSection: React.FC = () => {
 
       const newActivate = updateActivate(activate, newObject);
       const turnLightOnNewData = turnLightOn(newData, newActivate);
-
+      console.log(turnLightOnNewData);
       setActivate(newActivate);
       setVisual({ objects: turnLightOnNewData });
     }
 
     let tmpItemName;
-    if (dummy_json[idx].variable_list === undefined) {
+    if (dummy_json[idx].variables === undefined) {
       tmpItemName = [];
     } else {
-      tmpItemName = dummy_json[idx].variable_list?.map((element) => {
+      tmpItemName = dummy_json[idx].variables?.map((element) => {
         return element.name;
       });
     }
@@ -565,7 +710,7 @@ const RightSection: React.FC = () => {
         return { ...element, lightOn: false };
       }
     });
-
+    console.log(copyData);
     setVarData(copyData);
     setIdx(idx + 1);
   };
