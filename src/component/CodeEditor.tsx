@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Editor from "@monaco-editor/react";
 import styles from "./codeEditor.module.css";
 import { useMutation } from "@tanstack/react-query";
-
+import { CodeContext } from "../pages/Home";
 const CodeEditor: React.FC = () => {
   const [code, setCode] = useState<string>(
     ["def hello_world():", '    print("Hello, World!")'].join("\n")
   );
-
+  const { codeData, setCodeData } = useContext(CodeContext);
   const mutation = useMutation({
     mutationFn: async (code) => {
       const response = await fetch("http://localhost:8000/api/code", {
@@ -15,13 +15,10 @@ const CodeEditor: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({ source_code: code }),
       });
       const result = await response.json();
       return result;
-    },
-    onError: (error) => {
-      console.error("Error:", error); // 오류 발생 시 콘솔에 출력
     },
   });
 
@@ -29,6 +26,7 @@ const CodeEditor: React.FC = () => {
     event.preventDefault();
     mutation.mutate(code, {
       onSuccess: (data) => {
+        setCodeData(data);
         console.log("Success:", data); // 성공 시 콘솔에 출력
       },
       onError: (error) => {
