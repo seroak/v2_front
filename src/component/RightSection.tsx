@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, {useState, useContext, ReactNode, ReactElement} from "react";
 import ForBox from "./ForBox";
 import VariableBox from "./VariableBox";
 import IfBox from "./IfBox";
 import ElseBox from "./ElseBox";
 import PrintBox from "./PrintBox";
+import { CodeContext } from "../pages/Home";
 import _ from "lodash";
+import {i} from "vite/dist/node/types.d-aGj9QkWt";
 
 interface ObjectItem {
   id: number;
@@ -29,7 +31,7 @@ interface DummyItem {
   expr?: string;
   highlight?: number[] | string[];
   condition?: ConditionItem;
-  variable_list?: VariableList[];
+  variables?: VariableList[];
 }
 interface VarItem extends DummyItem {
   lightOn?: boolean;
@@ -38,6 +40,7 @@ interface VariableList {
   name: string;
   expr: string;
   depth: number;
+  type?: string;
 }
 interface ConditionItem {
   target: string;
@@ -81,185 +84,6 @@ interface ActivateItem {
   type: string;
 }
 
-// Initial data setup
-const dummy_json: DummyItem[] = [
-  {
-    variable_list: [
-      {
-        depth: 1,
-        expr: "3",
-        name: "a",
-      },
-    ],
-    type: "varList",
-  },
-  {
-    id: 1,
-    depth: 1,
-    condition: {
-      target: "i",
-      cur: 0,
-      start: 0,
-      end: 3,
-      step: 2,
-    },
-    highlight: ["target", "cur", "start", "end", "step"],
-    type: "for",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "' ' * (a - (i + 1))",
-    highlight: [],
-    type: "print",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "' ' * (3 - (0 + 1))",
-    highlight: [7, 12],
-    type: "print",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "  ",
-    highlight: [0, 1],
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "'*' * (i + 1)",
-    highlight: [],
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "'*' * (0 + 1)",
-    highlight: [7],
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "*",
-    highlight: [0],
-    type: "print",
-  },
-  {
-    id: 1,
-    depth: 1,
-    condition: {
-      target: "i",
-      cur: 1,
-      start: 0,
-      end: 3,
-      step: 2,
-    },
-    highlight: ["cur"],
-    type: "for",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "' ' * (a - (i + 1))",
-    highlight: [],
-    type: "print",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "' ' * (3 - (1 + 1))",
-    highlight: [7, 12],
-    type: "print",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: " ",
-    highlight: [0],
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "'*' * (i + 1)",
-    highlight: [],
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "'*' * (1 + 1)",
-    highlight: [7],
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "**",
-    highlight: [0, 1],
-    type: "print",
-  },
-  {
-    id: 1,
-    depth: 1,
-    condition: {
-      target: "i",
-      cur: 2,
-      start: 0,
-      end: 3,
-      step: 1,
-    },
-    highlight: ["cur"],
-    type: "for",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "' ' * (a - (i + 1))",
-    highlight: [],
-    type: "print",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "' ' * (3 - (2 + 1))",
-    highlight: [7, 12],
-    type: "print",
-  },
-  {
-    id: 2,
-    depth: 2,
-    expr: "",
-    highlight: [],
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "'*' * (i + 1)",
-    highlight: [],
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "'*' * (2 + 1)",
-    highlight: [7],
-    type: "print",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "***",
-    highlight: [0, 1, 2],
-    type: "print",
-  },
-];
-
 const RightSection: React.FC = () => {
   const [idx, setIdx] = useState<number>(0);
   const [usedId, setUsedId] = useState<number[]>([]); // 한 번사용한 id를 저장하는 리스트
@@ -271,21 +95,23 @@ const RightSection: React.FC = () => {
   const [usedName, setUsedName] = useState<string[]>([]); // 사용한 변수 데이터 name 모아두는 리스트
   const [activate, setActivate] = useState<ActivateItem[]>([]); // 애니메이션을 줄 때 사용하는 리스트
 
+  const { codeData } = useContext(CodeContext);
   const createNewObject = (idx: number): AnyObjectItem => {
     const baseObject: ObjectItem = {
-      id: dummy_json[idx].id!,
-      type: dummy_json[idx].type,
-      depth: dummy_json[idx].depth,
+      id: codeData[idx].id!,
+      type: codeData[idx].type,
+      depth: codeData[idx].depth,
       lightOn: false,
       child: [],
     };
+    const type: string = codeData[idx].type.toLowerCase();
 
-    switch (dummy_json[idx].type) {
+    switch (type) {
       case "print":
         return {
           ...baseObject,
-          expr: dummy_json[idx].expr!,
-          highlight: dummy_json[idx].highlight!,
+          expr: codeData[idx].expr!,
+          highlight: codeData[idx].highlight!,
         } as PrintItem;
       case "for":
         // for문 highlight 객체로 변환
@@ -294,7 +120,8 @@ const RightSection: React.FC = () => {
         let startLightOn = false;
         let endLightOn = false;
         let stepLightOn = false;
-        dummy_json[idx].highlight?.map((item) => {
+        codeData[idx].highlight?.map((item) => {
+          item = item.toLowerCase();
           if (item === "target") {
             targetLightON = true;
           }
@@ -314,11 +141,11 @@ const RightSection: React.FC = () => {
 
         return {
           ...baseObject,
-          start: dummy_json[idx].condition!.start,
-          end: dummy_json[idx].condition!.end,
-          cur: dummy_json[idx].condition!.cur,
-          target: dummy_json[idx].condition!.target,
-          step: dummy_json[idx].condition!.step,
+          start: codeData[idx].condition!.start,
+          end: codeData[idx].condition!.end,
+          cur: codeData[idx].condition!.cur,
+          target: codeData[idx].condition!.target,
+          step: codeData[idx].condition!.step,
           startLightOn: startLightOn,
           endLightOn: endLightOn,
           curLightOn: curLightOn,
@@ -328,8 +155,10 @@ const RightSection: React.FC = () => {
         return baseObject as IfItem;
       case "else":
         return baseObject as ElseItem;
+      // case "end":
+      //   return baseObject as End;
       default:
-        return baseObject as End;
+        console.log(type + " is not implemented!");
     }
   };
 
@@ -339,24 +168,26 @@ const RightSection: React.FC = () => {
     newObject: AnyObjectItem
   ): AnyObjectItem[] => {
     let updated = false;
-    return items.map((item) => {
+    return items.reduceRight<AnyObjectItem[]>((acc, item) => {
       if (!updated && item.depth === targetDepth - 1) {
         updated = true;
-        return { ...item, child: [...item.child, newObject] };
+        acc.unshift({ ...item, child: [...item.child, newObject] });
       } else if (item.child && item.child.length > 0) {
-        return {
+        acc.unshift({
           ...item,
           child: addChild(item.child, targetDepth, newObject),
-        };
+        });
       } else {
-        return item;
+        acc.unshift(item);
       }
-    });
+      return acc;
+    }, []);
   };
 
   const updateChild = (
-    items: AnyObjectItem[],
-    newObject: AnyObjectItem
+      // todo renaming for readAbility
+    items: AnyObjectItem[], //비주얼 스택
+    newObject: AnyObjectItem //넣어야하는 data
   ): AnyObjectItem[] => {
     return items.map((item) => {
       if (item.id === newObject.id) {
@@ -394,23 +225,26 @@ const RightSection: React.FC = () => {
     });
   };
 
+  // todo 변수명 + 구조를 다같이 살펴봐주면.
   const updateVar = (
     targetName: string,
     varData: DummyItem[],
     newVar: DummyItem
   ): DummyItem[] => {
     return varData.map((item) => {
-      if (item.name === targetName) {
-        return { ...item, ...newVar };
-      } else {
-        return item;
-      }
+
+      return (item.name === targetName) ? {...item, ...newVar } : item;
+      // if (item.name === targetName) {
+      //   return { ...item, ...newVar };
+      // } else {
+      //   return item;
+      // }
     });
   };
 
   const updateActivate = (
-    activate: ActivateItem[],
-    newObject: ObjectItem
+    activate: ActivateItem[], //활성화 스택
+    newObject: ObjectItem //넣어야하는 data
   ): ActivateItem[] => {
     let tmp: ActivateItem[] = [];
 
@@ -421,6 +255,7 @@ const RightSection: React.FC = () => {
           depth: newObject.depth,
           type: newObject.type,
         });
+
         return tmp;
       }
     }
@@ -430,47 +265,52 @@ const RightSection: React.FC = () => {
       depth: newObject.depth!,
       type: newObject.type,
     });
+
     return tmp;
   };
 
-  const renderComponent = (items: AnyObjectItem[]): JSX.Element | null => {
+  const renderComponent = (
+    items: AnyObjectItem[] //비주얼 스택
+  ): JSX.Element | null => {
     return (
       <>
         {items.map((item) => {
           switch (item.type) {
-            case "print":
+            case "print": {
               const print = item as PrintItem;
               return (
-                <React.Fragment key={item.id}>
-                  <PrintBox
-                    key={print.id}
-                    expr={print.expr}
-                    highlight={print.highlight}
-                    lightOn={print.lightOn}
-                  />
-                  {renderComponent(item.child)}
-                </React.Fragment>
+                  <React.Fragment key={item.id}>
+                    <PrintBox
+                        key={print.id}
+                        expr={print.expr}
+                        highlight={print.highlight}
+                        lightOn={print.lightOn}
+                    />
+                    {renderComponent(item.child)}
+                  </React.Fragment>
               );
-            case "for":
+            }
+            case "for": {
               const forItem = item as ForItem;
 
               return (
-                <ForBox
-                  key={forItem.id}
-                  start={forItem.start}
-                  startLightOn={forItem.startLightOn}
-                  end={forItem.end}
-                  endLightOn={forItem.endLightOn}
-                  cur={forItem.cur}
-                  curLightOn={forItem.curLightOn}
-                  target={forItem.target}
-                  step={forItem.step}
-                  stepLightOn={forItem.stepLightOn}
-                  lightOn={forItem.lightOn}
-                >
-                  {renderComponent(forItem.child)}
+                  <ForBox
+                      key={forItem.id}
+                      start={forItem.start}
+                      startLightOn={forItem.startLightOn}
+                      end={forItem.end}
+                      endLightOn={forItem.endLightOn}
+                      cur={forItem.cur}
+                      curLightOn={forItem.curLightOn}
+                      target={forItem.target}
+                      step={forItem.step}
+                      stepLightOn={forItem.stepLightOn}
+                      lightOn={forItem.lightOn}
+                  >
+                    {renderComponent(forItem.child)}
                 </ForBox>
               );
+            }
             case "if":
               return (
                 <IfBox key={item.id} lightOn={item.lightOn}>
@@ -491,7 +331,9 @@ const RightSection: React.FC = () => {
     );
   };
 
-  const renderComponentVar = (items: VarItem[]): JSX.Element | null => {
+  const renderComponentVar = (
+    items: VarItem[] //변수시각화 리스트
+  ): ReactElement | null => {
     return (
       <>
         {items.map((item) => (
@@ -508,19 +350,20 @@ const RightSection: React.FC = () => {
 
   const handleClick = () => {
     let newData: AnyObjectItem[] = [];
-    if (idx >= dummy_json.length) {
+    // console.log(codeData);
+    if (idx >= codeData.length) {
       console.log("더이상 데이터가 없습니다");
       return;
     }
 
     let copyData = _.cloneDeep(varData);
     // For variables
-    if (dummy_json[idx].type === "varList") {
-      dummy_json[idx].variable_list?.forEach((element) => {
+    // todo compare -> lower or upper
+    if (codeData[idx].type.toLowerCase()=== "assignViz".toLowerCase()) {
+      codeData[idx].variables?.forEach((element) => {
         if (usedName.includes(element.name!)) {
           const targetName = element.name!;
-          const updatedData = updateVar(targetName, copyData, element);
-          copyData = updatedData;
+          copyData  = updateVar(targetName, copyData, element);
         } else {
           copyData.push(element);
           setUsedName((prevName) => [...prevName, element.name!]);
@@ -528,44 +371,43 @@ const RightSection: React.FC = () => {
       });
     } else {
       const newObject = createNewObject(idx);
-      if (usedId.includes(dummy_json[idx].id!)) {
+      if (usedId.includes(codeData[idx].id!)) {
         // 한번 visual list에 들어가서 수정하는 입력일 때
         // updateChild(비주얼 스택, 넣어야하는 위치를 알려주는 id, 넣어야하는 data)
         newData = updateChild(visual.objects, newObject);
       } else {
         // 처음 visual list에 들어가서 더해야하는 입력일 때
-        const targetDepth: number = dummy_json[idx].depth!;
+        const targetDepth: number = codeData[idx].depth!;
+        const id: number = codeData[idx].id!;
 
         // 한번 사용한 id는 저장해준다
-        setUsedId((prevIds) => [...prevIds, dummy_json[idx].id!]);
+        setUsedId((prevIds) => [...prevIds, id]);
         // addChild(비주얼 스택, 넣어야하는 위치를 알려주는 depth, 넣어야하는 data)
         newData = addChild(visual.objects, targetDepth, newObject);
       }
 
       const newActivate = updateActivate(activate, newObject);
       const turnLightOnNewData = turnLightOn(newData, newActivate);
-
+      // console.log(turnLightOnNewData);
       setActivate(newActivate);
       setVisual({ objects: turnLightOnNewData });
     }
 
+    // judge for turn on or off light.
     let tmpItemName;
-    if (dummy_json[idx].variable_list === undefined) {
+    if (codeData[idx].variables === undefined) {
       tmpItemName = [];
     } else {
-      tmpItemName = dummy_json[idx].variable_list?.map((element) => {
+      tmpItemName = codeData[idx].variables?.map((element) => {
         return element.name;
       });
     }
 
     copyData = copyData.map((element) => {
-      if (tmpItemName?.includes(element.name)) {
-        return { ...element, lightOn: true };
-      } else {
-        return { ...element, lightOn: false };
-      }
+      // todo validate this code
+      return { ...element, lightOn: tmpItemName?.includes(element.name) };
     });
-
+    // console.log(copyData);
     setVarData(copyData);
     setIdx(idx + 1);
   };
@@ -577,7 +419,7 @@ const RightSection: React.FC = () => {
       </div>
 
       <ul>{renderComponent(visual.objects[0].child)}</ul>
-      <button onClick={handleClick}>특정 객체 child에 객체 생성</button>
+      <button onClick={handleClick}>특정 객체 child 에 객체 생성</button>
     </div>
   );
 };
