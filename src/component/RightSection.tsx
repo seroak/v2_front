@@ -113,15 +113,11 @@ const RightSection: React.FC = () => {
         } as PrintItem;
       case "for":
         // for문 highlight 객체로 변환
-        let targetLightON: boolean = false;
         let curLightOn = false;
         let startLightOn = false;
         let endLightOn = false;
         let stepLightOn = false;
         codeData[idx].highlight?.map((item) => {
-          if (item === "target") {
-            targetLightON = true;
-          }
           if (item === "cur") {
             curLightOn = true;
           }
@@ -395,6 +391,7 @@ const RightSection: React.FC = () => {
         return { ...element, lightOn: false };
       }
     });
+
     console.log(copyData);
     setVarData(copyData);
     setIdx(idx + 1);
