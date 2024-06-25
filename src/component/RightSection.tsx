@@ -1,4 +1,10 @@
-import React, { useState, useContext, ReactNode, ReactElement } from "react";
+import React, {
+  useState,
+  useContext,
+  ReactNode,
+  ReactElement,
+  Fragment,
+} from "react";
 import ForBox from "./ForBox";
 import VariableBox from "./VariableBox";
 import IfBox from "./IfBox";
@@ -83,7 +89,7 @@ interface ActivateItem {
   type: string;
 }
 
-const RightSection: React.FC = () => {
+const RightSection = () => {
   const [idx, setIdx] = useState<number>(0);
   const [usedId, setUsedId] = useState<number[]>([]); // 한 번사용한 id를 저장하는 리스트
   const [visual, setVisual] = useState<State>({
@@ -94,23 +100,30 @@ const RightSection: React.FC = () => {
   const [usedName, setUsedName] = useState<string[]>([]); // 사용한 변수 데이터 name 모아두는 리스트
   const [activate, setActivate] = useState<ActivateItem[]>([]); // 애니메이션을 줄 때 사용하는 리스트
 
-  const { codeData } = useContext(CodeContext);
+  // context API로 데이터 가져오기
+  const context = useContext(CodeContext);
+  // context가 없을 경우 에러 출력
+  if (!context) {
+    console.error("CodeContext not found");
+    return null;
+  }
+  const { code, setCode } = context;
   const createNewObject = (idx: number): AnyObjectItem => {
     const baseObject: ObjectItem = {
-      id: codeData[idx].id!,
-      type: codeData[idx].type,
-      depth: codeData[idx].depth,
+      id: code[idx].id!,
+      type: code[idx].type,
+      depth: code[idx].depth,
       lightOn: false,
       child: [],
     };
-    const type: string = codeData[idx].type.toLowerCase();
+    const type: string = code[idx].type.toLowerCase();
 
     switch (type) {
       case "print":
         return {
           ...baseObject,
-          expr: codeData[idx].expr!,
-          highlight: codeData[idx].highlight!,
+          expr: code[idx].expr!,
+          highlight: code[idx].highlight!,
         } as PrintItem;
       case "for":
         // for문 highlight 객체로 변환
@@ -118,7 +131,7 @@ const RightSection: React.FC = () => {
         let startLightOn = false;
         let endLightOn = false;
         let stepLightOn = false;
-        codeData[idx].highlight?.map((item) => {
+        code[idx].highlight?.map((item) => {
           item = item.toLowerCase();
           if (item === "target") {
             targetLightON = true;
@@ -139,11 +152,11 @@ const RightSection: React.FC = () => {
 
         return {
           ...baseObject,
-          start: codeData[idx].condition!.start,
-          end: codeData[idx].condition!.end,
-          cur: codeData[idx].condition!.cur,
-          target: codeData[idx].condition!.target,
-          step: codeData[idx].condition!.step,
+          start: code[idx].condition!.start,
+          end: code[idx].condition!.end,
+          cur: code[idx].condition!.cur,
+          target: code[idx].condition!.target,
+          step: code[idx].condition!.step,
           startLightOn: startLightOn,
           endLightOn: endLightOn,
           curLightOn: curLightOn,
@@ -231,11 +244,6 @@ const RightSection: React.FC = () => {
   ): DummyItem[] => {
     return varData.map((item) => {
       return item.name === targetName ? { ...item, ...newVar } : item;
-      // if (item.name === targetName) {
-      //   return { ...item, ...newVar };
-      // } else {
-      //   return item;
-      // }
     });
   };
 
@@ -276,7 +284,7 @@ const RightSection: React.FC = () => {
             case "print": {
               const print = item as PrintItem;
               return (
-                <React.Fragment key={item.id}>
+                <Fragment key={item.id}>
                   <PrintBox
                     key={print.id}
                     expr={print.expr}
@@ -284,7 +292,7 @@ const RightSection: React.FC = () => {
                     lightOn={print.lightOn}
                   />
                   {renderComponent(item.child)}
-                </React.Fragment>
+                </Fragment>
               );
             }
             case "for": {
@@ -330,7 +338,7 @@ const RightSection: React.FC = () => {
 
   const renderComponentVar = (
     items: VarItem[] //변수시각화 리스트
-  ): ReactElement | null => {
+  ): ReactElement => {
     return (
       <>
         {items.map((item) => (
@@ -347,8 +355,8 @@ const RightSection: React.FC = () => {
 
   const handleClick = () => {
     let newData: AnyObjectItem[] = [];
-    // console.log(codeData);
-    if (idx >= codeData.length) {
+    // console.log(code);
+    if (idx >= code.length) {
       console.log("더이상 데이터가 없습니다");
       return;
     }
@@ -356,8 +364,8 @@ const RightSection: React.FC = () => {
     let copyData = _.cloneDeep(varData);
     // For variables
     // todo compare -> lower or upper
-    if (codeData[idx].type.toLowerCase() === "assignViz".toLowerCase()) {
-      codeData[idx].variables?.forEach((element) => {
+    if (code[idx].type.toLowerCase() === "assignViz".toLowerCase()) {
+      code[idx].variables?.forEach((element) => {
         if (usedName.includes(element.name!)) {
           const targetName = element.name!;
           copyData = updateVar(targetName, copyData, element);
@@ -368,14 +376,14 @@ const RightSection: React.FC = () => {
       });
     } else {
       const newObject = createNewObject(idx);
-      if (usedId.includes(codeData[idx].id!)) {
+      if (usedId.includes(code[idx].id!)) {
         // 한번 visual list에 들어가서 수정하는 입력일 때
         // updateChild(비주얼 스택, 넣어야하는 위치를 알려주는 id, 넣어야하는 data)
         newData = updateChild(visual.objects, newObject);
       } else {
         // 처음 visual list에 들어가서 더해야하는 입력일 때
-        const targetDepth: number = codeData[idx].depth!;
-        const id: number = codeData[idx].id!;
+        const targetDepth: number = code[idx].depth!;
+        const id: number = code[idx].id!;
 
         // 한번 사용한 id는 저장해준다
         setUsedId((prevIds) => [...prevIds, id]);
@@ -392,10 +400,10 @@ const RightSection: React.FC = () => {
 
     // judge for turn on or off light.
     let tmpItemName;
-    if (codeData[idx].variables === undefined) {
+    if (code[idx].variables === undefined) {
       tmpItemName = [];
     } else {
-      tmpItemName = codeData[idx].variables?.map((element) => {
+      tmpItemName = code[idx].variables?.map((element) => {
         return element.name;
       });
     }
