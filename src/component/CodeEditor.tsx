@@ -11,7 +11,7 @@ const CodeEditor: React.FC = () => {
 
   // context API로 state 가져오기
   const context = useContext(CodeContext);
-  // context가 없을 경우 에러 출력
+  // context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
   if (!context) {
     console.error("CodeContext not found");
     return null;
