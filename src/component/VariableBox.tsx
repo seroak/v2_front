@@ -1,4 +1,3 @@
-"use client";
 import styles from "./VariableBox.module.css";
 import cx from "classnames";
 type Props = {

@@ -1,5 +1,3 @@
-"use client";
-
 import cx from "classnames";
 import styles from "./PrintBox.module.css";
 type Props = { expr: string; highlight: number[]; lightOn: boolean };

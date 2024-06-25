@@ -30,8 +30,6 @@ function ForBox({
   stepLightOn,
   lightOn,
 }: Props) {
-  console.log(curLightOn);
-  console.log(lightOn);
   return (
     <div className={styles.for_box}>
       <div className={cx(styles.for_border, lightOn && styles.highlight)}>
