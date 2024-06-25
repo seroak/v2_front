@@ -10,7 +10,7 @@ import VariableBox from "./VariableBox";
 import IfBox from "./IfBox";
 import ElseBox from "./ElseBox";
 import PrintBox from "./PrintBox";
-import { CodeContext } from "../pages/Home";
+import { CodeDataContext } from "../pages/Home";
 import _ from "lodash";
 
 interface ObjectItem {
@@ -101,29 +101,29 @@ const RightSection = () => {
   const [activate, setActivate] = useState<ActivateItem[]>([]); // 애니메이션을 줄 때 사용하는 리스트
 
   // context API로 데이터 가져오기
-  const context = useContext(CodeContext);
-  // context가 없을 경우 에러 출력
+  const context = useContext(CodeDataContext);
+  //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
   if (!context) {
     console.error("CodeContext not found");
     return null;
   }
-  const { code, setCode } = context;
+  const { codeData, setCodeData } = context;
   const createNewObject = (idx: number): AnyObjectItem => {
     const baseObject: ObjectItem = {
-      id: code[idx].id!,
-      type: code[idx].type,
-      depth: code[idx].depth,
+      id: codeData[idx].id!,
+      type: codeData[idx].type,
+      depth: codeData[idx].depth,
       lightOn: false,
       child: [],
     };
-    const type: string = code[idx].type.toLowerCase();
+    const type: string = codeData[idx].type.toLowerCase();
 
     switch (type) {
       case "print":
         return {
           ...baseObject,
-          expr: code[idx].expr!,
-          highlight: code[idx].highlight!,
+          expr: codeData[idx].expr!,
+          highlight: codeData[idx].highlight!,
         } as PrintItem;
       case "for":
         // for문 highlight 객체로 변환
@@ -131,11 +131,9 @@ const RightSection = () => {
         let startLightOn = false;
         let endLightOn = false;
         let stepLightOn = false;
-        code[idx].highlight?.map((item) => {
+        codeData[idx].highlight?.map((item) => {
           item = item.toLowerCase();
-          if (item === "target") {
-            targetLightON = true;
-          }
+
           if (item === "cur") {
             curLightOn = true;
           }
@@ -152,11 +150,11 @@ const RightSection = () => {
 
         return {
           ...baseObject,
-          start: code[idx].condition!.start,
-          end: code[idx].condition!.end,
-          cur: code[idx].condition!.cur,
-          target: code[idx].condition!.target,
-          step: code[idx].condition!.step,
+          start: codeData[idx].condition!.start,
+          end: codeData[idx].condition!.end,
+          cur: codeData[idx].condition!.cur,
+          target: codeData[idx].condition!.target,
+          step: codeData[idx].condition!.step,
           startLightOn: startLightOn,
           endLightOn: endLightOn,
           curLightOn: curLightOn,
@@ -276,7 +274,7 @@ const RightSection = () => {
 
   const renderComponent = (
     items: AnyObjectItem[] //비주얼 스택
-  ): JSX.Element | null => {
+  ): JSX.Element => {
     return (
       <>
         {items.map((item) => {
@@ -355,8 +353,8 @@ const RightSection = () => {
 
   const handleClick = () => {
     let newData: AnyObjectItem[] = [];
-    // console.log(code);
-    if (idx >= code.length) {
+    // console.log(codeData);
+    if (idx >= codeData.length) {
       console.log("더이상 데이터가 없습니다");
       return;
     }
@@ -364,8 +362,8 @@ const RightSection = () => {
     let copyData = _.cloneDeep(varData);
     // For variables
     // todo compare -> lower or upper
-    if (code[idx].type.toLowerCase() === "assignViz".toLowerCase()) {
-      code[idx].variables?.forEach((element) => {
+    if (codeData[idx].type.toLowerCase() === "assignViz".toLowerCase()) {
+      codeData[idx].variables?.forEach((element) => {
         if (usedName.includes(element.name!)) {
           const targetName = element.name!;
           copyData = updateVar(targetName, copyData, element);
@@ -376,14 +374,14 @@ const RightSection = () => {
       });
     } else {
       const newObject = createNewObject(idx);
-      if (usedId.includes(code[idx].id!)) {
+      if (usedId.includes(codeData[idx].id!)) {
         // 한번 visual list에 들어가서 수정하는 입력일 때
         // updateChild(비주얼 스택, 넣어야하는 위치를 알려주는 id, 넣어야하는 data)
         newData = updateChild(visual.objects, newObject);
       } else {
         // 처음 visual list에 들어가서 더해야하는 입력일 때
-        const targetDepth: number = code[idx].depth!;
-        const id: number = code[idx].id!;
+        const targetDepth: number = codeData[idx].depth!;
+        const id: number = codeData[idx].id!;
 
         // 한번 사용한 id는 저장해준다
         setUsedId((prevIds) => [...prevIds, id]);
@@ -400,10 +398,10 @@ const RightSection = () => {
 
     // judge for turn on or off light.
     let tmpItemName;
-    if (code[idx].variables === undefined) {
+    if (codeData[idx].variables === undefined) {
       tmpItemName = [];
     } else {
-      tmpItemName = code[idx].variables?.map((element) => {
+      tmpItemName = codeData[idx].variables?.map((element) => {
         return element.name;
       });
     }
