@@ -22,10 +22,7 @@ const Resizable: React.FC<ResizableProps> = ({ left, right }) => {
     if (containerRef.current) {
       const containerRect = containerRef.current.getBoundingClientRect();
       const deltaX = e.clientX - startXRef.current; // 드래그 시작 시점으로부터의 이동 거리 계산
-      const newLeftWidth =
-        ((startXRef.current - containerRect.left + deltaX) /
-          containerRect.width) *
-        100;
+      const newLeftWidth = ((startXRef.current - containerRect.left + deltaX) / containerRect.width) * 100;
       if (newLeftWidth > 10 && newLeftWidth < 90) {
         setLeftWidth(newLeftWidth);
       }

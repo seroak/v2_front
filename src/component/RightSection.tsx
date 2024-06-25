@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, ReactNode, ReactElement } from "react";
 import ForBox from "./ForBox";
 import VariableBox from "./VariableBox";
 import IfBox from "./IfBox";
@@ -103,8 +103,9 @@ const RightSection: React.FC = () => {
       lightOn: false,
       child: [],
     };
+    const type: string = codeData[idx].type.toLowerCase();
 
-    switch (codeData[idx].type) {
+    switch (type) {
       case "print":
         return {
           ...baseObject,
@@ -118,6 +119,10 @@ const RightSection: React.FC = () => {
         let endLightOn = false;
         let stepLightOn = false;
         codeData[idx].highlight?.map((item) => {
+          item = item.toLowerCase();
+          if (item === "target") {
+            targetLightON = true;
+          }
           if (item === "cur") {
             curLightOn = true;
           }
@@ -148,8 +153,10 @@ const RightSection: React.FC = () => {
         return baseObject as IfItem;
       case "else":
         return baseObject as ElseItem;
+      // case "end":
+      //   return baseObject as End;
       default:
-        return baseObject as End;
+        console.log(type + " is not implemented!");
     }
   };
 
@@ -176,6 +183,7 @@ const RightSection: React.FC = () => {
   };
 
   const updateChild = (
+    // todo renaming for readAbility
     items: AnyObjectItem[], //비주얼 스택
     newObject: AnyObjectItem //넣어야하는 data
   ): AnyObjectItem[] => {
@@ -215,17 +223,19 @@ const RightSection: React.FC = () => {
     });
   };
 
+  // todo 변수명 + 구조를 다같이 살펴봐주면.
   const updateVar = (
     targetName: string,
     varData: DummyItem[],
     newVar: DummyItem
   ): DummyItem[] => {
     return varData.map((item) => {
-      if (item.name === targetName) {
-        return { ...item, ...newVar };
-      } else {
-        return item;
-      }
+      return item.name === targetName ? { ...item, ...newVar } : item;
+      // if (item.name === targetName) {
+      //   return { ...item, ...newVar };
+      // } else {
+      //   return item;
+      // }
     });
   };
 
@@ -242,6 +252,7 @@ const RightSection: React.FC = () => {
           depth: newObject.depth,
           type: newObject.type,
         });
+
         return tmp;
       }
     }
@@ -251,6 +262,7 @@ const RightSection: React.FC = () => {
       depth: newObject.depth!,
       type: newObject.type,
     });
+
     return tmp;
   };
 
@@ -261,7 +273,7 @@ const RightSection: React.FC = () => {
       <>
         {items.map((item) => {
           switch (item.type) {
-            case "print":
+            case "print": {
               const print = item as PrintItem;
               return (
                 <React.Fragment key={item.id}>
@@ -274,7 +286,8 @@ const RightSection: React.FC = () => {
                   {renderComponent(item.child)}
                 </React.Fragment>
               );
-            case "for":
+            }
+            case "for": {
               const forItem = item as ForItem;
 
               return (
@@ -294,6 +307,7 @@ const RightSection: React.FC = () => {
                   {renderComponent(forItem.child)}
                 </ForBox>
               );
+            }
             case "if":
               return (
                 <IfBox key={item.id} lightOn={item.lightOn}>
@@ -316,7 +330,7 @@ const RightSection: React.FC = () => {
 
   const renderComponentVar = (
     items: VarItem[] //변수시각화 리스트
-  ): JSX.Element | null => {
+  ): ReactElement | null => {
     return (
       <>
         {items.map((item) => (
@@ -333,7 +347,7 @@ const RightSection: React.FC = () => {
 
   const handleClick = () => {
     let newData: AnyObjectItem[] = [];
-    console.log(codeData);
+    // console.log(codeData);
     if (idx >= codeData.length) {
       console.log("더이상 데이터가 없습니다");
       return;
@@ -341,12 +355,12 @@ const RightSection: React.FC = () => {
 
     let copyData = _.cloneDeep(varData);
     // For variables
-    if (codeData[idx].type === "assignViz") {
+    // todo compare -> lower or upper
+    if (codeData[idx].type.toLowerCase() === "assignViz".toLowerCase()) {
       codeData[idx].variables?.forEach((element) => {
         if (usedName.includes(element.name!)) {
           const targetName = element.name!;
-          const updatedData = updateVar(targetName, copyData, element);
-          copyData = updatedData;
+          copyData = updateVar(targetName, copyData, element);
         } else {
           copyData.push(element);
           setUsedName((prevName) => [...prevName, element.name!]);
@@ -361,20 +375,22 @@ const RightSection: React.FC = () => {
       } else {
         // 처음 visual list에 들어가서 더해야하는 입력일 때
         const targetDepth: number = codeData[idx].depth!;
+        const id: number = codeData[idx].id!;
 
         // 한번 사용한 id는 저장해준다
-        setUsedId((prevIds) => [...prevIds, codeData[idx].id!]);
+        setUsedId((prevIds) => [...prevIds, id]);
         // addChild(비주얼 스택, 넣어야하는 위치를 알려주는 depth, 넣어야하는 data)
         newData = addChild(visual.objects, targetDepth, newObject);
       }
 
       const newActivate = updateActivate(activate, newObject);
       const turnLightOnNewData = turnLightOn(newData, newActivate);
-      console.log(turnLightOnNewData);
+      // console.log(turnLightOnNewData);
       setActivate(newActivate);
       setVisual({ objects: turnLightOnNewData });
     }
 
+    // judge for turn on or off light.
     let tmpItemName;
     if (codeData[idx].variables === undefined) {
       tmpItemName = [];
@@ -385,11 +401,8 @@ const RightSection: React.FC = () => {
     }
 
     copyData = copyData.map((element) => {
-      if (tmpItemName?.includes(element.name)) {
-        return { ...element, lightOn: true };
-      } else {
-        return { ...element, lightOn: false };
-      }
+      // todo validate this code
+      return { ...element, lightOn: tmpItemName?.includes(element.name) };
     });
 
     console.log(copyData);
@@ -404,7 +417,7 @@ const RightSection: React.FC = () => {
       </div>
 
       <ul>{renderComponent(visual.objects[0].child)}</ul>
-      <button onClick={handleClick}>특정 객체 child에 객체 생성</button>
+      <button onClick={handleClick}>특정 객체 child 에 객체 생성</button>
     </div>
   );
 };

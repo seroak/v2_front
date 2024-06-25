@@ -17,8 +17,8 @@ const CodeEditor: React.FC = () => {
         },
         body: JSON.stringify({ source_code: code }),
       });
-      const result = await response.json();
-      return result;
+      return await response.json();
+      // return result;
     },
   });
 
@@ -27,10 +27,10 @@ const CodeEditor: React.FC = () => {
     mutation.mutate(code, {
       onSuccess: (data) => {
         setCodeData(data);
-        console.log("Success:", data); // 성공 시 콘솔에 출력
+        // console.log("Success:", data); // 성공 시 콘솔에 출력
       },
       onError: (error) => {
-        console.error("Submit Error:", error); // 제출 오류 시 콘솔에 출력
+        // console.error("Submit Error:", error); // 제출 오류 시 콘솔에 출력
       },
     });
   };
