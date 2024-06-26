@@ -1,102 +1,52 @@
-import React, {useState, useContext, ReactNode, ReactElement} from "react";
+import { useState, useContext, ReactElement, Fragment } from "react";
 import ForBox from "./ForBox";
 import VariableBox from "./VariableBox";
 import IfBox from "./IfBox";
 import ElseBox from "./ElseBox";
 import PrintBox from "./PrintBox";
-import { CodeContext } from "../pages/Home";
+import { CodeDataContext } from "../pages/Home";
 import _ from "lodash";
-import {i} from "vite/dist/node/types.d-aGj9QkWt";
-
+import { CodeItem } from "@/types/codeItem";
+import { AllObjectItem } from "@/types/allObjectItem";
+import { ActivateItem } from "@/types/activateItem";
+import { ForItem } from "@/types/forItem";
+import { PrintItem } from "@/types/printItem";
+import { IfItem } from "@/types/ifItem";
+import { ElseItem } from "@/types/elseItem";
+import { VarItem } from "@/types/varItem";
 interface ObjectItem {
   id: number;
   type: string;
   depth?: number;
   lightOn: boolean;
-  child: AnyObjectItem[];
+  child: AllObjectItem[];
 }
 interface State {
-  objects: AnyObjectItem[];
+  objects: AllObjectItem[];
 }
 
-interface DummyItem {
-  id?: number;
-  type: string;
-  depth?: number;
-  value?: number;
-  name?: string;
-  start?: number;
-  end?: number;
-  cur?: number;
-  expr?: string;
-  highlight?: number[] | string[];
-  condition?: ConditionItem;
-  variables?: VariableList[];
-}
-interface VarItem extends DummyItem {
-  lightOn?: boolean;
-}
-interface VariableList {
-  name: string;
-  expr: string;
-  depth: number;
-  type?: string;
-}
-interface ConditionItem {
-  target: string;
-  start: number;
-  end: number;
-  cur: number;
-  step: number;
-}
-
-// Subtype definitions
-
-interface PrintItem extends ObjectItem {
-  expr: string;
-  highlight: number[];
-}
-
-interface ForItem extends ObjectItem {
-  start: number;
-  startLightOn: boolean;
-  end: number;
-  endLightOn: boolean;
-  cur: number;
-  curLightOn: boolean;
-  target: string;
-  step: number;
-  stepLightOn: boolean;
-}
-
-interface IfItem extends ObjectItem {}
-
-interface ElseItem extends ObjectItem {}
-
-interface End extends ObjectItem {}
-
-type AnyObjectItem = PrintItem | ForItem | IfItem | ElseItem | End;
-
-// Activate stack type definition
-interface ActivateItem {
-  id: number;
-  depth: number;
-  type: string;
-}
-
-const RightSection: React.FC = () => {
+const RightSection = () => {
   const [idx, setIdx] = useState<number>(0);
   const [usedId, setUsedId] = useState<number[]>([]); // 한 번사용한 id를 저장하는 리스트
   const [visual, setVisual] = useState<State>({
     // 시각화전에 데이터를 담아두는 리스트 객체
     objects: [{ id: 0, type: "start", depth: 0, lightOn: false, child: [] }],
   });
-  const [varData, setVarData] = useState<DummyItem[]>([]); // 변수 데이터 시각화 리스트
+  const [varData, setVarData] = useState<CodeItem[]>([]); // 변수 데이터 시각화 리스트
   const [usedName, setUsedName] = useState<string[]>([]); // 사용한 변수 데이터 name 모아두는 리스트
   const [activate, setActivate] = useState<ActivateItem[]>([]); // 애니메이션을 줄 때 사용하는 리스트
 
-  const { codeData } = useContext(CodeContext);
-  const createNewObject = (idx: number): AnyObjectItem => {
+  // context API로 데이터 가져오기
+  // context API를 사용하는 패턴
+  const context = useContext(CodeDataContext);
+  //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
+  if (!context) {
+    console.error("CodeContext not found");
+    return null;
+  }
+  const { codeData } = context;
+  // 스택에 넣을 객체를 생성하는 함수
+  const createNewObject = (idx: number): AllObjectItem => {
     const baseObject: ObjectItem = {
       id: codeData[idx].id!,
       type: codeData[idx].type,
@@ -105,36 +55,33 @@ const RightSection: React.FC = () => {
       child: [],
     };
     const type: string = codeData[idx].type.toLowerCase();
-
+    // type에 따라서 객체 생성
     switch (type) {
       case "print":
         return {
           ...baseObject,
           expr: codeData[idx].expr!,
-          highlight: codeData[idx].highlight!,
+          highlights: codeData[idx].highlights!,
         } as PrintItem;
       case "for":
-        // for문 highlight 객체로 변환
-        let targetLightON: boolean = false;
+        // for문 highlights 객체로 변환
         let curLightOn = false;
         let startLightOn = false;
         let endLightOn = false;
         let stepLightOn = false;
-        codeData[idx].highlight?.map((item) => {
-          item = item.toLowerCase();
-          if (item === "target") {
-            targetLightON = true;
-          }
-          if (item === "cur") {
+        codeData[idx].highlights?.map((highlight: any) => {
+          highlight = highlight.toLowerCase();
+
+          if (highlight === "cur") {
             curLightOn = true;
           }
-          if (item === "start") {
+          if (highlight === "start") {
             startLightOn = true;
           }
-          if (item === "end") {
+          if (highlight === "end") {
             endLightOn = true;
           }
-          if (item === "step") {
+          if (highlight === "step") {
             stepLightOn = true;
           }
         });
@@ -155,59 +102,75 @@ const RightSection: React.FC = () => {
         return baseObject as IfItem;
       case "else":
         return baseObject as ElseItem;
-      // case "end":
-      //   return baseObject as End;
       default:
         console.log(type + " is not implemented!");
+        return null as any;
     }
   };
 
+  // 새로운 객체를 뒤에 추가하는 함수
   const addChild = (
-    items: AnyObjectItem[],
+    items: AllObjectItem[],
     targetDepth: number,
-    newObject: AnyObjectItem
-  ): AnyObjectItem[] => {
+    newObject: AllObjectItem
+  ): AllObjectItem[] => {
+    //  add는 뒤에서 부터 추가한다
     let updated = false;
-    return items.reduceRight<AnyObjectItem[]>((acc, item) => {
+    return items.reduceRight<AllObjectItem[]>((acc, item) => {
+      // 아직 추가하지 않았고, depth가 targetDepth - 1인 경우
       if (!updated && item.depth === targetDepth - 1) {
         updated = true;
+        // 해당 노드의 child에 새로운 객체를 추가한다
         acc.unshift({ ...item, child: [...item.child, newObject] });
-      } else if (item.child && item.child.length > 0) {
+      }
+      // 아직 child가 있고 노드가 끝나지 않은 경우
+      else if (item.child && item.child.length > 0) {
         acc.unshift({
           ...item,
+          // child로 들어가서 그 안에서 재귀로 들어간다
           child: addChild(item.child, targetDepth, newObject),
         });
-      } else {
+      }
+      // child가 더이상 없는 경우
+      else {
+        // 그냥 노드를 추가한다
         acc.unshift(item);
       }
+      // 더 이상 돌 곳이 없으면 누산기를 반환한다
       return acc;
     }, []);
   };
 
+  // 객체를 수정해야하는 경우에 실행하는 함수
   const updateChild = (
-      // todo renaming for readAbility
-    items: AnyObjectItem[], //비주얼 스택
-    newObject: AnyObjectItem //넣어야하는 data
-  ): AnyObjectItem[] => {
+    // todo renaming for readAbility
+    items: AllObjectItem[], //비주얼 스택
+    newObject: AllObjectItem //넣어야하는 data
+  ): AllObjectItem[] => {
     return items.map((item) => {
+      // 비주얼 스택을 순회하면서 수정해야하는 위치를 찾는다
+      // 발견하고 반복문이 바로 끝나는 것이 아니라 계속 돌면서 남아있는 객체도 반환해야한다
       if (item.id === newObject.id) {
+        // 발견하면 들어가서 수정한다
         return { ...item, ...newObject, child: item.child };
       } else if (item.child && item.child.length > 0) {
+        // 끝까지 찾아도 없으면 child로 들어가서 재귀적으로 탐색한다
         return { ...item, child: updateChild(item.child, newObject) };
       } else {
+        // 끝까지 찾아도 없으면 그냥 객체를 반환한다
         return item;
       }
     });
   };
 
   const turnLightOn = (
-    new_data: AnyObjectItem[], //비주얼 스택
+    new_data: AllObjectItem[], //비주얼 스택
     newActivate: ActivateItem[] //활성화 스택
-  ): AnyObjectItem[] => {
+  ): AllObjectItem[] => {
     return new_data.map((item) => {
       if (newActivate.some((data) => data.id === item.id)) {
         // 수정해야하는 위치일때
-
+        // ligthOn을 true로 바꾼다
         return {
           ...item,
           lightOn: true,
@@ -228,17 +191,11 @@ const RightSection: React.FC = () => {
   // todo 변수명 + 구조를 다같이 살펴봐주면.
   const updateVar = (
     targetName: string,
-    varData: DummyItem[],
-    newVar: DummyItem
-  ): DummyItem[] => {
+    varData: CodeItem[],
+    newVar: CodeItem
+  ): CodeItem[] => {
     return varData.map((item) => {
-
-      return (item.name === targetName) ? {...item, ...newVar } : item;
-      // if (item.name === targetName) {
-      //   return { ...item, ...newVar };
-      // } else {
-      //   return item;
-      // }
+      return item.name === targetName ? { ...item, ...newVar } : item;
     });
   };
 
@@ -270,44 +227,27 @@ const RightSection: React.FC = () => {
   };
 
   const renderComponent = (
-    items: AnyObjectItem[] //비주얼 스택
-  ): JSX.Element | null => {
+    items: AllObjectItem[] //비주얼 스택
+  ): JSX.Element => {
     return (
       <>
         {items.map((item) => {
           switch (item.type) {
             case "print": {
-              const print = item as PrintItem;
+              const printItem = item as PrintItem;
               return (
-                  <React.Fragment key={item.id}>
-                    <PrintBox
-                        key={print.id}
-                        expr={print.expr}
-                        highlight={print.highlight}
-                        lightOn={print.lightOn}
-                    />
-                    {renderComponent(item.child)}
-                  </React.Fragment>
+                <Fragment key={item.id}>
+                  <PrintBox key={printItem.id} printItem={printItem} />
+                  {renderComponent(item.child)}
+                </Fragment>
               );
             }
             case "for": {
               const forItem = item as ForItem;
-
+              console.log(forItem);
               return (
-                  <ForBox
-                      key={forItem.id}
-                      start={forItem.start}
-                      startLightOn={forItem.startLightOn}
-                      end={forItem.end}
-                      endLightOn={forItem.endLightOn}
-                      cur={forItem.cur}
-                      curLightOn={forItem.curLightOn}
-                      target={forItem.target}
-                      step={forItem.step}
-                      stepLightOn={forItem.stepLightOn}
-                      lightOn={forItem.lightOn}
-                  >
-                    {renderComponent(forItem.child)}
+                <ForBox key={forItem.id} forItem={forItem}>
+                  {renderComponent(forItem.child)}
                 </ForBox>
               );
             }
@@ -333,7 +273,7 @@ const RightSection: React.FC = () => {
 
   const renderComponentVar = (
     items: VarItem[] //변수시각화 리스트
-  ): ReactElement | null => {
+  ): ReactElement => {
     return (
       <>
         {items.map((item) => (
@@ -349,8 +289,7 @@ const RightSection: React.FC = () => {
   };
 
   const handleClick = () => {
-    let newData: AnyObjectItem[] = [];
-    // console.log(codeData);
+    let newData: AllObjectItem[] = [];
     if (idx >= codeData.length) {
       console.log("더이상 데이터가 없습니다");
       return;
@@ -359,11 +298,11 @@ const RightSection: React.FC = () => {
     let copyData = _.cloneDeep(varData);
     // For variables
     // todo compare -> lower or upper
-    if (codeData[idx].type.toLowerCase()=== "assignViz".toLowerCase()) {
+    if (codeData[idx].type.toLowerCase() === "assignViz".toLowerCase()) {
       codeData[idx].variables?.forEach((element) => {
         if (usedName.includes(element.name!)) {
           const targetName = element.name!;
-          copyData  = updateVar(targetName, copyData, element);
+          copyData = updateVar(targetName, copyData, element);
         } else {
           copyData.push(element);
           setUsedName((prevName) => [...prevName, element.name!]);
@@ -388,7 +327,7 @@ const RightSection: React.FC = () => {
 
       const newActivate = updateActivate(activate, newObject);
       const turnLightOnNewData = turnLightOn(newData, newActivate);
-      // console.log(turnLightOnNewData);
+
       setActivate(newActivate);
       setVisual({ objects: turnLightOnNewData });
     }
@@ -407,7 +346,8 @@ const RightSection: React.FC = () => {
       // todo validate this code
       return { ...element, lightOn: tmpItemName?.includes(element.name) };
     });
-    // console.log(copyData);
+
+    console.log(copyData);
     setVarData(copyData);
     setIdx(idx + 1);
   };

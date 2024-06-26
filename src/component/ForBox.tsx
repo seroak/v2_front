@@ -1,80 +1,59 @@
 import { ReactNode } from "react";
 import styles from "./ForBox.module.css";
 import cx from "classnames";
+import { ForItem } from "@/types/forItem";
 
 type Props = {
   children?: ReactNode;
-  animation?: boolean;
-  key: number;
-  start: number;
-  startLightOn: boolean;
-  end: number;
-  endLightOn: boolean;
-  cur: number;
-  curLightOn: boolean;
-  target: string;
-  step: number;
-  stepLightOn: boolean;
-  lightOn: boolean;
+  forItem: ForItem;
 };
-function ForBox({
-  children,
-  start,
-  startLightOn,
-  end,
-  endLightOn,
-  cur,
-  curLightOn,
-  target,
-  step,
-  stepLightOn,
-  lightOn,
-}: Props) {
-  // console.log(curLightOn);
-  // console.log(lightOn);
+
+function ForBox({ children, forItem }: Props) {
   return (
     <div className={styles.for_box}>
-      <div className={cx(styles.for_border, lightOn && styles.highlight)}>
+      <div
+        className={cx(styles.for_border, forItem.lightOn && styles.highlight)}
+      >
         <span className={styles.for_text}>for</span>
-        <span className={styles.textName}>{target}</span>
+        <span className={styles.textName}>{forItem.target}</span>
         <div
           className={cx(
             styles.numberCur,
-            lightOn && curLightOn && styles.highlightNumber
+            forItem.lightOn && forItem.curLightOn && styles.highlightNumber
           )}
         >
-          <span className={styles.text}>{cur}</span>
+          <span className={styles.text}>{forItem.cur}</span>
         </div>
 
         <span className={styles.textStart}>start</span>
         <div
           className={cx(
             styles.numberStart,
-            lightOn && startLightOn && styles.highlightNumber
+            forItem.lightOn && forItem.startLightOn && styles.highlightNumber
           )}
         >
-          <span className={styles.text}>{start}</span>
+          <span className={styles.text}>{forItem.start}</span>
         </div>
 
         <span className={styles.textEnd}>end</span>
         <div
           className={cx(
             styles.numberEnd,
-            lightOn && endLightOn && styles.highlightNumber
+            forItem.lightOn && forItem.endLightOn && styles.highlightNumber
           )}
         >
-          <span className={styles.text}>{end}</span>
+          <span className={styles.text}>{forItem.end}</span>
         </div>
-        {step === 1 ? null : (
+        {forItem.step === 1 ? null : (
           <>
             <span className={styles.textStep}>step</span>
             <div
               className={cx(
                 styles.numberStep,
-                lightOn && stepLightOn && styles.highlightNumber
+                forItem.lightOn && forItem.stepLightOn && styles.highlightNumber
               )}
             >
-              <span className={styles.text}>{step}</span>
+              <span className={styles.text}>{forItem.step}</span>
             </div>
           </>
         )}
