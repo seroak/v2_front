@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import Editor from "@monaco-editor/react";
 import styles from "./codeEditor.module.css";
-import { useMutation } from "@tanstack/react-query";
+
 import { CodeContext } from "../pages/Home";
 const CodeEditor: React.FC = () => {
   // context API로 state 가져오기

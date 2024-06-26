@@ -3,12 +3,12 @@ import cx from "classnames";
 type Props = {
   value: string;
   name: string;
-  lightOn: boolean;
+  isLight: boolean;
 };
-function VariableBox({ value, name, lightOn }: Props) {
+function VariableBox({ value, name, isLight }: Props) {
   return (
     <div className={styles.variable_box}>
-      <div className={cx(styles.variable_border, lightOn && styles.highlight)}>
+      <div className={cx(styles.variable_border, isLight && styles.highlight)}>
         <span className={styles.variable_text}>{name}</span>
         <span>{value}</span>
       </div>

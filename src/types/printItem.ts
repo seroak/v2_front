@@ -4,7 +4,7 @@ export interface PrintItem {
   id: number;
   type: string;
   depth?: number;
-  lightOn: boolean;
+  isLight: boolean;
   expr: string;
   highlights: number[];
   child: AllObjectItem[];

@@ -2,16 +2,16 @@ import { AllObjectItem } from "./allObjectItem";
 export interface ForItem {
   id: number;
   start: number;
-  startLightOn: boolean;
+  startIsLight: boolean;
   end: number;
-  endLightOn: boolean;
+  endIsLight: boolean;
   cur: number;
-  curLightOn: boolean;
+  curIsLight: boolean;
   target: string;
   step: number;
-  stepLightOn: boolean;
+  stepIsLight: boolean;
   type: string;
   depth?: number;
-  lightOn: boolean;
+  isLight: boolean;
   child: AllObjectItem[];
 }

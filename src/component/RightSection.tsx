@@ -18,7 +18,7 @@ interface ObjectItem {
   id: number;
   type: string;
   depth?: number;
-  lightOn: boolean;
+  isLight: boolean;
   child: AllObjectItem[];
 }
 interface State {
@@ -30,7 +30,7 @@ const RightSection = () => {
   const [usedId, setUsedId] = useState<number[]>([]); // 한 번사용한 id를 저장하는 리스트
   const [visual, setVisual] = useState<State>({
     // 시각화전에 데이터를 담아두는 리스트 객체
-    objects: [{ id: 0, type: "start", depth: 0, lightOn: false, child: [] }],
+    objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
   });
   const [varData, setVarData] = useState<CodeItem[]>([]); // 변수 데이터 시각화 리스트
   const [usedName, setUsedName] = useState<string[]>([]); // 사용한 변수 데이터 name 모아두는 리스트
@@ -51,7 +51,7 @@ const RightSection = () => {
       id: codeData[idx].id!,
       type: codeData[idx].type,
       depth: codeData[idx].depth,
-      lightOn: false,
+      isLight: false,
       child: [],
     };
     const type: string = codeData[idx].type.toLowerCase();
@@ -65,24 +65,24 @@ const RightSection = () => {
         } as PrintItem;
       case "for":
         // for문 highlights 객체로 변환
-        let curLightOn = false;
-        let startLightOn = false;
-        let endLightOn = false;
-        let stepLightOn = false;
+        let curIsLight = false;
+        let startIsLight = false;
+        let endIsLight = false;
+        let stepIsLight = false;
         codeData[idx].highlights?.map((highlight: any) => {
           highlight = highlight.toLowerCase();
 
           if (highlight === "cur") {
-            curLightOn = true;
+            curIsLight = true;
           }
           if (highlight === "start") {
-            startLightOn = true;
+            startIsLight = true;
           }
           if (highlight === "end") {
-            endLightOn = true;
+            endIsLight = true;
           }
           if (highlight === "step") {
-            stepLightOn = true;
+            stepIsLight = true;
           }
         });
 
@@ -93,10 +93,10 @@ const RightSection = () => {
           cur: codeData[idx].condition!.cur,
           target: codeData[idx].condition!.target,
           step: codeData[idx].condition!.step,
-          startLightOn: startLightOn,
-          endLightOn: endLightOn,
-          curLightOn: curLightOn,
-          stepLightOn: stepLightOn,
+          startIsLight: startIsLight,
+          endIsLight: endIsLight,
+          curIsLight: curIsLight,
+          stepIsLight: stepIsLight,
         } as ForItem;
       case "if":
         return baseObject as IfItem;
@@ -163,7 +163,7 @@ const RightSection = () => {
     });
   };
 
-  const turnLightOn = (
+  const turnisLight = (
     new_data: AllObjectItem[], //비주얼 스택
     newActivate: ActivateItem[] //활성화 스택
   ): AllObjectItem[] => {
@@ -173,17 +173,17 @@ const RightSection = () => {
         // ligthOn을 true로 바꾼다
         return {
           ...item,
-          lightOn: true,
-          child: turnLightOn(item.child, newActivate),
+          isLight: true,
+          child: turnisLight(item.child, newActivate),
         };
       } else if (item.child && item.child.length > 0) {
         return {
           ...item,
-          lightOn: false,
-          child: turnLightOn(item.child, newActivate),
+          isLight: false,
+          child: turnisLight(item.child, newActivate),
         };
       } else {
-        return { ...item, lightOn: false };
+        return { ...item, isLight: false };
       }
     });
   };
@@ -253,13 +253,13 @@ const RightSection = () => {
             }
             case "if":
               return (
-                <IfBox key={item.id} lightOn={item.lightOn}>
+                <IfBox key={item.id} isLight={item.isLight}>
                   {renderComponent(item.child)}
                 </IfBox>
               );
             case "else":
               return (
-                <ElseBox key={item.id} lightOn={item.lightOn}>
+                <ElseBox key={item.id} isLight={item.isLight}>
                   {renderComponent(item.child)}
                 </ElseBox>
               );
@@ -281,7 +281,7 @@ const RightSection = () => {
             key={item.name}
             value={item.expr!}
             name={item.name!}
-            lightOn={item.lightOn!}
+            isLight={item.isLight!}
           />
         ))}
       </>
@@ -326,10 +326,10 @@ const RightSection = () => {
       }
 
       const newActivate = updateActivate(activate, newObject);
-      const turnLightOnNewData = turnLightOn(newData, newActivate);
+      const turnisLightNewData = turnisLight(newData, newActivate);
 
       setActivate(newActivate);
-      setVisual({ objects: turnLightOnNewData });
+      setVisual({ objects: turnisLightNewData });
     }
 
     // judge for turn on or off light.
@@ -344,7 +344,7 @@ const RightSection = () => {
 
     copyData = copyData.map((element) => {
       // todo validate this code
-      return { ...element, lightOn: tmpItemName?.includes(element.name) };
+      return { ...element, isLight: tmpItemName?.includes(element.name) };
     });
 
     console.log(copyData);
