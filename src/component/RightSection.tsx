@@ -327,7 +327,7 @@ const RightSection = () => {
 
       const newActivate = updateActivate(activate, newObject);
       const turnLightOnNewData = turnLightOn(newData, newActivate);
-      // console.log(turnLightOnNewData);
+
       setActivate(newActivate);
       setVisual({ objects: turnLightOnNewData });
     }
