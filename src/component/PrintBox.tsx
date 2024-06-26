@@ -1,17 +1,27 @@
 import cx from "classnames";
 import styles from "./PrintBox.module.css";
-type Props = { expr: string; highlight: number[]; lightOn: boolean };
-function printBox({ expr, highlight, lightOn }: Props) {
+import { PrintItem } from "@/types/printItem";
+type Props = {
+  printItem: PrintItem;
+};
+function printBox({ printItem }: Props) {
   return (
     <div className={styles.print_box}>
-      <div className={cx(styles.print_border, lightOn && styles.highlight)}>
+      <div
+        className={cx(
+          styles.print_border,
+          printItem.lightOn && styles.highlight
+        )}
+      >
         <span className={styles.print_text}>print</span>
         <div className={styles.textOutput}>
-          {expr.split("").map((char, index) => (
+          {printItem.expr.split("").map((char, index) => (
             <span
               key={index}
               className={cx(
-                lightOn && highlight.includes(index) && styles.font_highlight
+                printItem.lightOn &&
+                  printItem.highlights?.includes(index) &&
+                  styles.font_highlight
               )}
             >
               {char}

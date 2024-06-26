@@ -5,37 +5,8 @@ import Resizable from "../component/Resizable";
 import { createContext, useState, Dispatch, SetStateAction } from "react";
 
 import { useMutation } from "@tanstack/react-query";
+import { CodeItem } from "@/types/codeItem";
 
-interface DummyItem {
-  id?: number;
-  type: string;
-  depth?: number;
-  value?: number;
-  name?: string;
-  start?: number;
-  end?: number;
-  cur?: number;
-  expr?: string;
-  highlight?: number[] | string[];
-  condition?: ConditionItem;
-  variables?: VariableList[];
-}
-interface VarItem extends DummyItem {
-  lightOn?: boolean;
-}
-interface VariableList {
-  name: string;
-  expr: string;
-  depth: number;
-  type?: string;
-}
-interface ConditionItem {
-  target: string;
-  start: number;
-  end: number;
-  cur: number;
-  step: number;
-}
 // 원본 코드 타입 정의
 interface CodeContextType {
   code: string;
@@ -46,19 +17,19 @@ export const CodeContext = createContext<CodeContextType | undefined>(
 );
 // 전처리한 코드 타입 정의
 interface CodeDataContextType {
-  codeData: DummyItem[];
-  setCodeData: Dispatch<SetStateAction<DummyItem[]>>;
+  codeData: CodeItem[];
+  setCodeData: Dispatch<SetStateAction<CodeItem[]>>;
 }
 export const CodeDataContext = createContext<CodeDataContextType | undefined>(
   undefined
 );
 export default function Home() {
   // 원본 코드 state
-  const [code, setCode] = useState<string>(
+  const [code, setCode] = useState<any>(
     ["def hello_world():", '    print("Hello, World!")'].join("\n")
   );
   // 전처리한 코드 state
-  const [codeData, setCodeData] = useState<DummyItem[]>([]);
+  const [codeData, setCodeData] = useState<CodeItem[]>([]);
   const mutation = useMutation({
     mutationFn: async (code) => {
       const response = await fetch("http://localhost:8000/v1/python", {
