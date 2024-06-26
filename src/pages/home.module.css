@@ -37,7 +37,7 @@
 }
 .button {
   position: relative;
-  top: 2px;
+  top: 4px;
   right: 100px;
   background-color: #4a4a4a;
   cursor: pointer;
