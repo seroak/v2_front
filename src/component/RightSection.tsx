@@ -67,24 +67,24 @@ const RightSection = () => {
         } as PrintItem;
       case "for":
         // for문 highlights 객체로 변환
-        let curIsLight = false;
-        let startIsLight = false;
-        let endIsLight = false;
-        let stepIsLight = false;
+        let isCurLight = false;
+        let isStartLight = false;
+        let isEndLight = false;
+        let isStepLight = false;
         codeData[idx].highlights?.map((highlight: any) => {
           highlight = highlight.toLowerCase();
 
           if (highlight === "cur") {
-            curIsLight = true;
+            isCurLight = true;
           }
           if (highlight === "start") {
-            startIsLight = true;
+            isStartLight = true;
           }
           if (highlight === "end") {
-            endIsLight = true;
+            isEndLight = true;
           }
           if (highlight === "step") {
-            stepIsLight = true;
+            isStepLight = true;
           }
         });
 
@@ -95,10 +95,10 @@ const RightSection = () => {
           cur: codeData[idx].condition!.cur,
           target: codeData[idx].condition!.target,
           step: codeData[idx].condition!.step,
-          startIsLight: startIsLight,
-          endIsLight: endIsLight,
-          curIsLight: curIsLight,
-          stepIsLight: stepIsLight,
+          isStartLight: isStartLight,
+          isEndLight: isEndLight,
+          isCurLight: isCurLight,
+          isStepLight: isStepLight,
         } as ForItem;
       case "if":
         return baseObject as IfItem;
