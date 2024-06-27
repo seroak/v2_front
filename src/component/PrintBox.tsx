@@ -10,7 +10,7 @@ function printBox({ printItem }: Props) {
       <div
         className={cx(
           styles.print_border,
-          printItem.lightOn && styles.highlight
+          printItem.isLight && styles.highlight
         )}
       >
         <span className={styles.print_text}>print</span>
@@ -19,7 +19,7 @@ function printBox({ printItem }: Props) {
             <span
               key={index}
               className={cx(
-                printItem.lightOn &&
+                printItem.isLight &&
                   printItem.highlights?.includes(index) &&
                   styles.font_highlight
               )}

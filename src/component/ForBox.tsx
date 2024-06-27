@@ -12,14 +12,14 @@ function ForBox({ children, forItem }: Props) {
   return (
     <div className={styles.for_box}>
       <div
-        className={cx(styles.for_border, forItem.lightOn && styles.highlight)}
+        className={cx(styles.for_border, forItem.isLight && styles.highlight)}
       >
         <span className={styles.for_text}>for</span>
         <span className={styles.textName}>{forItem.target}</span>
         <div
           className={cx(
             styles.numberCur,
-            forItem.lightOn && forItem.curLightOn && styles.highlightNumber
+            forItem.isLight && forItem.curIsLight && styles.highlightNumber
           )}
         >
           <span className={styles.text}>{forItem.cur}</span>
@@ -29,7 +29,7 @@ function ForBox({ children, forItem }: Props) {
         <div
           className={cx(
             styles.numberStart,
-            forItem.lightOn && forItem.startLightOn && styles.highlightNumber
+            forItem.isLight && forItem.startIsLight && styles.highlightNumber
           )}
         >
           <span className={styles.text}>{forItem.start}</span>
@@ -39,7 +39,7 @@ function ForBox({ children, forItem }: Props) {
         <div
           className={cx(
             styles.numberEnd,
-            forItem.lightOn && forItem.endLightOn && styles.highlightNumber
+            forItem.isLight && forItem.endIsLight && styles.highlightNumber
           )}
         >
           <span className={styles.text}>{forItem.end}</span>
@@ -50,7 +50,7 @@ function ForBox({ children, forItem }: Props) {
             <div
               className={cx(
                 styles.numberStep,
-                forItem.lightOn && forItem.stepLightOn && styles.highlightNumber
+                forItem.isLight && forItem.stepIsLight && styles.highlightNumber
               )}
             >
               <span className={styles.text}>{forItem.step}</span>

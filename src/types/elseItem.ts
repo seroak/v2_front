@@ -4,6 +4,6 @@ export interface ElseItem {
   id: number;
   type: string;
   depth?: number;
-  lightOn: boolean;
+  isLight: boolean;
   child: AllObjectItem[];
 }
