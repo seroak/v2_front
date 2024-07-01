@@ -1,10 +1,10 @@
-import { useState, useContext, ReactElement, Fragment } from "react";
+import { useState, useContext, ReactElement, Fragment, useEffect } from "react";
 import ForBox from "./ForBox";
 import VariableBox from "./VariableBox";
 import IfBox from "./IfBox";
 import ElseBox from "./ElseBox";
 import PrintBox from "./PrintBox";
-import { CodeDataContext } from "../pages/Home";
+import { PreprocessedCodesContext } from "../pages/Home";
 import _ from "lodash";
 
 // 타입 정의
@@ -28,42 +28,130 @@ interface State {
 }
 
 const RightSection = () => {
-  const [idx, setIdx] = useState<number>(0);
-  const [usedId, setUsedId] = useState<number[]>([]); // 한 번사용한 id를 저장하는 리스트
-  const [codeFlow, setCodeFlow] = useState<State>({
-    // 시각화전에 데이터를 담아두는 리스트 객체
-    objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
-  });
-  const [dataStructures, setDataStructures] = useState<CodeItem[]>([]); // 변수 데이터 시각화 리스트
+  const [idx, setIdx] = useState<number>(-1);
+
+  // 코드흐름 시각화 정보의 한단계 한단계 모두를 담아두는 리스트
+  const [codeFlowList, setCodeFlowList] = useState<State[]>([
+    {
+      objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
+    },
+  ]);
+
+  const [dataStructuresList, setDataStructuresList] = useState<CodeItem[][]>([
+    [],
+  ]); // 변수 데이터 시각화 리스트의 변화과정을 담아두는 리스트
   const [usedName, setUsedName] = useState<string[]>([]); // 사용한 변수 데이터 name 모아두는 리스트
-  const [activate, setActivate] = useState<ActivateItem[]>([]); // 애니메이션을 줄 때 사용하는 리스트
 
   // context API로 데이터 가져오기
   // context API를 사용하는 패턴
-  const context = useContext(CodeDataContext);
+  const context = useContext(PreprocessedCodesContext);
   //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
   if (!context) {
     console.error("CodeContext not found");
     return null;
   }
-  const { codeData } = context;
+  const { preprocessedCodes } = context;
+  // codeFlowList를 업데이트하는 useEffect
+
+  useEffect(() => {
+    let activate: ActivateItem[] = [];
+    const usedId: number[] = []; // 한 번 사용한 id를 저장하는 리스트
+    let tmpCodeFlow: State = {
+      objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
+    };
+    let tmpDataStructures: CodeItem[] = [];
+    const tmpCodeFlowList: State[] = [];
+    let tmpDataStructuresList: CodeItem[][] = [];
+    for (let preprocessedCode of preprocessedCodes) {
+      // 임시로 코드흐름 시각화 정보를 담아둘 리스트를 미리 선언
+      let changedCodeFlows: AllObjectItem[] = [];
+
+      // 자료구조 시각화 부분이 들어왔을 때
+      if (preprocessedCode.type.toLowerCase() === "assignViz".toLowerCase()) {
+        preprocessedCode.variables?.forEach((element) => {
+          if (usedName.includes(element.name!)) {
+            const targetName = element.name!;
+            tmpDataStructures = updateVar(
+              targetName,
+              tmpDataStructures,
+              element
+            );
+          } else {
+            tmpDataStructures.push(element);
+            setUsedName((prevName) => [...prevName, element.name!]);
+          }
+        });
+      }
+      // 코드 시각화 부분이 들어왔을 때
+      else {
+        const newObject = createNewObject(preprocessedCode);
+        if (usedId.includes(preprocessedCode.id!)) {
+          // 한번 codeFlow list에 들어가서 수정하는 입력일 때
+          // updateChild(비주얼 스택, 넣어야하는 위치를 알려주는 id, 넣어야하는 data)
+          changedCodeFlows = updateChild(tmpCodeFlow.objects, newObject);
+        } else {
+          // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
+          const targetDepth: number = preprocessedCode.depth!;
+          const id: number = preprocessedCode.id!;
+          // 한번 사용한 id는 저장해준다
+          usedId.push(id);
+          // addChild(비주얼 스택, 넣어야하는 위치를 알려주는 depth, 넣어야하는 data)
+          changedCodeFlows = addChild(
+            tmpCodeFlow.objects,
+            targetDepth,
+            newObject
+          );
+        }
+        // 불을 켜줘야하는 부분에 대한 변수
+        activate = updateActivate(activate, newObject);
+
+        //코드흐름 시각화 최종 결과물
+        const turnedLight = turnLight(changedCodeFlows, activate);
+
+        tmpCodeFlow = { objects: turnedLight };
+      }
+      // 불을 켜줘야하는 데이터 구조의 아이디를 담는 배열
+      let idDataStructures: any;
+      if (preprocessedCode.variables === undefined) {
+        idDataStructures = [];
+      } else {
+        idDataStructures = preprocessedCode.variables?.map((element) => {
+          return element.name;
+        });
+      }
+      // 데이터 구조 시각화에서 isLight를 불을 켜줘야하는 부분에서 true인지 false인지 판단해주는 부분
+      tmpDataStructures = tmpDataStructures.map((copyDataStructure) => {
+        return {
+          ...copyDataStructure,
+          isLight: idDataStructures?.includes(copyDataStructure.name),
+        };
+      });
+
+      tmpDataStructuresList.push(tmpDataStructures);
+      tmpCodeFlowList.push(tmpCodeFlow);
+    }
+
+    setCodeFlowList(tmpCodeFlowList);
+    setDataStructuresList(tmpDataStructuresList);
+  }, [preprocessedCodes]);
+
   // 스택에 넣을 객체를 생성하는 함수
-  const createNewObject = (idx: number): AllObjectItem => {
+  const createNewObject = (preprocessedCode: CodeItem): AllObjectItem => {
     const baseObject: ObjectItem = {
-      id: codeData[idx].id!,
-      type: codeData[idx].type,
-      depth: codeData[idx].depth,
+      id: preprocessedCode.id!,
+      type: preprocessedCode.type,
+      depth: preprocessedCode.depth,
       isLight: false,
       child: [],
     };
-    const type: string = codeData[idx].type.toLowerCase();
+    const type: string = preprocessedCode.type.toLowerCase();
     // type에 따라서 객체 생성
     switch (type) {
       case "print":
         return {
           ...baseObject,
-          expr: codeData[idx].expr!,
-          highlights: codeData[idx].highlights!,
+          expr: preprocessedCode.expr!,
+          highlights: preprocessedCode.highlights!,
         } as PrintItem;
       case "for":
         // for문 highlights 객체로 변환
@@ -71,7 +159,7 @@ const RightSection = () => {
         let isStartLight = false;
         let isEndLight = false;
         let isStepLight = false;
-        codeData[idx].highlights?.map((highlight: any) => {
+        preprocessedCode.highlights?.map((highlight: any) => {
           highlight = highlight.toLowerCase();
 
           if (highlight === "cur") {
@@ -90,11 +178,11 @@ const RightSection = () => {
 
         return {
           ...baseObject,
-          start: codeData[idx].condition!.start,
-          end: codeData[idx].condition!.end,
-          cur: codeData[idx].condition!.cur,
-          target: codeData[idx].condition!.target,
-          step: codeData[idx].condition!.step,
+          start: preprocessedCode.condition!.start,
+          end: preprocessedCode.condition!.end,
+          cur: preprocessedCode.condition!.cur,
+          target: preprocessedCode.condition!.target,
+          step: preprocessedCode.condition!.step,
           isStartLight: isStartLight,
           isEndLight: isEndLight,
           isCurLight: isCurLight,
@@ -105,7 +193,7 @@ const RightSection = () => {
       case "else":
         return baseObject as ElseItem;
       default:
-        console.log(type + " is not implemented!");
+        console.error(type + " is not implemented!");
         return null as any;
     }
   };
@@ -203,6 +291,7 @@ const RightSection = () => {
     });
   };
 
+  // 현재 불이 켜져야하는 부분을 표시해주는 함수
   const updateActivate = (
     oldActivates: ActivateItem[], // 불이 들어와야하는 객체를 저장하는 옛날 리스트
     newActivate: ObjectItem // 새로 불이 들어와야하는 곳의 정보를 담고있는 객체
@@ -231,6 +320,37 @@ const RightSection = () => {
     return tmpActivate;
   };
 
+  const toFront = () => {
+    if (idx > codeFlowList.length - 1) {
+      return;
+    }
+    setIdx(idx + 1);
+  };
+  const toBack = () => {
+    if (idx === -1) {
+      return;
+    }
+    setIdx(idx - 1);
+  };
+
+  const renderComponentDataStruct = (
+    dataStructures: VarItem[] //변수시각화 리스트
+  ): ReactElement => {
+    return (
+      <>
+        {dataStructures.map((dataStructure) => (
+          <VariableBox
+            key={dataStructure.name}
+            value={dataStructure.expr!}
+            name={dataStructure.name!}
+            isLight={dataStructure.isLight!}
+          />
+        ))}
+      </>
+    );
+  };
+
+  // 코드흐름 랜더링 함
   const renderComponent = (
     codeFlows: AllObjectItem[] // 코드흐름을 보여주는 정보를 담고 있는 리스트
   ): JSX.Element => {
@@ -275,106 +395,22 @@ const RightSection = () => {
     );
   };
 
-  const renderComponentDataStruct = (
-    dataStructures: VarItem[] //변수시각화 리스트
-  ): ReactElement => {
-    return (
-      <>
-        {dataStructures.map((dataStructure) => (
-          <VariableBox
-            key={dataStructure.name}
-            value={dataStructure.expr!}
-            name={dataStructure.name!}
-            isLight={dataStructure.isLight!}
-          />
-        ))}
-      </>
-    );
-  };
-
-  const handleClick = () => {
-    // 임시로 코드흐름 시각화 정보를 담아둘 리스트를 미리 선언
-    let changedCodeFlows: AllObjectItem[] = [];
-    if (idx >= codeData.length) {
-      console.log("더이상 데이터가 없습니다");
-      return;
-    }
-
-    // 자료구조 시각화를 복사해서 담아놓는 변수
-    let copyDataStructures = _.cloneDeep(dataStructures);
-    // 자료구조 시각화 부분이 들어왔을 때
-    if (codeData[idx].type.toLowerCase() === "assignViz".toLowerCase()) {
-      codeData[idx].variables?.forEach((element) => {
-        if (usedName.includes(element.name!)) {
-          const targetName = element.name!;
-          copyDataStructures = updateVar(
-            targetName,
-            copyDataStructures,
-            element
-          );
-        } else {
-          copyDataStructures.push(element);
-          setUsedName((prevName) => [...prevName, element.name!]);
-        }
-      });
-    }
-    // 코드 시각화 부분이 들어왔을 때
-    else {
-      const newObject = createNewObject(idx);
-      if (usedId.includes(codeData[idx].id!)) {
-        // 한번 codeFlow list에 들어가서 수정하는 입력일 때
-        // updateChild(비주얼 스택, 넣어야하는 위치를 알려주는 id, 넣어야하는 data)
-        changedCodeFlows = updateChild(codeFlow.objects, newObject);
-      } else {
-        // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
-        const targetDepth: number = codeData[idx].depth!;
-        const id: number = codeData[idx].id!;
-
-        // 한번 사용한 id는 저장해준다
-        setUsedId((prevIds) => [...prevIds, id]);
-        // addChild(비주얼 스택, 넣어야하는 위치를 알려주는 depth, 넣어야하는 data)
-        changedCodeFlows = addChild(codeFlow.objects, targetDepth, newObject);
-      }
-
-      const newActivate = updateActivate(activate, newObject);
-      const turnedLight = turnLight(changedCodeFlows, newActivate);
-
-      setActivate(newActivate);
-      setCodeFlow({ objects: turnedLight });
-    }
-
-    // 불을 켜줘야하는 데이터 구조의 아이디를 담는 배열
-    let idDataStructures;
-    if (codeData[idx].variables === undefined) {
-      idDataStructures = [];
-    } else {
-      idDataStructures = codeData[idx].variables?.map((element) => {
-        return element.name;
-      });
-    }
-
-    // 데이터 구조 시각화에서 isLight를 불을 켜줘야하는 부분에서 true인지 false인지 판단해주는 부분
-    copyDataStructures = copyDataStructures.map((copyDataStructure) => {
-      return {
-        ...copyDataStructure,
-        isLight: idDataStructures?.includes(copyDataStructure.name),
-      };
-    });
-
-    setDataStructures(copyDataStructures);
-    setIdx(idx + 1);
-  };
-
   return (
     <div style={{ backgroundColor: "#f4f4f4", width: "100%" }}>
+      <button onClick={toBack}>뒤로 가기</button>
+      <button onClick={toFront}>앞으로 가기</button>
       <div>
         <ul style={{ display: "flex" }}>
-          {renderComponentDataStruct(dataStructures)}
+          {dataStructuresList && dataStructuresList.length > 0 && idx >= 0
+            ? renderComponentDataStruct(dataStructuresList[idx])
+            : null}
         </ul>
       </div>
-
-      <ul>{renderComponent(codeFlow.objects[0].child)}</ul>
-      <button onClick={handleClick}>특정 객체 child 에 객체 생성</button>
+      <ul>
+        {codeFlowList && codeFlowList.length > 0 && idx >= 0
+          ? renderComponent(codeFlowList[idx].objects[0].child)
+          : null}
+      </ul>
     </div>
   );
 };

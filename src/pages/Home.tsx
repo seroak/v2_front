@@ -16,20 +16,20 @@ export const CodeContext = createContext<CodeContextType | undefined>(
   undefined
 );
 // 전처리한 코드 타입 정의
-interface CodeDataContextType {
-  codeData: CodeItem[];
-  setCodeData: Dispatch<SetStateAction<CodeItem[]>>;
+interface PreprocessedCodeContextType {
+  preprocessedCodes: CodeItem[];
+  setPreprocessedCodes: Dispatch<SetStateAction<CodeItem[]>>;
 }
-export const CodeDataContext = createContext<CodeDataContextType | undefined>(
-  undefined
-);
+export const PreprocessedCodesContext = createContext<
+  PreprocessedCodeContextType | undefined
+>(undefined);
 export default function Home() {
   // 원본 코드 state
   const [code, setCode] = useState<any>(
     ["def hello_world():", '    print("Hello, World!")'].join("\n")
   );
   // 전처리한 코드 state
-  const [codeData, setCodeData] = useState<CodeItem[]>([]);
+  const [preprocessedCodes, setPreprocessedCodes] = useState<CodeItem[]>([]);
   const mutation = useMutation({
     mutationFn: async (code) => {
       const response = await fetch("http://localhost:8000/v1/python", {
@@ -48,7 +48,7 @@ export default function Home() {
     // editorData를 사용하여 제출 로직 처리
     mutation.mutate(code, {
       onSuccess: (data) => {
-        setCodeData(data);
+        setPreprocessedCodes(data);
         console.log("Success:", data); // 성공 시 콘솔에 출력
       },
       onError: (error) => {
@@ -58,7 +58,9 @@ export default function Home() {
   };
   return (
     <CodeContext.Provider value={{ code, setCode }}>
-      <CodeDataContext.Provider value={{ codeData, setCodeData }}>
+      <PreprocessedCodesContext.Provider
+        value={{ preprocessedCodes, setPreprocessedCodes }}
+      >
         <main className={styles.main}>
           <div className={styles.header}>
             <form action="#" onSubmit={handleSubmit}>
@@ -86,7 +88,7 @@ export default function Home() {
           </div>
           <Resizable left={<CodeEditor />} right={<RightSection />} />
         </main>
-      </CodeDataContext.Provider>
+      </PreprocessedCodesContext.Provider>
     </CodeContext.Provider>
   );
 }
