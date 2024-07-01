@@ -1,4 +1,4 @@
-import { useState, useContext, ReactElement, Fragment } from "react";
+import { useState, useContext, ReactElement, Fragment, useEffect } from "react";
 import ForBox from "./ForBox";
 import VariableBox from "./VariableBox";
 import IfBox from "./IfBox";
@@ -31,13 +31,23 @@ const RightSection = () => {
   const [idx, setIdx] = useState<number>(0);
   const [usedId, setUsedId] = useState<number[]>([]); // 한 번사용한 id를 저장하는 리스트
   const [codeFlow, setCodeFlow] = useState<State>({
-    // 시각화전에 데이터를 담아두는 리스트 객체
+    // 코드흐름 시각화 정보를 담아두는 객체
     objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
   });
+  // 코드흐름 시각화 정보의 한단계 한단계 모두를 담아두는 리스트
+  const [codeFlowList, setCodeFlowList] = useState<State[]>([
+    {
+      objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
+    },
+  ]); // 코드가 변화는 과정을 담아두는 리스트
   const [dataStructures, setDataStructures] = useState<CodeItem[]>([]); // 변수 데이터 시각화 리스트
+  const [dataStructuresList, setDataStructuresList] = useState<CodeItem[][]>([
+    [],
+  ]); // 변수 데이터 시각화 리스트의 변화과정을 담아두는 리스트
   const [usedName, setUsedName] = useState<string[]>([]); // 사용한 변수 데이터 name 모아두는 리스트
   const [activate, setActivate] = useState<ActivateItem[]>([]); // 애니메이션을 줄 때 사용하는 리스트
-
+  const [codeFlowListIdx, setCodeFlowListIdx] = useState<number>(0); // 코드가 변화하는 과정을 보여주는 변수
+  const [dataStructuresListIdx, setDataStructuresListIdx] = useState<number>(0); // 변수 데이터 시각화 리스트의 변화과정을 보여주는 변수
   // context API로 데이터 가져오기
   // context API를 사용하는 패턴
   const context = useContext(CodeDataContext);
@@ -47,6 +57,7 @@ const RightSection = () => {
     return null;
   }
   const { codeData } = context;
+
   // 스택에 넣을 객체를 생성하는 함수
   const createNewObject = (idx: number): AllObjectItem => {
     const baseObject: ObjectItem = {
@@ -232,6 +243,110 @@ const RightSection = () => {
     return tmpActivate;
   };
 
+  // codeFlowList를 업데이트하는 useEffect
+  useEffect(() => {
+    if (!codeFlow) return;
+    setCodeFlowListIdx(codeFlowListIdx + 1);
+    setCodeFlowList((prev) => [...prev, codeFlow]);
+  }, [codeFlow]);
+  // dataStructuresList를 업데이트하는 useEffect
+  useEffect(() => {
+    setDataStructuresListIdx(dataStructuresListIdx + 1);
+    setDataStructuresList((prev) => [...prev, dataStructures]);
+  }, [dataStructures]);
+
+  const handleClick = () => {
+    // 임시로 코드흐름 시각화 정보를 담아둘 리스트를 미리 선언
+    let changedCodeFlows: AllObjectItem[] = [];
+    if (idx >= codeData.length) {
+      console.error("not data anymore");
+      return;
+    }
+
+    // 자료구조 시각화를 복사해서 담아놓는 변수
+    let copyDataStructures = _.cloneDeep(dataStructures);
+    // 자료구조 시각화 부분이 들어왔을 때
+    if (codeData[idx].type.toLowerCase() === "assignViz".toLowerCase()) {
+      codeData[idx].variables?.forEach((element) => {
+        if (usedName.includes(element.name!)) {
+          const targetName = element.name!;
+          copyDataStructures = updateVar(
+            targetName,
+            copyDataStructures,
+            element
+          );
+        } else {
+          copyDataStructures.push(element);
+          setUsedName((prevName) => [...prevName, element.name!]);
+        }
+      });
+    }
+    // 코드 시각화 부분이 들어왔을 때
+    else {
+      const newObject = createNewObject(idx);
+      if (usedId.includes(codeData[idx].id!)) {
+        // 한번 codeFlow list에 들어가서 수정하는 입력일 때
+        // updateChild(비주얼 스택, 넣어야하는 위치를 알려주는 id, 넣어야하는 data)
+        changedCodeFlows = updateChild(codeFlow.objects, newObject);
+      } else {
+        // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
+        const targetDepth: number = codeData[idx].depth!;
+        const id: number = codeData[idx].id!;
+
+        // 한번 사용한 id는 저장해준다
+        setUsedId((prevIds) => [...prevIds, id]);
+
+        // addChild(비주얼 스택, 넣어야하는 위치를 알려주는 depth, 넣어야하는 data)
+        changedCodeFlows = addChild(codeFlow.objects, targetDepth, newObject);
+      }
+
+      const newActivate = updateActivate(activate, newObject);
+      const turnedLight = turnLight(changedCodeFlows, newActivate);
+
+      setActivate(newActivate);
+      setCodeFlow({ objects: turnedLight });
+    }
+
+    // 불을 켜줘야하는 데이터 구조의 아이디를 담는 배열
+    let idDataStructures;
+    if (codeData[idx].variables === undefined) {
+      idDataStructures = [];
+    } else {
+      idDataStructures = codeData[idx].variables?.map((element) => {
+        return element.name;
+      });
+    }
+
+    // 데이터 구조 시각화에서 isLight를 불을 켜줘야하는 부분에서 true인지 false인지 판단해주는 부분
+    copyDataStructures = copyDataStructures.map((copyDataStructure) => {
+      return {
+        ...copyDataStructure,
+        isLight: idDataStructures?.includes(copyDataStructure.name),
+      };
+    });
+
+    setDataStructures(copyDataStructures);
+    setIdx(idx + 1);
+  };
+
+  const renderComponentDataStruct = (
+    dataStructures: VarItem[] //변수시각화 리스트
+  ): ReactElement => {
+    return (
+      <>
+        {dataStructures.map((dataStructure) => (
+          <VariableBox
+            key={dataStructure.name}
+            value={dataStructure.expr!}
+            name={dataStructure.name!}
+            isLight={dataStructure.isLight!}
+          />
+        ))}
+      </>
+    );
+  };
+
+  // 코드흐름 랜더링 함
   const renderComponent = (
     codeFlows: AllObjectItem[] // 코드흐름을 보여주는 정보를 담고 있는 리스트
   ): JSX.Element => {
@@ -275,6 +390,7 @@ const RightSection = () => {
       </>
     );
   };
+<<<<<<< HEAD
 
   const renderComponentDataStruct = (
     dataStructures: VarItem[] //변수시각화 리스트
@@ -367,15 +483,16 @@ const RightSection = () => {
     setIdx(idx + 1);
   };
 
+=======
+>>>>>>> c3af480 ([#38] 코드흐름과 자료구조들을 리스트 형식으로 저장하는 코드 완성)
   return (
     <div style={{ backgroundColor: "#f4f4f4", width: "100%" }}>
       <div>
         <ul style={{ display: "flex" }}>
-          {renderComponentDataStruct(dataStructures)}
+          {renderComponentDataStruct(dataStructuresList[dataStructuresListIdx])}
         </ul>
       </div>
-
-      <ul>{renderComponent(codeFlow.objects[0].child)}</ul>
+      <ul>{renderComponent(codeFlowList[codeFlowListIdx].objects[0].child)}</ul>
       <button onClick={handleClick}>특정 객체 child 에 객체 생성</button>
     </div>
   );
