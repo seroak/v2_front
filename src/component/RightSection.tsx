@@ -5,6 +5,7 @@ import IfBox from "./IfBox";
 import ElseBox from "./ElseBox";
 import PrintBox from "./PrintBox";
 import { PreprocessedCodesContext } from "../pages/Home";
+import { motion, AnimatePresence } from "framer-motion";
 import _ from "lodash";
 
 // 타입 정의
@@ -30,10 +31,6 @@ interface State {
 const RightSection = () => {
   const [idx, setIdx] = useState<number>(-1);
 
-  // const [codeFlow, setCodeFlow] = useState<State>({
-  //   // 코드흐름 시각화 정보를 담아두는 객체
-  //   objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
-  // });
   // 코드흐름 시각화 정보의 한단계 한단계 모두를 담아두는 리스트
   const [codeFlowList, setCodeFlowList] = useState<State[]>([
     {
@@ -45,7 +42,6 @@ const RightSection = () => {
     [],
   ]); // 변수 데이터 시각화 리스트의 변화과정을 담아두는 리스트
   const [usedName, setUsedName] = useState<string[]>([]); // 사용한 변수 데이터 name 모아두는 리스트
-  // const [activate, setActivate] = useState<ActivateItem[]>([]); // 애니메이션을 줄 때 사용하는 리스트
 
   // context API로 데이터 가져오기
   // context API를 사용하는 패턴
@@ -354,7 +350,35 @@ const RightSection = () => {
       </>
     );
   };
-
+  const codeFlowVariants = {
+    hidden: {
+      opacity: 0,
+      height: 0,
+      transition: {
+        height: { type: "spring", stiffness: 100, damping: 20 },
+        opacity: { duration: 0.2 },
+      },
+    },
+    visible: {
+      opacity: 1,
+      height: "auto",
+      transition: {
+        height: { type: "spring", stiffness: 100, damping: 20, mass: 0.5 },
+        opacity: { duration: 0.5 },
+        when: "beforeChildren",
+        staggerChildren: 0.1,
+      },
+    },
+    exit: {
+      opacity: 0,
+      height: 0,
+      transition: {
+        height: { type: "spring", stiffness: 100, damping: 20, mass: 0.8 },
+        opacity: { duration: 0.5 },
+        when: "afterChildren",
+      },
+    },
+  };
   // 코드흐름 랜더링 함
   const renderComponent = (
     codeFlows: AllObjectItem[] // 코드흐름을 보여주는 정보를 담고 있는 리스트
@@ -366,18 +390,35 @@ const RightSection = () => {
             case "print": {
               const printItem = codeFlow as PrintItem;
               return (
-                <Fragment key={codeFlow.id}>
-                  <PrintBox key={printItem.id} printItem={printItem} />
-                  {renderComponent(codeFlow.child)}
-                </Fragment>
+                <AnimatePresence key={printItem.id}>
+                  <motion.div
+                    variants={codeFlowVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    <PrintBox printItem={printItem} />
+                    {renderComponent(codeFlow.child)}
+                  </motion.div>
+                </AnimatePresence>
               );
             }
             case "for": {
               const forItem = codeFlow as ForItem;
               return (
-                <ForBox key={forItem.id} forItem={forItem}>
-                  {renderComponent(forItem.child)}
-                </ForBox>
+                <AnimatePresence key={forItem.id}>
+                  <motion.div
+                    key={forItem.id}
+                    variants={codeFlowVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    <ForBox forItem={forItem}>
+                      {renderComponent(forItem.child)}
+                    </ForBox>
+                  </motion.div>
+                </AnimatePresence>
               );
             }
             case "if":
@@ -406,15 +447,15 @@ const RightSection = () => {
       <button onClick={toFront}>앞으로 가기</button>
       <div>
         <ul style={{ display: "flex" }}>
-          {dataStructuresList && dataStructuresList.length > 0 && idx >= 0
-            ? renderComponentDataStruct(dataStructuresList[idx])
-            : null}
+          {dataStructuresList && dataStructuresList.length > 0 && idx >= 0 && (
+            <>{renderComponentDataStruct(dataStructuresList[idx])}</>
+          )}
         </ul>
       </div>
       <ul>
-        {codeFlowList && codeFlowList.length > 0 && idx >= 0
-          ? renderComponent(codeFlowList[idx].objects[0].child)
-          : null}
+        {codeFlowList && codeFlowList.length > 0 && idx >= 0 && (
+          <>{renderComponent(codeFlowList[idx].objects[0].child)}</>
+        )}
       </ul>
     </div>
   );
