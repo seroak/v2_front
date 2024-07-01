@@ -30,10 +30,6 @@ interface State {
 const RightSection = () => {
   const [idx, setIdx] = useState<number>(-1);
 
-  // const [codeFlow, setCodeFlow] = useState<State>({
-  //   // 코드흐름 시각화 정보를 담아두는 객체
-  //   objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
-  // });
   // 코드흐름 시각화 정보의 한단계 한단계 모두를 담아두는 리스트
   const [codeFlowList, setCodeFlowList] = useState<State[]>([
     {
@@ -45,7 +41,6 @@ const RightSection = () => {
     [],
   ]); // 변수 데이터 시각화 리스트의 변화과정을 담아두는 리스트
   const [usedName, setUsedName] = useState<string[]>([]); // 사용한 변수 데이터 name 모아두는 리스트
-  // const [activate, setActivate] = useState<ActivateItem[]>([]); // 애니메이션을 줄 때 사용하는 리스트
 
   // context API로 데이터 가져오기
   // context API를 사용하는 패턴
