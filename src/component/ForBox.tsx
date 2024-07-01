@@ -19,7 +19,7 @@ function ForBox({ children, forItem }: Props) {
         <div
           className={cx(
             styles.numberCur,
-            forItem.isLight && forItem.curIsLight && styles.highlightNumber
+            forItem.isLight && forItem.isCurLight && styles.highlightNumber
           )}
         >
           <span className={styles.text}>{forItem.cur}</span>
@@ -29,7 +29,7 @@ function ForBox({ children, forItem }: Props) {
         <div
           className={cx(
             styles.numberStart,
-            forItem.isLight && forItem.startIsLight && styles.highlightNumber
+            forItem.isLight && forItem.isStartLight && styles.highlightNumber
           )}
         >
           <span className={styles.text}>{forItem.start}</span>
@@ -39,7 +39,7 @@ function ForBox({ children, forItem }: Props) {
         <div
           className={cx(
             styles.numberEnd,
-            forItem.isLight && forItem.endIsLight && styles.highlightNumber
+            forItem.isLight && forItem.isEndLight && styles.highlightNumber
           )}
         >
           <span className={styles.text}>{forItem.end}</span>
@@ -50,7 +50,7 @@ function ForBox({ children, forItem }: Props) {
             <div
               className={cx(
                 styles.numberStep,
-                forItem.isLight && forItem.stepIsLight && styles.highlightNumber
+                forItem.isLight && forItem.isStepLight && styles.highlightNumber
               )}
             >
               <span className={styles.text}>{forItem.step}</span>
