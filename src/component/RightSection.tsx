@@ -105,7 +105,7 @@ const RightSection = () => {
       case "else":
         return baseObject as ElseItem;
       default:
-        console.log(type + " is not implemented!");
+        console.error(type + " is not implemented!");
         return null as any;
     }
   };
@@ -297,7 +297,7 @@ const RightSection = () => {
     // 임시로 코드흐름 시각화 정보를 담아둘 리스트를 미리 선언
     let changedCodeFlows: AllObjectItem[] = [];
     if (idx >= codeData.length) {
-      console.log("더이상 데이터가 없습니다");
+      console.error("not data anymore");
       return;
     }
 
