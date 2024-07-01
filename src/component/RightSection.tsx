@@ -112,7 +112,7 @@ const RightSection = () => {
 
         //코드흐름 시각화 최종 결과물
         const turnedLight = turnLight(changedCodeFlows, activate);
-        console.log(turnedLight);
+
         tmpCodeFlow = { objects: turnedLight };
       }
       // 불을 켜줘야하는 데이터 구조의 아이디를 담는 배열
@@ -135,8 +135,7 @@ const RightSection = () => {
       tmpDataStructuresList.push(tmpDataStructures);
       tmpCodeFlowList.push(tmpCodeFlow);
     }
-    console.log(tmpCodeFlowList);
-    console.log(tmpDataStructuresList);
+
     setCodeFlowList(tmpCodeFlowList);
     setDataStructuresList(tmpDataStructuresList);
   }, [preprocessedCodes]);
