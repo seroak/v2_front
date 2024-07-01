@@ -203,6 +203,7 @@ const RightSection = () => {
     });
   };
 
+  // 현재 불이 켜져야하는 부분을 표시해주는 함수
   const updateActivate = (
     oldActivates: ActivateItem[], // 불이 들어와야하는 객체를 저장하는 옛날 리스트
     newActivate: ObjectItem // 새로 불이 들어와야하는 곳의 정보를 담고있는 객체
@@ -337,6 +338,7 @@ const RightSection = () => {
       }
 
       const newActivate = updateActivate(activate, newObject);
+      // 수정이 완료된 코드시각화 데이터
       const turnedLight = turnLight(changedCodeFlows, newActivate);
 
       setActivate(newActivate);
