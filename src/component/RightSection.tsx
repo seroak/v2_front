@@ -16,8 +16,12 @@ import { ForItem } from "@/types/forItem";
 import { PrintItem } from "@/types/printItem";
 import { IfItem } from "@/types/ifItem";
 import { ElseItem } from "@/types/elseItem";
-import { VarItem } from "@/types/varItem";
+import { VisVarItem } from "@/types/visVarItem";
+import { AssignVizItem } from "@/types/assignVizItem";
+import { ListItem } from "@/types/listItem";
 import { VariablesItem } from "@/types/variablesItem";
+import { VisListItem } from "@/types/visListItem";
+import ListDiv from "./ListDiv";
 interface ObjectItem {
   id: number;
   type: string;
@@ -42,7 +46,6 @@ const RightSection = () => {
   const [dataStructuresList, setDataStructuresList] = useState<CodeItem[][]>([
     [],
   ]); // 변수 데이터 시각화 리스트의 변화과정을 담아두는 리스트
-  const [usedName, setUsedName] = useState<string[]>([]); // 사용한 변수 데이터 name 모아두는 리스트
 
   // context API로 데이터 가져오기
   // context API를 사용하는 패턴
@@ -58,6 +61,7 @@ const RightSection = () => {
   useEffect(() => {
     let activate: ActivateItem[] = [];
     const usedId: number[] = []; // 한 번 사용한 id를 저장하는 리스트
+    const usedName: string[] = []; // 한 번 사용한 name을 저장하는 리스트
     let tmpCodeFlow: State = {
       objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
     };
@@ -70,7 +74,8 @@ const RightSection = () => {
 
       // 자료구조 시각화 부분이 들어왔을 때
       if (preprocessedCode.type.toLowerCase() === "assignViz".toLowerCase()) {
-        preprocessedCode.variables?.forEach((variable) => {
+        preprocessedCode.variables?.forEach((variable: VariablesItem) => {
+          // 이미 한번 자료구조 시각화에 표현된 name인 경우
           if (usedName.includes(variable.name!)) {
             const targetName = variable.name!;
             tmpDataStructures = updateVar(
@@ -78,9 +83,13 @@ const RightSection = () => {
               tmpDataStructures,
               variable
             );
-          } else {
+            tmpDataStructures;
+          }
+          // 처음 시각화해주는 자료구조인 경우
+          else {
             tmpDataStructures.push(variable as CodeItem);
-            setUsedName((prevName) => [...prevName, variable.name!]);
+            // setUsedName((prevName) => [...prevName, variable.name!]);
+            usedName.push(variable.name!);
           }
         });
       }
@@ -112,7 +121,7 @@ const RightSection = () => {
 
         tmpCodeFlow = { objects: turnedLight };
       }
-      // 불을 켜줘야하는 데이터 구조의 아이디를 담는 배열
+      // 불을 켜줘야하는 자료구조의의 name을 담는 배열
       let idDataStructures: any;
       if (preprocessedCode.variables === undefined) {
         idDataStructures = [];
@@ -121,15 +130,17 @@ const RightSection = () => {
           return element.name;
         });
       }
-      // 데이터 구조 시각화에서 isLight를 불을 켜줘야하는 부분에서 true인지 false인지 판단해주는 부분
-      tmpDataStructures = tmpDataStructures.map((copyDataStructure) => {
-        return {
-          ...copyDataStructure,
-          isLight: idDataStructures?.includes(copyDataStructure.name),
-        };
-      });
 
-      tmpDataStructuresList.push(tmpDataStructures);
+      // idDataStructures를 참고해서 데이터 구조 시각화 데이터 속성 중 isLight가 true인지 false인지 판단해주는 부분
+      // idDataStructures에 자료구조 name이 있으면 isLight를 true로 바꿔준다
+      tmpDataStructures = tmpDataStructures.map((dataStructure) => ({
+        ...dataStructure,
+        isLight: idDataStructures?.includes(dataStructure.name),
+      }));
+
+      // 얕은 복사 문제가 생겨서 깊은 복사를 해준다
+      const deepCloneDataStructures = _.cloneDeep(tmpDataStructures);
+      tmpDataStructuresList.push(deepCloneDataStructures);
       tmpCodeFlowList.push(tmpCodeFlow);
     }
 
@@ -284,7 +295,7 @@ const RightSection = () => {
   const updateVar = (
     targetName: string,
     dataStructures: CodeItem[], // 원래 들어있는 자료구조 데이터
-    newData: VariablesItem // 수정해야하는 자료구조가 들어있는 데이터
+    newData: CodeItem // 수정해야하는 자료구조가 들어있는 데이터
   ): CodeItem[] => {
     return dataStructures.map((dataStructure) => {
       return dataStructure.name === targetName
@@ -362,27 +373,56 @@ const RightSection = () => {
     },
   };
   const renderComponentDataStruct = (
-    dataStructures: VarItem[] //변수시각화 리스트
+    dataStructures: VisVarItem[] //변수시각화 리스트
   ): ReactElement => {
     return (
       <>
-        {dataStructures.map((dataStructure) => (
-          <AnimatePresence key={dataStructure.name} mode="wait">
-            <motion.div
-              key={`${dataStructure.name}-${dataStructure.expr}`}
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <VariableBox
-                value={dataStructure.expr!}
-                name={dataStructure.name!}
-                isLight={dataStructure.isLight!}
-              />
-            </motion.div>
-          </AnimatePresence>
-        ))}
+        {dataStructures.map((dataStructure) => {
+          switch (dataStructure.type) {
+            case "variable": {
+              const variableItem = dataStructure as VisVarItem;
+              console.log(variableItem);
+              return (
+                <AnimatePresence key={variableItem.name} mode="wait">
+                  <motion.div
+                    key={`${variableItem.name}`}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <VariableBox
+                      value={variableItem.expr!}
+                      name={variableItem.name!}
+                      isLight={variableItem.isLight!}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              );
+            }
+            case "list": {
+              const listItem = dataStructure as VisListItem;
+              console.log(listItem);
+              return (
+                <AnimatePresence key={listItem.name} mode="wait">
+                  <motion.div
+                    key={`${listItem.name}`}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ListDiv listItem={listItem} />
+                  </motion.div>
+                </AnimatePresence>
+              );
+            }
+            default: {
+              console.error("Not implemented");
+              return null;
+            }
+          }
+        })}
       </>
     );
   };
@@ -390,14 +430,13 @@ const RightSection = () => {
     return (
       <>
         {codeFlows.map((codeFlow) => {
-          const key = `${codeFlow.id}-${codeFlow.isLight}`;
           switch (codeFlow.type) {
             case "print": {
               const printItem = codeFlow as PrintItem;
               return (
                 <AnimatePresence key={printItem.id} mode="wait">
                   <motion.div
-                    key={key}
+                    key={printItem.id}
                     layout
                     variants={codeFlowVariants}
                     initial="hidden"
@@ -414,7 +453,11 @@ const RightSection = () => {
               const forItem = codeFlow as ForItem;
               return (
                 <AnimatePresence key={forItem.id} mode="wait">
-                  <motion.div key={key} layout variants={codeFlowVariants}>
+                  <motion.div
+                    key={forItem.id}
+                    layout
+                    variants={codeFlowVariants}
+                  >
                     <ForBox forItem={forItem}>
                       {renderComponent(forItem.child)}
                     </ForBox>
@@ -423,10 +466,11 @@ const RightSection = () => {
               );
             }
             case "if":
+              const ifItem = codeFlow as IfItem;
               return (
-                <AnimatePresence key={codeFlow.id} mode="wait">
+                <AnimatePresence key={ifItem.id} mode="wait">
                   <motion.div
-                    key={key}
+                    key={ifItem.id}
                     layout
                     variants={codeFlowVariants}
                     initial="hidden"
@@ -440,10 +484,11 @@ const RightSection = () => {
                 </AnimatePresence>
               );
             case "else":
+              const elseItem = codeFlow as ElseItem;
               return (
-                <AnimatePresence key={codeFlow.id} mode="wait">
+                <AnimatePresence key={elseItem.id} mode="wait">
                   <motion.div
-                    key={key}
+                    key={elseItem.id}
                     layout
                     variants={codeFlowVariants}
                     initial="hidden"
@@ -457,6 +502,7 @@ const RightSection = () => {
                 </AnimatePresence>
               );
             default:
+              console.error("Not implemented");
               return null;
           }
         })}
