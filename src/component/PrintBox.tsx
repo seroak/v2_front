@@ -1,9 +1,11 @@
 import cx from "classnames";
 import styles from "./PrintBox.module.css";
 import { PrintItem } from "@/types/printItem";
+
 type Props = {
   printItem: PrintItem;
 };
+
 function printBox({ printItem }: Props) {
   return (
     <div className={styles.print_box}>

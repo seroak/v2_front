@@ -5,6 +5,7 @@ import IfBox from "./IfBox";
 import ElseBox from "./ElseBox";
 import PrintBox from "./PrintBox";
 import { PreprocessedCodesContext } from "../pages/Home";
+import { motion, AnimatePresence } from "framer-motion";
 import _ from "lodash";
 
 // 타입 정의
@@ -16,6 +17,7 @@ import { PrintItem } from "@/types/printItem";
 import { IfItem } from "@/types/ifItem";
 import { ElseItem } from "@/types/elseItem";
 import { VarItem } from "@/types/varItem";
+import { VariablesItem } from "@/types/variablesItem";
 interface ObjectItem {
   id: number;
   type: string;
@@ -68,17 +70,17 @@ const RightSection = () => {
 
       // 자료구조 시각화 부분이 들어왔을 때
       if (preprocessedCode.type.toLowerCase() === "assignViz".toLowerCase()) {
-        preprocessedCode.variables?.forEach((element) => {
-          if (usedName.includes(element.name!)) {
-            const targetName = element.name!;
+        preprocessedCode.variables?.forEach((variable) => {
+          if (usedName.includes(variable.name!)) {
+            const targetName = variable.name!;
             tmpDataStructures = updateVar(
               targetName,
               tmpDataStructures,
-              element
+              variable
             );
           } else {
-            tmpDataStructures.push(element);
-            setUsedName((prevName) => [...prevName, element.name!]);
+            tmpDataStructures.push(variable as CodeItem);
+            setUsedName((prevName) => [...prevName, variable.name!]);
           }
         });
       }
@@ -282,7 +284,7 @@ const RightSection = () => {
   const updateVar = (
     targetName: string,
     dataStructures: CodeItem[], // 원래 들어있는 자료구조 데이터
-    newData: CodeItem // 수정해야하는 자료구조가 들어있는 데이터
+    newData: VariablesItem // 수정해야하는 자료구조가 들어있는 데이터
   ): CodeItem[] => {
     return dataStructures.map((dataStructure) => {
       return dataStructure.name === targetName
@@ -333,59 +335,126 @@ const RightSection = () => {
     setIdx(idx - 1);
   };
 
+  const codeFlowVariants = {
+    hidden: {
+      opacity: 0,
+      height: 0,
+      transition: {
+        height: { type: "spring", stiffness: 300, damping: 30 },
+        opacity: { duration: 0.2 },
+      },
+    },
+    visible: {
+      opacity: 1,
+      height: "auto",
+      transition: {
+        height: { type: "spring", stiffness: 300, damping: 30, mass: 0.8 },
+        opacity: { duration: 0.3 },
+      },
+    },
+    exit: {
+      opacity: 0,
+      height: 0,
+      transition: {
+        height: { type: "spring", stiffness: 300, damping: 30, mass: 0.8 },
+        opacity: { duration: 0.3 },
+      },
+    },
+  };
   const renderComponentDataStruct = (
     dataStructures: VarItem[] //변수시각화 리스트
   ): ReactElement => {
     return (
       <>
         {dataStructures.map((dataStructure) => (
-          <VariableBox
-            key={dataStructure.name}
-            value={dataStructure.expr!}
-            name={dataStructure.name!}
-            isLight={dataStructure.isLight!}
-          />
+          <AnimatePresence key={dataStructure.name} mode="wait">
+            <motion.div
+              key={`${dataStructure.name}-${dataStructure.expr}`}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <VariableBox
+                value={dataStructure.expr!}
+                name={dataStructure.name!}
+                isLight={dataStructure.isLight!}
+              />
+            </motion.div>
+          </AnimatePresence>
         ))}
       </>
     );
   };
-
-  // 코드흐름 랜더링 함
-  const renderComponent = (
-    codeFlows: AllObjectItem[] // 코드흐름을 보여주는 정보를 담고 있는 리스트
-  ): JSX.Element => {
+  const renderComponent = (codeFlows: AllObjectItem[]): JSX.Element => {
     return (
       <>
         {codeFlows.map((codeFlow) => {
+          const key = `${codeFlow.id}-${codeFlow.isLight}`;
           switch (codeFlow.type) {
             case "print": {
               const printItem = codeFlow as PrintItem;
               return (
-                <Fragment key={codeFlow.id}>
-                  <PrintBox key={printItem.id} printItem={printItem} />
-                  {renderComponent(codeFlow.child)}
-                </Fragment>
+                <AnimatePresence key={printItem.id} mode="wait">
+                  <motion.div
+                    key={key}
+                    layout
+                    variants={codeFlowVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    <PrintBox printItem={printItem} />
+                    {renderComponent(codeFlow.child)}
+                  </motion.div>
+                </AnimatePresence>
               );
             }
             case "for": {
               const forItem = codeFlow as ForItem;
               return (
-                <ForBox key={forItem.id} forItem={forItem}>
-                  {renderComponent(forItem.child)}
-                </ForBox>
+                <AnimatePresence key={forItem.id} mode="wait">
+                  <motion.div key={key} layout variants={codeFlowVariants}>
+                    <ForBox forItem={forItem}>
+                      {renderComponent(forItem.child)}
+                    </ForBox>
+                  </motion.div>
+                </AnimatePresence>
               );
             }
             case "if":
               return (
-                <IfBox key={codeFlow.id} isLight={codeFlow.isLight}>
-                  {renderComponent(codeFlow.child)}
-                </IfBox>
+                <AnimatePresence key={codeFlow.id} mode="wait">
+                  <motion.div
+                    key={key}
+                    layout
+                    variants={codeFlowVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    <IfBox isLight={codeFlow.isLight}>
+                      {renderComponent(codeFlow.child)}
+                    </IfBox>
+                  </motion.div>
+                </AnimatePresence>
               );
             case "else":
               return (
-                <ElseBox key={codeFlow.id} isLight={codeFlow.isLight}>
-                  {renderComponent(codeFlow.child)}
-                </ElseBox>
+                <AnimatePresence key={codeFlow.id} mode="wait">
+                  <motion.div
+                    key={key}
+                    layout
+                    variants={codeFlowVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    <ElseBox isLight={codeFlow.isLight}>
+                      {renderComponent(codeFlow.child)}
+                    </ElseBox>
+                  </motion.div>
+                </AnimatePresence>
               );
             default:
               return null;
@@ -401,15 +470,17 @@ const RightSection = () => {
       <button onClick={toFront}>앞으로 가기</button>
       <div>
         <ul style={{ display: "flex" }}>
-          {dataStructuresList && dataStructuresList.length > 0 && idx >= 0
-            ? renderComponentDataStruct(dataStructuresList[idx])
-            : null}
+          {dataStructuresList &&
+            dataStructuresList.length > 0 &&
+            idx >= 0 &&
+            renderComponentDataStruct(dataStructuresList[idx])}
         </ul>
       </div>
       <ul>
-        {codeFlowList && codeFlowList.length > 0 && idx >= 0
-          ? renderComponent(codeFlowList[idx].objects[0].child)
-          : null}
+        {codeFlowList &&
+          codeFlowList.length > 0 &&
+          idx >= 0 &&
+          renderComponent(codeFlowList[idx].objects[0].child)}
       </ul>
     </div>
   );
