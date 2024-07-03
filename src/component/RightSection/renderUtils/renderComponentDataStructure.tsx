@@ -5,7 +5,7 @@ import VariableBox from "../VariableBox";
 import { VizListItem } from "@/types/vizListItem";
 import ListDiv from "../ListDiv";
 
-export const renderComponentDataStruct = (
+export const renderComponentDataStructure = (
   dataStructures: VizVarItem[] //변수시각화 리스트
 ): ReactElement => {
   return (

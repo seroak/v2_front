@@ -1,6 +1,5 @@
 import { useState, useContext, useEffect } from "react";
 import { PreprocessedCodesContext } from "../../pages/Home";
-
 import _ from "lodash";
 
 // 타입 정의
@@ -17,8 +16,9 @@ import { updateDataStructure } from "./utils/updateDataStructure";
 import { updateActivate } from "./utils/updateActivate";
 
 //rendUtils에서 가져온 함수
-import { renderComponentDataStruct } from "./renderUtils/renderComponentDataStruct";
+import { renderComponentDataStructure } from "./renderUtils/renderComponentDataStructure";
 import { renderComponentCodeFlow } from "./renderUtils/renderComponentCodeFLow";
+import { VariablesItem } from "@/types/variablesItem";
 interface State {
   objects: AllObjectItem[];
 }
@@ -158,7 +158,7 @@ const RightSection = () => {
           {dataStructuresList &&
             dataStructuresList.length > 0 &&
             idx >= 0 &&
-            renderComponentDataStruct(dataStructuresList[idx])}
+            renderComponentDataStructure(dataStructuresList[idx])}
         </ul>
       </div>
       <ul>

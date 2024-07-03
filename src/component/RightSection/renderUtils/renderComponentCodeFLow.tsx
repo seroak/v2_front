@@ -7,6 +7,8 @@ import ForBox from "../ForBox";
 import IfBox from "../IfBox";
 import { ElseItem } from "@/types/elseItem";
 import ElseBox from "../ElseBox";
+import { ForItem } from "@/types/forItem";
+import { IfItem } from "@/types/ifItem";
 const codeFlowVariants = {
   hidden: {
     opacity: 0,
