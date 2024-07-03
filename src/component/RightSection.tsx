@@ -88,7 +88,6 @@ const RightSection = () => {
           // 처음 시각화해주는 자료구조인 경우
           else {
             tmpDataStructures.push(variable as CodeItem);
-            // setUsedName((prevName) => [...prevName, variable.name!]);
             usedName.push(variable.name!);
           }
         });
@@ -312,6 +311,7 @@ const RightSection = () => {
     // 새로 생성되는 활성화리스트를 임시로 받아서 리턴할 변수
     let tmpActivate: ActivateItem[] = [];
 
+    // 옛날 활성화 리스트를 돌면서 새로운 활성화 객체의 위치를 찾아서 활성화 시켜준다
     for (let oldActivate of oldActivates) {
       if (oldActivate.depth === newActivate.depth) {
         tmpActivate.push({
@@ -352,7 +352,7 @@ const RightSection = () => {
       height: 0,
       transition: {
         height: { type: "spring", stiffness: 300, damping: 30 },
-        opacity: { duration: 0.2 },
+        opacity: { duration: 0.5 },
       },
     },
     visible: {
@@ -360,7 +360,7 @@ const RightSection = () => {
       height: "auto",
       transition: {
         height: { type: "spring", stiffness: 300, damping: 30, mass: 0.8 },
-        opacity: { duration: 0.3 },
+        opacity: { duration: 0.5 },
       },
     },
     exit: {
@@ -368,7 +368,7 @@ const RightSection = () => {
       height: 0,
       transition: {
         height: { type: "spring", stiffness: 300, damping: 30, mass: 0.8 },
-        opacity: { duration: 0.3 },
+        opacity: { duration: 0.5 },
       },
     },
   };
@@ -437,14 +437,14 @@ const RightSection = () => {
                 <AnimatePresence key={printItem.id} mode="wait">
                   <motion.div
                     key={printItem.id}
-                    layout
                     variants={codeFlowVariants}
                     initial="hidden"
                     animate="visible"
                     exit="exit"
+                    layout
                   >
                     <PrintBox printItem={printItem} />
-                    {renderComponent(codeFlow.child)}
+                    {renderComponent(printItem.child)}
                   </motion.div>
                 </AnimatePresence>
               );
@@ -455,8 +455,11 @@ const RightSection = () => {
                 <AnimatePresence key={forItem.id} mode="wait">
                   <motion.div
                     key={forItem.id}
-                    layout
                     variants={codeFlowVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    layout
                   >
                     <ForBox forItem={forItem}>
                       {renderComponent(forItem.child)}
