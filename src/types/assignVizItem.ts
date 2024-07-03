@@ -4,4 +4,5 @@ import { ListItem } from "./listItem";
 export interface AssignVizItem {
   variables: VariablesItem[] | ListItem[];
   type: string;
+  name: string;
 }

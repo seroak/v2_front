@@ -17,11 +17,11 @@ import { ForItem } from "@/types/forItem";
 import { PrintItem } from "@/types/printItem";
 import { IfItem } from "@/types/ifItem";
 import { ElseItem } from "@/types/elseItem";
-import { VisVarItem } from "@/types/visVarItem";
+import { VizVarItem } from "@/types/vizVarItem";
 import { AssignVizItem } from "@/types/assignVizItem";
 import { ListItem } from "@/types/listItem";
 import { VariablesItem } from "@/types/variablesItem";
-import { VisListItem } from "@/types/visListItem";
+import { VizListItem } from "@/types/vizListItem";
 
 interface ObjectItem {
   id: number;
@@ -53,8 +53,7 @@ const RightSection = () => {
   const context = useContext(PreprocessedCodesContext);
   //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
   if (!context) {
-    console.error("CodeContext not found");
-    return null;
+    throw new Error("CodeContext not found");
   }
   const { preprocessedCodes } = context;
   // codeFlowList를 업데이트하는 useEffect
@@ -206,8 +205,7 @@ const RightSection = () => {
       case "else":
         return baseObject as ElseItem;
       default:
-        console.error(type + " is not implemented!");
-        return null as any;
+        throw new Error(`Unsupported type: ${type}`);
     }
   };
 
@@ -374,15 +372,15 @@ const RightSection = () => {
     },
   };
   const renderComponentDataStruct = (
-    dataStructures: VisVarItem[] //변수시각화 리스트
+    dataStructures: VizVarItem[] //변수시각화 리스트
   ): ReactElement => {
     return (
       <>
         {dataStructures.map((dataStructure) => {
           switch (dataStructure.type) {
             case "variable": {
-              const variableItem = dataStructure as VisVarItem;
-              console.log(variableItem);
+              const variableItem = dataStructure as VizVarItem;
+
               return (
                 <AnimatePresence key={variableItem.name} mode="wait">
                   <motion.div
@@ -402,8 +400,8 @@ const RightSection = () => {
               );
             }
             case "list": {
-              const listItem = dataStructure as VisListItem;
-              console.log(listItem);
+              const listItem = dataStructure as VizListItem;
+
               return (
                 <AnimatePresence key={listItem.name} mode="wait">
                   <motion.div
@@ -419,8 +417,7 @@ const RightSection = () => {
               );
             }
             default: {
-              console.error("Not implemented");
-              return null;
+              throw new Error(`Unsupported type: ${dataStructure.type}`);
             }
           }
         })}
@@ -506,8 +503,7 @@ const RightSection = () => {
                 </AnimatePresence>
               );
             default:
-              console.error("Not implemented");
-              return null;
+              throw new Error(`${codeFlow.type} is unexpected type`);
           }
         })}
       </>
