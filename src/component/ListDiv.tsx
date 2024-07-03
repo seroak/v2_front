@@ -1,9 +1,9 @@
 import styles from "./ListDiv.module.css";
 import cx from "classnames";
 import ListBox from "./ListBox";
-import { VisListItem } from "@/types/visListItem";
+import { VizListItem } from "@/types/vizListItem";
 type Props = {
-  listItem: VisListItem;
+  listItem: VizListItem;
 };
 function ListDiv({ listItem }: Props) {
   const { expr, isLight, name } = listItem;
@@ -22,7 +22,14 @@ function ListDiv({ listItem }: Props) {
       <span className={styles.listName}>{name}</span>
       <div style={{ display: "flex" }}>
         {exprArray?.map((exprItem, index) => {
-          return <ListBox key={index} exprItem={exprItem} isLight={isLight} />;
+          return (
+            <ListBox
+              key={index}
+              exprItem={exprItem}
+              isLight={isLight}
+              index={index}
+            />
+          );
         })}
       </div>
     </div>
