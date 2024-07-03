@@ -1,5 +1,4 @@
 import styles from "./ListDiv.module.css";
-import cx from "classnames";
 import ListBox from "./ListBox";
 import { VizListItem } from "@/types/vizListItem";
 type Props = {

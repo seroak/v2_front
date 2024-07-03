@@ -1,6 +1,6 @@
 import styles from "./home.module.css";
 import CodeEditor from "../component/CodeEditor";
-import RightSection from "../component/RightSection";
+import RightSection from "../component/RightSection/RightSection";
 import Resizable from "../component/Resizable";
 import { createContext, useState, Dispatch, SetStateAction } from "react";
 
