@@ -7,9 +7,21 @@ export const handlers = [
       {
         variables: [
           {
-            depth: 1,
-            expr: "6",
+            expr: "3",
+            highlights: [0],
             name: "a",
+            type: "variable",
+          },
+        ],
+        type: "assignViz",
+      },
+      {
+        variables: [
+          {
+            expr: "1,2,3,4,5",
+            highlights: [0, 1, 2, 3, 4],
+            name: "b",
+            type: "list",
           },
         ],
         type: "assignViz",

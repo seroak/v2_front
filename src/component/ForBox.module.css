@@ -2,17 +2,7 @@
   display: flex;
   flex-direction: column;
 }
-.box_animation {
-  animation: fadeIn 3s ease-in-out; /* fadeIn 애니메이션 적용 */
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0; /* 시작 시 투명도를 0으로 설정 */
-  }
-  to {
-    opacity: 1; /* 끝날 때 투명도를 1로 설정 */
-  }
-}
+
 .for_border {
   position: relative;
   border: 3px solid #dedede;

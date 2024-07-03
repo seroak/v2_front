@@ -1,6 +1,6 @@
 // 백엔드로 부터 받는 데이터 타입 설정
 import { ConditionItem } from "./conditionItem";
-import { VariablesItem } from "./variablesItem";
+import { AssignVizItem } from "./assignVizItem";
 export interface CodeItem {
   id?: number;
   type: string;
@@ -13,5 +13,5 @@ export interface CodeItem {
   expr?: string;
   highlights?: number[] | string[];
   condition?: ConditionItem;
-  variables?: VariablesItem[];
+  variables?: AssignVizItem[];
 }
