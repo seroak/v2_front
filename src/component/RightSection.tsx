@@ -4,6 +4,7 @@ import VariableBox from "./VariableBox";
 import IfBox from "./IfBox";
 import ElseBox from "./ElseBox";
 import PrintBox from "./PrintBox";
+import ListDiv from "./ListDiv";
 import { PreprocessedCodesContext } from "../pages/Home";
 import { motion, AnimatePresence } from "framer-motion";
 import _ from "lodash";
@@ -21,7 +22,7 @@ import { AssignVizItem } from "@/types/assignVizItem";
 import { ListItem } from "@/types/listItem";
 import { VariablesItem } from "@/types/variablesItem";
 import { VisListItem } from "@/types/visListItem";
-import ListDiv from "./ListDiv";
+
 interface ObjectItem {
   id: number;
   type: string;

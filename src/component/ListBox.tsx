@@ -1,12 +1,17 @@
-import styles from "./VariableBox.module.css";
+import styles from "./ListBox.module.css";
 import cx from "classnames";
 
-import { VisListItem } from "@/types/visListItem";
 type Props = {
   exprItem: string;
+  isLight: boolean;
 };
-function ListBox({ exprItem }: Props) {
-  return <div>{exprItem}</div>;
+function ListBox({ exprItem, isLight }: Props) {
+  console.log(isLight);
+  return (
+    <div className={cx(styles.list_box, isLight && styles.highlight)}>
+      <span className={styles.text}>{exprItem}</span>
+    </div>
+  );
 }
 
 export default ListBox;
