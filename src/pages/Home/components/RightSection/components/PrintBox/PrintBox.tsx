@@ -5,10 +5,15 @@ import { PrintItem } from "@/types/printItem";
 type Props = {
   printItem: PrintItem;
 };
+/**
+ *
+ * @param param0 (@link PrintItem)
+ * @returns
+ */
 
 function printBox({ printItem }: Props) {
   return (
-    <div className={styles.print_box}>
+    <div className={styles.print}>
       <div
         className={cx(
           styles.print_border,

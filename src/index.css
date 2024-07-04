@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Inder&display=swap");
+/* 모드요소에 적용되는 속성 정의 */
 :root {
   font-family: "Inder", sans-serif;
   font-weight: 400;
@@ -7,12 +8,11 @@
   color-scheme: light dark;
 
   font-synthesis: none;
-  text-rendering: optimizeLegibility;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.white-text {
+  color: #f1f1f1;
 }

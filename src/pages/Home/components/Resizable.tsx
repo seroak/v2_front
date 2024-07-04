@@ -1,9 +1,14 @@
-import React, { useState, useRef, MouseEvent } from "react";
+import React, {
+  useState,
+  useRef,
+  MouseEvent as ReactMouseEvent,
+  ReactNode,
+} from "react";
 import styles from "./Resizable.module.css";
 
 interface ResizableProps {
-  left: JSX.Element;
-  right: JSX.Element;
+  left: ReactNode;
+  right: ReactNode;
 }
 
 const Resizable: React.FC<ResizableProps> = ({ left, right }) => {
@@ -11,18 +16,21 @@ const Resizable: React.FC<ResizableProps> = ({ left, right }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const startXRef = useRef<number>(0);
 
-  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = (e: ReactMouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    startXRef.current = e.clientX; // 드래그 시작 시점의 X 좌표 저장
+    startXRef.current = e.clientX;
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
   };
 
-  const handleMouseMove = (e: MouseEvent) => {
+  const handleMouseMove = (e: globalThis.MouseEvent) => {
     if (containerRef.current) {
       const containerRect = containerRef.current.getBoundingClientRect();
-      const deltaX = e.clientX - startXRef.current; // 드래그 시작 시점으로부터의 이동 거리 계산
-      const newLeftWidth = ((startXRef.current - containerRect.left + deltaX) / containerRect.width) * 100;
+      const deltaX = e.clientX - startXRef.current;
+      const newLeftWidth =
+        ((startXRef.current - containerRect.left + deltaX) /
+          containerRect.width) *
+        100;
       if (newLeftWidth > 10 && newLeftWidth < 90) {
         setLeftWidth(newLeftWidth);
       }

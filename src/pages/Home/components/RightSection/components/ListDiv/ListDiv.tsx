@@ -1,5 +1,5 @@
 import styles from "./ListDiv.module.css";
-import ListBox from "./ListBox";
+import ListBox from "./components/ListBox";
 import { VizListItem } from "@/types/vizListItem";
 type Props = {
   listItem: VizListItem;
@@ -18,7 +18,7 @@ function ListDiv({ listItem }: Props) {
         justifyContent: "center",
       }}
     >
-      <span className={styles.listName}>{name}</span>
+      <span className={styles.list_name}>{name}</span>
       <div style={{ display: "flex" }}>
         {exprArray?.map((exprItem, index) => {
           return (

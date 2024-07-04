@@ -1,11 +1,11 @@
 import { VizVarItem } from "@/types/vizVarItem";
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactElement } from "react";
-import VariableBox from "../VariableBox";
+import VariableBox from "../components/VariableBox/VariableBox";
 import { VizListItem } from "@/types/vizListItem";
-import ListDiv from "../ListDiv";
+import ListDiv from "../components/ListDiv/ListDiv";
 
-export const renderComponentDataStructure = (
+export const renderingDataStructure = (
   dataStructures: VizVarItem[] //변수시각화 리스트
 ): ReactElement => {
   return (

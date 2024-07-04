@@ -2,11 +2,11 @@ import { AllObjectItem } from "@/types/allObjectItem";
 import { PrintItem } from "@/types/printItem";
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactElement } from "react";
-import PrintBox from "../PrintBox";
-import ForBox from "../ForBox";
-import IfBox from "../IfBox";
+import PrintBox from "../components/PrintBox/PrintBox";
+import ForBox from "../components/ForBox/ForBox";
+import IfBox from "../components/IfBox/IfBox";
 import { ElseItem } from "@/types/elseItem";
-import ElseBox from "../ElseBox";
+import ElseBox from "../components/ElseBox/ElseBox";
 import { ForItem } from "@/types/forItem";
 import { IfItem } from "@/types/ifItem";
 const codeFlowVariants = {
@@ -35,9 +35,7 @@ const codeFlowVariants = {
     },
   },
 };
-export const renderComponentCodeFlow = (
-  codeFlows: AllObjectItem[]
-): ReactElement => {
+export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
   return (
     <>
       {codeFlows.map((codeFlow) => {
@@ -55,7 +53,7 @@ export const renderComponentCodeFlow = (
                   layout
                 >
                   <PrintBox printItem={printItem} />
-                  {renderComponentCodeFlow(printItem.child)}
+                  {renderingCodeFlow(printItem.child)}
                 </motion.div>
               </AnimatePresence>
             );
@@ -73,7 +71,7 @@ export const renderComponentCodeFlow = (
                   layout
                 >
                   <ForBox forItem={forItem}>
-                    {renderComponentCodeFlow(forItem.child)}
+                    {renderingCodeFlow(forItem.child)}
                   </ForBox>
                 </motion.div>
               </AnimatePresence>
@@ -92,7 +90,7 @@ export const renderComponentCodeFlow = (
                   exit="exit"
                 >
                   <IfBox isLight={codeFlow.isLight}>
-                    {renderComponentCodeFlow(codeFlow.child)}
+                    {renderingCodeFlow(codeFlow.child)}
                   </IfBox>
                 </motion.div>
               </AnimatePresence>
@@ -110,7 +108,7 @@ export const renderComponentCodeFlow = (
                   exit="exit"
                 >
                   <ElseBox isLight={codeFlow.isLight}>
-                    {renderComponentCodeFlow(codeFlow.child)}
+                    {renderingCodeFlow(codeFlow.child)}
                   </ElseBox>
                 </motion.div>
               </AnimatePresence>

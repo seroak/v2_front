@@ -1,7 +1,7 @@
-import styles from "./home.module.css";
-import CodeEditor from "../component/CodeEditor";
-import RightSection from "../component/RightSection/RightSection";
-import Resizable from "../component/Resizable";
+import styles from "./Home.module.css";
+import LeftSection from "./components/LeftSection/LeftSection";
+import RightSection from "./components/RightSection/RightSection";
+import Resizable from "./components/Resizable";
 import { createContext, useState, Dispatch, SetStateAction } from "react";
 
 import { useMutation } from "@tanstack/react-query";
@@ -86,7 +86,7 @@ export default function Home() {
               </button>
             </form>
           </div>
-          <Resizable left={<CodeEditor />} right={<RightSection />} />
+          <Resizable left={<LeftSection />} right={<RightSection />} />
         </main>
       </PreprocessedCodesContext.Provider>
     </CodeContext.Provider>

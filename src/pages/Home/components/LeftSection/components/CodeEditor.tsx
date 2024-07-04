@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import Editor from "@monaco-editor/react";
-import styles from "./codeEditor.module.css";
+import styles from "./CodeEditor.module.css";
 
-import { CodeContext } from "../pages/Home";
-const CodeEditor: React.FC = () => {
+import { CodeContext } from "../../../Home";
+const CodeEditor = () => {
   // context API로 state 가져오기
   const context = useContext(CodeContext);
   // context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생

@@ -7,7 +7,7 @@ type Props = {
 };
 function VariableBox({ value, name, isLight }: Props) {
   return (
-    <div>
+    <div className={styles.variable}>
       <span className={styles.variable_name}>{name}</span>
       <div className={cx(styles.variable_box, isLight && styles.highlight)}>
         <span className={styles.text}>{value}</span>
