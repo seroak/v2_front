@@ -8,7 +8,7 @@ function ListDiv({ listItem }: Props) {
   const { expr, isLight, name } = listItem;
 
   const exprArray = expr?.split(",");
-  console.log(exprArray);
+
   return (
     <div
       style={{

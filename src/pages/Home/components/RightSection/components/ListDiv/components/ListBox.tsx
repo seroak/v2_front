@@ -7,7 +7,6 @@ type Props = {
   index: number;
 };
 function ListBox({ exprItem, isLight, index }: Props) {
-  console.log(isLight);
   return (
     <div>
       <div className={cx(styles.list, isLight && styles.highlight)}>

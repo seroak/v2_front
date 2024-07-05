@@ -56,7 +56,7 @@ const RightSection = () => {
     };
     let tmpDataStructures: CodeItem[] = [];
     const tmpCodeFlowList: State[] = [];
-    let tmpDataStructuresList: CodeItem[][] = [];
+    const tmpDataStructuresList: CodeItem[][] = [];
     for (let preprocessedCode of preprocessedCodes) {
       // 임시로 코드흐름 시각화 정보를 담아둘 리스트를 미리 선언
       let changedCodeFlows: AllObjectItem[] = [];
