@@ -12,29 +12,30 @@
   margin: 25px;
   margin-top: 40px;
   min-width: 200px;
-
-  max-width: 1000px;
-  max-height: 1000px;
   display: inline-block;
 }
 
-.text-for {
+.for_title {
   position: absolute;
+  width: 50px;
+  height: 40px;
   font-size: 24px;
-  top: -10px; /* 테두리 위에 위치 */
+  top: -20px; /* 테두리 위에 위치 */
   left: 5px; /* 테두리 왼쪽에 위치 */
   background-color: #f4f4f4; /* 텍스트 위에 테두리가 있어도 글씨가 보이도록 배경색 지정 */
   padding: 0 5px; /* 좌우 여백 추가 */
 }
 
-.text-target {
+.for_target-title {
   position: absolute;
+  width: 100px;
+  height: 100px;
   top: -40px; /* 테두리 위에 위치 */
-  left: 57px; /* 테두리 왼쪽에 위치 */
+  left: 65px; /* 테두리 왼쪽에 위치 */
   background-color: #f4f4f4; /* 텍스트 위에 테두리가 있어도 글씨가 보이도록 배경색 지정 */
   padding: 0 5px; /* 좌우 여백 추가 */
 }
-.numberCur {
+.cur-number {
   position: absolute;
   border: 1px solid black;
   border-radius: 3px;
@@ -43,21 +44,23 @@
   padding: 10px;
   margin: 10px;
   top: -30px; /* 테두리 위에 위치 */
-  left: 37px; /* 테두리 왼쪽에 위치 */
+  left: 45px; /* 테두리 왼쪽에 위치 */
   background-color: #515060; /* 텍스트 위에 테두리가 있어도 글씨가 보이도록 배경색 지정 */
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.text-start {
+.start_title {
   position: absolute;
   justify-content: center;
+  width: 50px;
+  height: 100px;
   top: -40px; /* 테두리 위에 위치 */
   left: 108px; /* 테두리 왼쪽에 위치 */
   background-color: #f4f4f4; /* 텍스트 위에 테두리가 있어도 글씨가 보이도록 배경색 지정 */
   padding: 0 5px; /* 좌우 여백 추가 */
 }
-.numberStart {
+.number_start {
   position: absolute;
   border: 2px solid black;
   border-radius: 3px;
@@ -72,14 +75,16 @@
   align-items: center;
   justify-content: center;
 }
-.text-end {
+.end_title {
   position: absolute;
+  width: 50px;
+  height: 100px;
   top: -40px; /* 테두리 위에 위치 */
   left: 160px; /* 테두리 왼쪽에 위치 */
   background-color: #f4f4f4; /* 텍스트 위에 테두리가 있어도 글씨가 보이도록 배경색 지정 */
   padding: 0 5px; /* 좌우 여백 추가 */
 }
-.numberEnd {
+.end_number {
   position: absolute;
   border: 2px solid black;
   border-radius: 3px;
@@ -94,14 +99,14 @@
   align-items: center;
   justify-content: center;
 }
-.textStep {
+.step_title {
   position: absolute;
   top: -40px; /* 테두리 위에 위치 */
   left: 210px; /* 테두리 왼쪽에 위치 */
   background-color: #f4f4f4; /* 텍스트 위에 테두리가 있어도 글씨가 보이도록 배경색 지정 */
   padding: 0 5px; /* 좌우 여백 추가 */
 }
-.numberStep {
+.step_number {
   position: absolute;
   border: 2px solid black;
   border-radius: 3px;
@@ -117,8 +122,7 @@
   justify-content: center;
 }
 .highlight {
-  border: 2px solid #8e2efa;
-  border-width: thick;
+  border-color: #8e2efa;
 }
 .highlight-number {
   background-color: #8e2efa;
