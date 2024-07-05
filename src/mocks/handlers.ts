@@ -34,7 +34,7 @@ export const handlers = [
           cur: 0,
           start: 0,
           end: 3,
-          step: 1,
+          step: 2,
         },
         highlights: ["target", "cur", "start", "end", "step"],
         type: "for",

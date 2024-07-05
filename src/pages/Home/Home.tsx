@@ -49,10 +49,9 @@ export default function Home() {
     mutation.mutate(code, {
       onSuccess: (data) => {
         setPreprocessedCodes(data);
-        console.log("Success:", data); // 성공 시 콘솔에 출력
       },
       onError: (error) => {
-        console.error("Submit Error:", error); // 제출 오류 시 콘솔에 출력
+        throw new Error(`Submit Error: ${error}`); // 제출 오류 발생시 에러 출력
       },
     });
   };
