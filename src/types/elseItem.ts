@@ -3,7 +3,7 @@ import { AllObjectItem } from "./allObjectItem";
 export interface ElseItem {
   id: number;
   type: string;
-  depth?: number;
+  depth: number;
   isLight: boolean;
   child: AllObjectItem[];
 }

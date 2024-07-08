@@ -5,15 +5,15 @@ import VariableBox from "../components/VariableBox/VariableBox";
 import { VizListItem } from "@/types/vizListItem";
 import ListDiv from "../components/ListDiv/ListDiv";
 
-export const renderingDataStructure = (
-  dataStructures: VizVarItem[] //변수시각화 리스트
+export const renderingStructure = (
+  structures: VizVarItem[] //변수시각화 리스트
 ): ReactElement => {
   return (
     <>
-      {dataStructures.map((dataStructure) => {
-        switch (dataStructure.type) {
+      {structures.map((structure) => {
+        switch (structure.type) {
           case "variable": {
-            const variableItem = dataStructure as VizVarItem;
+            const variableItem = structure as VizVarItem;
 
             return (
               <AnimatePresence key={variableItem.name} mode="wait">
@@ -34,7 +34,7 @@ export const renderingDataStructure = (
             );
           }
           case "list": {
-            const listItem = dataStructure as VizListItem;
+            const listItem = structure as VizListItem;
 
             return (
               <AnimatePresence key={listItem.name} mode="wait">
@@ -51,7 +51,7 @@ export const renderingDataStructure = (
             );
           }
           default: {
-            throw new Error(`Unsupported type: ${dataStructure.type}`);
+            throw new Error(`Unsupported type: ${structure.type}`);
           }
         }
       })}
