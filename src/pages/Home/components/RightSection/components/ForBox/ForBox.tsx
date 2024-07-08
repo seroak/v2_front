@@ -2,68 +2,108 @@ import { ReactNode } from "react";
 import styles from "./ForBox.module.css";
 import cx from "classnames";
 import { ForItem } from "@/types/forItem";
+import { AnimatePresence, motion } from "framer-motion";
 
 type Props = {
   children?: ReactNode;
   forItem: ForItem;
 };
 
-function ForBox({ children, forItem }: Props) {
+const ForBox = ({ children, forItem }: Props) => {
   return (
-    <div className={styles.for}>
-      <div
-        className={cx(styles.for_border, forItem.isLight && styles.highlight)}
-      >
-        <span className={styles["text-for"]}>for</span>
-        <span className={styles["text-target"]}>{forItem.target}</span>
-        <div
-          className={cx(
-            styles.numberCur,
-            forItem.isLight && forItem.isCurLight && styles.highlightNumber
-          )}
+    <AnimatePresence key={forItem.id} mode="wait">
+      <motion.div className={styles.for}>
+        <motion.div
+          layout
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className={cx(styles.for_border, forItem.isLight && styles.highlight)}
         >
-          <span className="white-text">{forItem.cur}</span>
-        </div>
+          <motion.div layout className={styles["for_title"]}>
+            <span>for</span>
+          </motion.div>
 
-        <span className={styles["text-start"]}>start</span>
-        <div
-          className={cx(
-            styles.numberStart,
-            forItem.isLight && forItem.isStartLight && styles.highlightNumber
-          )}
-        >
-          <span className="white-text">{forItem.start}</span>
-        </div>
+          <motion.div layout className={styles["for_target-title"]}>
+            <span>{forItem.target}</span>
+          </motion.div>
 
-        <span className={styles["text-end"]}>end</span>
-        <div
-          className={cx(
-            styles.numberEnd,
-            forItem.isLight && forItem.isEndLight && styles.highlightNumber
+          <motion.div
+            layout
+            className={cx(
+              styles["cur-number"],
+              forItem.isLight &&
+                forItem.isCurLight &&
+                styles["highlight-number"]
+            )}
+          >
+            <span className="white-text">{forItem.cur}</span>
+          </motion.div>
+          <motion.div layout className={styles["start_title"]}>
+            <span>start</span>
+          </motion.div>
+          <motion.div
+            layout
+            className={cx(
+              styles.number_start,
+              forItem.isLight &&
+                forItem.isStartLight &&
+                styles["highlight-number"]
+            )}
+          >
+            <span className="white-text">{forItem.start}</span>
+          </motion.div>
+          <motion.div layout className={styles["end_title"]}>
+            <span>end</span>
+          </motion.div>
+
+          <motion.div
+            layout
+            className={cx(
+              styles.end_number,
+              forItem.isLight &&
+                forItem.isEndLight &&
+                styles["highlight-number"]
+            )}
+          >
+            <span className="white-text">{forItem.end}</span>
+          </motion.div>
+          {forItem.step === 1 ? null : (
+            <>
+              <motion.div layout className={styles.step_title}>
+                <span>step</span>
+              </motion.div>
+
+              <motion.div
+                layout
+                className={cx(
+                  styles.step_number,
+                  forItem.isLight &&
+                    forItem.isStepLight &&
+                    styles["highlight-number"]
+                )}
+              >
+                <span className="white-text">{forItem.step}</span>
+              </motion.div>
+            </>
           )}
-        >
-          <span className="white-text">{forItem.end}</span>
-        </div>
-        {forItem.step === 1 ? null : (
-          <>
-            <span className={styles.textStep}>step</span>
-            <div
-              className={cx(
-                styles.numberStep,
-                forItem.isLight &&
-                  forItem.isStepLight &&
-                  styles["highlight-number"]
-              )}
+
+          {children && (
+            <motion.div
+              layout
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ delay: 0.3 }}
             >
-              <span className="white-text">{forItem.step}</span>
-            </div>
-          </>
-        )}
-
-        {children && <div>{children}</div>}
-      </div>
-    </div>
+              {children}
+            </motion.div>
+          )}
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
-}
+};
 
 export default ForBox;

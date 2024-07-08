@@ -45,8 +45,8 @@ const RightSection = () => {
     throw new Error("CodeContext not found");
   }
   const { preprocessedCodes } = context;
-  // codeFlowList를 업데이트하는 useEffect
 
+  // codeFlowList를 업데이트하는 useEffect
   useEffect(() => {
     let activate: ActivateItem[] = [];
     const usedId: number[] = []; // 한 번 사용한 id를 저장하는 리스트
@@ -56,7 +56,7 @@ const RightSection = () => {
     };
     let tmpDataStructures: CodeItem[] = [];
     const tmpCodeFlowList: State[] = [];
-    let tmpDataStructuresList: CodeItem[][] = [];
+    const tmpDataStructuresList: CodeItem[][] = [];
     for (let preprocessedCode of preprocessedCodes) {
       // 임시로 코드흐름 시각화 정보를 담아둘 리스트를 미리 선언
       let changedCodeFlows: AllObjectItem[] = [];
@@ -67,6 +67,7 @@ const RightSection = () => {
           // 이미 한번 자료구조 시각화에 표현된 name인 경우
           if (usedName.includes(variable.name!)) {
             const targetName = variable.name!;
+
             tmpDataStructures = updateDataStructure(
               targetName,
               tmpDataStructures,
@@ -84,6 +85,7 @@ const RightSection = () => {
       // 코드 시각화 부분이 들어왔을 때
       else {
         const newObject = createNewObject(preprocessedCode);
+
         if (usedId.includes(preprocessedCode.id!)) {
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           // updateCodeFlow(비주얼 스택, 넣어야하는 위치를 알려주는 id, 넣어야하는 data)
@@ -92,6 +94,7 @@ const RightSection = () => {
           // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
           const targetDepth: number = preprocessedCode.depth!;
           const id: number = preprocessedCode.id!;
+
           // 한번 사용한 id는 저장해준다
           usedId.push(id);
           // addCodeFlow(비주얼 스택, 넣어야하는 위치를 알려주는 depth, 넣어야하는 data)
