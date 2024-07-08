@@ -51,12 +51,12 @@ const RightSection = () => {
     let activate: ActivateItem[] = [];
     const usedId: number[] = []; // 한 번 사용한 id를 저장하는 리스트
     const usedName: string[] = []; // 한 번 사용한 name을 저장하는 리스트
-    let tmpCodeFlow: State = {
+    let accCodeFlow: State = {
       objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
     };
-    let tmpDataStructures: CodeItem[] = [];
-    const tmpCodeFlowList: State[] = [];
-    const tmpDataStructuresList: CodeItem[][] = [];
+    let accDataStructures: CodeItem[] = [];
+    const accCodeFlowList: State[] = [];
+    const accDataStructuresList: CodeItem[][] = [];
     for (let preprocessedCode of preprocessedCodes) {
       // 임시로 코드흐름 시각화 정보를 담아둘 리스트를 미리 선언
       let changedCodeFlows: AllObjectItem[] = [];
@@ -68,16 +68,16 @@ const RightSection = () => {
           if (usedName.includes(variable.name!)) {
             const targetName = variable.name!;
 
-            tmpDataStructures = updateDataStructure(
+            accDataStructures = updateDataStructure(
               targetName,
-              tmpDataStructures,
+              accDataStructures,
               variable
             );
-            tmpDataStructures;
+            accDataStructures;
           }
           // 처음 시각화해주는 자료구조인 경우
           else {
-            tmpDataStructures.push(variable as CodeItem);
+            accDataStructures.push(variable as CodeItem);
             usedName.push(variable.name!);
           }
         });
@@ -89,20 +89,22 @@ const RightSection = () => {
         // 한번 codeFlow list에 들어가서 수정하는 입력일 때
         if (usedId.includes(preprocessedCode.id!)) {
           // updateCodeFlow(이전 코드흐름 데이터, 새로 수정해야하는 객체 데이터)
-          changedCodeFlows = updateCodeFlow(tmpCodeFlow.objects, newObject);
+          changedCodeFlows = updateCodeFlow(accCodeFlow.objects, newObject);
         }
-          // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
+        // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
         else {
           // 한번 사용한 id는 저장해준다
+          usedId.push(newObject.id);
           // addCodeFlow(비주얼 스택, 새로 더해줘야하는 객체 데이터)
+          changedCodeFlows = addCodeFlow(accCodeFlow.objects, newObject);
         }
         // 불을 켜줘야하는 부분에 대한 변수
         activate = updateActivate(activate, newObject);
 
         //코드흐름 시각화 최종 결과물
-        const turnedLight = turnLight(changedCodeFlows, activate);
+        const finallyCodeFlow = turnLight(changedCodeFlows, activate);
 
-        tmpCodeFlow = { objects: turnedLight };
+        accCodeFlow = { objects: finallyCodeFlow };
       }
       // 불을 켜줘야하는 자료구조의의 name을 담는 배열
       let idDataStructures: any;
@@ -115,20 +117,19 @@ const RightSection = () => {
       }
 
       // idDataStructures를 참고해서 데이터 구조 시각화 데이터 속성 중 isLight가 true인지 false인지 판단해주는 부분
-      // idDataStructures에 자료구조 name이 있으면 isLight를 true로 바꿔준다
-      tmpDataStructures = tmpDataStructures.map((dataStructure) => ({
+      accDataStructures = accDataStructures.map((dataStructure) => ({
         ...dataStructure,
-        isLight: idDataStructures?.includes(dataStructure.name),
+        isLight: idDataStructures?.includes(dataStructure.name), // idDataStructures에 자료구조 name이 있으면 isLight를 true로 바꿔준다
       }));
 
       // 얕은 복사 문제가 생겨서 깊은 복사를 해준다
-      const deepCloneDataStructures = _.cloneDeep(tmpDataStructures);
-      tmpDataStructuresList.push(deepCloneDataStructures);
-      tmpCodeFlowList.push(tmpCodeFlow);
+      const deepCloneDataStructures = _.cloneDeep(accDataStructures);
+      accDataStructuresList.push(deepCloneDataStructures);
+      accCodeFlowList.push(accCodeFlow);
     }
 
-    setCodeFlowList(tmpCodeFlowList);
-    setDataStructuresList(tmpDataStructuresList);
+    setCodeFlowList(accCodeFlowList);
+    setDataStructuresList(accDataStructuresList);
   }, [preprocessedCodes]);
 
   const toFront = () => {
