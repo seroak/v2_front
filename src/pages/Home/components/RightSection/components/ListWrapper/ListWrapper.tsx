@@ -1,5 +1,5 @@
-import styles from "./ListDiv.module.css";
-import ListBox from "./components/ListBox";
+import styles from "./ListWrapper.module.css";
+import ListBlock from "./components/ListBlock";
 import { VizListItem } from "@/types/vizListItem";
 type Props = {
   listItem: VizListItem;
@@ -22,7 +22,7 @@ function ListDiv({ listItem }: Props) {
       <div style={{ display: "flex" }}>
         {exprArray?.map((exprItem, index) => {
           return (
-            <ListBox
+            <ListBlock
               key={index}
               exprItem={exprItem}
               isLight={isLight}

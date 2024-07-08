@@ -1,4 +1,4 @@
-import styles from "./ListBox.module.css";
+import styles from "./ListBlock.module.css";
 import cx from "classnames";
 
 type Props = {
@@ -6,7 +6,7 @@ type Props = {
   isLight: boolean;
   index: number;
 };
-function ListBox({ exprItem, isLight, index }: Props) {
+function ListBlock({ exprItem, isLight, index }: Props) {
   console.log(isLight);
   return (
     <div>
@@ -18,4 +18,4 @@ function ListBox({ exprItem, isLight, index }: Props) {
   );
 }
 
-export default ListBox;
+export default ListBlock;
