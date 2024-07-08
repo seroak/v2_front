@@ -1,10 +1,10 @@
 import styles from "./ListWrapper.module.css";
-import ListBlock from "./components/ListBlock";
+import { ListBlock } from "./components/ListBlock";
 import { VizListItem } from "@/types/vizListItem";
 type Props = {
   listItem: VizListItem;
 };
-function ListDiv({ listItem }: Props) {
+function ListWrapper({ listItem }: Props) {
   const { expr, isLight, name } = listItem;
 
   const exprArray = expr?.split(",");
@@ -35,4 +35,4 @@ function ListDiv({ listItem }: Props) {
   );
 }
 
-export default ListDiv;
+export default ListWrapper;
