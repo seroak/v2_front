@@ -1,4 +1,4 @@
-.for_box {
+.for {
   display: flex;
   flex-direction: column;
 }
@@ -18,7 +18,7 @@
   display: inline-block;
 }
 
-.for_text {
+.text-for {
   position: absolute;
   font-size: 24px;
   top: -10px; /* 테두리 위에 위치 */
@@ -26,10 +26,8 @@
   background-color: #f4f4f4; /* 텍스트 위에 테두리가 있어도 글씨가 보이도록 배경색 지정 */
   padding: 0 5px; /* 좌우 여백 추가 */
 }
-.text {
-  color: #f1f1f1;
-}
-.textName {
+
+.text-target {
   position: absolute;
   top: -40px; /* 테두리 위에 위치 */
   left: 57px; /* 테두리 왼쪽에 위치 */
@@ -51,7 +49,7 @@
   align-items: center;
   justify-content: center;
 }
-.textStart {
+.text-start {
   position: absolute;
   justify-content: center;
   top: -40px; /* 테두리 위에 위치 */
@@ -74,7 +72,7 @@
   align-items: center;
   justify-content: center;
 }
-.textEnd {
+.text-end {
   position: absolute;
   top: -40px; /* 테두리 위에 위치 */
   left: 160px; /* 테두리 왼쪽에 위치 */
@@ -122,6 +120,6 @@
   border: 2px solid #8e2efa;
   border-width: thick;
 }
-.highlightNumber {
+.highlight-number {
   background-color: #8e2efa;
 }

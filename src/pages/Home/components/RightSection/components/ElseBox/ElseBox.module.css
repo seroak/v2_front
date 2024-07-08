@@ -1,18 +1,24 @@
-.print_box {
+.else {
   display: flex;
   flex-direction: column;
 }
-.print_border {
+
+.else_border {
   position: relative;
-  border: 2px solid #dedede;
+  border: 3px solid #dedede;
   border-radius: 3px;
-  padding: 15px;
-  margin: 15px;
+  background-color: #f4f4f4;
+  padding: 30px;
+  margin: 25px;
+  margin-top: 40px;
+  min-width: 200px;
+
   max-width: 1000px;
   max-height: 1000px;
   display: inline-block;
 }
-.print_text {
+
+.else_text {
   position: absolute;
   font-size: 24px;
   top: -10px; /* 테두리 위에 위치 */
@@ -20,13 +26,10 @@
   background-color: #f4f4f4; /* 텍스트 위에 테두리가 있어도 글씨가 보이도록 배경색 지정 */
   padding: 0 5px; /* 좌우 여백 추가 */
 }
-.textOutput {
-  font-size: 24px;
+.text {
+  color: #f1f1f1;
 }
-.font_highlight {
-  color: #8e2efa;
-  font-size: 24px;
-}
+
 .highlight {
   border: 2px solid #8e2efa;
   border-width: thick;

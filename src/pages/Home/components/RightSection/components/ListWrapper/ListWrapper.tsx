@@ -1,6 +1,5 @@
-import styles from "./ListDiv.module.css";
-import cx from "classnames";
-import ListBox from "./ListBox";
+import styles from "./ListWrapper.module.css";
+import ListBlock from "./components/ListBlock";
 import { VizListItem } from "@/types/vizListItem";
 type Props = {
   listItem: VizListItem;
@@ -19,11 +18,11 @@ function ListDiv({ listItem }: Props) {
         justifyContent: "center",
       }}
     >
-      <span className={styles.listName}>{name}</span>
+      <span className={styles.list_name}>{name}</span>
       <div style={{ display: "flex" }}>
         {exprArray?.map((exprItem, index) => {
           return (
-            <ListBox
+            <ListBlock
               key={index}
               exprItem={exprItem}
               isLight={isLight}

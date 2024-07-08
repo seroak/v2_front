@@ -10,39 +10,39 @@ type Props = {
 
 function ForBox({ children, forItem }: Props) {
   return (
-    <div className={styles.for_box}>
+    <div className={styles.for}>
       <div
         className={cx(styles.for_border, forItem.isLight && styles.highlight)}
       >
-        <span className={styles.for_text}>for</span>
-        <span className={styles.textName}>{forItem.target}</span>
+        <span className={styles["text-for"]}>for</span>
+        <span className={styles["text-target"]}>{forItem.target}</span>
         <div
           className={cx(
             styles.numberCur,
             forItem.isLight && forItem.isCurLight && styles.highlightNumber
           )}
         >
-          <span className={styles.text}>{forItem.cur}</span>
+          <span className="white-text">{forItem.cur}</span>
         </div>
 
-        <span className={styles.textStart}>start</span>
+        <span className={styles["text-start"]}>start</span>
         <div
           className={cx(
             styles.numberStart,
             forItem.isLight && forItem.isStartLight && styles.highlightNumber
           )}
         >
-          <span className={styles.text}>{forItem.start}</span>
+          <span className="white-text">{forItem.start}</span>
         </div>
 
-        <span className={styles.textEnd}>end</span>
+        <span className={styles["text-end"]}>end</span>
         <div
           className={cx(
             styles.numberEnd,
             forItem.isLight && forItem.isEndLight && styles.highlightNumber
           )}
         >
-          <span className={styles.text}>{forItem.end}</span>
+          <span className="white-text">{forItem.end}</span>
         </div>
         {forItem.step === 1 ? null : (
           <>
@@ -50,10 +50,12 @@ function ForBox({ children, forItem }: Props) {
             <div
               className={cx(
                 styles.numberStep,
-                forItem.isLight && forItem.isStepLight && styles.highlightNumber
+                forItem.isLight &&
+                  forItem.isStepLight &&
+                  styles["highlight-number"]
               )}
             >
-              <span className={styles.text}>{forItem.step}</span>
+              <span className="white-text">{forItem.step}</span>
             </div>
           </>
         )}
