@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useState,
-  Dispatch,
-  SetStateAction,
-  FormEvent,
-} from "react";
+import { createContext, useState, Dispatch, SetStateAction } from "react";
 import { useMutation } from "@tanstack/react-query";
 import styles from "./Home.module.css";
 import LeftSection from "./components/LeftSection/LeftSection";
