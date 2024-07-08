@@ -1,4 +1,4 @@
-import styles from "./ListBox.module.css";
+import styles from "./ListBlock.module.css";
 import cx from "classnames";
 
 type Props = {
@@ -17,4 +17,4 @@ function ListBox({ exprItem, isLight, index }: Props) {
   );
 }
 
-export default ListBox;
+export default ListBlock;
