@@ -86,23 +86,15 @@ const RightSection = () => {
       else {
         const newObject = createNewObject(preprocessedCode);
 
+        // 한번 codeFlow list에 들어가서 수정하는 입력일 때
         if (usedId.includes(preprocessedCode.id!)) {
-          // 한번 codeFlow list에 들어가서 수정하는 입력일 때
-          // updateCodeFlow(비주얼 스택, 넣어야하는 위치를 알려주는 id, 넣어야하는 data)
+          // updateCodeFlow(이전 코드흐름 데이터, 새로 수정해야하는 객체 데이터)
           changedCodeFlows = updateCodeFlow(tmpCodeFlow.objects, newObject);
-        } else {
+        }
           // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
-          const targetDepth: number = preprocessedCode.depth!;
-          const id: number = preprocessedCode.id!;
-
+        else {
           // 한번 사용한 id는 저장해준다
-          usedId.push(id);
-          // addCodeFlow(비주얼 스택, 넣어야하는 위치를 알려주는 depth, 넣어야하는 data)
-          changedCodeFlows = addCodeFlow(
-            tmpCodeFlow.objects,
-            targetDepth,
-            newObject
-          );
+          // addCodeFlow(비주얼 스택, 새로 더해줘야하는 객체 데이터)
         }
         // 불을 켜줘야하는 부분에 대한 변수
         activate = updateActivate(activate, newObject);
