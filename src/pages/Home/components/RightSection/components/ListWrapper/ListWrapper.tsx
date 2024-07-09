@@ -6,8 +6,7 @@ type Props = {
 };
 function ListWrapper({ listItem }: Props) {
   const { expr, isLight, name } = listItem;
-
-  const exprArray = expr?.split(",");
+  const exprArray = expr?.slice(1, -1).split(",");
 
   return (
     <div
