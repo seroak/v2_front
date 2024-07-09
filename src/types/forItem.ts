@@ -11,7 +11,7 @@ export interface ForItem {
   step: number;
   isStepLight: boolean;
   type: string;
-  depth?: number;
+  depth: number;
   isLight: boolean;
   child: AllObjectItem[];
 }

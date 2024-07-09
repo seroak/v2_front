@@ -9,86 +9,36 @@ import { ElseItem } from "@/types/elseItem";
 import ElseBox from "../components/ElseBox/ElseBox";
 import { ForItem } from "@/types/forItem";
 import { IfItem } from "@/types/ifItem";
-const codeFlowVariants = {
-  hidden: {
-    opacity: 0,
-    height: 0,
-    transition: {
-      height: { type: "spring", stiffness: 300, damping: 30 },
-      opacity: { duration: 0.5 },
-    },
-  },
-  visible: {
-    opacity: 1,
-    height: "auto",
-    transition: {
-      height: { type: "spring", stiffness: 300, damping: 30, mass: 0.8 },
-      opacity: { duration: 0.5 },
-    },
-  },
-  exit: {
-    opacity: 0,
-    height: 0,
-    transition: {
-      height: { type: "spring", stiffness: 300, damping: 30, mass: 0.8 },
-      opacity: { duration: 0.5 },
-    },
-  },
-};
+
 export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
   return (
     <>
-      {codeFlows.map((codeFlow) => {
+      {codeFlows.map((codeFlow, index) => {
         switch (codeFlow.type) {
           case "print": {
             const printItem = codeFlow as PrintItem;
             return (
-              <AnimatePresence key={printItem.id} mode="wait">
-                <motion.div
-                  key={printItem.id}
-                  variants={codeFlowVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  layout
-                >
-                  <PrintBox printItem={printItem} />
-                  {renderingCodeFlow(printItem.child)}
-                </motion.div>
-              </AnimatePresence>
+              <div key={index}>
+                <PrintBox key={index} printItem={printItem} />
+                {renderingCodeFlow(printItem.child)}
+              </div>
             );
           }
           case "for": {
             const forItem = codeFlow as ForItem;
             return (
-              <AnimatePresence key={forItem.id} mode="wait">
-                <motion.div
-                  key={forItem.id}
-                  variants={codeFlowVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  layout
-                >
-                  <ForBox forItem={forItem}>
-                    {renderingCodeFlow(forItem.child)}
-                  </ForBox>
-                </motion.div>
-              </AnimatePresence>
+              <div key={index}>
+                <ForBox key={index} forItem={forItem}>
+                  {renderingCodeFlow(forItem.child)}
+                </ForBox>
+              </div>
             );
           }
           case "if":
             const ifItem = codeFlow as IfItem;
             return (
               <AnimatePresence key={ifItem.id} mode="wait">
-                <motion.div
-                  key={ifItem.id}
-                  layout
-                  variants={codeFlowVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                >
+                <motion.div key={ifItem.id} layout>
                   <IfBox isLight={codeFlow.isLight}>
                     {renderingCodeFlow(codeFlow.child)}
                   </IfBox>
@@ -99,14 +49,7 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
             const elseItem = codeFlow as ElseItem;
             return (
               <AnimatePresence key={elseItem.id} mode="wait">
-                <motion.div
-                  key={elseItem.id}
-                  layout
-                  variants={codeFlowVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                >
+                <motion.div key={elseItem.id} layout>
                   <ElseBox isLight={codeFlow.isLight}>
                     {renderingCodeFlow(codeFlow.child)}
                   </ElseBox>

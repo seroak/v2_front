@@ -3,7 +3,7 @@ import { AllObjectItem } from "./allObjectItem";
 export interface PrintItem {
   id: number;
   type: string;
-  depth?: number;
+  depth: number;
   isLight: boolean;
   expr: string;
   highlights: number[];

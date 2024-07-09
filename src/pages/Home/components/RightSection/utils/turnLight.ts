@@ -8,8 +8,7 @@ export const turnLight = (
 ): AllObjectItem[] => {
   return codeFlows.map((codeFlow) => {
     if (Activate.some((data) => data.id === codeFlow.id)) {
-      // 수정해야하는 위치일때
-      // isLight을 true로 바꾼다
+      // 수정해야하는 위치일때 isLight를 true로 바꾼다
       return {
         ...codeFlow,
         isLight: true,

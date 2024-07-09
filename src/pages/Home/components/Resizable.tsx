@@ -2,13 +2,13 @@ import React, {
   useState,
   useRef,
   MouseEvent as ReactMouseEvent,
-  ReactNode,
+  ReactElement,
 } from "react";
 import styles from "./Resizable.module.css";
 
 interface ResizableProps {
-  left: ReactNode;
-  right: ReactNode;
+  left: ReactElement;
+  right: ReactElement;
 }
 
 const Resizable: React.FC<ResizableProps> = ({ left, right }) => {

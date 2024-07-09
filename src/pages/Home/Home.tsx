@@ -1,10 +1,9 @@
+import { createContext, useState, Dispatch, SetStateAction } from "react";
+import { useMutation } from "@tanstack/react-query";
 import styles from "./Home.module.css";
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
 import Resizable from "./components/Resizable";
-import { createContext, useState, Dispatch, SetStateAction } from "react";
-
-import { useMutation } from "@tanstack/react-query";
 import { CodeItem } from "@/types/codeItem";
 
 // 원본 코드 타입 정의
@@ -12,17 +11,23 @@ interface CodeContextType {
   code: string;
   setCode: Dispatch<SetStateAction<string>>;
 }
-export const CodeContext = createContext<CodeContextType | undefined>(
-  undefined
-);
 // 전처리한 코드 타입 정의
 interface PreprocessedCodeContextType {
   preprocessedCodes: CodeItem[];
   setPreprocessedCodes: Dispatch<SetStateAction<CodeItem[]>>;
 }
-export const PreprocessedCodesContext = createContext<
-  PreprocessedCodeContextType | undefined
->(undefined);
+// Create contexts
+export const CodeContext = createContext<CodeContextType>({
+  code: "",
+  setCode: () => {},
+});
+
+export const PreprocessedCodesContext =
+  createContext<PreprocessedCodeContextType>({
+    preprocessedCodes: [],
+    setPreprocessedCodes: () => {},
+  });
+
 export default function Home() {
   // 원본 코드 state
   const [code, setCode] = useState<any>(
@@ -31,31 +36,29 @@ export default function Home() {
   // 전처리한 코드 state
   const [preprocessedCodes, setPreprocessedCodes] = useState<CodeItem[]>([]);
   const mutation = useMutation({
-    mutationFn: async (code) => {
-      const response = await fetch("http://localhost:8000/v1/python", {
+    mutationFn: async (code: string) => {
+      return fetch("http://localhost:8000/v1/python", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        // 백엔드에 전송할 데이터는 객체로 source_code 키에 code를 할당하여 전송
         body: JSON.stringify({ source_code: code }),
       });
-      return await response.json();
+    },
+    async onSuccess(data) {
+      const jsonData = await data.json();
+      setPreprocessedCodes(jsonData);
+    },
+    onError(error) {
+      console.error("Submit Error:", error);
+      alert("코드 처리 중 에러가 발생했습니다.");
     },
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // editorData를 사용하여 제출 로직 처리
-    mutation.mutate(code, {
-      onSuccess: (data) => {
-        setPreprocessedCodes(data);
-        console.log("Success:", data); // 성공 시 콘솔에 출력
-      },
-      onError: (error) => {
-        console.error("Submit Error:", error); // 제출 오류 시 콘솔에 출력
-      },
-    });
+    mutation.mutate(code);
   };
+
   return (
     <CodeContext.Provider value={{ code, setCode }}>
       <PreprocessedCodesContext.Provider
