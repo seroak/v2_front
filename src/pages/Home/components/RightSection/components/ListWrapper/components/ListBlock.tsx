@@ -7,7 +7,6 @@ type Props = {
   index: number;
 };
 export const ListBlock = ({ exprItem, isLight, index }: Props) => {
-  console.log(isLight);
   return (
     <div>
       <div className={cx(styles.list, isLight && styles.highlight)}>
