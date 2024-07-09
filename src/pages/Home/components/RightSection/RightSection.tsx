@@ -7,6 +7,10 @@ import { CodeItem } from "@/types/codeItem";
 import { AllObjectItem } from "@/types/allObjectItem";
 import { ActivateItem } from "@/types/activateItem";
 
+import { VariablesItem } from "@/types/variablesItem";
+import { VariablesDto } from "@/types/dto/variablesDto";
+import { ForDto } from "@/types/dto/forDto";
+import { PrintDto } from "@/types/dto/printDto";
 // utils폴더에서 가져온 함수
 import { addCodeFlow } from "./utils/addCodeFlow";
 import { updateCodeFlow } from "./utils/updateCodeFlow";
@@ -18,7 +22,7 @@ import { updateActivate } from "./utils/updateActivate";
 //rendUtils에서 가져온 함수
 import { renderingStructure } from "./rendering/renderingStructure";
 import { renderingCodeFlow } from "./rendering/renderingCodeFLow";
-import { VariablesItem } from "@/types/variablesItem";
+
 interface State {
   objects: AllObjectItem[];
 }
@@ -59,34 +63,42 @@ const RightSection = () => {
       // 임시로 코드흐름 시각화 정보를 담아둘 리스트를 미리 선언
       let changedCodeFlows: AllObjectItem[] = [];
 
+      // type이 undefined일 경우 에러 출력하는 타입 가드
+      if (preprocessedCode.type === undefined) {
+        throw new Error("type is undefined");
+      }
       // 자료구조 시각화 부분이 들어왔을 때
       if (preprocessedCode.type.toLowerCase() === "assignViz".toLowerCase()) {
-        preprocessedCode.variables?.forEach((variable: VariablesItem) => {
-          // 이미 한번 자료구조 시각화에 표현된 name인 경우
-          if (usedName.includes(variable.name!)) {
-            const targetName = variable.name!;
+        (preprocessedCode as VariablesDto).variables.forEach(
+          (variable: VariablesItem) => {
+            // 이미 한번 자료구조 시각화에 표현된 name인 경우
+            if (usedName.includes(variable.name!)) {
+              const targetName = variable.name!;
 
-            accStructures = updateDataStructure(
-              targetName,
-              accStructures,
-              variable
-            );
-            accStructures;
+              accStructures = updateDataStructure(
+                targetName,
+                accStructures,
+                variable
+              );
+              accStructures;
+            }
+            // 처음 시각화해주는 자료구조인 경우
+            else {
+              accStructures.push(variable as CodeItem);
+              usedName.push(variable.name!);
+            }
           }
-          // 처음 시각화해주는 자료구조인 경우
-          else {
-            accStructures.push(variable as CodeItem);
-            usedName.push(variable.name!);
-          }
-        });
+        );
       }
       // 코드 시각화 부분이 들어왔을 때
       else {
-        const newObject = createNewObject(preprocessedCode);
+        const newObject = createNewObject(
+          preprocessedCode as ForDto | PrintDto
+        );
 
         // 한번 codeFlow list에 들어가서 수정하는 입력일 때
-        if (usedId.includes(preprocessedCode.id!)) {
-          // updateCodeFlow(이전 코드흐름 데이터, 새로 수정해야하는 객체 데이터)
+        if (usedId.includes(newObject.id!)) {
+          // updateCodeFlow(비주얼 스택, 새로 수정해야하는 객체 데이터)
           changedCodeFlows = updateCodeFlow(accCodeFlow.objects, newObject);
         }
         // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
@@ -106,12 +118,14 @@ const RightSection = () => {
       }
       // 불을 켜줘야하는 자료구조의의 name을 담는 배열
       let toLightStructures: any;
-      if (preprocessedCode.variables === undefined) {
+      if ((preprocessedCode as VariablesDto).variables === undefined) {
         toLightStructures = [];
       } else {
-        toLightStructures = preprocessedCode.variables?.map((element) => {
-          return element.name;
-        });
+        toLightStructures = (preprocessedCode as VariablesDto).variables?.map(
+          (element) => {
+            return element.name;
+          }
+        );
       }
 
       // toLightStructures 를 참고해서 데이터 구조 시각화 데이터 속성 중 isLight가 true인지 false인지 판단해주는 부분
