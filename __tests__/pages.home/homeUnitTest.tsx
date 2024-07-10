@@ -1,8 +1,8 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import forPrintMockData from "@/fixtures/forPrintMockData.json";
-import Home from "@/pages/Home/Home";
+import forPrintMockData from "./samples/successForAndPrintResponseBody.json";
+import Home from "../../src/pages/Home/Home";
 
 // 브라우저API 모킹
 (window as any).fetch = jest.fn();
@@ -16,7 +16,7 @@ const renderWithQueryClient = (component: React.ReactElement) => {
   );
 };
 
-describe("백엔드로 부터 이상한 코드를 받았을 때", () => {
+describe("백엔드로 부터 Object 외에 다른 response body(code) 를 받았을 때", () => {
   beforeEach(() => {
     jest.resetAllMocks(); //모든 mock 함수 초기화
     jest.spyOn(console, "error").mockImplementation(() => {}); // console.error를 모킹
@@ -24,11 +24,11 @@ describe("백엔드로 부터 이상한 코드를 받았을 때", () => {
 
   test("submits code when button is clicked", async () => {
     ((window as any).fetch as jest.Mock).mockResolvedValueOnce({
-      json: async () => [{ code: "test code" }],
+      json: async () => [{ code: "failed_response// strange_response_of_back_end" }],
     });
 
     renderWithQueryClient(<Home />); // Home 컴포넌트 렌더
-    const button = screen.getByTestId("submit-button"); // subit-button 아이디로 찾아은 요소를 button에 할당
+    const button = screen.getByTestId("submit-button"); // subit-button 아이디로 찾아은 요소를 button 에 할당
     fireEvent.click(button); // button을 클릭하는 이벤트 발생시킴
 
     await waitFor(() => {
@@ -44,7 +44,7 @@ describe("백엔드로 부터 이상한 코드를 받았을 때", () => {
   });
 });
 
-describe("백엔드로 부터 정상적인 코드를 받았을 때", () => {
+describe("백엔드로 부터 정상적인 response body(code) 를 받았을 때", () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
