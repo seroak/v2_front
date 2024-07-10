@@ -141,7 +141,6 @@ const RightSection = () => {
   }, [preprocessedCodes]);
 
   const onForward = useCallback(() => {
-    console.log(idx);
     if (idx < codeFlowList.length - 1) {
       navControlDispatch({ type: "forward" });
     }
