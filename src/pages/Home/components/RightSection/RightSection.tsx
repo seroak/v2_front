@@ -80,6 +80,7 @@ const RightSection = () => {
             // 이미 한번 자료구조 시각화에 표현된 name인 경우
             if (usedName.includes(variable.name!)) {
               const targetName = variable.name!;
+
               accDataStructures = updateDataStructure(
                 targetName,
                 accDataStructures,
