@@ -148,7 +148,7 @@ const RightSection = () => {
   }, [idx, codeFlowList.length]);
 
   const onBack = useCallback(() => {
-    if (idx > -1) {
+    if (idx >= 0) {
       navControlDispatch({ type: "back" });
     }
   }, [idx]);
