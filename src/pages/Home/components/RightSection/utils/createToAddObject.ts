@@ -1,12 +1,19 @@
 import { AllObjectItem } from "@/types/allObjectItem";
-import { CodeItem } from "@/types/codeItem";
+import { CodeFlowItem } from "@/types/codeFlowItem";
 import { ElseItem } from "@/types/elseItem";
 import { ForItem } from "@/types/forItem";
 import { IfItem } from "@/types/ifItem";
 import { PrintItem } from "@/types/printItem";
 
 // 스택에 넣을 객체를 생성하는 함수
-export const createNewObject = (preprocessedCode: CodeItem): AllObjectItem => {
+export const createToAddObject = (
+  preprocessedCode: CodeFlowItem
+): AllObjectItem => {
+  // type이 undefined일 경우 에러 출력하는 타입 가드
+  if (preprocessedCode.type === undefined) {
+    throw new Error(`Type is undefined`);
+  }
+
   const baseObject: AllObjectItem = {
     id: preprocessedCode.id!,
     type: preprocessedCode.type,
@@ -14,7 +21,9 @@ export const createNewObject = (preprocessedCode: CodeItem): AllObjectItem => {
     isLight: false,
     child: [],
   };
+
   const type: string = preprocessedCode.type.toLowerCase();
+
   // type에 따라서 객체 생성
   switch (type) {
     case "print":
@@ -63,6 +72,6 @@ export const createNewObject = (preprocessedCode: CodeItem): AllObjectItem => {
     case "else":
       return baseObject as ElseItem;
     default:
-      throw new Error(`Unsupported type: ${type}`);
+      throw new Error(`Unsupported type: ${type}`); // 옵셔널 체이닝으로 undefined일 경우 처리
   }
 };

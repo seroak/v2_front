@@ -1,72 +1,62 @@
+import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { enableFetchMocks } from "jest-fetch-mock";
+import forPrintMockData from "@/fixtures/forPrintMockData.json";
 import Home from "@/pages/Home/Home";
 
-enableFetchMocks();
+//브라우저에서 동작하는 목업 fetch 함수를 만들어준다
+(window as any).fetch = jest.fn();
 
-// console.error와 window.alert를 모킹합니다.
-console.error = jest.fn();
-window.alert = jest.fn();
+// reactQuery를 사용하는 컴포넌트를 테스트하기 위해 컴포넌트를 렌더링 하는 함수
+const renderWithQueryClient = (component: React.ReactElement) => {
+  const queryClient = new QueryClient();
+  return render(
+    <QueryClientProvider client={queryClient}>{component}</QueryClientProvider>
+  );
+};
 
-describe("Home component mutation and form submission", () => {
-  let queryClient: QueryClient;
-
+describe("백엔드로 부터 이상한 코드를 받았을 때", () => {
   beforeEach(() => {
-    queryClient = new QueryClient();
-    // 각 테스트 전에 모든 모의 함수를 초기화합니다.
-    jest.clearAllMocks();
-    fetchMock.resetMocks();
+    jest.resetAllMocks(); //모든 mock 함수 초기화
   });
 
-  test("successful form submission updates preprocessed codes", async () => {
-    const mockResponse = [{ id: 1, code: "processed code" }];
-    fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <Home />
-      </QueryClientProvider>
-    );
-
-    const form = screen.getByRole("form");
-    fireEvent.submit(form);
-
-    await waitFor(() => {
-      expect(fetchMock).toHaveBeenCalledTimes(1);
-      expect(fetchMock).toHaveBeenCalledWith(
-        "http://localhost:8000/v1/python",
-        expect.objectContaining({
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: expect.any(String),
-        })
-      );
+  test("submits code when button is clicked", async () => {
+    ((window as any).fetch as jest.Mock).mockResolvedValueOnce({
+      json: async () => [{ code: "test code" }],
     });
 
-    // 상태 업데이트 확인 코드...
-  });
-
-  test("failed form submission shows error alert", async () => {
-    fetchMock.mockRejectOnce(new Error("API Error"));
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <Home />
-      </QueryClientProvider>
-    );
-
-    const form = screen.getByRole("form");
-    fireEvent.submit(form);
+    renderWithQueryClient(<Home />); // Home 컴포넌트 렌더
+    const button = screen.getByTestId("submit-button"); // subit-button 아이디로 찾아은 요소를 button에 할당
+    fireEvent.click(button); // button을 클릭하는 이벤트 발생시킴
 
     await waitFor(() => {
-      expect(fetchMock).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith(
-        "Submit Error:",
-        expect.any(Error)
+      // waitFor 함수를 사용하여 비동기 처리가 완료될 때까지 기다린다
+      expect((window as any).fetch).toHaveBeenCalledWith(
+        "http://localhost:8000/v1/python",
+        expect.any(Object)
       );
-      expect(window.alert).toHaveBeenCalledWith(
-        "코드 처리 중 에러가 발생했습니다."
+    });
+  });
+});
+describe("백엔드로 부터 정상적인 코드를 받았을 때", () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
+  test("submits code when button is clicked", async () => {
+    ((window as any).fetch as jest.Mock).mockResolvedValueOnce({
+      json: async () => forPrintMockData,
+    });
+
+    renderWithQueryClient(<Home />);
+    const button = screen.getByTestId("submit-button");
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      // waitFor 함수를 사용하여 비동기 처리가 완료될 때까지 기다린다
+      expect((window as any).fetch).toHaveBeenCalledWith(
+        "http://localhost:8000/v1/python",
+        expect.any(Object)
       );
     });
   });

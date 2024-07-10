@@ -4,8 +4,8 @@ import styles from "./Home.module.css";
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
 import Resizable from "./components/Resizable";
-import { CodeItem } from "@/types/codeItem";
 
+import { AllDto, isAllDtoArray } from "@/types/dto/allDto";
 // 원본 코드 타입 정의
 interface CodeContextType {
   code: string;
@@ -13,8 +13,8 @@ interface CodeContextType {
 }
 // 전처리한 코드 타입 정의
 interface PreprocessedCodeContextType {
-  preprocessedCodes: CodeItem[];
-  setPreprocessedCodes: Dispatch<SetStateAction<CodeItem[]>>;
+  preprocessedCodes: AllDto[];
+  setPreprocessedCodes: Dispatch<SetStateAction<AllDto[]>>;
 }
 // Create contexts
 export const CodeContext = createContext<CodeContextType>({
@@ -34,7 +34,7 @@ export default function Home() {
     ["def hello_world():", '    print("Hello, World!")'].join("\n")
   );
   // 전처리한 코드 state
-  const [preprocessedCodes, setPreprocessedCodes] = useState<CodeItem[]>([]);
+  const [preprocessedCodes, setPreprocessedCodes] = useState<AllDto[]>([]);
   const mutation = useMutation({
     mutationFn: async (code: string) => {
       return fetch("http://localhost:8000/v1/python", {
@@ -46,8 +46,18 @@ export default function Home() {
       });
     },
     async onSuccess(data) {
-      const jsonData = await data.json();
-      setPreprocessedCodes(jsonData);
+      try {
+        const jsonData = await data.json();
+        // 타입 체크 함수
+        if (isAllDtoArray(jsonData)) {
+          setPreprocessedCodes(jsonData);
+        } else {
+          throw new Error("받은 데이터가 올바르지 않습니다");
+        }
+      } catch (error) {
+        console.error("Data processing error:", error);
+        alert("받은 데이터의 형식이 올바르지 않습니다.");
+      }
     },
     onError(error) {
       console.error("Submit Error:", error);
@@ -67,7 +77,11 @@ export default function Home() {
         <main className={styles.main}>
           <div className={styles.header}>
             <form action="#" onSubmit={handleSubmit}>
-              <button type="submit" className={styles.button}>
+              <button
+                type="submit"
+                className={styles.button}
+                data-testid="submit-button"
+              >
                 {/* // 버튼에 기본 css가 적용되어 있다 border: none 하면 지워진다
               // 테두리디자인에 대한 고민 필요 */}
                 <svg

@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ReactElement } from "react";
 import VariableBox from "../components/VariableBox/VariableBox";
 import { VizListItem } from "@/types/vizListItem";
-import ListDiv from "../components/ListDiv/ListDiv";
+import ListWrapper from "../components/ListWrapper/ListWrapper";
 
 export const renderingStructure = (
   structures: VizVarItem[] //변수시각화 리스트
@@ -45,7 +45,7 @@ export const renderingStructure = (
                   exit={{ opacity: 0, y: 20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <ListDiv listItem={listItem} />
+                  <ListWrapper listItem={listItem} />
                 </motion.div>
               </AnimatePresence>
             );
