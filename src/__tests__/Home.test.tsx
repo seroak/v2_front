@@ -38,6 +38,7 @@ describe("백엔드로 부터 이상한 코드를 받았을 때", () => {
     });
   });
 });
+
 describe("백엔드로 부터 정상적인 코드를 받았을 때", () => {
   beforeEach(() => {
     jest.resetAllMocks();
