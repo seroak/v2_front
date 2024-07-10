@@ -4,8 +4,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import forPrintMockData from "@/fixtures/forPrintMockData.json";
 import Home from "@/pages/Home/Home";
 
-//브라우저에서 동작하는 목업 fetch 함수를 만들어준다
+// 브라우저API 모킹
 (window as any).fetch = jest.fn();
+window.alert = jest.fn();
 
 // reactQuery를 사용하는 컴포넌트를 테스트하기 위해 컴포넌트를 렌더링 하는 함수
 const renderWithQueryClient = (component: React.ReactElement) => {
@@ -18,6 +19,7 @@ const renderWithQueryClient = (component: React.ReactElement) => {
 describe("백엔드로 부터 이상한 코드를 받았을 때", () => {
   beforeEach(() => {
     jest.resetAllMocks(); //모든 mock 함수 초기화
+    jest.spyOn(console, "error").mockImplementation(() => {}); // console.error를 모킹
   });
 
   test("submits code when button is clicked", async () => {
@@ -36,6 +38,9 @@ describe("백엔드로 부터 이상한 코드를 받았을 때", () => {
         expect.any(Object)
       );
     });
+    expect(window.alert).toHaveBeenCalledWith(
+      "받은 데이터의 형식이 올바르지 않습니다."
+    );
   });
 });
 
