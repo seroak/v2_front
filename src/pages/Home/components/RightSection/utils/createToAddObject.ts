@@ -1,17 +1,18 @@
 import { AllObjectItem } from "@/types/allObjectItem";
-import { CodeFlowItem } from "@/types/codeFlowItem";
 import { ForItem } from "@/types/forItem";
 import { ConditionItem } from "@/types/conditionItem";
 import { PrintItem } from "@/types/printItem";
-
+import {MainFuncForElseData} from "@/types/mainFuncData/mainFuncForData";
+import { MainFuncPrintData } from "@/types/mainFuncData/mainFuncPrintData";
+import { MainFuncIfElseData } from "@/types/mainFuncData/mainFuncifElseData";
 // 스택에 넣을 객체를 생성하는 함수
 export const createToAddObject = (
-  preprocessedCode: CodeFlowItem
+  preprocessedCode: MainFuncPrintData | MainFuncForElseData | MainFuncIfElseData
 ): AllObjectItem => {
   const baseObject: AllObjectItem = {
     id: preprocessedCode.id!,
     type: preprocessedCode.type,
-    depth: preprocessedCode.depth,
+    depth: preprocessedCode.depth!,
     isLight: false,
     child: [],
   };
@@ -23,10 +24,11 @@ export const createToAddObject = (
     case "print":
       return {
         ...baseObject,
-        expr: preprocessedCode.expr!,
-        highlights: preprocessedCode.highlights!,
+        expr: (preprocessedCode as MainFuncPrintData).expr!,
+        highlights: (preprocessedCode as MainFuncPrintData).highlights!,
       } as PrintItem;
     case "for":
+      preprocessedCode = preprocessedCode as MainFuncForElseData;
       // for문 highlights 객체로 변환
       let isCurLight = false;
       let isStartLight = false;

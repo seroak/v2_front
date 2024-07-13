@@ -99,7 +99,7 @@ const RightSection = () => {
       }
       // 코드 시각화 부분이 들어왔을 때
       else {
-        // ifelse 탑입
+        // ifelse 타입s
         if (preprocessedCode.type === "ifElseDefine") {
           for (let condition of (preprocessedCode as IfElseDto).conditions) {
             console.dir(condition);
