@@ -1,0 +1,50 @@
+[
+  {
+    "variables": [
+      {
+        "expr": "3",
+        "highlights": [0],
+        "name": "a",
+        "type": "variable"
+      }
+    ],
+    "type": "assignViz"
+  },
+  {
+    "variables": [
+      {
+        "expr": "[1,2,3,4,5]",
+        "highlights": [0, 1, 2, 3, 4],
+        "name": "b",
+        "type": "list"
+      }
+    ],
+    "type": "assignViz"
+  },
+  {
+    "depth": 1,
+    "conditions": [
+      {
+        "id": 1,
+        "type": "if",
+        "expr": "a>5"
+      },
+      {
+        "id": 2,
+        "type": "elif",
+        "expr": "a<5"
+      },
+      {
+        "id": 3,
+        "type": "elif",
+        "expr": "a<5"
+      },
+      {
+        "id": 4,
+        "type": "else",
+        "expr": ""
+      }
+    ],
+    "type": "ifElseDefine"
+  }
+]
