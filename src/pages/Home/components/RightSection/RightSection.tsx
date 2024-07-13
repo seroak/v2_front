@@ -12,11 +12,13 @@ import _ from "lodash";
 import { CodeItem } from "@/types/codeItem";
 import { AllObjectItem } from "@/types/allObjectItem";
 import { ActivateItem } from "@/types/activateItem";
-
 import { VariablesItem } from "@/types/variablesItem";
 import { VariablesDto } from "@/types/dto/variablesDto";
+import { ConditionItem } from "@/types/conditionItem";
 import { ForDto } from "@/types/dto/forDto";
 import { PrintDto } from "@/types/dto/printDto";
+import { IfElseDto } from "@/types/dto/ifElseDto";
+
 // utils폴더에서 가져온 함수
 import { addCodeFlow } from "./utils/addCodeFlow";
 import { updateCodeFlow } from "./utils/updateCodeFlow";
@@ -26,8 +28,8 @@ import { updateDataStructure } from "./utils/updateDataStructure";
 import { updateActivate } from "./utils/updateActivate";
 
 //rendUtils에서 가져온 함수
-import { renderingStructure } from "./rendering/renderingStructure";
-import { renderingCodeFlow } from "./rendering/renderingCodeFLow";
+import { renderingStructure } from "./renderingStructure";
+import { renderingCodeFlow } from "./renderingCodeFLow";
 
 interface State {
   objects: AllObjectItem[];
@@ -72,7 +74,7 @@ const RightSection = () => {
 
     for (let preprocessedCode of preprocessedCodes) {
       let changedCodeFlows: AllObjectItem[] = [];
-
+      console.log(preprocessedCode);
       // 자료구조 시각화 부분이 들어왔을 때
       if (preprocessedCode.type.toLowerCase() === "assignViz".toLowerCase()) {
         (preprocessedCode as VariablesDto).variables.forEach(
@@ -97,21 +99,36 @@ const RightSection = () => {
       }
       // 코드 시각화 부분이 들어왔을 때
       else {
-        const toAddObject = createToAddObject(
-          preprocessedCode as ForDto | PrintDto
-        );
-        // 한번 codeFlow list에 들어가서 수정하는 입력일 때
-        if (usedId.includes(toAddObject.id!)) {
-          changedCodeFlows = updateCodeFlow(accCodeFlow.objects, toAddObject);
+        // ifelse 탑입
+        if (preprocessedCode.type === "ifElseDefine") {
+          for (let condition of (preprocessedCode as IfElseDto).conditions) {
+            console.dir(condition);
+            const IfItem = Object.assign(condition, {
+              depth: (preprocessedCode as IfElseDto).depth,
+            });
+            console.dir(IfItem);
+            const toAddObject = createToAddObject(IfItem);
+            console.log(toAddObject);
+          }
         }
-        // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
+        //그밖의 타입
         else {
-          usedId.push(toAddObject.id);
-          changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject);
+          const toAddObject = createToAddObject(
+            preprocessedCode as ForDto | PrintDto
+          );
+          // 한번 codeFlow list에 들어가서 수정하는 입력일 때
+          if (usedId.includes(toAddObject.id!)) {
+            changedCodeFlows = updateCodeFlow(accCodeFlow.objects, toAddObject);
+          }
+          // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
+          else {
+            usedId.push(toAddObject.id);
+            changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject);
+          }
+          activate = updateActivate(activate, toAddObject);
+          const finallyCodeFlow = turnLight(changedCodeFlows, activate);
+          accCodeFlow = { objects: finallyCodeFlow };
         }
-        activate = updateActivate(activate, toAddObject);
-        const finallyCodeFlow = turnLight(changedCodeFlows, activate);
-        accCodeFlow = { objects: finallyCodeFlow };
       }
       // 불을 켜줘야하는 자료구조의의 name을 담는 배열
       let toLightStructures: any;

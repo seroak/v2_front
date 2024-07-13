@@ -1,7 +1,9 @@
+import { AllObjectItem } from "./allObjectItem";
+
 export interface ConditionItem {
-  target: string;
-  start: number;
-  end: number;
-  cur: number;
-  step: number;
+  id: number;
+  type: string;
+  depth: number;
+  isLight: boolean;
+  child: AllObjectItem[];
 }
