@@ -2,7 +2,7 @@ import { AllObjectItem } from "@/types/allObjectItem";
 import { ForItem } from "@/types/forItem";
 import { ConditionItem } from "@/types/conditionItem";
 import { PrintItem } from "@/types/printItem";
-import {MainFuncForElseData} from "@/types/mainFuncData/mainFuncForData";
+import { MainFuncForElseData } from "@/types/mainFuncData/mainFuncForData";
 import { MainFuncPrintData } from "@/types/mainFuncData/mainFuncPrintData";
 import { MainFuncIfElseData } from "@/types/mainFuncData/mainFuncifElseData";
 // 스택에 넣을 객체를 생성하는 함수
@@ -64,11 +64,20 @@ export const createToAddObject = (
         isStepLight: isStepLight,
       } as ForItem;
     case "if":
-      return baseObject as ConditionItem;
+      return {
+        ...(baseObject as ConditionItem),
+        expr: (preprocessedCode as MainFuncIfElseData).expr!,
+      };
     case "elif":
-      return baseObject as ConditionItem;
+      return {
+        ...(baseObject as ConditionItem),
+        expr: (preprocessedCode as MainFuncIfElseData).expr!,
+      };
     case "else":
-      return baseObject as ConditionItem;
+      return {
+        ...(baseObject as ConditionItem),
+        expr: (preprocessedCode as MainFuncIfElseData).expr!,
+      };
     default:
       throw new Error(`Unsupported type: ${type}`); // 옵셔널 체이닝으로 undefined일 경우 처리
   }

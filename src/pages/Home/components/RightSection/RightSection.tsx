@@ -14,7 +14,6 @@ import { AllObjectItem } from "@/types/allObjectItem";
 import { ActivateItem } from "@/types/activateItem";
 import { VariablesItem } from "@/types/variablesItem";
 import { VariablesDto } from "@/types/dto/variablesDto";
-import { ConditionItem } from "@/types/conditionItem";
 import { ForDto } from "@/types/dto/forDto";
 import { PrintDto } from "@/types/dto/printDto";
 import { IfElseDto } from "@/types/dto/ifElseDto";
@@ -102,14 +101,21 @@ const RightSection = () => {
         // ifelse 타입s
         if (preprocessedCode.type === "ifElseDefine") {
           for (let condition of (preprocessedCode as IfElseDto).conditions) {
-            console.dir(condition);
+            // ifelse 타입의 객체에 depth를 추가해주는 부분
             const IfItem = Object.assign(condition, {
               depth: (preprocessedCode as IfElseDto).depth,
             });
-            console.dir(IfItem);
+            // ifelse 타입의 객체를 만들어주는 함수
             const toAddObject = createToAddObject(IfItem);
             console.log(toAddObject);
+            usedId.push(toAddObject.id);
+            changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject);
+            // 마지막에 하나만 불켜는 함수로 바꿔서 제대로 작동이 안됨
+            activate = updateActivate(activate, toAddObject);
+            const finallyCodeFlow = turnLight(changedCodeFlows, activate);
+            accCodeFlow = { objects: finallyCodeFlow };
           }
+          console.dir(changedCodeFlows);
         }
         //그밖의 타입
         else {

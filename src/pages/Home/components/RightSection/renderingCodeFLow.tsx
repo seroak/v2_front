@@ -8,7 +8,7 @@ import IfBox from "./components/IfBox/IfBox";
 import { ElseItem } from "@/types/elseItem";
 import ElseBox from "./components/ElseBox/ElseBox";
 import { ForItem } from "@/types/forItem";
-import { IfItem } from "@/types/conditionItem";
+import { ConditionItem } from "@/types/conditionItem";
 
 export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
   return (
@@ -35,10 +35,21 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
             );
           }
           case "if":
-            const ifItem = codeFlow as IfItem;
+            const ifItem = codeFlow as ConditionItem;
             return (
               <AnimatePresence key={ifItem.id} mode="wait">
                 <motion.div key={ifItem.id} layout>
+                  <IfBox isLight={codeFlow.isLight}>
+                    {renderingCodeFlow(codeFlow.child)}
+                  </IfBox>
+                </motion.div>
+              </AnimatePresence>
+            );
+          case "elif":
+            const elif = codeFlow as ConditionItem;
+            return (
+              <AnimatePresence key={elif.id} mode="wait">
+                <motion.div key={elif.id} layout>
                   <IfBox isLight={codeFlow.isLight}>
                     {renderingCodeFlow(codeFlow.child)}
                   </IfBox>

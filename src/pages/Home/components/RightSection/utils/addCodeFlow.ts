@@ -17,7 +17,6 @@ export const addCodeFlow = (
     else if (codeFlow.child && codeFlow.child.length > 0) {
       acc.unshift({
         ...codeFlow,
-
         child: addCodeFlow(codeFlow.child, toAddObject),
       });
     } else {
