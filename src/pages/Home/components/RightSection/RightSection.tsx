@@ -30,6 +30,7 @@ import { turnOffAllLight } from "./services/turnOffAllLight";
 import { renderingStructure } from "./renderingStructure";
 import { renderingCodeFlow } from "./renderingCodeFLow";
 import { IfElseChangeDto } from "@/types/dto/ifElseChangeDto";
+import { refreshCodeFlow } from "./services/refreshCodeFlow";
 
 interface State {
   objects: AllObjectItem[];
@@ -61,6 +62,7 @@ const RightSection = () => {
 
   // codeFlowList를 업데이트하는 useEffect
   useEffect(() => {
+    let trackingId: number = 0;
     let activate: ActivateItem[] = [];
     const usedId: number[] = [];
     const usedName: string[] = [];
@@ -115,8 +117,22 @@ const RightSection = () => {
             usedId.push(toAddObject.id);
             // isLight를 true로 바꿔준다
             toAddObject.isLight = true;
-            const finallyCodeFlow = addCodeFlow(accCodeFlow.objects, toAddObject);
-       
+            let finallyCodeFlow: any;
+            if (usedId.includes(toAddObject.id)) {
+              // child부분을 초기화 해주는 함수
+              finallyCodeFlow = refreshCodeFlow(
+                accCodeFlow.objects,
+                toAddObject
+              );
+            } else {
+              usedId.push(toAddObject.id);
+
+              finallyCodeFlow = addCodeFlow(
+                accCodeFlow.objects,
+                toAddObject,
+                trackingId
+              );
+            }
  
             accCodeFlow = { objects: finallyCodeFlow };
           }
@@ -133,11 +149,16 @@ const RightSection = () => {
           // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
           else {
             usedId.push(toAddObject.id);
-            changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject);
+            changedCodeFlows = addCodeFlow(
+              accCodeFlow.objects,
+              toAddObject,
+              trackingId
+            );
           }
           activate = updateActivate(activate, toAddObject);
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
           accCodeFlow = { objects: finallyCodeFlow };
+          trackingId = toAddObject.id;
         }
       }
       // 불을 켜줘야하는 자료구조의의 name을 담는 배열
