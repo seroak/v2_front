@@ -18,17 +18,18 @@ import { ForDto } from "@/types/dto/forDto";
 import { PrintDto } from "@/types/dto/printDto";
 import { IfElseDto } from "@/types/dto/ifElseDto";
 
-// utils폴더에서 가져온 함수
-import { addCodeFlow } from "./utils/addCodeFlow";
-import { updateCodeFlow } from "./utils/updateCodeFlow";
-import { turnLight } from "./utils/turnLight";
-import { createToAddObject } from "./utils/createToAddObject";
-import { updateDataStructure } from "./utils/updateDataStructure";
-import { updateActivate } from "./utils/updateActivate";
-
+// services폴더에서 가져온 함수
+import { addCodeFlow } from "./services/addCodeFlow";
+import { updateCodeFlow } from "./services/updateCodeFlow";
+import { turnLight } from "./services/turnLight";
+import { createToAddObject } from "./services/createToAddObject";
+import { updateDataStructure } from "./services/updateDataStructure";
+import { updateActivate } from "./services/updateActivate";
+import { turnOffAllLight } from "./services/turnOffAllLight";
 //rendUtils에서 가져온 함수
 import { renderingStructure } from "./renderingStructure";
 import { renderingCodeFlow } from "./renderingCodeFLow";
+import { IfElseChangeDto } from "@/types/dto/ifElseChangeDto";
 
 interface State {
   objects: AllObjectItem[];
@@ -73,7 +74,7 @@ const RightSection = () => {
 
     for (let preprocessedCode of preprocessedCodes) {
       let changedCodeFlows: AllObjectItem[] = [];
-      console.log(preprocessedCode);
+
       // 자료구조 시각화 부분이 들어왔을 때
       if (preprocessedCode.type.toLowerCase() === "assignViz".toLowerCase()) {
         (preprocessedCode as VariablesDto).variables.forEach(
@@ -98,29 +99,32 @@ const RightSection = () => {
       }
       // 코드 시각화 부분이 들어왔을 때
       else {
-        // ifelse 타입s
+        // ifelseDefine 타입
         if (preprocessedCode.type === "ifElseDefine") {
+          // ifelse만 한번에 다 끄고 한번에 다 킨다
+          const turnoff = turnOffAllLight(accCodeFlow.objects);
+          accCodeFlow = { objects: turnoff };
           for (let condition of (preprocessedCode as IfElseDto).conditions) {
             // ifelse 타입의 객체에 depth를 추가해주는 부분
-            const IfItem = Object.assign(condition, {
+            const ifElseItem = Object.assign(condition, {
               depth: (preprocessedCode as IfElseDto).depth,
-            });
+            });          
             // ifelse 타입의 객체를 만들어주는 함수
-            const toAddObject = createToAddObject(IfItem);
-            console.log(toAddObject);
+            const toAddObject = createToAddObject(ifElseItem);
+          
             usedId.push(toAddObject.id);
-            changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject);
-            // 마지막에 하나만 불켜는 함수로 바꿔서 제대로 작동이 안됨
-            activate = updateActivate(activate, toAddObject);
-            const finallyCodeFlow = turnLight(changedCodeFlows, activate);
+            // isLight를 true로 바꿔준다
+            toAddObject.isLight = true;
+            const finallyCodeFlow = addCodeFlow(accCodeFlow.objects, toAddObject);
+       
+ 
             accCodeFlow = { objects: finallyCodeFlow };
           }
-          console.dir(changedCodeFlows);
         }
         //그밖의 타입
         else {
           const toAddObject = createToAddObject(
-            preprocessedCode as ForDto | PrintDto
+            preprocessedCode as ForDto | PrintDto | IfElseChangeDto
           );
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
@@ -197,3 +201,5 @@ const RightSection = () => {
 };
 
 export default RightSection;
+
+

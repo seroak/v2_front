@@ -26,7 +26,16 @@
   background-color: #f4f4f4; /* 텍스트 위에 테두리가 있어도 글씨가 보이도록 배경색 지정 */
   padding: 0 5px; /* 좌우 여백 추가 */
 }
-
+.if_expr_div{
+  position: relative;
+  top: -45px;
+  left: 30px;
+  border: 3px solid #dedede;
+  border-radius: 3px;
+  background-color: #f4f4f4;
+  width: fit-content;
+  padding: 3px 10px;
+}
 .highlight {
   border: 2px solid #8e2efa;
   border-width: thick;

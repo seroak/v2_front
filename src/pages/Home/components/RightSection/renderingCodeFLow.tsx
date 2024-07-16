@@ -9,8 +9,10 @@ import { ElseItem } from "@/types/elseItem";
 import ElseBox from "./components/ElseBox/ElseBox";
 import { ForItem } from "@/types/forItem";
 import { ConditionItem } from "@/types/conditionItem";
+import ElifBox from "./components/ElifBox/ElifBox";
 
 export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
+  console.log("codeFlows", codeFlows);
   return (
     <>
       {codeFlows.map((codeFlow, index) => {
@@ -39,20 +41,20 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
             return (
               <AnimatePresence key={ifItem.id} mode="wait">
                 <motion.div key={ifItem.id} layout>
-                  <IfBox isLight={codeFlow.isLight}>
+                  <IfBox isLight={codeFlow.isLight} ifItem={ifItem}>
                     {renderingCodeFlow(codeFlow.child)}
                   </IfBox>
                 </motion.div>
               </AnimatePresence>
             );
           case "elif":
-            const elif = codeFlow as ConditionItem;
+            const elifItem = codeFlow as ConditionItem;
             return (
-              <AnimatePresence key={elif.id} mode="wait">
-                <motion.div key={elif.id} layout>
-                  <IfBox isLight={codeFlow.isLight}>
+              <AnimatePresence key={elifItem.id} mode="wait">
+                <motion.div key={elifItem.id} layout>
+                  <ElifBox isLight={codeFlow.isLight} elifItem={elifItem}>
                     {renderingCodeFlow(codeFlow.child)}
-                  </IfBox>
+                  </ElifBox>
                 </motion.div>
               </AnimatePresence>
             );
@@ -61,7 +63,7 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
             return (
               <AnimatePresence key={elseItem.id} mode="wait">
                 <motion.div key={elseItem.id} layout>
-                  <ElseBox isLight={codeFlow.isLight}>
+                  <ElseBox isLight={codeFlow.isLight} elseItem={elseItem}>
                     {renderingCodeFlow(codeFlow.child)}
                   </ElseBox>
                 </motion.div>
