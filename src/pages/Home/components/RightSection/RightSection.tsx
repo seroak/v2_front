@@ -110,11 +110,10 @@ const RightSection = () => {
             // ifelse 타입의 객체에 depth를 추가해주는 부분
             const ifElseItem = Object.assign(condition, {
               depth: (preprocessedCode as IfElseDto).depth,
-            });          
+            });
             // ifelse 타입의 객체를 만들어주는 함수
             const toAddObject = createToAddObject(ifElseItem);
-          
-            usedId.push(toAddObject.id);
+
             // isLight를 true로 바꿔준다
             toAddObject.isLight = true;
             let finallyCodeFlow: any;
@@ -133,7 +132,7 @@ const RightSection = () => {
                 trackingId
               );
             }
- 
+
             accCodeFlow = { objects: finallyCodeFlow };
           }
         }
@@ -142,6 +141,7 @@ const RightSection = () => {
           const toAddObject = createToAddObject(
             preprocessedCode as ForDto | PrintDto | IfElseChangeDto
           );
+
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
             changedCodeFlows = updateCodeFlow(accCodeFlow.objects, toAddObject);
@@ -222,5 +222,3 @@ const RightSection = () => {
 };
 
 export default RightSection;
-
-

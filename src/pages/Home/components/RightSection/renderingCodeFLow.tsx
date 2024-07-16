@@ -12,7 +12,6 @@ import { ConditionItem } from "@/types/conditionItem";
 import ElifBox from "./components/ElifBox/ElifBox";
 
 export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
-  console.log("codeFlows", codeFlows);
   return (
     <>
       {codeFlows.map((codeFlow, index) => {
