@@ -1,4 +1,10 @@
-import { useState, useContext, useEffect } from "react";
+import {
+  useState,
+  useContext,
+  useEffect,
+  useReducer,
+  useCallback,
+} from "react";
 import { PreprocessedCodesContext } from "../../Home";
 import _ from "lodash";
 
@@ -26,25 +32,28 @@ import { renderingCodeFlow } from "./rendering/renderingCodeFLow";
 interface State {
   objects: AllObjectItem[];
 }
+const backForwardNavReducer = (state: any, action: any) => {
+  switch (action.type) {
+    case "forward":
+      return state + 1;
+    case "back":
+      return state - 1;
+    default:
+      return state;
+  }
+};
 
 const RightSection = () => {
-  const [idx, setIdx] = useState<number>(-1);
-
-  // 코드흐름 시각화 정보의 한단계 한단계 모두를 담아두는 리스트
+  const [idx, navControlDispatch] = useReducer(backForwardNavReducer, -1);
   const [codeFlowList, setCodeFlowList] = useState<State[]>([
     {
       objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
     },
   ]);
-
   const [StructuresList, setStructuresList] = useState<CodeItem[][]>([[]]); // 변수 데이터 시각화 리스트의 변화과정을 담아두는 리스트
-
-  // context API로 데이터 가져오기
-  // context API를 사용하는 패턴
-  const context = useContext(PreprocessedCodesContext);
-  //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
+  const context = useContext(PreprocessedCodesContext); // context API로 데이터 가져오기
   if (!context) {
-    throw new Error("CodeContext not found");
+    throw new Error("CodeContext not found"); //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
   }
   const { preprocessedCodes } = context;
 
@@ -77,7 +86,6 @@ const RightSection = () => {
                 accDataStructures,
                 variable
               );
-              accDataStructures;
             }
             // 처음 시각화해주는 자료구조인 경우
             else {
@@ -133,34 +141,31 @@ const RightSection = () => {
     setStructuresList(accDataStructuresList);
   }, [preprocessedCodes]);
 
-  const toFront = () => {
-    if (idx > codeFlowList.length - 1) {
-      return;
+  const onForward = useCallback(() => {
+    if (idx < codeFlowList.length - 1) {
+      navControlDispatch({ type: "forward" });
     }
-    setIdx(idx + 1);
-  };
-  const toBack = () => {
-    if (idx === -1) {
-      return;
+  }, [idx, codeFlowList.length]);
+
+  const onBack = useCallback(() => {
+    if (idx >= 0) {
+      navControlDispatch({ type: "back" });
     }
-    setIdx(idx - 1);
-  };
+  }, [idx]);
 
   return (
     <div style={{ backgroundColor: "#f4f4f4", width: "100%" }}>
-      <button onClick={toBack}>뒤로 가기</button>
-      <button onClick={toFront}>앞으로 가기</button>
+      <button onClick={onBack}>뒤로 가기</button>
+      <button onClick={onForward}>앞으로 가기</button>
       <div>
         <ul style={{ display: "flex" }}>
-          {StructuresList &&
-            StructuresList.length > 0 &&
+          {StructuresList?.length > 0 &&
             idx >= 0 &&
             renderingStructure(StructuresList[idx])}
         </ul>
       </div>
       <ul>
-        {codeFlowList &&
-          codeFlowList.length > 0 &&
+        {codeFlowList?.length > 0 &&
           idx >= 0 &&
           renderingCodeFlow(codeFlowList[idx].objects[0].child)}
       </ul>
