@@ -19,7 +19,7 @@ export const createToAddObject = (
   };
 
   const type: string = preprocessedCode.type.toLowerCase();
-  console.log("type", type);
+
   // type에 따라서 객체 생성
   switch (type) {
     case "print":

@@ -11,7 +11,7 @@ type Props = {
 
 const ForBox = ({ children, forItem }: Props) => {
   return (
-    <AnimatePresence key={forItem.id} mode="wait">
+    <AnimatePresence key={forItem.id}>
       <motion.div className={styles.for}>
         <motion.div
           layout

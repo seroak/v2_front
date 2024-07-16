@@ -1,8 +1,8 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import forPrintMockData from "@/fixtures/forPrintMockData.json";
-import Home from "@/pages/Home/Home";
+import successForAndPrintResponseBody from "./pages.home/samples/successForAndPrintResponseBody.json";
+import Home from "../src/pages/Home/Home";
 
 // 브라우저API 모킹
 (window as any).fetch = jest.fn();
@@ -22,7 +22,7 @@ describe("백엔드로 부터 이상한 코드를 받았을 때", () => {
     jest.spyOn(console, "error").mockImplementation(() => {}); // console.error를 모킹
   });
 
-  test("submits code when button is clicked", async () => {
+  test("버튼을 눌렀을 때 코드 제출", async () => {
     ((window as any).fetch as jest.Mock).mockResolvedValueOnce({
       json: async () => [{ code: "test code" }],
     });
@@ -51,7 +51,7 @@ describe("백엔드로 부터 정상적인 코드를 받았을 때", () => {
 
   test("submits code when button is clicked", async () => {
     ((window as any).fetch as jest.Mock).mockResolvedValueOnce({
-      json: async () => forPrintMockData,
+      json: async () => successForAndPrintResponseBody,
     });
 
     renderWithQueryClient(<Home />);

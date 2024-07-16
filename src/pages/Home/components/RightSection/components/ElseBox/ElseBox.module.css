@@ -10,29 +10,31 @@
   background-color: #f4f4f4;
   padding: 30px;
   margin: 25px;
-  margin-top: 40px;
+  margin-top: 30px;
   min-width: 200px;
-
-  max-width: 1000px;
-  max-height: 1000px;
   display: inline-block;
 }
 
-.else_text {
+.else_title {
   position: absolute;
+  left: 10px;
+  top: -20px;
   font-size: 24px;
-  top: -10px; /* 테두리 위에 위치 */
-  left: 5px; /* 테두리 왼쪽에 위치 */
+  text-align: center;
+  width: fit-content;
   background-color: #f4f4f4; /* 텍스트 위에 테두리가 있어도 글씨가 보이도록 배경색 지정 */
   padding: 0 5px; /* 좌우 여백 추가 */
 }
-
-
-.text {
-  color: #f1f1f1;
+.else_expr {
+  position: absolute;
+  left: 75px;
+  top: -15px;
+  border: 3px solid #dedede;
+  border-radius: 3px;
+  background-color: #f4f4f4;
+  width: fit-content;
+  padding: 3px 10px;
 }
-
 .highlight {
   border: 2px solid #8e2efa;
-  border-width: thick;
 }
