@@ -7,7 +7,7 @@ import ForBox from "./components/ForBox/ForBox";
 import IfBox from "./components/IfBox/IfBox";
 import { ElseItem } from "@/pages/Home/types/elseItem";
 import ElseBox from "./components/ElseBox/ElseBox";
-import { ForItem } from "@/types/forItem";
+import { ForItem } from "@/pages/Home/types/forItem";
 import { ConditionItem } from "@/pages/Home/types/conditionItem";
 import ElifBox from "./components/ElifBox/ElifBox";
 
