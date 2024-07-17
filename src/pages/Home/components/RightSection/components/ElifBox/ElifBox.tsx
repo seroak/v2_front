@@ -27,7 +27,8 @@ function IfBox({ children, isLight, elifItem }: Props) {
           transition={{ duration: 0.3 }}
           className={cx(
             styles.elif_border,
-            elifItem.isLight && styles.highlight
+            elifItem.isLight && styles.highlight,
+            isLight && elifItem.expr === "False" && styles.false
           )}
         >
           <motion.div layout className={styles.elif_title}>
@@ -35,9 +36,20 @@ function IfBox({ children, isLight, elifItem }: Props) {
           </motion.div>
           <motion.div
             layout
-            className={cx(styles.elif_expr, isLight && styles.highlight)}
+            className={cx(
+              styles.elif_expr,
+              isLight && styles.highlight,
+              isLight && elifItem.expr === "False" && styles.false
+            )}
           >
-            <span>{elifItem.expr}</span>
+            <span
+              className={cx(
+                isLight && elifItem.expr === "True" && styles["true-expr"],
+                isLight && elifItem.expr === "False" && styles["false-expr"]
+              )}
+            >
+              {elifItem.expr}
+            </span>
           </motion.div>
           {children && <div>{children}</div>}
         </motion.div>

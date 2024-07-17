@@ -33,12 +33,15 @@ function ElseBox({ children, isLight, elseItem }: Props) {
           <motion.div layout className={styles.else_title}>
             <span>else</span>
           </motion.div>
-          <motion.div
-            layout
-            className={cx(styles.else_expr, isLight && styles.highlight)}
-          >
-            <span>True</span>
-          </motion.div>
+          {isLight && elseItem.expr === "True" ? (
+            <motion.div
+              layout
+              className={cx(styles.else_expr, isLight && styles.highlight)}
+            >
+              <span>True</span>
+            </motion.div>
+          ) : null}
+
           {children && <div>{children}</div>}
         </motion.div>
       </motion.div>

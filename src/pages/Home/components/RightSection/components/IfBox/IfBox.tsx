@@ -22,16 +22,31 @@ function IfBox({ children, isLight, ifItem }: Props) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className={cx(styles.if_border, ifItem.isLight && styles.highlight)}
+          className={cx(
+            styles.if_border,
+            isLight && styles.highlight,
+            isLight && ifItem.expr === "False" && styles.false
+          )}
         >
           <motion.div layout className={styles.if_title}>
             <span>if</span>
           </motion.div>
           <motion.div
             layout
-            className={cx(styles.if_expr, isLight && styles.highlight)}
+            className={cx(
+              styles.if_expr,
+              isLight && styles.highlight,
+              isLight && ifItem.expr === "False" && styles.false
+            )}
           >
-            <span>{ifItem.expr}</span>
+            <span
+              className={cx(
+                isLight && ifItem.expr === "True" && styles["true-expr"],
+                isLight && ifItem.expr === "False" && styles["false-expr"]
+              )}
+            >
+              {ifItem.expr}
+            </span>
           </motion.div>
           {children && <div>{children}</div>}
         </motion.div>

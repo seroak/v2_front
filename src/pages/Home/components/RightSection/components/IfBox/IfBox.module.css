@@ -38,3 +38,12 @@
 .highlight {
   border: 2px solid #8e2efa;
 }
+.false {
+  border: 2px solid #ff0000;
+}
+.true-expr {
+  color: #8e2efa;
+}
+.false-expr {
+  color: #ff0000;
+}

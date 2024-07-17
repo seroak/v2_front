@@ -69,7 +69,7 @@ const ForBox = ({ children, forItem }: Props) => {
           >
             <span className="white-text">{forItem.end}</span>
           </motion.div>
-          {forItem.step === 1 ? null : (
+          {forItem.step === "1" ? null : (
             <>
               <motion.div layout className={styles.step_title}>
                 <span>step</span>
