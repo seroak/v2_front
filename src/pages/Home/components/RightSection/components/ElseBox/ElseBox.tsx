@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import styles from "./ElseBox.module.css";
 import cx from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
-import { ConditionItem } from "@/types/conditionItem";
+import { ConditionItem } from "@/pages/Home/types/conditionItem";
 type Props = {
   children?: ReactNode;
   isLight: boolean;

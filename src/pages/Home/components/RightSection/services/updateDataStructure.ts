@@ -1,4 +1,4 @@
-import { CodeItem } from "@/types/codeItem";
+import { CodeItem } from "@/pages/Home/types/codeItem";
 
 // 자료구조 부분을 수정할때 실행하는 함수
 export const updateDataStructure = (

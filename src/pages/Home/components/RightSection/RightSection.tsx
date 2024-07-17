@@ -9,14 +9,14 @@ import { PreprocessedCodesContext } from "../../Home";
 import _ from "lodash";
 
 // 타입 정의
-import { CodeItem } from "@/types/codeItem";
-import { AllObjectItem } from "@/types/allObjectItem";
-import { ActivateItem } from "@/types/activateItem";
-import { VariablesItem } from "@/types/variablesItem";
-import { VariablesDto } from "@/types/dto/variablesDto";
-import { ForDto } from "@/types/dto/forDto";
-import { PrintDto } from "@/types/dto/printDto";
-import { IfElseDto } from "@/types/dto/ifElseDto";
+import { CodeItem } from "@/pages/Home/types/codeItem";
+import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
+import { ActivateItem } from "@/pages/Home/types/activateItem";
+import { VariablesItem } from "@/pages/Home/types/variablesItem";
+import { VariablesDto } from "@/pages/Home/types/dto/variablesDto";
+import { ForDto } from "@/pages/Home/types/dto/forDto";
+import { PrintDto } from "@/pages/Home/types/dto/printDto";
+import { IfElseDto } from "@/pages/Home/types/dto/ifElseDto";
 
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
@@ -28,8 +28,8 @@ import { updateActivate } from "./services/updateActivate";
 import { turnOffAllLight } from "./services/turnOffAllLight";
 //rendUtils에서 가져온 함수
 import { renderingStructure } from "./renderingStructure";
-import { renderingCodeFlow } from "./renderingCodeFLow";
-import { IfElseChangeDto } from "@/types/dto/ifElseChangeDto";
+import { renderingCodeFlow } from "./renderingCodeFlow";
+import { IfElseChangeDto } from "@/pages/Home/types/dto/ifElseChangeDto";
 import { refreshCodeFlow } from "./services/refreshCodeFlow";
 
 interface State {

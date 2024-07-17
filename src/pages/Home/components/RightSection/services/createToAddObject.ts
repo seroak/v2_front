@@ -1,14 +1,17 @@
-import { AllObjectItem } from "@/types/allObjectItem";
-import { ForItem } from "@/types/forItem";
-import { ConditionItem } from "@/types/conditionItem";
-import { PrintItem } from "@/types/printItem";
-import { CreateToAddForData } from "@/types/createToAddData/createToAddForData";
-import { CreateToAddPrintData } from "@/types/createToAddData/createToAddPrintData";
-import { CreateToAddIfElseData } from "@/types/createToAddData/createToAddIfElseData";
-import {CreateToAddIfElseChangeData} from "@/types/createToAddData/createToAddIfElseChangeData";
+import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
+import { ForItem } from "@/pages/Home/types/forItem";
+import { ConditionItem } from "@/pages/Home/types/conditionItem";
+import { PrintItem } from "@/pages/Home/types/printItem";
+import { CreateToAddForData } from "@/pages/Home/types/createToAddData/createToAddForData";
+import { CreateToAddPrintData } from "@/pages/Home/types/createToAddData/createToAddPrintData";
+import { CreateToAddIfElseData } from "@/pages/Home/types/createToAddData/createToAddIfElseData";
+import { CreateToAddIfElseChangeData } from "@/pages/Home/types/createToAddData/createToAddIfElseChangeData";
 // 스택에 넣을 객체를 생성하는 함수
 export const createToAddObject = (
-  preprocessedCode: CreateToAddPrintData | CreateToAddForData | CreateToAddIfElseData
+  preprocessedCode:
+    | CreateToAddPrintData
+    | CreateToAddForData
+    | CreateToAddIfElseData
 ): AllObjectItem => {
   const baseObject: AllObjectItem = {
     id: preprocessedCode.id!,
@@ -80,10 +83,10 @@ export const createToAddObject = (
         expr: (preprocessedCode as CreateToAddIfElseData).expr!,
       };
     case "ifelsechange":
-      return{
+      return {
         ...baseObject,
-        expr:(preprocessedCode as CreateToAddIfElseChangeData).expr!,
-      }
+        expr: (preprocessedCode as CreateToAddIfElseChangeData).expr!,
+      };
     default:
       throw new Error(`Unsupported type: ${type}`); // 옵셔널 체이닝으로 undefined일 경우 처리
   }

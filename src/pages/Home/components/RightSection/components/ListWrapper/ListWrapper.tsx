@@ -1,6 +1,6 @@
 import styles from "./ListWrapper.module.css";
 import { ListBlock } from "./components/ListBlock";
-import { VizListItem } from "@/types/vizListItem";
+import { VizListItem } from "@/pages/Home/types/vizListItem";
 type Props = {
   listItem: VizListItem;
 };

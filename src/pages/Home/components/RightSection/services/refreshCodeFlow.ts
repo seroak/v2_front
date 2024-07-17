@@ -1,4 +1,4 @@
-import { AllObjectItem } from "@/types/allObjectItem";
+import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
 
 // ifElseDefine 타입일 떄는 child를 초기화해야하기 때문에 다른 함수를 사용한다
 export const refreshCodeFlow = (

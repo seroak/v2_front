@@ -1,14 +1,14 @@
-import { AllObjectItem } from "@/types/allObjectItem";
-import { PrintItem } from "@/types/printItem";
+import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
+import { PrintItem } from "@/pages/Home/types/printItem";
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactElement } from "react";
 import PrintBox from "./components/PrintBox/PrintBox";
 import ForBox from "./components/ForBox/ForBox";
 import IfBox from "./components/IfBox/IfBox";
-import { ElseItem } from "@/types/elseItem";
+import { ElseItem } from "@/pages/Home/types/elseItem";
 import ElseBox from "./components/ElseBox/ElseBox";
 import { ForItem } from "@/types/forItem";
-import { ConditionItem } from "@/types/conditionItem";
+import { ConditionItem } from "@/pages/Home/types/conditionItem";
 import ElifBox from "./components/ElifBox/ElifBox";
 
 export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {

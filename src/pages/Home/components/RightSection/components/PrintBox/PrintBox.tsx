@@ -1,6 +1,6 @@
 import cx from "classnames";
 import styles from "./PrintBox.module.css";
-import { PrintItem } from "@/types/printItem";
+import { PrintItem } from "@/pages/Home/types/printItem";
 import { AnimatePresence, motion } from "framer-motion";
 
 type Props = {

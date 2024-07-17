@@ -5,7 +5,7 @@ import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
 import Resizable from "./components/Resizable";
 
-import { AllDto, isAllDtoArray } from "@/types/dto/allDto";
+import { AllDto, isAllDtoArray } from "@/pages/Home/types/dto/allDto";
 // 원본 코드 타입 정의
 interface CodeContextType {
   code: string;

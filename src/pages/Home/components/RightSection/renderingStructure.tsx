@@ -1,8 +1,8 @@
-import { VizVarItem } from "@/types/vizVarItem";
+import { VizVarItem } from "@/pages/Home/types/vizVarItem";
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactElement } from "react";
 import VariableBox from "./components/VariableBox/VariableBox";
-import { VizListItem } from "@/types/vizListItem";
+import { VizListItem } from "@/pages/Home/types/vizListItem";
 import ListWrapper from "./components/ListWrapper/ListWrapper";
 
 export const renderingStructure = (

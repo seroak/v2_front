@@ -6,7 +6,7 @@ export interface ForDto {
     cur: number;
     start: number;
     end: number;
-    step: number;
+    step: string;
   };
   highlights: Array<string>;
   type: string;

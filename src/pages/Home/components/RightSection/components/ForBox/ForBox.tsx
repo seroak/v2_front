@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import styles from "./ForBox.module.css";
 import cx from "classnames";
-import { ForItem } from "@/types/forItem";
+import { ForItem } from "@/pages/Home/types/forItem";
 import { AnimatePresence, motion } from "framer-motion";
 
 type Props = {

@@ -1,4 +1,4 @@
-import { AllObjectItem } from "@/types/allObjectItem";
+import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
 
 // 새로운 객체를 CodeFlow에 추가하는 함수
 export const addCodeFlow = (
