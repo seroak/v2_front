@@ -6,8 +6,11 @@ import { CreateToAddForData } from '@/pages/Home/types/createToAddData/createToA
 import { CreateToAddPrintData } from '@/pages/Home/types/createToAddData/createToAddPrintData';
 import { CreateToAddIfElseData } from '@/pages/Home/types/createToAddData/createToAddIfElseData';
 import { CreateToAddIfElseChangeData } from '@/pages/Home/types/createToAddData/createToAddIfElseChangeData';
+import { CreateToAddCodeFlowVariableDto } from '@/pages/Home/types/createToAddData/createToAddCodeFlowVariableData';
 // 스택에 넣을 객체를 생성하는 함수
-export const createToAddObject = (preprocessedCode: CreateToAddPrintData | CreateToAddForData | CreateToAddIfElseData): AllObjectItem => {
+export const createToAddObject = (
+  preprocessedCode: CreateToAddPrintData | CreateToAddForData | CreateToAddIfElseData
+): AllObjectItem => {
   const baseObject: AllObjectItem = {
     id: preprocessedCode.id!,
     type: preprocessedCode.type,
@@ -92,6 +95,11 @@ export const createToAddObject = (preprocessedCode: CreateToAddPrintData | Creat
         expr: (preprocessedCode as CreateToAddIfElseChangeData).expr!,
       };
 
+    case 'variable':
+      return {
+        ...baseObject,
+        expr: (preprocessedCode as CreateToAddCodeFlowVariableDto).expr!,
+      };
     default:
       throw new Error(`Unsupported type: ${type}`); // 옵셔널 체이닝으로 undefined일 경우 처리
   }
