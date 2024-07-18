@@ -102,9 +102,7 @@ const RightSection = () => {
       // 코드 시각화 부분이 들어왔을 때
       else {
         // ifelseDefine 타입
-        if (preprocessedCode.type === "ifElseDefine") {
-          // ifelse만 한번에 다 끄고 한번에 다 킨다
-          const turnoff = turnOffAllLight(accCodeFlow.objects);
+        if (preprocessedCode.type === 'ifElseDefine') {
           accCodeFlow = { objects: turnoff };
           for (let condition of (preprocessedCode as IfElseDto).conditions) {
             // ifelse 타입의 객체에 depth를 추가해주는 부분
