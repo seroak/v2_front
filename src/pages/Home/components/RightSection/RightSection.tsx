@@ -25,7 +25,7 @@ import { turnLight } from "./services/turnLight";
 import { createToAddObject } from "./services/createToAddObject";
 import { updateDataStructure } from "./services/updateDataStructure";
 import { updateActivate } from "./services/updateActivate";
-import { turnOffAllLight } from "./services/turnOffAllLight";
+import { turnOffAllNodeLight } from './services/turnOffAllNodeLight';
 //rendUtils에서 가져온 함수
 import { renderingStructure } from "./renderingStructure";
 import { renderingCodeFlow } from "./renderingCodeFlow";
@@ -103,6 +103,7 @@ const RightSection = () => {
       else {
         // ifelseDefine 타입
         if (preprocessedCode.type === 'ifElseDefine') {
+          const turnoff = turnOffAllNodeLight(accCodeFlow.objects);
           accCodeFlow = { objects: turnoff };
           for (let condition of (preprocessedCode as IfElseDto).conditions) {
             // ifelse 타입의 객체에 depth를 추가해주는 부분

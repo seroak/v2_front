@@ -1,7 +1,7 @@
-import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
+import { AllObjectItem } from '@/pages/Home/types/allObjectItem';
 
 // 현재 불이 켜져야하는 부분을 표시해주는 함수
-export const turnOffAllLight = (
+export const turnOffAllNodeLight = (
   codeFlows: AllObjectItem[] // 불이 들어와야하는 객체를 저장하는 옛날 리스트
   // 새로 불이 들어와야하는 곳의 정보를 담고있는 객체
 ): AllObjectItem[] => {
@@ -10,7 +10,7 @@ export const turnOffAllLight = (
     return {
       ...codeFlow,
       isLight: false,
-      child: turnOffAllLight(codeFlow.child),
+      child: turnOffAllNodeLight(codeFlow.child),
     };
   });
 };
