@@ -70,21 +70,26 @@ export const createToAddObject = (
     case "if":
       return {
         ...(baseObject as ConditionItem),
+        highlights: [],
         expr: (preprocessedCode as CreateToAddIfElseData).expr!,
       };
     case "elif":
       return {
         ...(baseObject as ConditionItem),
+        highlights: [],
         expr: (preprocessedCode as CreateToAddIfElseData).expr!,
       };
     case "else":
       return {
         ...(baseObject as ConditionItem),
+        highlights: [],
         expr: (preprocessedCode as CreateToAddIfElseData).expr!,
       };
     case "ifelsechange":
       return {
         ...baseObject,
+        highlights: (preprocessedCode as CreateToAddIfElseChangeData)
+          .highlights!,
         expr: (preprocessedCode as CreateToAddIfElseChangeData).expr!,
       };
     default:

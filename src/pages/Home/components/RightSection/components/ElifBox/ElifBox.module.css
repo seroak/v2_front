@@ -38,12 +38,15 @@
 .highlight {
   border: 2px solid #8e2efa;
 }
-
-.false {
-  border: 2px solid #ff0000;
-}
 .true-expr {
   color: #8e2efa;
+}
+.font-highlight {
+  color: #8e2efa;
+}
+/* false는 항상 맨아래 우선순위가 높게 설정되어야 함 */
+.false {
+  border: 2px solid #ff0000;
 }
 .false-expr {
   color: #ff0000;

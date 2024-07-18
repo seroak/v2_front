@@ -141,7 +141,6 @@ const RightSection = () => {
           const toAddObject = createToAddObject(
             preprocessedCode as ForDto | PrintDto | IfElseChangeDto
           );
-
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
             changedCodeFlows = updateCodeFlow(accCodeFlow.objects, toAddObject);

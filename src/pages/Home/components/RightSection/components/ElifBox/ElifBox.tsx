@@ -42,14 +42,19 @@ function IfBox({ children, isLight, elifItem }: Props) {
               isLight && elifItem.expr === "False" && styles.false
             )}
           >
-            <span
-              className={cx(
-                isLight && elifItem.expr === "True" && styles["true-expr"],
-                isLight && elifItem.expr === "False" && styles["false-expr"]
-              )}
-            >
-              {elifItem.expr}
-            </span>
+            {elifItem.expr?.split("").map((char, index) => (
+              <span
+                key={index}
+                className={cx(
+                  isLight &&
+                    elifItem.highlights?.includes(index) &&
+                    styles["font-highlight"],
+                  isLight && elifItem.expr === "False" && styles["false-expr"]
+                )}
+              >
+                {char}
+              </span>
+            ))}
           </motion.div>
           {children && <div>{children}</div>}
         </motion.div>
