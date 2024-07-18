@@ -11,6 +11,7 @@ import { VariablesDto } from '@/pages/Home/types/dto/variablesDto';
 import { ForDto } from '@/pages/Home/types/dto/forDto';
 import { PrintDto } from '@/pages/Home/types/dto/printDto';
 import { IfElseDto } from '@/pages/Home/types/dto/ifElseDto';
+import { CodeFlowVariableDto } from '@/pages/Home/types/dto/codeFlowVariableDto';
 
 // services폴더에서 가져온 함수
 import { addCodeFlow } from './services/addCodeFlow';
@@ -20,6 +21,7 @@ import { createToAddObject } from './services/createToAddObject';
 import { updateDataStructure } from './services/updateDataStructure';
 import { updateActivate } from './services/updateActivate';
 import { turnOffAllNodeLight } from './services/turnOffAllNodeLight';
+
 //rendUtils에서 가져온 함수
 import { renderingStructure } from './renderingStructure';
 import { renderingCodeFlow } from './renderingCodeFlow';
@@ -111,7 +113,6 @@ const RightSection = () => {
               finallyCodeFlow = refreshCodeFlow(accCodeFlow.objects, toAddObject);
             } else {
               usedId.push(toAddObject.id);
-
               finallyCodeFlow = addCodeFlow(accCodeFlow.objects, toAddObject, trackingId);
             }
 
@@ -120,7 +121,10 @@ const RightSection = () => {
         }
         //그밖의 타입
         else {
-          const toAddObject = createToAddObject(preprocessedCode as ForDto | PrintDto | IfElseChangeDto);
+          const toAddObject = createToAddObject(
+            preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
+          );
+
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
             changedCodeFlows = updateCodeFlow(accCodeFlow.objects, toAddObject);
@@ -132,6 +136,7 @@ const RightSection = () => {
           }
           activate = updateActivate(activate, toAddObject);
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
+
           accCodeFlow = { objects: finallyCodeFlow };
           trackingId = toAddObject.id;
         }
@@ -179,7 +184,9 @@ const RightSection = () => {
       <button onClick={onBack}>뒤로 가기</button>
       <button onClick={onForward}>앞으로 가기</button>
       <div>
-        <ul style={{ display: 'flex' }}>{StructuresList?.length > 0 && idx >= 0 && renderingStructure(StructuresList[idx])}</ul>
+        <ul style={{ display: 'flex' }}>
+          {StructuresList?.length > 0 && idx >= 0 && renderingStructure(StructuresList[idx])}
+        </ul>
       </div>
       <ul>{codeFlowList?.length > 0 && idx >= 0 && renderingCodeFlow(codeFlowList[idx].objects[0].child)}</ul>
     </div>
