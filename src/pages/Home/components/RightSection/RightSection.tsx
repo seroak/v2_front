@@ -17,6 +17,7 @@ import { VariablesDto } from "@/pages/Home/types/dto/variablesDto";
 import { ForDto } from "@/pages/Home/types/dto/forDto";
 import { PrintDto } from "@/pages/Home/types/dto/printDto";
 import { IfElseDto } from "@/pages/Home/types/dto/ifElseDto";
+import { CodeFlowVariableDto } from "@/pages/Home/types/dto/codeFlowVariableDto";
 
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
@@ -26,7 +27,6 @@ import { createToAddObject } from "./services/createToAddObject";
 import { updateDataStructure } from "./services/updateDataStructure";
 import { updateActivate } from "./services/updateActivate";
 import { turnOffAllNodeLight } from "./services/turnOffAllNodeLight";
-import { CodeFlowVariableDto } from "@/pages/Home/types/dto/codeFlowVariableDto";
 
 //rendUtils에서 가져온 함수
 import { renderingStructure } from "./renderingStructure";
