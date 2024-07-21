@@ -1,26 +1,26 @@
-import { AllObjectItem } from '@/pages/Home/types/allObjectItem';
-import { PrintItem } from '@/pages/Home/types/printItem';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ReactElement } from 'react';
-import PrintBox from './components/PrintBox/PrintBox';
-import ForBox from './components/ForBox/ForBox';
-import IfBox from './components/IfBox/IfBox';
-import ElseBox from './components/ElseBox/ElseBox';
-import ElifBox from './components/ElifBox/ElifBox';
+import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
+import { PrintItem } from "@/pages/Home/types/printItem";
+import { AnimatePresence, motion } from "framer-motion";
+import { ReactElement } from "react";
+import PrintBox from "./components/PrintBox/PrintBox";
+import ForBox from "./components/ForBox/ForBox";
+import IfBox from "./components/IfBox/IfBox";
+import ElseBox from "./components/ElseBox/ElseBox";
+import ElifBox from "./components/ElifBox/ElifBox";
 
 // type import
-import { ElseItem } from '@/pages/Home/types/elseItem';
-import { ForItem } from '@/pages/Home/types/forItem';
-import { ConditionItem } from '@/pages/Home/types/conditionItem';
-import { CodeFlowVariableItem } from '@/pages/Home/types/codeFlow/codeFlowVariableItem';
-import CodeFlowVariableBox from './components/CodeFlowVariableBox/CodeFlowVariableBox';
+import { ElseItem } from "@/pages/Home/types/elseItem";
+import { ForItem } from "@/pages/Home/types/forItem";
+import { ConditionItem } from "@/pages/Home/types/conditionItem";
+import { CodeFlowVariableItem } from "@/pages/Home/types/codeFlow/codeFlowVariableItem";
+import CodeFlowVariableBox from "./components/CodeFlowVariableBox/CodeFlowVariableBox";
 
 export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
   return (
     <>
       {codeFlows.map((codeFlow, index) => {
         switch (codeFlow.type) {
-          case 'print': {
+          case "print": {
             const printItem = codeFlow as PrintItem;
             return (
               <div key={index}>
@@ -29,7 +29,7 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
               </div>
             );
           }
-          case 'for': {
+          case "for": {
             const forItem = codeFlow as ForItem;
             return (
               <div key={index}>
@@ -39,7 +39,7 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
               </div>
             );
           }
-          case 'if':
+          case "if":
             const ifItem = codeFlow as ConditionItem;
             return (
               <AnimatePresence key={ifItem.id} mode="wait">
@@ -50,7 +50,7 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
                 </motion.div>
               </AnimatePresence>
             );
-          case 'elif':
+          case "elif":
             const elifItem = codeFlow as ConditionItem;
             return (
               <AnimatePresence key={elifItem.id} mode="wait">
@@ -61,7 +61,7 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
                 </motion.div>
               </AnimatePresence>
             );
-          case 'else':
+          case "else":
             const elseItem = codeFlow as ElseItem;
             return (
               <AnimatePresence key={elseItem.id} mode="wait">
@@ -72,11 +72,14 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
                 </motion.div>
               </AnimatePresence>
             );
-          case 'variable':
+          case "variable":
             const variableItem = codeFlow as CodeFlowVariableItem;
             return (
               <div key={variableItem.id}>
-                <CodeFlowVariableBox key={index} codeFlowVarialbeItem={variableItem} />
+                <CodeFlowVariableBox
+                  key={index}
+                  codeFlowVariableItem={variableItem}
+                />
               </div>
             );
 
