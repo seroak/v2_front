@@ -1,6 +1,5 @@
 import { AllObjectItem } from '@/pages/Home/types/allObjectItem';
 
-// ifElseDefine 타입일 떄는 child를 초기화해야하기 때문에 다른 함수를 사용한다
 export const refreshCodeFlow = (
   codeFlows: AllObjectItem[], //현제 코드흐름 시각화 정보를 담고 있는 리스트
   toAddObject: AllObjectItem //수정해야하는 정보를 담고 있는 객체

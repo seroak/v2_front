@@ -21,7 +21,6 @@ export const createToAddObject = (
 
   const type: string = preprocessedCode.type.toLowerCase();
 
-  // type에 따라서 객체 생성
   switch (type) {
     case 'print':
       return {
@@ -32,7 +31,7 @@ export const createToAddObject = (
 
     case 'for':
       preprocessedCode = preprocessedCode as CreateToAddForData;
-      // for문 highlights 객체로 변환
+
       let isCurLight = false;
       let isStartLight = false;
       let isEndLight = false;
@@ -101,6 +100,6 @@ export const createToAddObject = (
         expr: (preprocessedCode as CreateToAddCodeFlowVariableDto).expr!,
       };
     default:
-      throw new Error(`Unsupported type: ${type}`); // 옵셔널 체이닝으로 undefined일 경우 처리
+      throw new Error(`Unsupported type: ${type}`);
   }
 };
