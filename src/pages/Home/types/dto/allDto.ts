@@ -1,9 +1,10 @@
-import { ForDto, isForDto } from "./forDto";
-import { PrintDto, isPrintDto } from "./printDto";
-import { VariablesDto, isVariablesDto } from "./variablesDto";
-import { IfElseDto, isIfElseDto } from "./ifElseDto";
-import { IfElseChangeDto, isIfElseChangeDto } from "./ifElseChangeDto";
-export type AllDto = ForDto | PrintDto | VariablesDto | IfElseDto | IfElseChangeDto;
+import { ForDto, isForDto } from './forDto';
+import { PrintDto, isPrintDto } from './printDto';
+import { VariablesDto, isVariablesDto } from './variablesDto';
+import { IfElseDto, isIfElseDto } from './ifElseDto';
+import { IfElseChangeDto, isIfElseChangeDto } from './ifElseChangeDto';
+import { CodeFlowVariableDto, isCodeFlowVariableDto } from './codeFlowVariableDto';
+export type AllDto = ForDto | PrintDto | VariablesDto | IfElseDto | IfElseChangeDto | CodeFlowVariableDto;
 
 export const isAllDto = (item: any): item is AllDto => {
   return (
@@ -11,7 +12,8 @@ export const isAllDto = (item: any): item is AllDto => {
     isPrintDto(item) ||
     isVariablesDto(item) ||
     isIfElseDto(item) ||
-    isIfElseChangeDto(item)
+    isIfElseChangeDto(item) ||
+    isCodeFlowVariableDto(item)
   );
 };
 
