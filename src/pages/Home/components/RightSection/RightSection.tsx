@@ -1,10 +1,4 @@
-import {
-  useState,
-  useContext,
-  useEffect,
-  useReducer,
-  useCallback,
-} from "react";
+import { useState, useContext, useEffect, useReducer, useCallback } from "react";
 import { PreprocessedCodesContext } from "../../Home";
 import _ from "lodash";
 
@@ -81,25 +75,19 @@ const RightSection = () => {
 
       // 자료구조 시각화 부분이 들어왔을 때
       if (preprocessedCode.type.toLowerCase() === "assignViz".toLowerCase()) {
-        (preprocessedCode as VariablesDto).variables.forEach(
-          (variable: VariablesItem) => {
-            // 이미 한번 자료구조 시각화에 표현된 name인 경우
-            if (usedName.includes(variable.name!)) {
-              const targetName = variable.name!;
+        (preprocessedCode as VariablesDto).variables.forEach((variable: VariablesItem) => {
+          // 이미 한번 자료구조 시각화에 표현된 name인 경우
+          if (usedName.includes(variable.name!)) {
+            const targetName = variable.name!;
 
-              accDataStructures = updateDataStructure(
-                targetName,
-                accDataStructures,
-                variable
-              );
-            }
-            // 처음 시각화해주는 자료구조인 경우
-            else {
-              accDataStructures.push(variable as CodeItem);
-              usedName.push(variable.name!);
-            }
+            accDataStructures = updateDataStructure(targetName, accDataStructures, variable);
           }
-        );
+          // 처음 시각화해주는 자료구조인 경우
+          else {
+            accDataStructures.push(variable as CodeItem);
+            usedName.push(variable.name!);
+          }
+        });
       }
       // 코드 시각화 부분이 들어왔을 때
       else {
@@ -122,17 +110,10 @@ const RightSection = () => {
             let finallyCodeFlow: any;
             if (usedId.includes(toAddObject.id)) {
               // child부분을 초기화 해주는 함수
-              finallyCodeFlow = refreshCodeFlow(
-                accCodeFlow.objects,
-                toAddObject
-              );
+              finallyCodeFlow = refreshCodeFlow(accCodeFlow.objects, toAddObject);
             } else {
               usedId.push(toAddObject.id);
-              finallyCodeFlow = addCodeFlow(
-                accCodeFlow.objects,
-                toAddObject,
-                trackingId
-              );
+              finallyCodeFlow = addCodeFlow(accCodeFlow.objects, toAddObject, trackingId);
             }
 
             accCodeFlow = { objects: finallyCodeFlow };
@@ -141,11 +122,7 @@ const RightSection = () => {
         //그밖의 타입
         else {
           const toAddObject = createToAddObject(
-            preprocessedCode as
-              | ForDto
-              | PrintDto
-              | IfElseChangeDto
-              | CodeFlowVariableDto
+            preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
           );
 
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
@@ -155,11 +132,7 @@ const RightSection = () => {
           // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
           else {
             usedId.push(toAddObject.id);
-            changedCodeFlows = addCodeFlow(
-              accCodeFlow.objects,
-              toAddObject,
-              trackingId
-            );
+            changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject, trackingId);
           }
           activate = updateActivate(activate, toAddObject);
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
@@ -173,11 +146,9 @@ const RightSection = () => {
       if ((preprocessedCode as VariablesDto).variables === undefined) {
         toLightStructures = [];
       } else {
-        toLightStructures = (preprocessedCode as VariablesDto).variables?.map(
-          (element) => {
-            return element.name;
-          }
-        );
+        toLightStructures = (preprocessedCode as VariablesDto).variables?.map((element) => {
+          return element.name;
+        });
       }
 
       // toLightStructures 를 참고해서 데이터 구조 시각화 데이터 속성 중 isLight가 true인지 false인지 판단해주는 부분
@@ -214,16 +185,10 @@ const RightSection = () => {
       <button onClick={onForward}>앞으로 가기</button>
       <div>
         <ul style={{ display: "flex" }}>
-          {StructuresList?.length > 0 &&
-            idx >= 0 &&
-            renderingStructure(StructuresList[idx])}
+          {StructuresList?.length > 0 && idx >= 0 && renderingStructure(StructuresList[idx])}
         </ul>
       </div>
-      <ul>
-        {codeFlowList?.length > 0 &&
-          idx >= 0 &&
-          renderingCodeFlow(codeFlowList[idx].objects[0].child)}
-      </ul>
+      <ul>{codeFlowList?.length > 0 && idx >= 0 && renderingCodeFlow(codeFlowList[idx].objects[0].child)}</ul>
     </div>
   );
 };
