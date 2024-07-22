@@ -8,7 +8,7 @@ import { CreateToAddIfElseData } from "@/pages/Home/types/createToAddData/create
 import { CreateToAddIfElseChangeData } from "@/pages/Home/types/createToAddData/createToAddIfElseChangeData";
 import { CreateToAddCodeFlowVariableDto } from "@/pages/Home/types/createToAddData/createToAddCodeFlowVariableData";
 // 스택에 넣을 객체를 생성하는 함수
-export const createToAddObject = (
+export const createObjectToAdd = (
   preprocessedCode: CreateToAddPrintData | CreateToAddForData | CreateToAddIfElseData
 ): AllObjectItem => {
   const baseObject: AllObjectItem = {

@@ -17,7 +17,7 @@ import { CodeFlowVariableDto } from "@/pages/Home/types/dto/codeFlowVariableDto"
 import { addCodeFlow } from "./services/addCodeFlow";
 import { updateCodeFlow } from "./services/updateCodeFlow";
 import { turnLight } from "./services/turnLight";
-import { createToAddObject } from "./services/createToAddObject";
+import { createObjectToAdd } from "./services/createObjectToAdd";
 import { updateDataStructure } from "./services/updateDataStructure";
 import { updateActivate } from "./services/updateActivate";
 import { turnOffAllNodeLight } from "./services/turnOffAllNodeLight";
@@ -109,7 +109,7 @@ const RightSection = () => {
               depth: (preprocessedCode as IfElseDto).depth,
             });
             // ifelse 타입의 객체를 만들어주는 함수
-            const toAddObject = createToAddObject(ifElseItem);
+            const toAddObject = createObjectToAdd(ifElseItem);
 
             // isLight를 true로 바꿔준다
             toAddObject.isLight = true;
@@ -127,7 +127,7 @@ const RightSection = () => {
         }
         //그밖의 타입
         else {
-          const toAddObject = createToAddObject(
+          const toAddObject = createObjectToAdd(
             preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
           );
 
