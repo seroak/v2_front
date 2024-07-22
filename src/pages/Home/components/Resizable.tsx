@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  MouseEvent as ReactMouseEvent,
-  ReactElement,
-} from "react";
+import React, { useState, useRef, MouseEvent as ReactMouseEvent, ReactElement } from "react";
 import styles from "./Resizable.module.css";
 
 interface ResizableProps {
@@ -27,10 +22,7 @@ const Resizable: React.FC<ResizableProps> = ({ left, right }) => {
     if (containerRef.current) {
       const containerRect = containerRef.current.getBoundingClientRect();
       const deltaX = e.clientX - startXRef.current;
-      const newLeftWidth =
-        ((startXRef.current - containerRect.left + deltaX) /
-          containerRect.width) *
-        100;
+      const newLeftWidth = ((startXRef.current - containerRect.left + deltaX) / containerRect.width) * 100;
       if (newLeftWidth > 10 && newLeftWidth < 90) {
         setLeftWidth(newLeftWidth);
       }
@@ -47,15 +39,8 @@ const Resizable: React.FC<ResizableProps> = ({ left, right }) => {
       <div className={styles.leftSection} style={{ width: `${leftWidth}%` }}>
         {left}
       </div>
-      <div
-        className={styles.resizer}
-        onMouseDown={handleMouseDown}
-        style={{ height: "80vh", width: "10px" }}
-      ></div>
-      <div
-        className={styles.rightSection}
-        style={{ width: `${100 - leftWidth}%` }}
-      >
+      <div className={styles.resizer} onMouseDown={handleMouseDown} style={{ height: "80vh", width: "10px" }}></div>
+      <div className={styles.rightSection} style={{ width: `${100 - leftWidth}%` }}>
         {right}
       </div>
     </div>
