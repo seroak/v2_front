@@ -1,0 +1,16 @@
+/* IDE.module.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: black;
+}
+
+.scrollContainer {
+  height: 300px; /* 원하는 높이로 조절 가능 */
+  overflow-y: auto;
+}
+
+.consoleText {
+  color: white;
+}
