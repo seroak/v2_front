@@ -4,7 +4,7 @@ export const deleteCodeFlow = (codeFlows: AllObjectItem[], toDeleteId: number): 
   return codeFlows
     .map((codeFlow) => {
       if (codeFlow.id === toDeleteId) {
-        return null;
+        return false;
       }
       const newCodeFlow = { ...codeFlow };
       if (newCodeFlow.child && newCodeFlow.child.length > 0) {
@@ -12,5 +12,5 @@ export const deleteCodeFlow = (codeFlows: AllObjectItem[], toDeleteId: number): 
       }
       return newCodeFlow;
     })
-    .filter((codeFlow): codeFlow is AllObjectItem => codeFlow !== null);
+    .filter((codeFlow): codeFlow is AllObjectItem => codeFlow !== false);
 };
