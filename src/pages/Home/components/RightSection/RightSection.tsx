@@ -27,6 +27,7 @@ import { renderingStructure } from "./renderingStructure";
 import { renderingCodeFlow } from "./renderingCodeFLow";
 import { IfElseChangeDto } from "@/pages/Home/types/dto/ifElseChangeDto";
 import { refreshCodeFlow } from "./services/refreshCodeFlow";
+import { deleteCodeFlow } from "./services/deleteCodeFlow";
 
 interface State {
   objects: AllObjectItem[];
@@ -86,6 +87,12 @@ const RightSection = () => {
           else {
             accDataStructures.push(variable as CodeItem);
             usedName.push(variable.name!);
+          }
+
+          if (variable.type === "variable") {
+            let deletedCodeFlow: any = [];
+            deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, variable.id!);
+            accCodeFlow = { objects: deletedCodeFlow };
           }
         });
       }
@@ -157,7 +164,7 @@ const RightSection = () => {
         isLight: toLightStructures?.includes(structure.name), // toLightStructures 에 자료구조 name이 있으면 isLight를 true로 바꿔준다
       }));
 
-      // 얕은 복사 문제가 생겨서 깊은 복사를 해준다
+      // 자료구조리스트에서 얕은 복사 문제가 생겨서 깊은 복사를 해준다
       const deepCloneStructures = _.cloneDeep(accDataStructures);
       accDataStructuresList.push(deepCloneStructures);
       accCodeFlowList.push(accCodeFlow);
