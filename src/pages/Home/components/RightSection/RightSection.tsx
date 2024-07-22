@@ -90,8 +90,7 @@ const RightSection = () => {
           }
 
           if (variable.type === "variable") {
-            let deletedCodeFlow: any = [];
-            deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, variable.id!);
+            let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, variable.id!);
             accCodeFlow = { objects: deletedCodeFlow };
           }
         });
