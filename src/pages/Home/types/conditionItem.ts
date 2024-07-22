@@ -1,8 +1,10 @@
 import { AllObjectItem } from "./allObjectItem";
 
-export interface IfItem {
+export interface ConditionItem {
   id: number;
   type: string;
+  expr?: string;
+  highlights?: number[];
   depth: number;
   isLight: boolean;
   child: AllObjectItem[];

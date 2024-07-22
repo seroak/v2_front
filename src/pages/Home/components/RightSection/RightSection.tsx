@@ -1,33 +1,30 @@
-import {
-  useState,
-  useContext,
-  useEffect,
-  useReducer,
-  useCallback,
-} from "react";
+import { useState, useContext, useEffect, useReducer, useCallback } from "react";
 import { PreprocessedCodesContext } from "../../Home";
 import _ from "lodash";
 
 // 타입 정의
-import { CodeItem } from "@/types/codeItem";
-import { AllObjectItem } from "@/types/allObjectItem";
-import { ActivateItem } from "@/types/activateItem";
+import { CodeItem } from "@/pages/Home/types/codeItem";
+import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
+import { ActivateItem } from "@/pages/Home/types/activateItem";
+import { VariablesItem } from "@/pages/Home/types/variablesItem";
+import { VariablesDto } from "@/pages/Home/types/dto/variablesDto";
+import { ForDto } from "@/pages/Home/types/dto/forDto";
+import { PrintDto } from "@/pages/Home/types/dto/printDto";
+import { IfElseDto } from "@/pages/Home/types/dto/ifElseDto";
 
-import { VariablesItem } from "@/types/variablesItem";
-import { VariablesDto } from "@/types/dto/variablesDto";
-import { ForDto } from "@/types/dto/forDto";
-import { PrintDto } from "@/types/dto/printDto";
-// utils폴더에서 가져온 함수
-import { addCodeFlow } from "./utils/addCodeFlow";
-import { updateCodeFlow } from "./utils/updateCodeFlow";
-import { turnLight } from "./utils/turnLight";
-import { createToAddObject } from "./utils/createToAddObject";
-import { updateDataStructure } from "./utils/updateDataStructure";
-import { updateActivate } from "./utils/updateActivate";
-
+// services폴더에서 가져온 함수
+import { addCodeFlow } from "./services/addCodeFlow";
+import { updateCodeFlow } from "./services/updateCodeFlow";
+import { turnLight } from "./services/turnLight";
+import { createToAddObject } from "./services/createToAddObject";
+import { updateDataStructure } from "./services/updateDataStructure";
+import { updateActivate } from "./services/updateActivate";
+import { turnOffAllNodeLight } from "./services/turnOffAllNodeLight";
 //rendUtils에서 가져온 함수
-import { renderingStructure } from "./rendering/renderingStructure";
-import { renderingCodeFlow } from "./rendering/renderingCodeFLow";
+import { renderingStructure } from "./renderingStructure";
+import { renderingCodeFlow } from "./renderingCodeFlow";
+import { IfElseChangeDto } from "@/pages/Home/types/dto/ifElseChangeDto";
+import { refreshCodeFlow } from "./services/refreshCodeFlow";
 
 interface State {
   objects: AllObjectItem[];
@@ -59,6 +56,7 @@ const RightSection = () => {
 
   // codeFlowList를 업데이트하는 useEffect
   useEffect(() => {
+    let trackingId: number = 0;
     let activate: ActivateItem[] = [];
     const usedId: number[] = [];
     const usedName: string[] = [];
@@ -75,54 +73,77 @@ const RightSection = () => {
 
       // 자료구조 시각화 부분이 들어왔을 때
       if (preprocessedCode.type.toLowerCase() === "assignViz".toLowerCase()) {
-        (preprocessedCode as VariablesDto).variables.forEach(
-          (variable: VariablesItem) => {
-            // 이미 한번 자료구조 시각화에 표현된 name인 경우
-            if (usedName.includes(variable.name!)) {
-              const targetName = variable.name!;
+        (preprocessedCode as VariablesDto).variables.forEach((variable: VariablesItem) => {
+          // 이미 한번 자료구조 시각화에 표현된 name인 경우
+          if (usedName.includes(variable.name!)) {
+            const targetName = variable.name!;
 
-              accDataStructures = updateDataStructure(
-                targetName,
-                accDataStructures,
-                variable
-              );
-            }
-            // 처음 시각화해주는 자료구조인 경우
-            else {
-              accDataStructures.push(variable as CodeItem);
-              usedName.push(variable.name!);
-            }
+            accDataStructures = updateDataStructure(targetName, accDataStructures, variable);
           }
-        );
+          // 처음 시각화해주는 자료구조인 경우
+          else {
+            accDataStructures.push(variable as CodeItem);
+            usedName.push(variable.name!);
+          }
+        });
       }
       // 코드 시각화 부분이 들어왔을 때
       else {
-        const toAddObject = createToAddObject(
-          preprocessedCode as ForDto | PrintDto
-        );
-        // 한번 codeFlow list에 들어가서 수정하는 입력일 때
-        if (usedId.includes(toAddObject.id!)) {
-          changedCodeFlows = updateCodeFlow(accCodeFlow.objects, toAddObject);
+        // ifelseDefine 타입
+        if (preprocessedCode.type === "ifElseDefine") {
+          // ifelse가 들어왔을 때 한번에 모든 노드의 Light를 다 false로  바꿔주는 함수
+          const turnoff = turnOffAllNodeLight(accCodeFlow.objects);
+
+          accCodeFlow = { objects: turnoff };
+          for (let condition of (preprocessedCode as IfElseDto).conditions) {
+            // ifelse 타입의 객체에 depth를 추가해주는 부분
+            const ifElseItem = Object.assign(condition, {
+              depth: (preprocessedCode as IfElseDto).depth,
+            });
+            // ifelse 타입의 객체를 만들어주는 함수
+            const toAddObject = createToAddObject(ifElseItem);
+
+            // isLight를 true로 바꿔준다
+            toAddObject.isLight = true;
+            let finallyCodeFlow: any;
+            if (usedId.includes(toAddObject.id)) {
+              // child부분을 초기화 해주는 함수
+              finallyCodeFlow = refreshCodeFlow(accCodeFlow.objects, toAddObject);
+            } else {
+              usedId.push(toAddObject.id);
+
+              finallyCodeFlow = addCodeFlow(accCodeFlow.objects, toAddObject, trackingId);
+            }
+
+            accCodeFlow = { objects: finallyCodeFlow };
+          }
         }
-        // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
+        //그밖의 타입
         else {
-          usedId.push(toAddObject.id);
-          changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject);
+          const toAddObject = createToAddObject(preprocessedCode as ForDto | PrintDto | IfElseChangeDto);
+          // 한번 codeFlow list에 들어가서 수정하는 입력일 때
+          if (usedId.includes(toAddObject.id!)) {
+            changedCodeFlows = updateCodeFlow(accCodeFlow.objects, toAddObject);
+          }
+          // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
+          else {
+            usedId.push(toAddObject.id);
+            changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject, trackingId);
+          }
+          activate = updateActivate(activate, toAddObject);
+          const finallyCodeFlow = turnLight(changedCodeFlows, activate);
+          accCodeFlow = { objects: finallyCodeFlow };
+          trackingId = toAddObject.id;
         }
-        activate = updateActivate(activate, toAddObject);
-        const finallyCodeFlow = turnLight(changedCodeFlows, activate);
-        accCodeFlow = { objects: finallyCodeFlow };
       }
       // 불을 켜줘야하는 자료구조의의 name을 담는 배열
       let toLightStructures: any;
       if ((preprocessedCode as VariablesDto).variables === undefined) {
         toLightStructures = [];
       } else {
-        toLightStructures = (preprocessedCode as VariablesDto).variables?.map(
-          (element) => {
-            return element.name;
-          }
-        );
+        toLightStructures = (preprocessedCode as VariablesDto).variables?.map((element) => {
+          return element.name;
+        });
       }
 
       // toLightStructures 를 참고해서 데이터 구조 시각화 데이터 속성 중 isLight가 true인지 false인지 판단해주는 부분
@@ -159,16 +180,10 @@ const RightSection = () => {
       <button onClick={onForward}>앞으로 가기</button>
       <div>
         <ul style={{ display: "flex" }}>
-          {StructuresList?.length > 0 &&
-            idx >= 0 &&
-            renderingStructure(StructuresList[idx])}
+          {StructuresList?.length > 0 && idx >= 0 && renderingStructure(StructuresList[idx])}
         </ul>
       </div>
-      <ul>
-        {codeFlowList?.length > 0 &&
-          idx >= 0 &&
-          renderingCodeFlow(codeFlowList[idx].objects[0].child)}
-      </ul>
+      <ul>{codeFlowList?.length > 0 && idx >= 0 && renderingCodeFlow(codeFlowList[idx].objects[0].child)}</ul>
     </div>
   );
 };

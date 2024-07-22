@@ -1,6 +1,6 @@
 import cx from "classnames";
 import styles from "./PrintBox.module.css";
-import { PrintItem } from "@/types/printItem";
+import { PrintItem } from "@/pages/Home/types/printItem";
 import { AnimatePresence, motion } from "framer-motion";
 
 type Props = {
@@ -26,11 +26,8 @@ function printBox({ printItem }: Props) {
         <motion.div
           layout
           initial={{ opacity: 0 }}
-          animate={{
-            opacity: 1,
-            transition: { when: "beforeChildren" },
-          }}
-          exit={{ opacity: 0, transition: { when: "afterChildren" } }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
           className={cx(
             styles.print_border,

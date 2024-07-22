@@ -8,7 +8,7 @@ export interface ForItem {
   cur: number;
   isCurLight: boolean;
   target: string;
-  step: number;
+  step: string;
   isStepLight: boolean;
   type: string;
   depth: number;

@@ -1,5 +1,5 @@
-import { ActivateItem } from "@/types/activateItem";
-import { AllObjectItem } from "@/types/allObjectItem";
+import { ActivateItem } from "@/pages/Home/types/activateItem";
+import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
 
 // 현재 불이 켜져야하는 부분을 표시해주는 함수
 export const updateActivate = (

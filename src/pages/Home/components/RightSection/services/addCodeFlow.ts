@@ -1,14 +1,15 @@
-import { AllObjectItem } from "@/types/allObjectItem";
+import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
 
 // 새로운 객체를 CodeFlow에 추가하는 함수
 export const addCodeFlow = (
   codeFlows: AllObjectItem[], // 현제 코드흐름 시각화 정보를 담고 있는 리스트
-  toAddObject: AllObjectItem
+  toAddObject: AllObjectItem,
+  trackingId: number
 ): AllObjectItem[] => {
   let updated = false;
   return codeFlows.reduceRight<AllObjectItem[]>((acc, codeFlow) => {
     // 아직 추가하지 않았고, depth가 targetDepth - 1인 경우
-    if (!updated && codeFlow.depth === toAddObject.depth - 1) {
+    if (!updated && codeFlow.id === trackingId) {
       updated = true;
 
       acc.unshift({ ...codeFlow, child: [...codeFlow.child, toAddObject] });
@@ -17,8 +18,7 @@ export const addCodeFlow = (
     else if (codeFlow.child && codeFlow.child.length > 0) {
       acc.unshift({
         ...codeFlow,
-
-        child: addCodeFlow(codeFlow.child, toAddObject),
+        child: addCodeFlow(codeFlow.child, toAddObject, trackingId),
       });
     } else {
       acc.unshift(codeFlow);

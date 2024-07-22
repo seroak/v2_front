@@ -1,14 +1,15 @@
-import { AllObjectItem } from "@/types/allObjectItem";
-import { PrintItem } from "@/types/printItem";
+import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
+import { PrintItem } from "@/pages/Home/types/printItem";
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactElement } from "react";
-import PrintBox from "../components/PrintBox/PrintBox";
-import ForBox from "../components/ForBox/ForBox";
-import IfBox from "../components/IfBox/IfBox";
-import { ElseItem } from "@/types/elseItem";
-import ElseBox from "../components/ElseBox/ElseBox";
-import { ForItem } from "@/types/forItem";
-import { IfItem } from "@/types/ifItem";
+import PrintBox from "./components/PrintBox/PrintBox";
+import ForBox from "./components/ForBox/ForBox";
+import IfBox from "./components/IfBox/IfBox";
+import { ElseItem } from "@/pages/Home/types/elseItem";
+import ElseBox from "./components/ElseBox/ElseBox";
+import { ForItem } from "@/pages/Home/types/forItem";
+import { ConditionItem } from "@/pages/Home/types/conditionItem";
+import ElifBox from "./components/ElifBox/ElifBox";
 
 export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
   return (
@@ -35,13 +36,24 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
             );
           }
           case "if":
-            const ifItem = codeFlow as IfItem;
+            const ifItem = codeFlow as ConditionItem;
             return (
               <AnimatePresence key={ifItem.id} mode="wait">
                 <motion.div key={ifItem.id} layout>
-                  <IfBox isLight={codeFlow.isLight}>
+                  <IfBox isLight={codeFlow.isLight} ifItem={ifItem}>
                     {renderingCodeFlow(codeFlow.child)}
                   </IfBox>
+                </motion.div>
+              </AnimatePresence>
+            );
+          case "elif":
+            const elifItem = codeFlow as ConditionItem;
+            return (
+              <AnimatePresence key={elifItem.id} mode="wait">
+                <motion.div key={elifItem.id} layout>
+                  <ElifBox isLight={codeFlow.isLight} elifItem={elifItem}>
+                    {renderingCodeFlow(codeFlow.child)}
+                  </ElifBox>
                 </motion.div>
               </AnimatePresence>
             );
@@ -50,7 +62,7 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
             return (
               <AnimatePresence key={elseItem.id} mode="wait">
                 <motion.div key={elseItem.id} layout>
-                  <ElseBox isLight={codeFlow.isLight}>
+                  <ElseBox isLight={codeFlow.isLight} elseItem={elseItem}>
                     {renderingCodeFlow(codeFlow.child)}
                   </ElseBox>
                 </motion.div>

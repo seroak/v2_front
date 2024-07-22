@@ -2,7 +2,7 @@
 import { ConditionItem } from "./conditionItem";
 import { AssignVizItem } from "./assignVizItem";
 export interface CodeFlowItem {
-  id: number;
+  id?: number;
   type: string;
   depth: number;
   value?: number;

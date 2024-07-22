@@ -1,5 +1,5 @@
-import { ActivateItem } from "@/types/activateItem";
-import { AllObjectItem } from "@/types/allObjectItem";
+import { ActivateItem } from "@/pages/Home/types/activateItem";
+import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
 
 // 하이라이트 효과를 줘야하는 부분을 표시해주는 함수
 export const turnLight = (
