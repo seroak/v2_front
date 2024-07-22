@@ -7,13 +7,13 @@ import ForBox from "./components/ForBox/ForBox";
 import IfBox from "./components/IfBox/IfBox";
 import ElseBox from "./components/ElseBox/ElseBox";
 import ElifBox from "./components/ElifBox/ElifBox";
+import CodeFlowVariableBox from "./components/CodeFlowVariableBox/CodeFlowVariableBox";
 
 // type import
 import { ElseItem } from "@/pages/Home/types/elseItem";
 import { ForItem } from "@/pages/Home/types/forItem";
 import { ConditionItem } from "@/pages/Home/types/conditionItem";
 import { CodeFlowVariableItem } from "@/pages/Home/types/codeFlow/codeFlowVariableItem";
-import CodeFlowVariableBox from "./components/CodeFlowVariableBox/CodeFlowVariableBox";
 
 export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
   return (
@@ -76,10 +76,7 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
             const variableItem = codeFlow as CodeFlowVariableItem;
             return (
               <div key={variableItem.id}>
-                <CodeFlowVariableBox
-                  key={index}
-                  codeFlowVariableItem={variableItem}
-                />
+                <CodeFlowVariableBox key={index} codeFlowVariableItem={variableItem} />
               </div>
             );
 
