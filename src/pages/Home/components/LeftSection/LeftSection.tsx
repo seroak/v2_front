@@ -1,11 +1,12 @@
-import { Fragment } from "react/jsx-runtime";
 import CodeEditor from "./components/CodeEditor";
+import Console from "./components/Console";
 
 const LeftSection = () => {
   return (
-    <Fragment>
+    <div style={{ height: "100vh", width: "100%", overflow: "scroll" }}>
       <CodeEditor />
-    </Fragment>
+      <Console />
+    </div>
   );
 };
 

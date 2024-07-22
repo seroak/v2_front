@@ -3,20 +3,16 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-
-  height: 100vh;
-  width: 100%;
   box-sizing: border-box;
 }
 
 .editorContainer {
   width: 100%;
-
   padding: 1rem;
   border: 1px solid #ccc;
   display: flex;
   flex-direction: column;
-  height: 80vh; /* 컨테이너 높이 설정 */
+  height: 65vh; /* 컨테이너 높이 설정 */
   box-sizing: border-box;
 }
 
