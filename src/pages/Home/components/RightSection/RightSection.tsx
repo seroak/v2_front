@@ -89,7 +89,7 @@ const RightSection = () => {
             usedName.push(variable.name!);
           }
 
-          if (variable.type === "variable") {
+          if (variable.type.toLowerCase() === "variable".toLowerCase()) {
             let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, variable.id!);
             accCodeFlow = { objects: deletedCodeFlow };
           }
@@ -98,7 +98,7 @@ const RightSection = () => {
       // 코드 시각화 부분이 들어왔을 때
       else {
         // ifelseDefine 타입
-        if (preprocessedCode.type === "ifElseDefine") {
+        if (preprocessedCode.type.toLowerCase() === "ifElseDefine".toLocaleLowerCase()) {
           // ifelse가 들어왔을 때 한번에 모든 노드의 Light를 다 false로  바꿔주는 함수
           const turnoff = turnOffAllNodeLight(accCodeFlow.objects);
 
