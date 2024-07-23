@@ -13,4 +13,6 @@
 
 .consoleText {
   color: white;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
