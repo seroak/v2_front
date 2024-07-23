@@ -184,6 +184,7 @@ const RightSection = () => {
 
     setCodeFlowList(accCodeFlowList);
     setStructuresList(accDataStructuresList);
+    console.log(accConsoleLogList);
     setConsole(accConsoleLogList);
   }, [preprocessedCodes]);
 
