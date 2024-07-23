@@ -32,6 +32,7 @@ export default function Home() {
   const [code, setCode] = useState<any>(["def hello_world():", '    print("Hello, World!")'].join("\n"));
   // 전처리한 코드 state
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
+
   const mutation = useMutation({
     mutationFn: async (code: string) => {
       return fetch("http://localhost:8000/v1/python", {

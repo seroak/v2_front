@@ -6,6 +6,7 @@ export interface PrintItem {
   depth: number;
   isLight: boolean;
   expr: string;
+  console: string;
   highlights: number[];
   child: AllObjectItem[];
 }

@@ -27,6 +27,7 @@ export const createObjectToAdd = (
         ...baseObject,
         expr: (preprocessedCode as CreateToAddPrintData).expr!,
         highlights: (preprocessedCode as CreateToAddPrintData).highlights!,
+        console: (preprocessedCode as CreateToAddPrintData).console,
       } as PrintItem;
 
     case "for":
