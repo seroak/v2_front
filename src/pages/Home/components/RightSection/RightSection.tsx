@@ -11,20 +11,23 @@ import { VariablesDto } from "@/pages/Home/types/dto/variablesDto";
 import { ForDto } from "@/pages/Home/types/dto/forDto";
 import { PrintDto } from "@/pages/Home/types/dto/printDto";
 import { IfElseDto } from "@/pages/Home/types/dto/ifElseDto";
+import { CodeFlowVariableDto } from "@/pages/Home/types/dto/codeFlowVariableDto";
 
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
 import { updateCodeFlow } from "./services/updateCodeFlow";
 import { turnLight } from "./services/turnLight";
-import { createToAddObject } from "./services/createToAddObject";
+import { createObjectToAdd } from "./services/createObjectToAdd";
 import { updateDataStructure } from "./services/updateDataStructure";
 import { updateActivate } from "./services/updateActivate";
 import { turnOffAllNodeLight } from "./services/turnOffAllNodeLight";
+
 //rendUtils에서 가져온 함수
 import { renderingStructure } from "./renderingStructure";
 import { renderingCodeFlow } from "./renderingCodeFlow";
 import { IfElseChangeDto } from "@/pages/Home/types/dto/ifElseChangeDto";
 import { refreshCodeFlow } from "./services/refreshCodeFlow";
+import { deleteCodeFlow } from "./services/deleteCodeFlow";
 
 interface State {
   objects: AllObjectItem[];
@@ -85,12 +88,17 @@ const RightSection = () => {
             accDataStructures.push(variable as CodeItem);
             usedName.push(variable.name!);
           }
+
+          if (variable.type.toLowerCase() === "variable".toLowerCase()) {
+            let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, variable.id!);
+            accCodeFlow = { objects: deletedCodeFlow };
+          }
         });
       }
       // 코드 시각화 부분이 들어왔을 때
       else {
         // ifelseDefine 타입
-        if (preprocessedCode.type === "ifElseDefine") {
+        if (preprocessedCode.type.toLowerCase() === "ifElseDefine".toLocaleLowerCase()) {
           // ifelse가 들어왔을 때 한번에 모든 노드의 Light를 다 false로  바꿔주는 함수
           const turnoff = turnOffAllNodeLight(accCodeFlow.objects);
 
@@ -101,7 +109,7 @@ const RightSection = () => {
               depth: (preprocessedCode as IfElseDto).depth,
             });
             // ifelse 타입의 객체를 만들어주는 함수
-            const toAddObject = createToAddObject(ifElseItem);
+            const toAddObject = createObjectToAdd(ifElseItem);
 
             // isLight를 true로 바꿔준다
             toAddObject.isLight = true;
@@ -111,7 +119,6 @@ const RightSection = () => {
               finallyCodeFlow = refreshCodeFlow(accCodeFlow.objects, toAddObject);
             } else {
               usedId.push(toAddObject.id);
-
               finallyCodeFlow = addCodeFlow(accCodeFlow.objects, toAddObject, trackingId);
             }
 
@@ -120,7 +127,10 @@ const RightSection = () => {
         }
         //그밖의 타입
         else {
-          const toAddObject = createToAddObject(preprocessedCode as ForDto | PrintDto | IfElseChangeDto);
+          const toAddObject = createObjectToAdd(
+            preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
+          );
+
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
             changedCodeFlows = updateCodeFlow(accCodeFlow.objects, toAddObject);
@@ -132,6 +142,7 @@ const RightSection = () => {
           }
           activate = updateActivate(activate, toAddObject);
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
+
           accCodeFlow = { objects: finallyCodeFlow };
           trackingId = toAddObject.id;
         }
@@ -152,7 +163,7 @@ const RightSection = () => {
         isLight: toLightStructures?.includes(structure.name), // toLightStructures 에 자료구조 name이 있으면 isLight를 true로 바꿔준다
       }));
 
-      // 얕은 복사 문제가 생겨서 깊은 복사를 해준다
+      // 자료구조리스트에서 얕은 복사 문제가 생겨서 깊은 복사를 해준다
       const deepCloneStructures = _.cloneDeep(accDataStructures);
       accDataStructuresList.push(deepCloneStructures);
       accCodeFlowList.push(accCodeFlow);

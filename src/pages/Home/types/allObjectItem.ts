@@ -2,5 +2,9 @@
 import { ForItem } from "./forItem";
 import { ConditionItem } from "./conditionItem";
 import { PrintItem } from "./printItem";
-
-export type AllObjectItem = PrintItem | ForItem | ConditionItem;
+import { CodeFlowVariableItem } from "./codeFlow/codeFlowVariableItem";
+export type AllObjectItem =
+  | PrintItem
+  | ForItem
+  | ConditionItem
+  | CodeFlowVariableItem;
