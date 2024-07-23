@@ -12,7 +12,7 @@ import { ForDto } from "@/pages/Home/types/dto/forDto";
 import { PrintDto } from "@/pages/Home/types/dto/printDto";
 import { IfElseDto } from "@/pages/Home/types/dto/ifElseDto";
 import { CodeFlowVariableDto } from "@/pages/Home/types/dto/codeFlowVariableDto";
-
+import { PrintItem } from "@/pages/Home/types/printItem";
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
 import { updateCodeFlow } from "./services/updateCodeFlow";
@@ -29,6 +29,8 @@ import { IfElseChangeDto } from "@/pages/Home/types/dto/ifElseChangeDto";
 import { refreshCodeFlow } from "./services/refreshCodeFlow";
 import { deleteCodeFlow } from "./services/deleteCodeFlow";
 
+//zustand store
+import { useConsoleStore } from "@/store/console";
 interface State {
   objects: AllObjectItem[];
 }
@@ -55,6 +57,8 @@ const RightSection = () => {
   if (!context) {
     throw new Error("CodeContext not found"); //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
   }
+  const setConsole = useConsoleStore((state) => state.setConsole);
+  const setConsoleIdx = useConsoleStore((state) => state.setConsoleIdx);
   const { preprocessedCodes } = context;
 
   // codeFlowList를 업데이트하는 useEffect
@@ -63,14 +67,14 @@ const RightSection = () => {
     let activate: ActivateItem[] = [];
     const usedId: number[] = [];
     const usedName: string[] = [];
-
     let accCodeFlow: State = {
       objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
     };
     let accDataStructures: CodeItem[] = [];
     const accCodeFlowList: State[] = [];
     const accDataStructuresList: CodeItem[][] = [];
-
+    const accConsoleLogList: string[] = [];
+    let accConsoleLog: string = "";
     for (let preprocessedCode of preprocessedCodes) {
       let changedCodeFlows: AllObjectItem[] = [];
 
@@ -131,6 +135,14 @@ const RightSection = () => {
             preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
           );
 
+          // print 타입일 때 console창의 로그를 만드는 부분
+          if ((toAddObject as PrintItem).type === "print") {
+            const printObject = toAddObject as PrintItem;
+            if (printObject.console !== null) {
+              accConsoleLog += printObject.console;
+            }
+          }
+
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
             changedCodeFlows = updateCodeFlow(accCodeFlow.objects, toAddObject);
@@ -167,21 +179,25 @@ const RightSection = () => {
       const deepCloneStructures = _.cloneDeep(accDataStructures);
       accDataStructuresList.push(deepCloneStructures);
       accCodeFlowList.push(accCodeFlow);
+      accConsoleLogList.push(accConsoleLog);
     }
 
     setCodeFlowList(accCodeFlowList);
     setStructuresList(accDataStructuresList);
+    setConsole(accConsoleLogList);
   }, [preprocessedCodes]);
 
   const onForward = useCallback(() => {
     if (idx < codeFlowList.length - 1) {
       navControlDispatch({ type: "forward" });
+      setConsoleIdx(idx);
     }
   }, [idx, codeFlowList.length]);
 
   const onBack = useCallback(() => {
     if (idx >= 0) {
       navControlDispatch({ type: "back" });
+      setConsoleIdx(idx);
     }
   }, [idx]);
 

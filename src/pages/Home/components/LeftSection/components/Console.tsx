@@ -1,17 +1,18 @@
+import { useConsoleStore } from "@/store/console";
 import styles from "./Console.module.css";
 
 const Console = () => {
+  const consoleText = useConsoleStore((state) => state.console);
+  const consoleIdx = useConsoleStore((state) => state.consoleIdx);
+
   return (
     <div className={styles.container}>
       <div className={styles.scrollContainer}>
-        {[...Array(21)].map((_, index) => (
-          <div key={index} className={styles.consoleText}>
-            콘솔창입니다
-          </div>
-        ))}
+        <div className={styles.consoleText}>{consoleText[consoleIdx]}</div>
       </div>
     </div>
   );
 };
 
 export default Console;
+

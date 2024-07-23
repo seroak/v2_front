@@ -1,4 +1,4 @@
-export interface CreateToAddCodeFlowVariableDto {
+export interface CreateCodeFlowVariableDtoToAdd {
   id: number;
   depth: number;
   expr: string;

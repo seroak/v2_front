@@ -29,10 +29,7 @@ function printBox({ printItem }: Props) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className={cx(
-            styles.print_border,
-            printItem.isLight && styles.border_highlight
-          )}
+          className={cx(styles.print_border, printItem.isLight && styles.border_highlight)}
         >
           <motion.div layout className={styles.print_title}>
             <span>print</span>
@@ -49,11 +46,7 @@ function printBox({ printItem }: Props) {
             {printItem.expr.split("").map((char, index) => (
               <span
                 key={index}
-                className={cx(
-                  printItem.isLight &&
-                    printItem.highlights?.includes(index) &&
-                    styles.font_highlight
-                )}
+                className={cx(printItem.isLight && printItem.highlights?.includes(index) && styles.font_highlight)}
               >
                 {char}
               </span>
