@@ -1,16 +1,17 @@
 import { create } from "zustand";
-// zustand 버그 있음 고칠것
+
 interface ConsoleState {
-  console: string;
-  setConsole: (console: string) => void;
+  console: string[];
+  consoleIdx: number;
+  setConsole: (console: string[]) => void;
+  setConsoleIdx: (consoleIdx: number) => void;
   reset: () => void;
 }
+
 export const useConsoleStore = create<ConsoleState>((set) => ({
-  console: "",
-  setConsole(console) {
-    set({ console });
-  },
-  reset() {
-    set({ console: "" });
-  },
+  console: [],
+  consoleIdx: 0,
+  setConsole: (console) => set({ console }),
+  setConsoleIdx: (consoleIdx) => set({ consoleIdx }),
+  reset: () => set({ console: [] }),
 }));

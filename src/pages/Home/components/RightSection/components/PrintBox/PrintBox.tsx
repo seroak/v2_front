@@ -2,7 +2,6 @@ import cx from "classnames";
 import styles from "./PrintBox.module.css";
 import { PrintItem } from "@/pages/Home/types/printItem";
 import { AnimatePresence, motion } from "framer-motion";
-import { useConsoleStore } from "@/store/console";
 
 type Props = {
   printItem: PrintItem;
@@ -14,8 +13,6 @@ type Props = {
  */
 
 function printBox({ printItem }: Props) {
-  const setConsole = useConsoleStore((state) => state.setConsole);
-  setConsole(printItem.console);
   return (
     <AnimatePresence key={printItem.id} mode="wait">
       <motion.div
