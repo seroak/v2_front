@@ -1,4 +1,4 @@
-export interface CreateForDataToAdd {
+export interface ForDataToAdd {
   id: number;
   depth: number;
   condition: {

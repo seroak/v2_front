@@ -2,15 +2,13 @@ import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
 import { ForItem } from "@/pages/Home/types/forItem";
 import { ConditionItem } from "@/pages/Home/types/conditionItem";
 import { PrintItem } from "@/pages/Home/types/printItem";
-import { CreateForDataToAdd } from "@/pages/Home/types/createDataToAdd/createForDataToAdd";
-import { CreatePrintDataToAdd } from "@/pages/Home/types/createDataToAdd/createPrintDataToAdd";
-import { CreateIfElseDataToAdd } from "@/pages/Home/types/createDataToAdd/createIfElseDataToAdd";
-import { CreateIfElseChangeDataToAdd } from "@/pages/Home/types/createDataToAdd/createIfElseChangeDataToAdd";
-import { CreateCodeFlowVariableDtoToAdd } from "@/pages/Home/types/createDataToAdd/createCodeFlowVariableDataToAdd";
+import { ForDataToAdd } from "@/pages/Home/types/dataToAdd/forDataToAdd";
+import { PrintDataToAdd } from "@/pages/Home/types/dataToAdd/printDataToAdd";
+import { IfElseDataToAdd } from "@/pages/Home/types/dataToAdd/ifElseDataToAdd";
+import { IfElseChangeDataToAdd } from "@/pages/Home/types/dataToAdd/ifElseChangeDataToAdd";
+import { CodeFlowVariableDtoToAdd } from "@/pages/Home/types/dataToAdd/codeFlowVariableDataToAdd";
 // 스택에 넣을 객체를 생성하는 함수
-export const createObjectToAdd = (
-  preprocessedCode: CreatePrintDataToAdd | CreateForDataToAdd | CreateIfElseDataToAdd
-): AllObjectItem => {
+export const createObjectToAdd = (preprocessedCode: PrintDataToAdd | ForDataToAdd | IfElseDataToAdd): AllObjectItem => {
   const baseObject: AllObjectItem = {
     id: preprocessedCode.id!,
     type: preprocessedCode.type,
@@ -25,13 +23,13 @@ export const createObjectToAdd = (
     case "print":
       return {
         ...baseObject,
-        expr: (preprocessedCode as CreatePrintDataToAdd).expr!,
-        highlights: (preprocessedCode as CreatePrintDataToAdd).highlights!,
-        console: (preprocessedCode as CreatePrintDataToAdd).console,
+        expr: (preprocessedCode as PrintDataToAdd).expr!,
+        highlights: (preprocessedCode as PrintDataToAdd).highlights!,
+        console: (preprocessedCode as PrintDataToAdd).console,
       } as PrintItem;
 
     case "for":
-      preprocessedCode = preprocessedCode as CreateForDataToAdd;
+      preprocessedCode = preprocessedCode as ForDataToAdd;
 
       let isCurLight = false;
       let isStartLight = false;
@@ -71,34 +69,34 @@ export const createObjectToAdd = (
       return {
         ...(baseObject as ConditionItem),
         highlights: [],
-        expr: (preprocessedCode as CreateIfElseDataToAdd).expr!,
+        expr: (preprocessedCode as IfElseDataToAdd).expr!,
       };
 
     case "elif":
       return {
         ...(baseObject as ConditionItem),
         highlights: [],
-        expr: (preprocessedCode as CreateIfElseDataToAdd).expr!,
+        expr: (preprocessedCode as IfElseDataToAdd).expr!,
       };
 
     case "else":
       return {
         ...(baseObject as ConditionItem),
         highlights: [],
-        expr: (preprocessedCode as CreateIfElseDataToAdd).expr!,
+        expr: (preprocessedCode as IfElseDataToAdd).expr!,
       };
 
     case "ifelsechange":
       return {
         ...baseObject,
-        highlights: (preprocessedCode as CreateIfElseChangeDataToAdd).highlights!,
-        expr: (preprocessedCode as CreateIfElseChangeDataToAdd).expr!,
+        highlights: (preprocessedCode as IfElseChangeDataToAdd).highlights!,
+        expr: (preprocessedCode as IfElseChangeDataToAdd).expr!,
       };
 
     case "variable":
       return {
         ...baseObject,
-        expr: (preprocessedCode as CreateCodeFlowVariableDtoToAdd).expr!,
+        expr: (preprocessedCode as CodeFlowVariableDtoToAdd).expr!,
       };
     default:
       throw new Error(`Unsupported type: ${type}`);
