@@ -1,4 +1,4 @@
-export interface CreatePrintDataToAdd {
+export interface PrintDataToAdd {
   id: number;
   depth: number;
   expr: string;
