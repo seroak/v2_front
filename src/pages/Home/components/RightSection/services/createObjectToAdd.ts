@@ -2,11 +2,11 @@ import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
 import { ForItem } from "@/pages/Home/types/forItem";
 import { ConditionItem } from "@/pages/Home/types/conditionItem";
 import { PrintItem } from "@/pages/Home/types/printItem";
-import { CreateForDataToAdd } from "@/pages/Home/types/createToAddData/createForDataToAdd";
-import { CreatePrintDataToAdd } from "@/pages/Home/types/createToAddData/createPrintDataToAdd";
-import { CreateIfElseDataToAdd } from "@/pages/Home/types/createToAddData/createIfElseDataToAdd";
-import { CreateIfElseChangeDataToAdd } from "@/pages/Home/types/createToAddData/createIfElseChangeDataToAdd";
-import { CreateCodeFlowVariableDtoToAdd } from "@/pages/Home/types/createToAddData/createCodeFlowVariableDataToAdd";
+import { CreateForDataToAdd } from "@/pages/Home/types/createDataToAdd/createForDataToAdd";
+import { CreatePrintDataToAdd } from "@/pages/Home/types/createDataToAdd/createPrintDataToAdd";
+import { CreateIfElseDataToAdd } from "@/pages/Home/types/createDataToAdd/createIfElseDataToAdd";
+import { CreateIfElseChangeDataToAdd } from "@/pages/Home/types/createDataToAdd/createIfElseChangeDataToAdd";
+import { CreateCodeFlowVariableDtoToAdd } from "@/pages/Home/types/createDataToAdd/createCodeFlowVariableDataToAdd";
 // 스택에 넣을 객체를 생성하는 함수
 export const createObjectToAdd = (
   preprocessedCode: CreatePrintDataToAdd | CreateForDataToAdd | CreateIfElseDataToAdd
