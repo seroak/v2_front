@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { renderingCodeFlow } from "@/pages/Home/components/RightSection/renderingCodeFlow";
+import { renderingCodeFlow } from "@/pages/Home/components/RightSection/renderingCodeFlow.tsx";
 import { ForItem } from "@/pages/Home/types/forItem";
 type Props = {
   children: ReactNode;
