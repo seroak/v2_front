@@ -73,8 +73,8 @@ const RightSection = () => {
     let accDataStructures: CodeItem[] = [];
     const accCodeFlowList: State[] = [];
     const accDataStructuresList: CodeItem[][] = [];
-    const curConsoleLogList: string[] = [];
-    let curConsoleLog: string = "";
+    const accConsoleLogList: string[] = [];
+    let accConsoleLog: string = "";
     for (let preprocessedCode of preprocessedCodes) {
       let changedCodeFlows: AllObjectItem[] = [];
 
@@ -139,7 +139,7 @@ const RightSection = () => {
           if ((toAddObject as PrintItem).type === "print") {
             const printObject = toAddObject as PrintItem;
             if (printObject.console !== null) {
-              curConsoleLog += printObject.console;
+              accConsoleLog += printObject.console;
             }
           }
 
@@ -179,12 +179,12 @@ const RightSection = () => {
       const deepCloneStructures = _.cloneDeep(accDataStructures);
       accDataStructuresList.push(deepCloneStructures);
       accCodeFlowList.push(accCodeFlow);
-      curConsoleLogList.push(curConsoleLog);
+      accConsoleLogList.push(accConsoleLog);
     }
 
     setCodeFlowList(accCodeFlowList);
     setStructuresList(accDataStructuresList);
-    setConsole(curConsoleLogList);
+    setConsole(accConsoleLogList);
   }, [preprocessedCodes]);
 
   const onForward = useCallback(() => {
