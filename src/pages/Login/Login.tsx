@@ -20,7 +20,7 @@ const Login = () => {
     },
     onSuccess(data) {
       const jsonData = data.data;
-      console.log("Login success:", jsonData);
+
       setLogedInUserId(jsonData.user.id);
       setLogedInUserPassword(jsonData.user.name);
     },
@@ -33,7 +33,6 @@ const Login = () => {
     e.preventDefault();
     // 여기에 로그인 로직을 추가하세요
     mutation.mutate({ userId, userPassword });
-    console.log("Login attempt:", { userId, userPassword });
   };
   const handleUserIdChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserId(e.target.value);
