@@ -4,8 +4,6 @@ import "./index.css";
 import RQProvider from "./RQProvider.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  //시작
-
   <RQProvider>
     <App />
   </RQProvider>
