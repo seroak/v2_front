@@ -25,13 +25,13 @@ const Login = () => {
       setLoggedInUserPassword(jsonData.user.name);
     },
     onError(error) {
+      alert("아이디 또는 비밀번호가 틀렸습니다.");
       console.error("Login error:", error);
     },
   });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // 여기에 로그인 로직을 추가하세요
     mutation.mutate({ userId, userPassword });
   };
   const handleUserIdChange = (e: ChangeEvent<HTMLInputElement>) => {
