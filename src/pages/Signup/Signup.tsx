@@ -26,7 +26,8 @@ const Signup = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    const trimmedValue = value.replace(/\s/g, "");
+    setFormData((prevData) => ({ ...prevData, [name]: trimmedValue }));
   };
 
   const validateForm = (): boolean => {
@@ -67,7 +68,7 @@ const Signup = () => {
       <div className={styles.formGroup}>
         <label htmlFor="email">이메일</label>
         <input
-          type="email"
+          type="text"
           id="email"
           name="email"
           value={formData.email}
