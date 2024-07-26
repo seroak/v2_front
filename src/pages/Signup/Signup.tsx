@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import styles from "./SignUpForm.module.css";
+import styles from "./Signup.module.css";
 
 interface FormData {
   username: string;
@@ -26,16 +26,14 @@ const Signup = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const validateForm = (): boolean => {
     let newErrors: FormErrors = {};
     if (!formData.username.trim()) newErrors.username = "사용자 이름은 필수입니다.";
     if (!formData.email.trim()) newErrors.email = "이메일은 필수입니다.";
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "유효한 이메일 주소를 입력하세요.";
     if (!formData.password) newErrors.password = "비밀번호는 필수입니다.";
     else if (formData.password.length < 6) newErrors.password = "비밀번호는 최소 6자 이상이어야 합니다.";
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
@@ -47,8 +45,7 @@ const Signup = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Form submitted:", formData);
-      // 여기에 실제 회원가입 로직을 구현합니다.
+      // 회원가입 API 호출해야하는 부분
     }
   };
 
