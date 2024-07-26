@@ -1,14 +1,38 @@
 import { useState, FormEvent, ChangeEvent } from "react";
 import styles from "./Login.module.css";
+import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
+import { useUserStore } from "@/store/user";
 
 const Login = () => {
   const [userId, setUserId] = useState<string>("");
   const [userPassword, setUserPassword] = useState<string>("");
+  const setLoggedInUserId = useUserStore((state) => state.setLoggedInUserId);
+  const setLoggedInUserPassword = useUserStore((state) => state.setLoggedInUserPassword);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const mutation = useMutation({
+    mutationFn: async ({ userId, userPassword }: { userId: string; userPassword: string }) => {
+      return axios.post(
+        "http://localhost:8000/login",
+        { userId, userPassword },
+        { headers: { "Content-Type": "application/json" }, withCredentials: true }
+      );
+    },
+    onSuccess(data) {
+      const jsonData = data.data;
+
+      setLoggedInUserId(jsonData.user.id);
+      setLoggedInUserPassword(jsonData.user.name);
+    },
+    onError(error) {
+      alert("아이디 또는 비밀번호가 틀렸습니다.");
+      console.error("Login error:", error);
+    },
+  });
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // 여기에 로그인 로직을 추가하세요
-    console.log("Login attempt:", { userId, userPassword });
+    mutation.mutate({ userId, userPassword });
   };
   const handleUserIdChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserId(e.target.value);
