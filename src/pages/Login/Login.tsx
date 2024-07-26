@@ -7,8 +7,8 @@ import { useUserStore } from "@/store/user";
 const Login = () => {
   const [userId, setUserId] = useState<string>("");
   const [userPassword, setUserPassword] = useState<string>("");
-  const setLogedInUserId = useUserStore((state) => state.setLogedInUserId);
-  const setLogedInUserPassword = useUserStore((state) => state.setLogedInUserPassword);
+  const setLoggedInUserId = useUserStore((state) => state.setLoggedInUserId);
+  const setLoggedInUserPassword = useUserStore((state) => state.setLoggedInUserPassword);
 
   const mutation = useMutation({
     mutationFn: async ({ userId, userPassword }: { userId: string; userPassword: string }) => {
@@ -21,8 +21,8 @@ const Login = () => {
     onSuccess(data) {
       const jsonData = data.data;
 
-      setLogedInUserId(jsonData.user.id);
-      setLogedInUserPassword(jsonData.user.name);
+      setLoggedInUserId(jsonData.user.id);
+      setLoggedInUserPassword(jsonData.user.name);
     },
     onError(error) {
       console.error("Login error:", error);
