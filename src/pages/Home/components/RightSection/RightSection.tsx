@@ -24,7 +24,7 @@ import { turnOffAllNodeLight } from "./services/turnOffAllNodeLight";
 
 //rendUtils에서 가져온 함수
 import { renderingStructure } from "./renderingStructure";
-import { renderingCodeFlow } from "./renderingCodeFlow.tsx";
+import { renderingCodeFlow } from "./renderingCodeFlow";
 import { IfElseChangeDto } from "@/pages/Home/types/dto/ifElseChangeDto";
 import { refreshCodeFlow } from "./services/refreshCodeFlow";
 import { deleteCodeFlow } from "./services/deleteCodeFlow";
