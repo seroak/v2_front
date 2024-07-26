@@ -11,9 +11,7 @@ window.alert = jest.fn();
 // reactQuery를 사용하는 컴포넌트를 테스트하기 위해 컴포넌트를 렌더링 하는 함수
 const renderWithQueryClient = (component: React.ReactElement) => {
   const queryClient = new QueryClient();
-  return render(
-    <QueryClientProvider client={queryClient}>{component}</QueryClientProvider>
-  );
+  return render(<QueryClientProvider client={queryClient}>{component}</QueryClientProvider>);
 };
 
 describe("백엔드로 부터 Object 외에 다른 response body(code) 를 받았을 때", () => {
@@ -33,14 +31,9 @@ describe("백엔드로 부터 Object 외에 다른 response body(code) 를 받�
 
     await waitFor(() => {
       // waitFor 함수를 사용하여 비동기 처리가 완료될 때까지 기다린다
-      expect((window as any).fetch).toHaveBeenCalledWith(
-        "http://localhost:8000/v1/python",
-        expect.any(Object)
-      );
+      expect((window as any).fetch).toHaveBeenCalledWith("http://localhost:8000/v1/python", expect.any(Object));
     });
-    expect(window.alert).toHaveBeenCalledWith(
-      "받은 데이터의 형식이 올바르지 않습니다."
-    );
+    expect(window.alert).toHaveBeenCalledWith("받은 데이터의 형식이 올바르지 않습니다.");
   });
 });
 
@@ -60,10 +53,7 @@ describe("백엔드로 부터 정상적인 response body(code) 를 받았을 때
 
     await waitFor(() => {
       // waitFor 함수를 사용하여 비동기 처리가 완료될 때까지 기다린다
-      expect((window as any).fetch).toHaveBeenCalledWith(
-        "http://localhost:8000/v1/python",
-        expect.any(Object)
-      );
+      expect((window as any).fetch).toHaveBeenCalledWith("http://localhost:8000/v1/python", expect.any(Object));
     });
   });
 });

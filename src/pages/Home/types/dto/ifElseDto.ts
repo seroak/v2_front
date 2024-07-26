@@ -8,9 +8,5 @@ export interface IfElseDto {
   type: string;
 }
 export const isIfElseDto = (item: any): item is IfElseDto => {
-  return (
-    typeof item.depth === "number" &&
-    typeof item.conditions === "object" &&
-    typeof item.type === "string"
-  );
+  return typeof item.depth === "number" && typeof item.conditions === "object" && typeof item.type === "string";
 };

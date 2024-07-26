@@ -7,8 +7,6 @@ export const updateDataStructure = (
   newData: CodeItem // 수정해야하는 자료구조가 들어있는 데이터
 ): CodeItem[] => {
   return dataStructures.map((dataStructure) => {
-    return dataStructure.name === targetName
-      ? { ...dataStructure, ...newData }
-      : dataStructure;
+    return dataStructure.name === targetName ? { ...dataStructure, ...newData } : dataStructure;
   });
 };
