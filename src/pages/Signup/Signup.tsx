@@ -1,5 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
+import { useMutation } from "@tanstack/react-query";
 import styles from "./Signup.module.css";
+import axios from "axios";
 
 interface FormData {
   username: string;
@@ -42,11 +44,26 @@ const Signup = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+  const mutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      return axios.post("http://localhost:8000/signup", formData, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
+    },
+    onSuccess() {
+      alert("회원가입이 완료되었습니다.");
+      // 랜딩 페이지로 접근하는 코드가 들어가야 할 곳
+    },
+    onError(error) {
+      console.error("회원가입 에러", error);
+      alert("회원가입 중 오류가 발생했습니다.");
+    },
+  });
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
-      // 회원가입 API 호출해야하는 부분
+      mutation.mutate(formData);
     }
   };
 
