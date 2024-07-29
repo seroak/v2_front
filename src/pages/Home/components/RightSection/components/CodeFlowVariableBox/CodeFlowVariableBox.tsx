@@ -7,12 +7,7 @@ type Props = {
 function CodeFlowVariableBox({ codeFlowVariableItem }: Props) {
   return (
     <div className={styles.variable}>
-      <div
-        className={cx(
-          styles.variable_box,
-          codeFlowVariableItem.isLight && styles.highlight
-        )}
-      >
+      <div className={cx(styles.variable_box, codeFlowVariableItem.isLight && styles.highlight)}>
         <span className={styles.text}>{codeFlowVariableItem.expr}</span>
       </div>
     </div>

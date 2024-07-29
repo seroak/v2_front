@@ -3,8 +3,4 @@ import { ForItem } from "./forItem";
 import { ConditionItem } from "./conditionItem";
 import { PrintItem } from "./printItem";
 import { CodeFlowVariableItem } from "./codeFlow/codeFlowVariableItem";
-export type AllObjectItem =
-  | PrintItem
-  | ForItem
-  | ConditionItem
-  | CodeFlowVariableItem;
+export type AllObjectItem = PrintItem | ForItem | ConditionItem | CodeFlowVariableItem;

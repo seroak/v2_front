@@ -24,11 +24,7 @@ export const renderingStructure = (
                   exit={{ opacity: 0, y: 20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <VariableBox
-                    value={variableItem.expr!}
-                    name={variableItem.name!}
-                    isLight={variableItem.isLight!}
-                  />
+                  <VariableBox value={variableItem.expr!} name={variableItem.name!} isLight={variableItem.isLight!} />
                 </motion.div>
               </AnimatePresence>
             );

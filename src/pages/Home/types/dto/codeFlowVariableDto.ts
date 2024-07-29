@@ -7,9 +7,9 @@ export interface CodeFlowVariableDto {
 
 export const isCodeFlowVariableDto = (item: any): item is CodeFlowVariableDto => {
   return (
-    typeof item.id === 'number' &&
-    typeof item.depth === 'number' &&
-    typeof item.expr === 'string' &&
-    typeof item.type === 'string'
+    typeof item.id === "number" &&
+    typeof item.depth === "number" &&
+    typeof item.expr === "string" &&
+    typeof item.type === "string"
   );
 };

@@ -1,377 +1,240 @@
 [
   {
-      "id": 2,
-      "depth": 1,
-      "condition": {
-          "target": "i",
-          "cur": 0,
-          "start": "0",
-          "end": "3",
-          "step": "1"
+    "id": 2,
+    "depth": 1,
+    "condition": {
+      "target": "i",
+      "cur": 0,
+      "start": "0",
+      "end": "3",
+      "step": "1"
+    },
+    "highlights": ["target", "cur", "start", "end", "step"],
+    "type": "for"
+  },
+  {
+    "depth": 2,
+    "conditions": [
+      {
+        "id": 3,
+        "expr": "i == 0",
+        "type": "if"
       },
-      "highlights": [
-          "target",
-          "cur",
-          "start",
-          "end",
-          "step"
-      ],
-      "type": "for"
-  },
-  {
-      "depth": 2,
-      "conditions": [
-          {
-              "id": 3,
-              "expr": "i == 0",
-              "type": "if"
-          },
-          {
-              "id": 5,
-              "expr": "i == 1",
-              "type": "elif"
-          },
-          {
-              "id": 7,
-              "expr": "",
-              "type": "else"
-          }
-      ],
-      "type": "ifElseDefine"
-  },
-  {
-      "id": 3,
-      "depth": 2,
-      "expr": "i == 0",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-      ],
-      "type": "ifElseChange"
-  },
-  {
-      "id": 3,
-      "depth": 2,
-      "expr": "0 == 0",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-      ],
-      "type": "ifElseChange"
-  },
-  {
-      "id": 3,
-      "depth": 2,
-      "expr": "True",
-      "highlights": [
-          0,
-          1,
-          2,
-          3
-      ],
-      "type": "ifElseChange"
-  },
-  {
-      "id": 4,
-      "depth": 3,
-      "expr": "'hello'",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-      ],
-      "console": "'hello'\n",
-      "type": "print"
-  },
-  {
-      "id": 2,
-      "depth": 1,
-      "condition": {
-          "target": "i",
-          "cur": 1,
-          "start": "0",
-          "end": "3",
-          "step": "1"
+      {
+        "id": 5,
+        "expr": "i == 1",
+        "type": "elif"
       },
-      "highlights": [
-          "cur"
-      ],
-      "type": "for"
+      {
+        "id": 7,
+        "expr": "",
+        "type": "else"
+      }
+    ],
+    "type": "ifElseDefine"
   },
   {
-      "depth": 2,
-      "conditions": [
-          {
-              "id": 3,
-              "expr": "i == 0",
-              "type": "if"
-          },
-          {
-              "id": 5,
-              "expr": "i == 1",
-              "type": "elif"
-          },
-          {
-              "id": 7,
-              "expr": "",
-              "type": "else"
-          }
-      ],
-      "type": "ifElseDefine"
+    "id": 3,
+    "depth": 2,
+    "expr": "i == 0",
+    "highlights": [0, 1, 2, 3, 4, 5],
+    "type": "ifElseChange"
   },
   {
-      "id": 3,
-      "depth": 2,
-      "expr": "i == 0",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-      ],
-      "type": "ifElseChange"
+    "id": 3,
+    "depth": 2,
+    "expr": "0 == 0",
+    "highlights": [0, 1, 2, 3, 4, 5],
+    "type": "ifElseChange"
   },
   {
-      "id": 3,
-      "depth": 2,
-      "expr": "1 == 0",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-      ],
-      "type": "ifElseChange"
+    "id": 3,
+    "depth": 2,
+    "expr": "True",
+    "highlights": [0, 1, 2, 3],
+    "type": "ifElseChange"
   },
   {
-      "id": 3,
-      "depth": 2,
-      "expr": "False",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4
-      ],
-      "type": "ifElseChange"
+    "id": 4,
+    "depth": 3,
+    "expr": "'hello'",
+    "highlights": [0, 1, 2, 3, 4, 5, 6],
+    "console": "'hello'\n",
+    "type": "print"
   },
   {
-      "id": 5,
-      "depth": 2,
-      "expr": "i == 1",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-      ],
-      "type": "ifElseChange"
+    "id": 2,
+    "depth": 1,
+    "condition": {
+      "target": "i",
+      "cur": 1,
+      "start": "0",
+      "end": "3",
+      "step": "1"
+    },
+    "highlights": ["cur"],
+    "type": "for"
   },
   {
-      "id": 5,
-      "depth": 2,
-      "expr": "1 == 1",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-      ],
-      "type": "ifElseChange"
-  },
-  {
-      "id": 5,
-      "depth": 2,
-      "expr": "True",
-      "highlights": [
-          0,
-          1,
-          2,
-          3
-      ],
-      "type": "ifElseChange"
-  },
-  {
-      "id": 6,
-      "depth": 3,
-      "expr": "'world'",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-      ],
-      "console": "'world'\n",
-      "type": "print"
-  },
-  {
-      "id": 2,
-      "depth": 1,
-      "condition": {
-          "target": "i",
-          "cur": 2,
-          "start": "0",
-          "end": "3",
-          "step": "1"
+    "depth": 2,
+    "conditions": [
+      {
+        "id": 3,
+        "expr": "i == 0",
+        "type": "if"
       },
-      "highlights": [
-          "cur"
-      ],
-      "type": "for"
+      {
+        "id": 5,
+        "expr": "i == 1",
+        "type": "elif"
+      },
+      {
+        "id": 7,
+        "expr": "",
+        "type": "else"
+      }
+    ],
+    "type": "ifElseDefine"
   },
   {
-      "depth": 2,
-      "conditions": [
-          {
-              "id": 3,
-              "expr": "i == 0",
-              "type": "if"
-          },
-          {
-              "id": 5,
-              "expr": "i == 1",
-              "type": "elif"
-          },
-          {
-              "id": 7,
-              "expr": "",
-              "type": "else"
-          }
-      ],
-      "type": "ifElseDefine"
+    "id": 3,
+    "depth": 2,
+    "expr": "i == 0",
+    "highlights": [0, 1, 2, 3, 4, 5],
+    "type": "ifElseChange"
   },
   {
-      "id": 3,
-      "depth": 2,
-      "expr": "i == 0",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-      ],
-      "type": "ifElseChange"
+    "id": 3,
+    "depth": 2,
+    "expr": "1 == 0",
+    "highlights": [0, 1, 2, 3, 4, 5],
+    "type": "ifElseChange"
   },
   {
-      "id": 3,
-      "depth": 2,
-      "expr": "2 == 0",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-      ],
-      "type": "ifElseChange"
+    "id": 3,
+    "depth": 2,
+    "expr": "False",
+    "highlights": [0, 1, 2, 3, 4],
+    "type": "ifElseChange"
   },
   {
-      "id": 3,
-      "depth": 2,
-      "expr": "False",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4
-      ],
-      "type": "ifElseChange"
+    "id": 5,
+    "depth": 2,
+    "expr": "i == 1",
+    "highlights": [0, 1, 2, 3, 4, 5],
+    "type": "ifElseChange"
   },
   {
-      "id": 5,
-      "depth": 2,
-      "expr": "i == 1",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-      ],
-      "type": "ifElseChange"
+    "id": 5,
+    "depth": 2,
+    "expr": "1 == 1",
+    "highlights": [0, 1, 2, 3, 4, 5],
+    "type": "ifElseChange"
   },
   {
-      "id": 5,
-      "depth": 2,
-      "expr": "2 == 1",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-      ],
-      "type": "ifElseChange"
+    "id": 5,
+    "depth": 2,
+    "expr": "True",
+    "highlights": [0, 1, 2, 3],
+    "type": "ifElseChange"
   },
   {
-      "id": 5,
-      "depth": 2,
-      "expr": "False",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4
-      ],
-      "type": "ifElseChange"
+    "id": 6,
+    "depth": 3,
+    "expr": "'world'",
+    "highlights": [0, 1, 2, 3, 4, 5, 6],
+    "console": "'world'\n",
+    "type": "print"
   },
   {
-      "id": 7,
-      "depth": 2,
-      "expr": "True",
-      "highlights": [
-          0,
-          1,
-          2,
-          3
-      ],
-      "type": "ifElseChange"
+    "id": 2,
+    "depth": 1,
+    "condition": {
+      "target": "i",
+      "cur": 2,
+      "start": "0",
+      "end": "3",
+      "step": "1"
+    },
+    "highlights": ["cur"],
+    "type": "for"
   },
   {
-      "id": 8,
-      "depth": 3,
-      "expr": "'hello'",
-      "highlights": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-      ],
-      "console": "'hello'\n",
-      "type": "print"
+    "depth": 2,
+    "conditions": [
+      {
+        "id": 3,
+        "expr": "i == 0",
+        "type": "if"
+      },
+      {
+        "id": 5,
+        "expr": "i == 1",
+        "type": "elif"
+      },
+      {
+        "id": 7,
+        "expr": "",
+        "type": "else"
+      }
+    ],
+    "type": "ifElseDefine"
+  },
+  {
+    "id": 3,
+    "depth": 2,
+    "expr": "i == 0",
+    "highlights": [0, 1, 2, 3, 4, 5],
+    "type": "ifElseChange"
+  },
+  {
+    "id": 3,
+    "depth": 2,
+    "expr": "2 == 0",
+    "highlights": [0, 1, 2, 3, 4, 5],
+    "type": "ifElseChange"
+  },
+  {
+    "id": 3,
+    "depth": 2,
+    "expr": "False",
+    "highlights": [0, 1, 2, 3, 4],
+    "type": "ifElseChange"
+  },
+  {
+    "id": 5,
+    "depth": 2,
+    "expr": "i == 1",
+    "highlights": [0, 1, 2, 3, 4, 5],
+    "type": "ifElseChange"
+  },
+  {
+    "id": 5,
+    "depth": 2,
+    "expr": "2 == 1",
+    "highlights": [0, 1, 2, 3, 4, 5],
+    "type": "ifElseChange"
+  },
+  {
+    "id": 5,
+    "depth": 2,
+    "expr": "False",
+    "highlights": [0, 1, 2, 3, 4],
+    "type": "ifElseChange"
+  },
+  {
+    "id": 7,
+    "depth": 2,
+    "expr": "True",
+    "highlights": [0, 1, 2, 3],
+    "type": "ifElseChange"
+  },
+  {
+    "id": 8,
+    "depth": 3,
+    "expr": "'hello'",
+    "highlights": [0, 1, 2, 3, 4, 5, 6],
+    "console": "'hello'\n",
+    "type": "print"
   }
 ]
