@@ -90,10 +90,8 @@ export default function Home() {
 
   const onForward = useCallback(() => {
     if (idx < codeFlowLength - 1) {
-      console.log("forward");
       navControlDispatch({ type: "forward" });
       setConsoleIdx(idx);
-      console.log(idx);
     }
   }, [idx, codeFlowLength]);
 
