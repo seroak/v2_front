@@ -1,6 +1,9 @@
 import { createContext, useState, Dispatch, SetStateAction } from "react";
 import { useMutation } from "@tanstack/react-query";
 import styles from "./Home.module.css";
+
+import LoggedInHeader from "../components/LoggedInHeader";
+import PublicHeader from "../components/PublicHeader";
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
 import Resizable from "./components/Resizable";
@@ -70,6 +73,7 @@ export default function Home() {
   return (
     <CodeContext.Provider value={{ code, setCode }}>
       <PreprocessedCodesContext.Provider value={{ preprocessedCodes, setPreprocessedCodes }}>
+        <LoggedInHeader />
         <main className={styles.main}>
           <div className={styles.header}>
             <form action="#" onSubmit={handleSubmit}>
