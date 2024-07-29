@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import forPrintMockData from "./samples/successForAndPrintResponseBody.json";
-import Home from "../../src/pages/Home/Home";
+import Home from "../../../src/pages/Home/Home";
 
 // 브라우저API 모킹
 (window as any).fetch = jest.fn();

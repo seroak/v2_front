@@ -5,7 +5,7 @@ import { ForItem } from "@/pages/Home/types/forItem";
 import { AnimatePresence, motion } from "framer-motion";
 
 type Props = {
-  children?: ReactNode;
+  children: ReactNode;
   forItem: ForItem;
 };
 
