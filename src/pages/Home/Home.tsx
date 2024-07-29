@@ -1,7 +1,6 @@
 import { createContext, useState, Dispatch, SetStateAction } from "react";
 import { useMutation } from "@tanstack/react-query";
 import styles from "./Home.module.css";
-
 import LoggedInHeader from "../components/LoggedInHeader";
 import PublicHeader from "../components/PublicHeader";
 import LeftSection from "./components/LeftSection/LeftSection";
@@ -74,12 +73,43 @@ export default function Home() {
     <CodeContext.Provider value={{ code, setCode }}>
       <PreprocessedCodesContext.Provider value={{ preprocessedCodes, setPreprocessedCodes }}>
         <LoggedInHeader />
+
         <main className={styles.main}>
-          <div className={styles.header}>
+          <div className={styles["top-btns"]}>
+            <div>
+              <button type="button" className={styles["playcode-btn"]}>
+                <img src="/image/icon_play_w.svg" alt="" />
+                실행코드
+              </button>
+            </div>
+            <div>
+              <button type="button" className={styles["view-btn"]}>
+                <img src="/image/icon_play_w.svg" alt="" />
+                시각화
+              </button>
+              <div>
+                <button>
+                  <img src="/image/icon_play_back.svg" alt="뒤로" />
+                </button>
+                <button className="ml8">
+                  <img src="/image/icon_play_stop.svg" alt="일시정지" />
+                </button>
+                <button className="ml8">
+                  <img src="/image/icon_play_next.svg" alt="다음" />
+                </button>
+                <p className={styles["ml14 fz14"]}>(23/23)</p>
+                <p className={styles["ml24 fz14"]}>Play Speed</p>
+                <select name="" id="" className={styles["s__select ml14"]}>
+                  <option value="1x">1X</option>
+                  <option value="2x">2X</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          {/* <div className={styles.header}>
             <form action="#" onSubmit={handleSubmit}>
               <button type="submit" className={styles.button} data-testid="submit-button">
-                {/* // 버튼에 기본 css가 적용되어 있다 border: none 하면 지워진다
-              // 테두리디자인에 대한 고민 필요 */}
+    
                 <svg width="56" height="22" viewBox="0 0 56 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M20 10.4545L5 19.5084L5 1.40064L20 10.4545Z" fill="#D9D9D9" />
                   <path
@@ -89,7 +119,7 @@ export default function Home() {
                 </svg>
               </button>
             </form>
-          </div>
+          </div> */}
           <Resizable left={<LeftSection />} right={<RightSection />} />
         </main>
       </PreprocessedCodesContext.Provider>
