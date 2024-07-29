@@ -41,11 +41,11 @@ export const handlers = [
   }),
   http.post("/signup", async ({ request }) => {
     const { username } = (await request.json()) as SignupUser;
-    if (username === "error") return HttpResponse.json({ message: "error" }, { status: 500 });
+    if (username === "error") return HttpResponse.json({ success: "false", message: "회원가입 실패" }, { status: 500 });
     return HttpResponse.json(
       {
         success: true,
-        message: "로그인 성공",
+        message: "회원가입 성공",
       },
       { status: 200 }
     );
