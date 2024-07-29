@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Inder&display=swap");
 @import url(./font.css);
+@import url(./grid.css);
 
 /* 모드요소에 적용되는 속성 정의 */
 :root {
@@ -26,6 +27,19 @@
 
 .white-text {
   color: #f1f1f1;
+}
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+button {
+  background: none;
+  border: 0;
+  cursor: pointer;
 }
 a {
   text-decoration: none;
