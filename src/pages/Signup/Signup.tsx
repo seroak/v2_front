@@ -6,6 +6,7 @@ import axios from "axios";
 interface FormData {
   username: string;
   email: string;
+  phoneNumber: string;
   password: string;
   confirmPassword: string;
 }
@@ -13,6 +14,7 @@ interface FormData {
 interface FormErrors {
   username?: string;
   email?: string;
+  phoneNumber?: string;
   password?: string;
   confirmPassword?: string;
 }
@@ -21,6 +23,7 @@ const Signup = () => {
   const [formData, setFormData] = useState<FormData>({
     username: "",
     email: "",
+    phoneNumber: "",
     password: "",
     confirmPassword: "",
   });
@@ -37,8 +40,14 @@ const Signup = () => {
     if (!formData.username.trim()) newErrors.username = "사용자 이름은 필수입니다.";
     if (!formData.email.trim()) newErrors.email = "이메일은 필수입니다.";
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "유효한 이메일 주소를 입력하세요.";
+    if (!formData.phoneNumber) newErrors.phoneNumber = "핸드폰 번호는 필수입니다.";
+    else if (!/^010-\d{3,4}-\d{4}$/.test(formData.phoneNumber))
+      newErrors.phoneNumber = "유효한 핸드폰 번호를 입력하세요.";
     if (!formData.password) newErrors.password = "비밀번호는 필수입니다.";
-    else if (formData.password.length < 6) newErrors.password = "비밀번호는 최소 6자 이상이어야 합니다.";
+    else if (formData.password.length < 6 || formData.confirmPassword.length > 20)
+      newErrors.password = "비밀번호는 최소 8자 이상 20자 이하여야 합니다.";
+    else if (!/^(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]).*$/.test(formData.password))
+      newErrors.password = "비밀번호는 최소 1개의 특수 문자를 포함해야 합니다";
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
 
     setErrors(newErrors);
@@ -94,6 +103,20 @@ const Signup = () => {
           required
         />
         {errors.email && <div className={styles.errorMessage}>{errors.email}</div>}
+      </div>
+      <div className={styles.formGroup}>
+        <label htmlFor="phoneNumber">핸드폰번호 </label>
+        <input
+          type="phoneNumber"
+          id="phoneNumber"
+          name="phoneNumber"
+          placeholder="하이픈(-)을 포함해서 입력해 주세요."
+          value={formData.phoneNumber}
+          onChange={handleChange}
+          className={styles.formInput}
+          required
+        />
+        {errors.phoneNumber && <div className={styles.errorMessage}>{errors.phoneNumber}</div>}
       </div>
       <div className={styles.formGroup}>
         <label htmlFor="password">비밀번호</label>
