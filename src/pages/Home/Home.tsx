@@ -50,9 +50,10 @@ export default function Home() {
   const [code, setCode] = useState<any>(["def hello_world():", '    print("Hello, World!")'].join("\n"));
   // 전처리한 코드 state
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
-  // 코드흐름 인덱스
+  // zustand store
   const setConsoleIdx = useConsoleStore((state) => state.setConsoleIdx);
   const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
+
   const mutation = useMutation({
     mutationFn: async (code: string) => {
       return fetch("http://localhost:8000/v1/python", {
@@ -133,8 +134,8 @@ export default function Home() {
                 <button className="ml8">
                   <img src="/image/icon_play_next.svg" onClick={onForward} alt="다음" />
                 </button>
-                <p className={"ml14" + "fz14"}>(23/23)</p>
-                <p className={"ml24" + "fz14"}>Play Speed</p>
+                <p className={"ml14" + " fz14"}>(23/23)</p>
+                <p className={"ml24" + " fz14"}>Play Speed</p>
                 <select name="" id="" className={styles.s__select + " ml14"}>
                   <option value="1x">1X</option>
                   <option value="2x">2X</option>
