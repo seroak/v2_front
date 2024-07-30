@@ -3,7 +3,6 @@ import { useMutation } from "@tanstack/react-query";
 import styles from "./Home.module.css";
 import "./gutter.css";
 import LoggedInHeader from "../components/LoggedInHeader";
-import PublicHeader from "../components/PublicHeader";
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
 
