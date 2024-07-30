@@ -1,12 +1,13 @@
 import { createContext, useState, Dispatch, SetStateAction, useReducer, useCallback } from "react";
 import { useMutation } from "@tanstack/react-query";
 import styles from "./Home.module.css";
+import "./gutter.css";
 import LoggedInHeader from "../components/LoggedInHeader";
 import PublicHeader from "../components/PublicHeader";
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
-import Resizable from "./components/Resizable";
 
+import Split from "react-split";
 import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Home/types/dto/ValidTypeDto";
 
 //zustand store
@@ -142,7 +143,22 @@ export default function Home() {
             </div>
           </div>
 
-          <Resizable left={<LeftSection />} right={<RightSection />} />
+          <Split
+            sizes={[50, 50]}
+            minSize={100}
+            expandToMin={false}
+            gutterSize={10}
+            gutterAlign="center"
+            snapOffset={30}
+            dragInterval={1}
+            direction="horizontal"
+            cursor="col-resize"
+            className={styles.splitContainer}
+            style={{ display: "flex", width: "100vw", height: "100vh" }}
+          >
+            <LeftSection />
+            <RightSection />
+          </Split>
         </main>
       </PreprocessedCodesContext.Provider>
     </CodeContext.Provider>
