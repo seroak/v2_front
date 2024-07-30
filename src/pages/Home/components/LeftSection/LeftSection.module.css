@@ -1,0 +1,7 @@
+.view-section-title {
+  width: 100%;
+  padding: 13px 24px;
+  background-color: #fcfcfc;
+  border-bottom: 1px solid var(--gray01);
+  font-weight: 600;
+}
