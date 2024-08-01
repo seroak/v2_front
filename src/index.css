@@ -27,7 +27,11 @@
   --bg01: #fcfcfc;
   --bg02: #f7f7f7;
 }
-
+:after,
+:before {
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
 .white-text {
   color: #f1f1f1;
 }
