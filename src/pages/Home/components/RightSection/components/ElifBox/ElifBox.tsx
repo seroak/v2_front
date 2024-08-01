@@ -17,7 +17,7 @@ function IfBox({ children, isLight, elifItem }: Props) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className={styles.elif}
+        className="code-flow"
       >
         <motion.div
           layout
@@ -25,37 +25,27 @@ function IfBox({ children, isLight, elifItem }: Props) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className={cx(
-            styles.elif_border,
-            elifItem.isLight && styles.highlight,
-            isLight && elifItem.expr === "False" && styles.false
-          )}
+          className={cx("code-flow-title-wrap")}
         >
-          <motion.div layout className={styles.elif_title}>
+          <motion.div layout className="code-flow-title">
             <span>elif</span>
           </motion.div>
-          <motion.div
-            layout
-            className={cx(
-              styles.elif_expr,
-              isLight && styles.highlight,
-              isLight && elifItem.expr === "False" && styles.false
-            )}
-          >
-            {elifItem.expr?.split("").map((char, index) => (
+          <div className="code-flow-var">
+            <div>
               <span
-                key={index}
                 className={cx(
-                  isLight && elifItem.highlights?.includes(index) && styles["font-highlight"],
-                  isLight && elifItem.expr === "False" && styles["false-expr"]
+                  isLight && styles["highlight-span"],
+                  isLight && elifItem.expr === "False" && styles.false
                 )}
               >
-                {char}
+                {elifItem.expr?.split("").map((char, index) => (
+                  <text key={index}>{char}</text>
+                ))}
               </span>
-            ))}
-          </motion.div>
-          {children && <div>{children}</div>}
+            </div>
+          </div>
         </motion.div>
+        {children && <div>{children}</div>}
       </motion.div>
     </AnimatePresence>
   );

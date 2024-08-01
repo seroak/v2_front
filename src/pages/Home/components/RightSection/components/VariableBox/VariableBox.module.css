@@ -1,33 +1,35 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&display=swap");
-.variable {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.variable_name {
-  font-family: "Noto Serif KR", serif;
-  font-optical-sizing: auto;
-  font-weight: 700;
-  font-style: normal;
-}
 
-.variable_box {
-  box-shadow: inset 0px 4px 4px 0px rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-  width: 18px;
-  height: 18px;
-  padding: 10px;
-  margin: 15px;
-  margin-top: 10px;
-  background-color: #515060; /* 텍스트 위에 테두리가 있어도 글씨가 보이도록 배경색 지정 */
+.var-data {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 1px;
+  background-color: #565656;
+  margin: 0px 10px;
+  border-radius: 5px;
+}
+span {
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: inline-block;
+}
+.var-data > span {
+  display: inline-block;
+  min-width: 10px;
+  border-radius: 4px;
+  color: #fff;
+  padding: 8px 15px;
+  font-weight: 600;
+  position: relative;
+}
+.var-data > span > span {
+  position: absolute;
+  bottom: -28px;
+  color: rgba(24, 24, 24, 0.3);
+  left: 50%;
+  text-wrap: nowrap;
+  transform: translateX(-50%);
 }
 .highlight {
-  background-color: #8e2efa;
-}
-.text {
-  color: #f1f1f1;
+  background-color: #364fce;
 }
