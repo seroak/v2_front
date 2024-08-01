@@ -8,7 +8,7 @@
         "type": "variable"
       }
     ],
-    "type": "assignViz"
+    "type": "assign"
   },
   {
     "variables": [
@@ -19,7 +19,7 @@
         "type": "list"
       }
     ],
-    "type": "assignViz"
+    "type": "assign"
   },
   {
     "id": 1,
