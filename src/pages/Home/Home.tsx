@@ -1,4 +1,4 @@
-import { createContext, useState, Dispatch, SetStateAction, useReducer, useCallback } from "react";
+import { createContext, useState, Dispatch, SetStateAction, useCallback } from "react";
 import { useMutation } from "@tanstack/react-query";
 import styles from "./Home.module.css";
 import "./gutter.css";
@@ -33,20 +33,7 @@ export const PreprocessedCodesContext = createContext<PreprocessedCodeContextTyp
   setPreprocessedCodes: () => {},
 });
 
-const backForwardNavReducer = (state: any, action: any) => {
-  console.log("state", state);
-  switch (action.type) {
-    case "forward":
-      return state + 1;
-    case "back":
-      return state - 1;
-    default:
-      return state;
-  }
-};
-
 export default function Home() {
-  const [idx, navControlDispatch] = useReducer(backForwardNavReducer, 0);
   // 원본 코드 state
   const [code, setCode] = useState<any>(["def hello_world():", '    print("Hello, World!")'].join("\n"));
   // 전처리한 코드 state
@@ -91,20 +78,14 @@ export default function Home() {
   };
 
   const onForward = useCallback(() => {
-    console.log("앞으로가기");
-    console.log(consoleIdx);
     if (consoleIdx < codeFlowLength - 1) {
       setConsoleIdx(consoleIdx + 1);
-      console.log("idx", idx);
-      console.log(consoleIdx);
     }
   }, [consoleIdx, codeFlowLength]);
 
   const onBack = useCallback(() => {
-    console.log("뒤로가기");
     if (consoleIdx > 0) {
       setConsoleIdx(consoleIdx - 1);
-      console.log("idx", idx);
     }
   }, [consoleIdx]);
 
