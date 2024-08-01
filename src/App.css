@@ -1,4 +1,90 @@
-/* id가 root인 div박스에 css를 넣을 수 있다 
-#root {
+.bg-gray {
+  background-color: var(--bg02);
+}
+.color-blue {
+  color: var(--blue);
+}
+.fz24 {
+  font-size: 24px;
+}
+.fz20 {
+  font-size: 20px;
+}
+.fz16 {
+  font-size: 16px;
+}
+.fz14 {
+  font-size: 14px;
+}
+button:hover {
+  filter: brightness(0.9);
+}
+.login-wrap {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 150px;
+  height: 100vh;
+}
+.login-box {
+  padding: 24px;
+  padding: 24px;
+  border-radius: 16px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.login-box input,
+.login-box button {
+  width: 400px;
+}
+input:not([type="file"]) {
+  box-sizing: border-box;
+  padding: 0 16px;
+  height: 51px;
+  border: 1px solid var(--gray01);
+  border-radius: 4px;
+}
+input:not([type="file"])::placeholder {
+  color: #c2c2c2;
+}
 
-} */
+.color-blue {
+  color: var(--blue);
+}
+.login-btn {
+  background-color: var(--bg02);
+  padding: 8px 16px;
+  border-radius: 4px;
+  color: var(--black);
+  margin-right: 12px;
+}
+.blue-btn {
+  background-color: var(--blue);
+  color: var(--white);
+  padding: 14px;
+  height: 50px;
+  border-radius: 4px;
+}
+.blue-btn:disabled {
+  background-color: #e2e2e2;
+  color: #a1a1a1;
+}
+.sns-btn {
+  height: 50px;
+  padding: 18px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+}
+.sns-btn p {
+  flex: 1;
+}
+.sns-btn.kakao {
+  background-color: #fae100;
+}
+.sns-btn.goggle {
+  border: 1px solid #f2f2f2;
+}
