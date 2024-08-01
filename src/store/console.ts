@@ -14,7 +14,7 @@ interface CodeFlowLengthState {
 
 export const useConsoleStore = create<ConsoleState>((set) => ({
   console: [],
-  consoleIdx: -1,
+  consoleIdx: 0,
   setConsole: (console) => set({ console }),
   setConsoleIdx: (consoleIdx) => set({ consoleIdx }),
   reset: () => set({ console: [] }),

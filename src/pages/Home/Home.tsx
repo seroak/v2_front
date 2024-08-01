@@ -34,6 +34,7 @@ export const PreprocessedCodesContext = createContext<PreprocessedCodeContextTyp
 });
 
 const backForwardNavReducer = (state: any, action: any) => {
+  console.log("state", state);
   switch (action.type) {
     case "forward":
       return state + 1;
@@ -52,6 +53,7 @@ export default function Home() {
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   // zustand store
   const setConsoleIdx = useConsoleStore((state) => state.setConsoleIdx);
+  const consoleIdx = useConsoleStore((state) => state.consoleIdx);
   const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
 
   const mutation = useMutation({
@@ -89,18 +91,22 @@ export default function Home() {
   };
 
   const onForward = useCallback(() => {
-    if (idx < codeFlowLength - 1) {
-      navControlDispatch({ type: "forward" });
-      setConsoleIdx(idx);
+    console.log("앞으로가기");
+    console.log(consoleIdx);
+    if (consoleIdx < codeFlowLength - 1) {
+      setConsoleIdx(consoleIdx + 1);
+      console.log("idx", idx);
+      console.log(consoleIdx);
     }
-  }, [idx, codeFlowLength]);
+  }, [consoleIdx, codeFlowLength]);
 
   const onBack = useCallback(() => {
-    if (idx >= 0) {
-      navControlDispatch({ type: "back" });
-      setConsoleIdx(idx);
+    console.log("뒤로가기");
+    if (consoleIdx > 0) {
+      setConsoleIdx(consoleIdx - 1);
+      console.log("idx", idx);
     }
-  }, [idx]);
+  }, [consoleIdx]);
 
   return (
     <CodeContext.Provider value={{ code, setCode }}>
