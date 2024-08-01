@@ -1,0 +1,28 @@
+.gutter {
+  background-color: #eee;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+.gutter.gutter-horizontal {
+  background-image: url(/image/icon_slide_btn_row.svg);
+  cursor: col-resize;
+  width: 25px !important;
+  background-color: #f9f9f9;
+  border-right: 1px solid var(--gray01);
+  z-index: 1;
+}
+.gutter.gutter-vertical {
+  background-image: url(/image/icon_slide_btn-column.svg);
+  cursor: row-resize;
+  height: 25px !important;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid var(--gray01);
+  z-index: 1;
+}
+.view-section2-1 + .gutter.gutter-vertical {
+  border-top: 1px solid var(--gray01);
+  border-bottom: none;
+  background-image: none;
+  background-color: #fdfdfe;
+  height: 10px !important;
+}

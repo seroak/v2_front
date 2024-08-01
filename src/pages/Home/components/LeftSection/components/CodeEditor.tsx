@@ -1,12 +1,10 @@
-import { useContext } from "react";
-import Editor from "@monaco-editor/react";
-import styles from "./CodeEditor.module.css";
+import { useContext, Fragment } from "react";
 
+import Editor from "@monaco-editor/react";
 import { CodeContext } from "../../../Home";
-const CodeEditor = () => {
-  // context API로 state 가져오기
+
+const SplitScreenCodeEditor = () => {
   const context = useContext(CodeContext);
-  // context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
   if (!context) {
     console.error("CodeContext not found");
     return null;
@@ -14,25 +12,27 @@ const CodeEditor = () => {
   const { code, setCode } = context;
 
   return (
-    <div className={styles.container}>
-      <div className={styles.editorContainer}>
-        <div className={styles.form}>
-          <div className={styles.editorWrapper}>
-            <label htmlFor="comment" className="sr-only">
-              Add your code
-            </label>
-            <Editor
-              className={styles.editor}
-              defaultLanguage="python"
-              value={code}
-              onChange={(value) => setCode(value || "")}
-            />
-          </div>
-          <div className={styles.buttonContainer}></div>
-        </div>
+    <Fragment>
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          overflow: "hidden",
+        }}
+      >
+        <Editor
+          defaultLanguage="python"
+          value={code}
+          onChange={(value) => setCode(value || "")}
+          options={{
+            minimap: { enabled: false },
+            scrollBeyondLastLine: false,
+            fontSize: 14,
+          }}
+        />
       </div>
-    </div>
+    </Fragment>
   );
 };
 
-export default CodeEditor;
+export default SplitScreenCodeEditor;
