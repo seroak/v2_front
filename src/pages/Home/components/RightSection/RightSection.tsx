@@ -50,7 +50,6 @@ const RightSection = () => {
     throw new Error("CodeContext not found"); //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
   }
   const setConsole = useConsoleStore((state) => state.setConsole);
-  const setConsoleIdx = useConsoleStore((state) => state.setConsoleIdx);
   const consoleIdx = useConsoleStore((state) => state.consoleIdx);
   const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
   const { preprocessedCodes } = context;
@@ -73,7 +72,7 @@ const RightSection = () => {
       let changedCodeFlows: AllObjectItem[] = [];
 
       // 자료구조 시각화 부분이 들어왔을 때
-      if (preprocessedCode.type.toLowerCase() === "assignViz".toLowerCase()) {
+      if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
         (preprocessedCode as VariablesDto).variables.forEach((variable: VariablesItem) => {
           // 이미 한번 자료구조 시각화에 표현된 name인 경우
           if (usedName.includes(variable.name!)) {
