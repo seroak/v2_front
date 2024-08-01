@@ -1,5 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { PreprocessedCodesContext } from "../../Home";
+import "./RightSection.css";
+import Split from "react-split";
 import _ from "lodash";
 
 // 타입 정의
@@ -181,16 +183,44 @@ const RightSection = () => {
   }, [preprocessedCodes]);
 
   return (
-    <div style={{ backgroundColor: "#f4f4f4", width: "100%" }}>
-      <div>
-        <ul style={{ display: "flex" }}>
-          {StructuresList?.length > 0 && consoleIdx >= 0 && renderingStructure(StructuresList[consoleIdx])}
-        </ul>
-      </div>
-      <ul>
-        {codeFlowList?.length > 0 && consoleIdx >= 0 && renderingCodeFlow(codeFlowList[consoleIdx].objects[0].child)}
-      </ul>
+    <div id="split-2">
+      <Split
+        sizes={[50, 50]}
+        minSize={100}
+        expandToMin={false}
+        gutterSize={10}
+        gutterAlign="center"
+        snapOffset={30}
+        dragInterval={1}
+        direction="vertical"
+        cursor="row-resize"
+        style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+        className="split-container"
+      >
+        <div id="split-2-1" className="view-section2-1">
+          <p className="view-section-title">시각화</p>
+          <div className="view-data">
+            <p className="data-name">변수</p>
+
+            <ul className="var-list">
+              {StructuresList?.length > 0 && consoleIdx >= 0 && renderingStructure(StructuresList[consoleIdx])}
+            </ul>
+          </div>
+        </div>
+        <div id="split-2-2" className="view-section2-2">
+          <div className="view-data">
+            <p className="data-name">코드흐름</p>
+
+            {codeFlowList?.length > 0 &&
+              consoleIdx >= 0 &&
+              renderingCodeFlow(codeFlowList[consoleIdx].objects[0].child)}
+          </div>
+        </div>
+      </Split>
     </div>
+    // <div style={{ backgroundColor: "#f4f4f4", width: "100%" }}>
+
+    // </div>
   );
 };
 
