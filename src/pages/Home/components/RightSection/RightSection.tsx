@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, useReducer, useCallback } from "react";
+import { useState, useContext, useEffect } from "react";
 import { PreprocessedCodesContext } from "../../Home";
 import _ from "lodash";
 
@@ -30,23 +30,13 @@ import { refreshCodeFlow } from "./services/refreshCodeFlow";
 import { deleteCodeFlow } from "./services/deleteCodeFlow";
 
 //zustand store
-import { useConsoleStore } from "@/store/console";
+import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
+
 interface State {
   objects: AllObjectItem[];
 }
-const backForwardNavReducer = (state: any, action: any) => {
-  switch (action.type) {
-    case "forward":
-      return state + 1;
-    case "back":
-      return state - 1;
-    default:
-      return state;
-  }
-};
 
 const RightSection = () => {
-  const [idx, navControlDispatch] = useReducer(backForwardNavReducer, -1);
   const [codeFlowList, setCodeFlowList] = useState<State[]>([
     {
       objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
@@ -59,6 +49,8 @@ const RightSection = () => {
   }
   const setConsole = useConsoleStore((state) => state.setConsole);
   const setConsoleIdx = useConsoleStore((state) => state.setConsoleIdx);
+  const consoleIdx = useConsoleStore((state) => state.consoleIdx);
+  const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
   const { preprocessedCodes } = context;
 
   // codeFlowList를 업데이트하는 useEffect
@@ -185,32 +177,19 @@ const RightSection = () => {
     setCodeFlowList(accCodeFlowList);
     setStructuresList(accDataStructuresList);
     setConsole(accConsoleLogList);
+    setCodeFlowLength(accCodeFlowList.length);
   }, [preprocessedCodes]);
-
-  const onForward = useCallback(() => {
-    if (idx < codeFlowList.length - 1) {
-      navControlDispatch({ type: "forward" });
-      setConsoleIdx(idx);
-    }
-  }, [idx, codeFlowList.length]);
-
-  const onBack = useCallback(() => {
-    if (idx >= 0) {
-      navControlDispatch({ type: "back" });
-      setConsoleIdx(idx);
-    }
-  }, [idx]);
 
   return (
     <div style={{ backgroundColor: "#f4f4f4", width: "100%" }}>
-      <button onClick={onBack}>뒤로 가기</button>
-      <button onClick={onForward}>앞으로 가기</button>
       <div>
         <ul style={{ display: "flex" }}>
-          {StructuresList?.length > 0 && idx >= 0 && renderingStructure(StructuresList[idx])}
+          {StructuresList?.length > 0 && consoleIdx >= 0 && renderingStructure(StructuresList[consoleIdx])}
         </ul>
       </div>
-      <ul>{codeFlowList?.length > 0 && idx >= 0 && renderingCodeFlow(codeFlowList[idx].objects[0].child)}</ul>
+      <ul>
+        {codeFlowList?.length > 0 && consoleIdx >= 0 && renderingCodeFlow(codeFlowList[consoleIdx].objects[0].child)}
+      </ul>
     </div>
   );
 };

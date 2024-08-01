@@ -1,17 +1,24 @@
 @import url("https://fonts.googleapis.com/css2?family=Inder&display=swap");
 @import url(./font.css);
-
+@import url(./grid.css);
+* {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+}
 /* 모드요소에 적용되는 속성 정의 */
 :root {
   /* font-family: "Noto Sans KR", "Helvetica Neue", Helvetica, Arial, sans-serif; */
   font-family: "Pretendard", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: var(--black);
-  font-weight: 400;
-  font-style: normal;
-
-  color-scheme: light dark;
-
-  font-synthesis: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  cursor: default;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  tab-size: 4;
 
   --black: #181818;
   --white: #fff;
@@ -19,13 +26,23 @@
   --gray01: #dddee4;
   --bg01: #fcfcfc;
   --bg02: #f7f7f7;
-
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 .white-text {
   color: #f1f1f1;
+}
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+button {
+  background: none;
+  border: 0;
+  cursor: pointer;
 }
 a {
   text-decoration: none;
@@ -33,4 +50,6 @@ a {
 }
 body {
   margin: 0;
+  font-family: "Pretendard", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--black);
 }
