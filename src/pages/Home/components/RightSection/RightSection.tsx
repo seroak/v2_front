@@ -147,7 +147,6 @@ const RightSection = () => {
           }
           activate = updateActivate(activate, toAddObject);
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
-
           accCodeFlow = { objects: finallyCodeFlow };
           trackingId = toAddObject.id;
         }
@@ -217,9 +216,6 @@ const RightSection = () => {
         </div>
       </Split>
     </div>
-    // <div style={{ backgroundColor: "#f4f4f4", width: "100%" }}>
-
-    // </div>
   );
 };
 
