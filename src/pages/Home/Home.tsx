@@ -35,7 +35,10 @@ export const PreprocessedCodesContext = createContext<PreprocessedCodeContextTyp
 
 export default function Home() {
   // 원본 코드 state
-  const [code, setCode] = useState<any>(["def hello_world():", '    print("Hello, World!")'].join("\n"));
+
+  const [code, setCode] = useState<any>(
+    ["a = 3", "for i in range(a):", "   print(' ' * ((a - 1) - i), end = '')", "   print('*' * (2 * i + 1))"].join("\n")
+  );
   // 전처리한 코드 state
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   // zustand store
@@ -56,6 +59,7 @@ export default function Home() {
     async onSuccess(data) {
       try {
         const jsonData = await data.json();
+        console.log("jsonData", jsonData);
         // 타입 체크 함수
         if (isValidTypeDtoArray(jsonData)) {
           setPreprocessedCodes(jsonData);
