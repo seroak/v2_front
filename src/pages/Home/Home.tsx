@@ -143,7 +143,7 @@ export default function Home() {
             direction="horizontal"
             cursor="col-resize"
             className={styles.splitContainer}
-            style={{ display: "flex", width: "100vw", height: "100vh" }}
+            style={{ display: "flex", width: "100vw", height: "calc(100vh - 100px)" }}
           >
             <LeftSection />
             <RightSection />
