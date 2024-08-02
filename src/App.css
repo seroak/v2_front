@@ -1,4 +1,326 @@
-/* id가 root인 div박스에 css를 넣을 수 있다 
-#root {
+.bg-gray {
+  background-color: var(--bg02);
+}
+.color-blue {
+  color: var(--blue);
+}
+.fz24 {
+  font-size: 24px;
+}
+.fz20 {
+  font-size: 20px;
+}
+.fz16 {
+  font-size: 16px;
+}
+.fz14 {
+  font-size: 14px;
+}
+button:hover {
+  filter: brightness(0.9);
+}
+.login-wrap {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 150px;
+  height: 100vh;
+}
+.login-box {
+  padding: 24px;
+  padding: 24px;
+  border-radius: 16px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.login-box input,
+.login-box button {
+  width: 400px;
+}
+input:not([type="file"]) {
+  box-sizing: border-box;
+  padding: 0 16px;
+  height: 51px;
+  border: 1px solid var(--gray01);
+  border-radius: 4px;
+}
+input:not([type="file"])::placeholder {
+  color: #c2c2c2;
+}
 
-} */
+.color-blue {
+  color: var(--blue);
+}
+.login-btn {
+  background-color: var(--bg02);
+  padding: 8px 16px;
+  border-radius: 4px;
+  color: var(--black);
+  margin-right: 12px;
+}
+.blue-btn {
+  background-color: var(--blue);
+  color: var(--white);
+  padding: 14px;
+  height: 50px;
+  border-radius: 4px;
+}
+.blue-btn:disabled {
+  background-color: #e2e2e2;
+  color: #a1a1a1;
+}
+.sns-btn {
+  height: 50px;
+  padding: 18px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+}
+.sns-btn p {
+  flex: 1;
+}
+.sns-btn.kakao {
+  background-color: #fae100;
+}
+.sns-btn.goggle {
+  border: 1px solid #f2f2f2;
+}
+input[type="checkbox"] {
+  display: block;
+}
+.s__checkbox-wrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.s__checkbox {
+  display: flex;
+  align-items: center;
+}
+.s__checkbox input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0 none;
+}
+.s__checkbox input:focus-visible ~ label {
+  outline: 2px solid var(--black);
+}
+.s__checkbox input + label {
+  height: 24px;
+  display: block;
+  background: url(/image/icon_checkbox_off.svg) no-repeat;
+  background-size: contain;
+  cursor: pointer;
+  font-size: 16px;
+  padding-left: 32px;
+  border-radius: 4px;
+}
+.s__checkbox input:disabled + label {
+  background: url(/image/icon_checkbox_off_disabled.svg) no-repeat;
+  background-size: contain;
+}
+.s__checkbox input:checked + label {
+  background: url(/image/icon_checkbox_on.svg) no-repeat;
+  background-size: contain;
+}
+.s__checkbox input:checked:disabled + label {
+  background: url(/image/icon_checkbox_on_disabled.svg) no-repeat;
+  background-size: contain;
+}
+.login-box .s__checkbox-wrap {
+  flex-direction: column;
+  align-items: flex-start;
+}
+.s__checkbox:nth-child(1) {
+  width: 100%;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #eaeaea;
+}
+.s__checkbox-wrap button {
+  width: auto;
+  text-decoration: underline;
+}
+/* popup */
+@-webkit-keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes popupDimbg {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+.scroll-off {
+  overflow: hidden;
+}
+.screen-out {
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  line-height: 0 !important;
+  overflow: hidden !important;
+  text-indent: -9999px !important;
+}
+.popup__section {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2000;
+}
+.popup__section.is-open {
+  display: block;
+}
+.popup__dim {
+  background: #000;
+  opacity: 0;
+}
+.is-open .popup__dim {
+  opacity: 0.4;
+  animation: popupDimbg 0.5s;
+}
+.popup__inner,
+.popup__dim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.popup__inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup__container__group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* width: calc(100% - 40px); */
+  width: 700px;
+  max-width: 980px;
+  max-height: 60%;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  animation: fade 0.5s;
+}
+.popup__container__group {
+  max-height: 80%;
+}
+.popup__header__group {
+  height: 77px;
+  padding: 24px 24px 20px 24px;
+  flex-shrink: 0;
+  border-bottom: 1px solid #eaeaea;
+}
+.popup__header__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #222;
+  line-height: 29px;
+  letter-spacing: -0.8px;
+}
+.popup__header__close {
+  width: 24px;
+  height: 24px;
+  background: url(/image/icon_close.svg) no-repeat center/contain;
+  position: absolute;
+  top: 24px;
+  right: 24px;
+}
+.popup__contents__group {
+  position: relative;
+  width: 100%;
+  max-height: 800px;
+  margin: 0 auto;
+  padding: 24px 24px 40px 24px;
+  overflow-y: auto;
+}
+.popup__button__group {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  flex-shrink: 0;
+  height: 56px;
+}
+.popup__button__group > button + button {
+  margin-left: 10px;
+}
+.alert {
+  display: none;
+  margin-top: 10px;
+  margin-left: 25px;
+  color: #f04c23;
+  font-size: 18px;
+  line-height: 1;
+}
+.alert.on,
+.alert2.on {
+  display: block;
+}
+
+.popup-sm .popup__container__group {
+  max-width: 400px;
+}
+.popup__contents__group ul,
+.popup__contents__group li {
+  list-style: inherit;
+  margin: inherit;
+  padding: inherit;
+}
+/* popup 끝 */
+@media all and (max-width: 767px) {
+  /* popup */
+  .popup__container__group {
+    width: 100%;
+    max-height: 90%;
+    border-radius: 20px 20px 0 0;
+    animation-name: popupYmove;
+  }
+  @-webkit-keyframes popupYmove {
+    0% {
+      opacity: 0;
+      transform: translateY(50%);
+    }
+    100% {
+      opacity: 0.4;
+      transform: translateY(0);
+    }
+  }
+
+  .popup__inner {
+    align-items: flex-end;
+  }
+  .popup-sm .popup__container__group {
+    max-width: initial;
+    animation-name: popupYmove;
+    width: calc(100% - 32px);
+    border-radius: 20px;
+  }
+  .popup__inner.popup-sm {
+    align-items: center;
+  }
+
+  /* popup 끝 */
+}
