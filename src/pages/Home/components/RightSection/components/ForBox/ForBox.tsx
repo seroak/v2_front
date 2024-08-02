@@ -19,7 +19,7 @@ const ForBox = ({ children, forItem }: Props) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className={cx("code-flow", "code-flow-for")}
+        className={cx("code-flow", "code-flow-for", forItem.isLight && "highlight-border")}
       >
         <motion.div
           layout
@@ -36,21 +36,15 @@ const ForBox = ({ children, forItem }: Props) => {
           <motion.div className="code-flow-var">
             <motion.div>
               <span className="code-var-title">i</span>
-              <span className={cx(forItem.isLight && forItem.isCurLight && styles["highlight-number"])}>
-                {forItem.cur}
-              </span>
+              <span className={cx(forItem.isLight && forItem.isCurLight && "highlight-number")}>{forItem.cur}</span>
             </motion.div>
             <motion.div>
               <span className="code-var-title">start</span>
-              <span className={cx(forItem.isLight && forItem.isCurLight && styles["highlight-number"])}>
-                {forItem.start}
-              </span>
+              <span className={cx(forItem.isLight && forItem.isCurLight && "highlight-number")}>{forItem.start}</span>
             </motion.div>
             <motion.div>
               <span className="code-var-title">end</span>
-              <span className={cx(forItem.isLight && forItem.isCurLight && styles["highlight-number"])}>
-                {forItem.end}
-              </span>
+              <span className={cx(forItem.isLight && forItem.isCurLight && "highlight-number")}>{forItem.end}</span>
             </motion.div>
             {forItem.step === "1" ? null : (
               <motion.div>

@@ -68,6 +68,16 @@ var-list {
 .code-flow + .code-flow {
   margin-top: 70px !important;
 }
+.highlight-border {
+  border-color: #364fce !important;
+}
+.highlight-number {
+  background-color: #364fce !important;
+}
+.highlight-text {
+  color: #364fce !important;
+}
+
 .code-flow-var {
   display: flex;
   align-items: center;
@@ -84,7 +94,7 @@ var-list {
   background-color: #565656;
   color: #fff;
   padding: 8px 15px;
-  font-weight: 600;
+
   position: relative;
 }
 .code-flow-var div span.code-var-title {
@@ -157,7 +167,7 @@ var-list {
 }
 
 .code-flow-for.code-flow {
-  margin-top: 40px;
+  margin-top: 80px;
 }
 .code-flow-for.code-flow .code-flow-for {
   margin-top: 48px;

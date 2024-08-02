@@ -21,7 +21,7 @@ function printBox({ printItem }: Props) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className={cx("code-flow", "code-flow-text")}
+        className={cx("code-flow", "code-flow-text", styles.padding, printItem.isLight && "highlight-border")}
       >
         <motion.div
           layout
@@ -59,8 +59,8 @@ function printBox({ printItem }: Props) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className={cx(printItem.isLight && printItem.highlights?.includes(index) && styles.font_highlight)}
-                style={{ whiteSpace: "pre" }}
+                className={cx(printItem.isLight && printItem.highlights?.includes(index) && "highlight-text")}
+                style={{ whiteSpace: "pre", fontSize: "18px" }}
               >
                 {char}
               </motion.span>

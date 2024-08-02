@@ -17,7 +17,7 @@ function IfBox({ children, isLight, elifItem }: Props) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className="code-flow"
+        className={cx("code-flow", isLight && "highlight-border")}
       >
         <motion.div
           layout
@@ -32,12 +32,7 @@ function IfBox({ children, isLight, elifItem }: Props) {
           </motion.div>
           <div className="code-flow-var">
             <div>
-              <span
-                className={cx(
-                  isLight && styles["highlight-span"],
-                  isLight && elifItem.expr === "False" && styles.false
-                )}
-              >
+              <span className={cx(isLight && "highlight-number", isLight && elifItem.expr === "False" && styles.false)}>
                 {elifItem.expr?.split("").map((char, index) => (
                   <text key={index}>{char}</text>
                 ))}
