@@ -47,7 +47,7 @@ const Login = () => {
         <div className="login-wrap">
           <img className="mb20" src="/image/img_logo2.png" alt="로고" />
           <p className="mb40">
-            아직 회원이 아지신가요?{" "}
+            아직 회원이 아니신가요?{" "}
             <a className="color-blue" href="">
               회원가입
             </a>
