@@ -17,15 +17,17 @@ export const renderingStructure = (
 
             return (
               <AnimatePresence key={variableItem.name} mode="wait">
-                <motion.div
+                <motion.ul
                   key={`${variableItem.name}`}
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
                   transition={{ duration: 0.3 }}
+                  className="var-list"
+                  style={{ display: "inline-block" }}
                 >
                   <VariableBox value={variableItem.expr!} name={variableItem.name!} isLight={variableItem.isLight!} />
-                </motion.div>
+                </motion.ul>
               </AnimatePresence>
             );
           }
@@ -40,6 +42,7 @@ export const renderingStructure = (
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
                   transition={{ duration: 0.3 }}
+                  style={{ display: "inline-block" }}
                 >
                   <ListWrapper listItem={listItem} />
                 </motion.div>

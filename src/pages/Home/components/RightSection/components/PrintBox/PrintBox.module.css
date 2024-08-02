@@ -23,9 +23,12 @@
   padding: 0 5px; /* 좌우 여백 추가 */
 }
 .print_expr {
+  display: flex !important;
+  flex-direction: row !important;
   font-size: 24px;
-  padding: 10px;
-  padding-bottom: 3px;
+}
+.print_expr span {
+  display: inline-block;
 }
 .font_highlight {
   color: #8e2efa;
@@ -33,4 +36,7 @@
 }
 .border_highlight {
   border-color: #8e2efa;
+}
+.padding {
+  padding-bottom: 18px !important;
 }

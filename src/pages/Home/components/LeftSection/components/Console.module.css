@@ -27,9 +27,11 @@
   background-color: #fcfcfc;
   border-bottom: 1px solid var(--gray01);
   font-weight: 600;
+  padding-right: 0px;
 }
 .view-section1-2 .view-data {
   padding: 24px;
+  box-sizing: border-box; /* 패딩과 보더를 포함하여 너비 계산 */
 }
 .view-data {
   position: relative;

@@ -1,5 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { PreprocessedCodesContext } from "../../Home";
+import "./RightSection.css";
+import Split from "react-split";
 import _ from "lodash";
 
 // 타입 정의
@@ -13,6 +15,7 @@ import { PrintDto } from "@/pages/Home/types/dto/printDto";
 import { IfElseDto } from "@/pages/Home/types/dto/ifElseDto";
 import { CodeFlowVariableDto } from "@/pages/Home/types/dto/codeFlowVariableDto";
 import { PrintItem } from "@/pages/Home/types/printItem";
+
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
 import { updateCodeFlow } from "./services/updateCodeFlow";
@@ -48,7 +51,6 @@ const RightSection = () => {
     throw new Error("CodeContext not found"); //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
   }
   const setConsole = useConsoleStore((state) => state.setConsole);
-  const setConsoleIdx = useConsoleStore((state) => state.setConsoleIdx);
   const consoleIdx = useConsoleStore((state) => state.consoleIdx);
   const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
   const { preprocessedCodes } = context;
@@ -71,7 +73,7 @@ const RightSection = () => {
       let changedCodeFlows: AllObjectItem[] = [];
 
       // 자료구조 시각화 부분이 들어왔을 때
-      if (preprocessedCode.type.toLowerCase() === "assignViz".toLowerCase()) {
+      if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
         (preprocessedCode as VariablesDto).variables.forEach((variable: VariablesItem) => {
           // 이미 한번 자료구조 시각화에 표현된 name인 경우
           if (usedName.includes(variable.name!)) {
@@ -115,7 +117,7 @@ const RightSection = () => {
               finallyCodeFlow = refreshCodeFlow(accCodeFlow.objects, toAddObject);
             } else {
               usedId.push(toAddObject.id);
-              finallyCodeFlow = addCodeFlow(accCodeFlow.objects, toAddObject, trackingId);
+              finallyCodeFlow = addCodeFlow(accCodeFlow.objects, toAddObject);
             }
 
             accCodeFlow = { objects: finallyCodeFlow };
@@ -142,11 +144,10 @@ const RightSection = () => {
           // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
           else {
             usedId.push(toAddObject.id);
-            changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject, trackingId);
+            changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject);
           }
           activate = updateActivate(activate, toAddObject);
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
-
           accCodeFlow = { objects: finallyCodeFlow };
           trackingId = toAddObject.id;
         }
@@ -181,15 +182,40 @@ const RightSection = () => {
   }, [preprocessedCodes]);
 
   return (
-    <div style={{ backgroundColor: "#f4f4f4", width: "100%" }}>
-      <div>
-        <ul style={{ display: "flex" }}>
-          {StructuresList?.length > 0 && consoleIdx >= 0 && renderingStructure(StructuresList[consoleIdx])}
-        </ul>
-      </div>
-      <ul>
-        {codeFlowList?.length > 0 && consoleIdx >= 0 && renderingCodeFlow(codeFlowList[consoleIdx].objects[0].child)}
-      </ul>
+    <div id="split-2">
+      <Split
+        sizes={[30, 70]}
+        minSize={100}
+        expandToMin={false}
+        gutterSize={10}
+        gutterAlign="center"
+        snapOffset={30}
+        dragInterval={1}
+        direction="vertical"
+        cursor="row-resize"
+        style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 100px)" }}
+        className="split-container"
+      >
+        <div id="split-2-1" className="view-section2-1">
+          <p className="view-section-title">시각화</p>
+          <div className="view-data">
+            <p className="data-name">변수</p>
+
+            <ul className="var-list">
+              {StructuresList?.length > 0 && consoleIdx >= 0 && renderingStructure(StructuresList[consoleIdx])}
+            </ul>
+          </div>
+        </div>
+        <div id="split-2-2" className="view-section2-2">
+          <div className="view-data">
+            <p className="data-name">코드흐름</p>
+
+            {codeFlowList?.length > 0 &&
+              consoleIdx >= 0 &&
+              renderingCodeFlow(codeFlowList[consoleIdx].objects[0].child)}
+          </div>
+        </div>
+      </Split>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { createContext, useState, Dispatch, SetStateAction, useReducer, useCallback } from "react";
+import { createContext, useState, Dispatch, SetStateAction, useCallback } from "react";
 import { useMutation } from "@tanstack/react-query";
 import styles from "./Home.module.css";
 import "./gutter.css";
@@ -33,25 +33,17 @@ export const PreprocessedCodesContext = createContext<PreprocessedCodeContextTyp
   setPreprocessedCodes: () => {},
 });
 
-const backForwardNavReducer = (state: any, action: any) => {
-  switch (action.type) {
-    case "forward":
-      return state + 1;
-    case "back":
-      return state - 1;
-    default:
-      return state;
-  }
-};
-
 export default function Home() {
-  const [idx, navControlDispatch] = useReducer(backForwardNavReducer, 0);
   // 원본 코드 state
-  const [code, setCode] = useState<any>(["def hello_world():", '    print("Hello, World!")'].join("\n"));
+
+  const [code, setCode] = useState<any>(
+    ["a = 3", "for i in range(a):", "   print(' ' * ((a - 1) - i), end = '')", "   print('*' * (2 * i + 1))"].join("\n")
+  );
   // 전처리한 코드 state
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   // zustand store
   const setConsoleIdx = useConsoleStore((state) => state.setConsoleIdx);
+  const consoleIdx = useConsoleStore((state) => state.consoleIdx);
   const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
 
   const mutation = useMutation({
@@ -89,18 +81,16 @@ export default function Home() {
   };
 
   const onForward = useCallback(() => {
-    if (idx < codeFlowLength - 1) {
-      navControlDispatch({ type: "forward" });
-      setConsoleIdx(idx);
+    if (consoleIdx < codeFlowLength - 1) {
+      setConsoleIdx(consoleIdx + 1);
     }
-  }, [idx, codeFlowLength]);
+  }, [consoleIdx, codeFlowLength]);
 
   const onBack = useCallback(() => {
-    if (idx >= 0) {
-      navControlDispatch({ type: "back" });
-      setConsoleIdx(idx);
+    if (consoleIdx > 0) {
+      setConsoleIdx(consoleIdx - 1);
     }
-  }, [idx]);
+  }, [consoleIdx]);
 
   return (
     <CodeContext.Provider value={{ code, setCode }}>
@@ -153,7 +143,7 @@ export default function Home() {
             direction="horizontal"
             cursor="col-resize"
             className={styles.splitContainer}
-            style={{ display: "flex", width: "100vw", height: "100vh" }}
+            style={{ display: "flex", width: "100vw", height: "calc(100vh - 100px)" }}
           >
             <LeftSection />
             <RightSection />

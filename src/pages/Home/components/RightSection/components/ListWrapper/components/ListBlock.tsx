@@ -1,4 +1,4 @@
-import styles from "./ListBlock.module.css";
+import styles from "../ListWrapper.module.css";
 import cx from "classnames";
 
 type Props = {
@@ -8,11 +8,11 @@ type Props = {
 };
 export const ListBlock = ({ exprItem, isLight, index }: Props) => {
   return (
-    <div>
-      <div className={cx(styles.list, isLight && styles.highlight)}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div className={cx(styles["var-data"], isLight && styles.highlight)}>
         <span className={styles.text}>{exprItem}</span>
       </div>
-      <span className={cx(styles.Noto_Serif_KR, styles.index)}>{index}</span>
+      <span className={styles.index}>{index}</span>
     </div>
   );
 };

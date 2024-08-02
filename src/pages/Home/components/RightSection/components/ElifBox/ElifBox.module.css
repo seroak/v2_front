@@ -35,18 +35,19 @@
   width: fit-content;
   padding: 3px 10px;
 }
-.highlight {
-  border: 2px solid #8e2efa;
-}
-.true-expr {
-  color: #8e2efa;
-}
 .font-highlight {
   color: #8e2efa;
 }
+.highlight-border {
+  border: 2px solid #8e2efa;
+}
+.highlight-span {
+  background-color: #8e2efa !important;
+}
+
 /* false는 항상 맨아래 우선순위가 높게 설정되어야 함 */
 .false {
-  border: 2px solid #ff0000;
+  background-color: #ff0000 !important;
 }
 .false-expr {
   color: #ff0000;
