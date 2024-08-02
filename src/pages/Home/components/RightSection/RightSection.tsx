@@ -15,6 +15,7 @@ import { PrintDto } from "@/pages/Home/types/dto/printDto";
 import { IfElseDto } from "@/pages/Home/types/dto/ifElseDto";
 import { CodeFlowVariableDto } from "@/pages/Home/types/dto/codeFlowVariableDto";
 import { PrintItem } from "@/pages/Home/types/printItem";
+
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
 import { updateCodeFlow } from "./services/updateCodeFlow";
@@ -192,7 +193,7 @@ const RightSection = () => {
         dragInterval={1}
         direction="vertical"
         cursor="row-resize"
-        style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+        style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 100px)" }}
         className="split-container"
       >
         <div id="split-2-1" className="view-section2-1">
