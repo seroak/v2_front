@@ -1,11 +1,11 @@
 import { AllObjectItem } from "./allObjectItem";
 export interface ForItem {
   id: number;
-  start: number;
+  start: string;
   isStartLight: boolean;
-  end: number;
+  end: string;
   isEndLight: boolean;
-  cur: number;
+  cur: string;
   isCurLight: boolean;
   target: string;
   step: string;

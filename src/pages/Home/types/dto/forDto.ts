@@ -3,9 +3,9 @@ export interface ForDto {
   depth: number;
   condition: {
     target: string;
-    cur: number;
-    start: number;
-    end: number;
+    cur: string;
+    start: string;
+    end: string;
     step: string;
   };
   highlights: Array<string>;
@@ -17,6 +17,11 @@ export const isForDto = (item: any): item is ForDto => {
     typeof item.id === "number" &&
     typeof item.depth === "number" &&
     typeof item.condition === "object" &&
+    typeof item.condition.target === "string" &&
+    typeof item.condition.cur === "string" &&
+    typeof item.condition.start === "string" &&
+    typeof item.condition.end === "string" &&
+    typeof item.condition.step === "string" &&
     typeof item.highlights === "object" &&
     typeof item.type === "string"
   );

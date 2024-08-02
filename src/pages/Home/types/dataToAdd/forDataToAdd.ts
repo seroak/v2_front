@@ -3,9 +3,9 @@ export interface ForDataToAdd {
   depth: number;
   condition: {
     target: string;
-    cur: number;
-    start: number;
-    end: number;
+    cur: string;
+    start: string;
+    end: string;
     step: string;
   };
   highlights: Array<string>;
