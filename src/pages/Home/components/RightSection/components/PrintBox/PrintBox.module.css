@@ -26,8 +26,6 @@
   display: flex !important;
   flex-direction: row !important;
   font-size: 24px;
-  padding: 10px;
-  padding-bottom: 3px;
 }
 .print_expr span {
   display: inline-block;
@@ -38,4 +36,7 @@
 }
 .border_highlight {
   border-color: #8e2efa;
+}
+.padding {
+  padding-bottom: 18px !important;
 }
