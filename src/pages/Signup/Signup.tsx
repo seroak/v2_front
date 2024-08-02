@@ -145,7 +145,7 @@ const Signup = () => {
               onChange={handleChange}
               placeholder="비밀번호 재확인"
             />
-            <p className="mb32 fz14">영문, 숫자, 특수문자를 조합하여 8자 이상으로 구성해주시요.</p>
+            <p className="mb32 fz14">영문, 숫자, 특수문자를 조합하여 8자 이상으로 구성해주세요.</p>
             <div className="s__checkbox-wrap">
               <div className="s__checkbox">
                 <input type="checkbox" className="s__checkbox-total" id="ch01_all" />
