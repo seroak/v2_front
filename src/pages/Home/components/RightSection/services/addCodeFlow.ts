@@ -9,7 +9,7 @@ export const addCodeFlow = (
   let updated = false;
   return codeFlows.reduceRight<AllObjectItem[]>((acc, codeFlow) => {
     // 아직 추가하지 않았고, depth가 targetDepth - 1인 경우
-    if (!updated && codeFlow.id === trackingId) {
+    if (!updated && codeFlow.depth === toAddObject.depth - 1) {
       updated = true;
 
       acc.unshift({ ...codeFlow, child: [...codeFlow.child, toAddObject] });

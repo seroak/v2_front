@@ -116,7 +116,7 @@ const RightSection = () => {
               finallyCodeFlow = refreshCodeFlow(accCodeFlow.objects, toAddObject);
             } else {
               usedId.push(toAddObject.id);
-              finallyCodeFlow = addCodeFlow(accCodeFlow.objects, toAddObject, trackingId);
+              finallyCodeFlow = addCodeFlow(accCodeFlow.objects, toAddObject);
             }
 
             accCodeFlow = { objects: finallyCodeFlow };
@@ -143,7 +143,7 @@ const RightSection = () => {
           // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
           else {
             usedId.push(toAddObject.id);
-            changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject, trackingId);
+            changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject);
           }
           activate = updateActivate(activate, toAddObject);
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
