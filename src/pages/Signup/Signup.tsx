@@ -38,7 +38,6 @@ const Signup = () => {
 
   const validateForm = (): boolean => {
     let newErrors: FormErrors = {};
-    console.log(formData);
     if (!formData.username.trim()) newErrors.username = "사용자 이름은 필수입니다.";
     if (!formData.email.trim()) newErrors.email = "이메일은 필수입니다.";
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "유효한 이메일 주소를 입력하세요.";
@@ -84,7 +83,7 @@ const Signup = () => {
       <div className="login-wrap">
         <img className="mb20" src="/image/img_logo2.png" alt="로고" />
         <p className="mb40">
-          이미 계정이 있으신가요?{" "}
+          이미 계정이 있으신가요?
           <a className="color-blue" href="">
             로그인
           </a>
