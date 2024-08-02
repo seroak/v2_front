@@ -184,7 +184,7 @@ const RightSection = () => {
   return (
     <div id="split-2">
       <Split
-        sizes={[50, 50]}
+        sizes={[30, 70]}
         minSize={100}
         expandToMin={false}
         gutterSize={10}

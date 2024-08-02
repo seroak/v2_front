@@ -9,7 +9,7 @@ const LeftSection = () => {
       <div style={{ display: "flex", flexDirection: "column" }}>
         <p className={styles["view-section-title"]}>코드작성</p>
         <Split
-          sizes={[50, 50]}
+          sizes={[70, 30]}
           minSize={100}
           expandToMin={false}
           gutterSize={10}

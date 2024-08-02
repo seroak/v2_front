@@ -7,6 +7,7 @@
 }
 .view-section2-1 .view-data,
 .view-section2-2 .view-data {
+  box-sizing: border-box; /* 패딩과 보더를 포함하여 너비 계산 */
   background-color: #fdfdfe;
   padding: 16px;
 }

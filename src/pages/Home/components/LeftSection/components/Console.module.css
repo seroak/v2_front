@@ -31,6 +31,7 @@
 }
 .view-section1-2 .view-data {
   padding: 24px;
+  box-sizing: border-box; /* 패딩과 보더를 포함하여 너비 계산 */
 }
 .view-data {
   position: relative;
