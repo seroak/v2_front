@@ -52,13 +52,18 @@ function printBox({ printItem }: Props) {
             className={styles.print_expr}
           >
             {printItem.expr.split("").map((char, index) => (
-              <span
+              <motion.span
                 key={index}
+                layout
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
                 className={cx(printItem.isLight && printItem.highlights?.includes(index) && styles.font_highlight)}
                 style={{ whiteSpace: "pre" }}
               >
                 {char}
-              </span>
+              </motion.span>
             ))}
           </motion.div>
         </motion.div>
