@@ -1,25 +1,25 @@
 import { ReactNode } from "react";
-import styles from "./ForBox.module.css";
+
 import "@/pages/Home/components/RightSection/RightSection.css";
 import cx from "classnames";
-import { WhileItem } from "@/pages/Home/types/WhileItem";
+import { WhileItem } from "@/pages/Home/types/codeFlow/whileItem";
 import { AnimatePresence, motion } from "framer-motion";
 
 type Props = {
   children: ReactNode;
-  WhileItem: WhileItem;
+  whileItem: WhileItem;
 };
 
-const WhileBox = ({ children, WhileItem }: Props) => {
+const WhileBox = ({ children, whileItem }: Props) => {
   return (
-    <AnimatePresence key={WhileItem.id}>
+    <AnimatePresence key={whileItem.id}>
       <motion.div
         layout
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className={cx("code-flow", "code-flow-While", WhileItem.isLight && "highlight-border")}
+        className={cx("code-flow", "code-flow-While", whileItem.isLight && "highlight-border")}
       >
         <motion.div
           layout
@@ -27,11 +27,25 @@ const WhileBox = ({ children, WhileItem }: Props) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className={cx("code-flow-title-wrap", WhileItem.isLight && styles.highlight)}
+          className={cx("code-flow-title-wrap", whileItem.isLight && "highlight")}
         >
           <motion.div className="code-flow-title">
             <span>while</span>
           </motion.div>
+          <div className="code-flow-var">
+            <div>
+              <span
+                className={cx(
+                  whileItem.isLight && "highlight-number",
+                  whileItem.isLight && whileItem.expr === "False" && "false"
+                )}
+              >
+                {whileItem.expr?.split("").map((char, index) => (
+                  <text key={index}>{char}</text>
+                ))}
+              </span>
+            </div>
+          </div>
         </motion.div>
         {children && <div>{children}</div>}
       </motion.div>
