@@ -4,7 +4,15 @@ import { VariablesDto, isVariablesDto } from "./variablesDto";
 import { IfElseDto, isIfElseDto } from "./ifElseDto";
 import { IfElseChangeDto, isIfElseChangeDto } from "./ifElseChangeDto";
 import { CodeFlowVariableDto, isCodeFlowVariableDto } from "./codeFlowVariableDto";
-export type ValidTypeDto = ForDto | PrintDto | VariablesDto | IfElseDto | IfElseChangeDto | CodeFlowVariableDto;
+import { WhileDto, isWhileDto } from "./whileDto";
+export type ValidTypeDto =
+  | ForDto
+  | PrintDto
+  | VariablesDto
+  | IfElseDto
+  | IfElseChangeDto
+  | CodeFlowVariableDto
+  | WhileDto;
 
 export const isValidTypeDto = (item: any): item is ValidTypeDto => {
   return (
@@ -13,7 +21,8 @@ export const isValidTypeDto = (item: any): item is ValidTypeDto => {
     isVariablesDto(item) ||
     isIfElseDto(item) ||
     isIfElseChangeDto(item) ||
-    isCodeFlowVariableDto(item)
+    isCodeFlowVariableDto(item) ||
+    isWhileDto(item)
   );
 };
 
