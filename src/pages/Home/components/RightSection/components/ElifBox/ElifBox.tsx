@@ -3,12 +3,13 @@ import styles from "./ElifBox.module.css";
 import cx from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { ConditionItem } from "@/pages/Home/types/conditionItem";
+
 type Props = {
-  children?: ReactNode;
+  children: ReactNode;
   isLight: boolean;
   elifItem: ConditionItem;
 };
-function IfBox({ children, isLight, elifItem }: Props) {
+function ElifBox({ children, isLight, elifItem }: Props) {
   return (
     <AnimatePresence key={elifItem.id}>
       <motion.div
@@ -46,4 +47,4 @@ function IfBox({ children, isLight, elifItem }: Props) {
   );
 }
 
-export default IfBox;
+export default ElifBox;
