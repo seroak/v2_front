@@ -2,151 +2,13 @@
   {
     "id": 2,
     "depth": 1,
-    "expr": "1",
-    "type": "variable"
-  },
-  {
-    "variables": [
-      {
-        "id": 2,
-        "expr": "1",
-        "name": "a",
-        "type": "variable"
-      }
-    ],
-    "type": "assign"
-  },
-  {
-    "id": 3,
-    "expr": "a < 10",
-    "depth": 1,
-    "type": "whileDefine"
-  },
-  {
-    "id": 3,
-    "depth": 1,
-    "expr": "a < 10",
-    "type": "whileChangeCondition"
-  },
-  {
-    "id": 3,
-    "depth": 1,
-    "expr": "1 < 10",
-    "type": "whileChangeCondition"
-  },
-  {
-    "id": 3,
-    "depth": 1,
-    "expr": "True",
-    "type": "whileChangeCondition"
-  },
-  {
-    "id": 4,
-    "depth": 1,
-    "expr": "a",
-    "highlights": [0],
-    "console": null,
-    "type": "print"
-  },
-  {
-    "id": 4,
-    "depth": 1,
-    "expr": "1",
-    "highlights": [0],
-    "console": "1\n",
-    "type": "print"
-  },
-  {
-    "id": 5,
-    "depth": 1,
-    "expr": "a + 1",
-    "type": "variable"
-  },
-  {
-    "id": 5,
-    "depth": 1,
-    "expr": "1 + 1",
-    "type": "variable"
-  },
-  {
-    "id": 5,
-    "depth": 1,
-    "expr": "2",
-    "type": "variable"
-  },
-  {
-    "variables": [
-      {
-        "id": 5,
-        "expr": "2",
-        "name": "a",
-        "type": "variable"
-      }
-    ],
-    "type": "assign"
-  },
-  {
-    "id": 3,
-    "expr": "a < 10",
-    "depth": 1,
-    "type": "whileDefine"
-  },
-  {
-    "id": 3,
-    "depth": 1,
-    "expr": "a < 10",
-    "type": "whileChangeCondition"
-  },
-  {
-    "id": 3,
-    "depth": 1,
-    "expr": "2 < 10",
-    "type": "whileChangeCondition"
-  },
-  {
-    "id": 3,
-    "depth": 1,
-    "expr": "True",
-    "type": "whileChangeCondition"
-  },
-  {
-    "id": 4,
-    "depth": 1,
-    "expr": "a",
-    "highlights": [0],
-    "console": null,
-    "type": "print"
-  },
-  {
-    "id": 4,
-    "depth": 1,
-    "expr": "2",
-    "highlights": [0],
-    "console": "2\n",
-    "type": "print"
-  },
-  {
-    "id": 5,
-    "depth": 1,
-    "expr": "a + 1",
-    "type": "variable"
-  },
-  {
-    "id": 5,
-    "depth": 1,
-    "expr": "2 + 1",
-    "type": "variable"
-  },
-  {
-    "id": 5,
-    "depth": 1,
     "expr": "3",
     "type": "variable"
   },
   {
     "variables": [
       {
-        "id": 5,
+        "id": 2,
         "expr": "3",
         "name": "a",
         "type": "variable"
@@ -158,6 +20,7 @@
     "id": 3,
     "expr": "a < 10",
     "depth": 1,
+    "orelse": false,
     "type": "whileDefine"
   },
   {
@@ -180,7 +43,7 @@
   },
   {
     "id": 4,
-    "depth": 1,
+    "depth": 2,
     "expr": "a",
     "highlights": [0],
     "console": null,
@@ -188,7 +51,7 @@
   },
   {
     "id": 4,
-    "depth": 1,
+    "depth": 2,
     "expr": "3",
     "highlights": [0],
     "console": "3\n",
@@ -196,19 +59,19 @@
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "a + 1",
     "type": "variable"
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "3 + 1",
     "type": "variable"
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "4",
     "type": "variable"
   },
@@ -227,6 +90,7 @@
     "id": 3,
     "expr": "a < 10",
     "depth": 1,
+    "orelse": false,
     "type": "whileDefine"
   },
   {
@@ -249,7 +113,7 @@
   },
   {
     "id": 4,
-    "depth": 1,
+    "depth": 2,
     "expr": "a",
     "highlights": [0],
     "console": null,
@@ -257,7 +121,7 @@
   },
   {
     "id": 4,
-    "depth": 1,
+    "depth": 2,
     "expr": "4",
     "highlights": [0],
     "console": "4\n",
@@ -265,19 +129,19 @@
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "a + 1",
     "type": "variable"
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "4 + 1",
     "type": "variable"
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "5",
     "type": "variable"
   },
@@ -296,6 +160,7 @@
     "id": 3,
     "expr": "a < 10",
     "depth": 1,
+    "orelse": false,
     "type": "whileDefine"
   },
   {
@@ -318,7 +183,7 @@
   },
   {
     "id": 4,
-    "depth": 1,
+    "depth": 2,
     "expr": "a",
     "highlights": [0],
     "console": null,
@@ -326,7 +191,7 @@
   },
   {
     "id": 4,
-    "depth": 1,
+    "depth": 2,
     "expr": "5",
     "highlights": [0],
     "console": "5\n",
@@ -334,19 +199,19 @@
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "a + 1",
     "type": "variable"
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "5 + 1",
     "type": "variable"
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "6",
     "type": "variable"
   },
@@ -365,6 +230,7 @@
     "id": 3,
     "expr": "a < 10",
     "depth": 1,
+    "orelse": false,
     "type": "whileDefine"
   },
   {
@@ -387,7 +253,7 @@
   },
   {
     "id": 4,
-    "depth": 1,
+    "depth": 2,
     "expr": "a",
     "highlights": [0],
     "console": null,
@@ -395,7 +261,7 @@
   },
   {
     "id": 4,
-    "depth": 1,
+    "depth": 2,
     "expr": "6",
     "highlights": [0],
     "console": "6\n",
@@ -403,19 +269,19 @@
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "a + 1",
     "type": "variable"
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "6 + 1",
     "type": "variable"
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "7",
     "type": "variable"
   },
@@ -434,6 +300,7 @@
     "id": 3,
     "expr": "a < 10",
     "depth": 1,
+    "orelse": false,
     "type": "whileDefine"
   },
   {
@@ -456,7 +323,7 @@
   },
   {
     "id": 4,
-    "depth": 1,
+    "depth": 2,
     "expr": "a",
     "highlights": [0],
     "console": null,
@@ -464,7 +331,7 @@
   },
   {
     "id": 4,
-    "depth": 1,
+    "depth": 2,
     "expr": "7",
     "highlights": [0],
     "console": "7\n",
@@ -472,19 +339,19 @@
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "a + 1",
     "type": "variable"
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "7 + 1",
     "type": "variable"
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "8",
     "type": "variable"
   },
@@ -503,6 +370,7 @@
     "id": 3,
     "expr": "a < 10",
     "depth": 1,
+    "orelse": false,
     "type": "whileDefine"
   },
   {
@@ -525,7 +393,7 @@
   },
   {
     "id": 4,
-    "depth": 1,
+    "depth": 2,
     "expr": "a",
     "highlights": [0],
     "console": null,
@@ -533,7 +401,7 @@
   },
   {
     "id": 4,
-    "depth": 1,
+    "depth": 2,
     "expr": "8",
     "highlights": [0],
     "console": "8\n",
@@ -541,19 +409,19 @@
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "a + 1",
     "type": "variable"
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "8 + 1",
     "type": "variable"
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "9",
     "type": "variable"
   },
@@ -572,6 +440,7 @@
     "id": 3,
     "expr": "a < 10",
     "depth": 1,
+    "orelse": false,
     "type": "whileDefine"
   },
   {
@@ -594,7 +463,7 @@
   },
   {
     "id": 4,
-    "depth": 1,
+    "depth": 2,
     "expr": "a",
     "highlights": [0],
     "console": null,
@@ -602,7 +471,7 @@
   },
   {
     "id": 4,
-    "depth": 1,
+    "depth": 2,
     "expr": "9",
     "highlights": [0],
     "console": "9\n",
@@ -610,19 +479,19 @@
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "a + 1",
     "type": "variable"
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "9 + 1",
     "type": "variable"
   },
   {
     "id": 5,
-    "depth": 1,
+    "depth": 2,
     "expr": "10",
     "type": "variable"
   },
@@ -641,6 +510,7 @@
     "id": 3,
     "expr": "a < 10",
     "depth": 1,
+    "orelse": false,
     "type": "whileDefine"
   },
   {
