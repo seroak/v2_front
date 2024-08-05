@@ -68,8 +68,8 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
             return (
               <AnimatePresence key={elseItem.id} mode="wait">
                 <motion.div key={elseItem.id} layout>
-                  <ElseBox isLight={codeFlow.isLight} elseItem={elseItem}>
-                    {renderingCodeFlow(codeFlow.child)}
+                  <ElseBox isLight={elseItem.isLight} elseItem={elseItem}>
+                    {renderingCodeFlow(elseItem.child)}
                   </ElseBox>
                 </motion.div>
               </AnimatePresence>
