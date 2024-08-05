@@ -40,16 +40,16 @@ const ForBox = ({ children, forItem }: Props) => {
             </motion.div>
             <motion.div>
               <span className="code-var-title">start</span>
-              <span className={cx(forItem.isLight && forItem.isCurLight && "highlight-number")}>{forItem.start}</span>
+              <span className={cx(forItem.isLight && forItem.isStartLight && "highlight-number")}>{forItem.start}</span>
             </motion.div>
             <motion.div>
               <span className="code-var-title">end</span>
-              <span className={cx(forItem.isLight && forItem.isCurLight && "highlight-number")}>{forItem.end}</span>
+              <span className={cx(forItem.isLight && forItem.isEndLight && "highlight-number")}>{forItem.end}</span>
             </motion.div>
             {forItem.step === "1" ? null : (
               <motion.div>
                 <span className="code-var-title">step</span>
-                <span className={cx(forItem.isLight && forItem.isCurLight && styles["highlight-number"])}>
+                <span className={cx(forItem.isLight && forItem.isStepLight && styles["highlight-number"])}>
                   {forItem.step}
                 </span>
               </motion.div>
