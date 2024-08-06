@@ -37,8 +37,8 @@ type Props = {
 };
 const CodeFlowVariableBox = ({ codeFlowVariableItem, isTracking }: Props) => {
   return (
-    <div className={styles.variable}>
-      <div className={cx(styles.variable_box, codeFlowVariableItem.isLight && styles.highlight)}>
+    <div className={styles["align-left"]}>
+      <div className={cx(styles["var-data"], codeFlowVariableItem.isLight && styles.highlight)}>
         <GetCodeFlowVariableBoxLocation
           key={codeFlowVariableItem.id}
           codeFlowVariableItem={codeFlowVariableItem}
@@ -46,9 +46,6 @@ const CodeFlowVariableBox = ({ codeFlowVariableItem, isTracking }: Props) => {
         >
           <span className={styles.text}>{codeFlowVariableItem.expr}</span>
         </GetCodeFlowVariableBoxLocation>
-    <div className={styles["align-left"]}>
-      <div className={cx(styles["var-data"], codeFlowVariableItem.isLight && styles.highlight)}>
-        <span>{codeFlowVariableItem.expr}</span>
       </div>
     </div>
   );
