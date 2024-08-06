@@ -1,3 +1,4 @@
+import { useRef, useEffect, ReactNode } from "react";
 import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
 import { PrintItem } from "@/pages/Home/types/printItem";
 import { AnimatePresence, motion } from "framer-motion";
@@ -15,26 +16,58 @@ import { ForItem } from "@/pages/Home/types/forItem";
 import { ConditionItem } from "@/pages/Home/types/conditionItem";
 import { CodeFlowVariableItem } from "@/pages/Home/types/codeFlow/codeFlowVariableItem";
 
-export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
+//zustand
+import { useArrowStore } from "@/store/arrow";
+
+interface Props {
+  codeFlow: AllObjectItem;
+  isTracking: boolean;
+  children?: ReactNode;
+}
+const CodeFlowItem = ({ codeFlow, isTracking, children }: Props) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const setTop = useArrowStore((state) => state.setTop);
+  const setRight = useArrowStore((state) => state.setRight);
+
+  useEffect(() => {
+    if (ref.current && isTracking) {
+      const rect = ref.current.getBoundingClientRect();
+      console.log(`Component ${codeFlow.type} (ID: ${codeFlow.id}) position:`, {
+        top: rect.top,
+        left: rect.left,
+        bottom: rect.bottom,
+        right: rect.right,
+        "top-right corner": `(${rect.right}, ${rect.top})`,
+      });
+      setTop(rect.top);
+      setRight(rect.right);
+    }
+  }, [codeFlow.id, codeFlow.type, isTracking]);
+
+  return <div ref={ref}>{children}</div>;
+};
+
+export const renderingCodeFlow = (codeFlows: AllObjectItem[], trackingId: number): ReactElement => {
   return (
     <>
       {codeFlows.map((codeFlow, index) => {
+        const isTracking = codeFlow.id === trackingId;
         switch (codeFlow.type) {
           case "print": {
             const printItem = codeFlow as PrintItem;
             return (
-              <div key={index}>
-                <PrintBox key={index} printItem={printItem} />
-                {renderingCodeFlow(printItem.child)}
-              </div>
+              <CodeFlowItem key={index} codeFlow={codeFlow} isTracking={isTracking}>
+                <PrintBox printItem={printItem} />
+                {renderingCodeFlow(printItem.child, trackingId)}
+              </CodeFlowItem>
             );
           }
           case "for": {
             const forItem = codeFlow as ForItem;
             return (
-              <div key={index}>
-                <ForBox key={index} forItem={forItem}>
-                  {renderingCodeFlow(forItem.child)}
+              <div>
+                <ForBox forItem={forItem} isTracking={isTracking}>
+                  {renderingCodeFlow(forItem.child, trackingId)}
                 </ForBox>
               </div>
             );
@@ -44,9 +77,11 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
             return (
               <AnimatePresence key={ifItem.id} mode="wait">
                 <motion.div key={ifItem.id} layout>
-                  <IfBox isLight={codeFlow.isLight} ifItem={ifItem}>
-                    {renderingCodeFlow(codeFlow.child)}
-                  </IfBox>
+                  <CodeFlowItem key={index} codeFlow={codeFlow} isTracking={isTracking}>
+                    <IfBox isLight={codeFlow.isLight} ifItem={ifItem}>
+                      {renderingCodeFlow(codeFlow.child, trackingId)}
+                    </IfBox>
+                  </CodeFlowItem>
                 </motion.div>
               </AnimatePresence>
             );
@@ -55,9 +90,11 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
             return (
               <AnimatePresence key={elifItem.id} mode="wait">
                 <motion.div key={elifItem.id} layout>
-                  <ElifBox isLight={codeFlow.isLight} elifItem={elifItem}>
-                    {renderingCodeFlow(codeFlow.child)}
-                  </ElifBox>
+                  <CodeFlowItem key={index} codeFlow={codeFlow} isTracking={isTracking}>
+                    <ElifBox isLight={codeFlow.isLight} elifItem={elifItem}>
+                      {renderingCodeFlow(codeFlow.child, trackingId)}
+                    </ElifBox>
+                  </CodeFlowItem>
                 </motion.div>
               </AnimatePresence>
             );
@@ -66,20 +103,21 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
             return (
               <AnimatePresence key={elseItem.id} mode="wait">
                 <motion.div key={elseItem.id} layout>
-                  <ElseBox isLight={codeFlow.isLight} elseItem={elseItem}>
-                    {renderingCodeFlow(codeFlow.child)}
-                  </ElseBox>
+                  <CodeFlowItem key={index} codeFlow={codeFlow} isTracking={isTracking}>
+                    <ElseBox isLight={codeFlow.isLight} elseItem={elseItem}>
+                      {renderingCodeFlow(codeFlow.child, trackingId)}
+                    </ElseBox>
+                  </CodeFlowItem>
                 </motion.div>
               </AnimatePresence>
             );
           case "variable":
             const variableItem = codeFlow as CodeFlowVariableItem;
             return (
-              <div key={variableItem.id}>
-                <CodeFlowVariableBox key={index} codeFlowVariableItem={variableItem} />
+              <div>
+                <CodeFlowVariableBox codeFlowVariableItem={variableItem} isTracking={isTracking} />
               </div>
             );
-
           default:
             throw new Error(`${codeFlow.type} is unexpected type`);
         }
