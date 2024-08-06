@@ -8,12 +8,14 @@ import IfBox from "./components/IfBox/IfBox";
 import ElseBox from "./components/ElseBox/ElseBox";
 import ElifBox from "./components/ElifBox/ElifBox";
 import CodeFlowVariableBox from "./components/CodeFlowVariableBox/CodeFlowVariableBox";
+import WhileBox from "./components/WhileBox/WhileBox";
 
 // type import
 import { ElseItem } from "@/pages/Home/types/elseItem";
 import { ForItem } from "@/pages/Home/types/forItem";
 import { ConditionItem } from "@/pages/Home/types/conditionItem";
 import { CodeFlowVariableItem } from "@/pages/Home/types/codeFlow/codeFlowVariableItem";
+import { WhileItem } from "@/pages/Home/types/codeFlow/whileItem";
 
 export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
   return (
@@ -66,8 +68,8 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
             return (
               <AnimatePresence key={elseItem.id} mode="wait">
                 <motion.div key={elseItem.id} layout>
-                  <ElseBox isLight={codeFlow.isLight} elseItem={elseItem}>
-                    {renderingCodeFlow(codeFlow.child)}
+                  <ElseBox isLight={elseItem.isLight} elseItem={elseItem}>
+                    {renderingCodeFlow(elseItem.child)}
                   </ElseBox>
                 </motion.div>
               </AnimatePresence>
@@ -79,7 +81,15 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[]): ReactElement => {
                 <CodeFlowVariableBox key={index} codeFlowVariableItem={variableItem} />
               </div>
             );
-
+          case "while":
+            const whileItem = codeFlow as WhileItem;
+            return (
+              <div key={whileItem.id}>
+                <WhileBox key={index} whileItem={whileItem}>
+                  {renderingCodeFlow(whileItem.child)}
+                </WhileBox>
+              </div>
+            );
           default:
             throw new Error(`${codeFlow.type} is unexpected type`);
         }

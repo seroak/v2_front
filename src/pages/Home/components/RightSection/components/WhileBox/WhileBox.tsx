@@ -1,24 +1,25 @@
 import { ReactNode } from "react";
-import styles from "./ElifBox.module.css";
+
+import "@/pages/Home/components/RightSection/RightSection.css";
 import cx from "classnames";
+import { WhileItem } from "@/pages/Home/types/codeFlow/whileItem";
 import { AnimatePresence, motion } from "framer-motion";
-import { ConditionItem } from "@/pages/Home/types/conditionItem";
 
 type Props = {
   children: ReactNode;
-  isLight: boolean;
-  elifItem: ConditionItem;
+  whileItem: WhileItem;
 };
-function ElifBox({ children, isLight, elifItem }: Props) {
+
+const WhileBox = ({ children, whileItem }: Props) => {
   return (
-    <AnimatePresence key={elifItem.id}>
+    <AnimatePresence key={whileItem.id}>
       <motion.div
         layout
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className={cx("code-flow", isLight && "highlight-border")}
+        className={cx("code-flow", "code-flow-While", whileItem.isLight && "highlight-border")}
       >
         <motion.div
           layout
@@ -26,15 +27,20 @@ function ElifBox({ children, isLight, elifItem }: Props) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className={cx("code-flow-title-wrap")}
+          className={cx("code-flow-title-wrap", whileItem.isLight && "highlight")}
         >
-          <motion.div layout className="code-flow-title">
-            <span>elif</span>
+          <motion.div className="code-flow-title">
+            <span>while</span>
           </motion.div>
           <div className="code-flow-var">
             <div>
-              <span className={cx(isLight && "highlight-number", isLight && elifItem.expr === "False" && styles.false)}>
-                {elifItem.expr?.split("").map((char, index) => (
+              <span
+                className={cx(
+                  whileItem.isLight && "highlight-number",
+                  whileItem.isLight && whileItem.expr === "False" && "false"
+                )}
+              >
+                {whileItem.expr?.split("").map((char, index) => (
                   <text key={index}>{char}</text>
                 ))}
               </span>
@@ -45,6 +51,6 @@ function ElifBox({ children, isLight, elifItem }: Props) {
       </motion.div>
     </AnimatePresence>
   );
-}
+};
 
-export default ElifBox;
+export default WhileBox;

@@ -7,8 +7,11 @@ import { PrintDataToAdd } from "@/pages/Home/types/dataToAdd/printDataToAdd";
 import { IfElseDataToAdd } from "@/pages/Home/types/dataToAdd/ifElseDataToAdd";
 import { IfElseChangeDataToAdd } from "@/pages/Home/types/dataToAdd/ifElseChangeDataToAdd";
 import { CodeFlowVariableDtoToAdd } from "@/pages/Home/types/dataToAdd/codeFlowVariableDataToAdd";
+import { WhileDto } from "@/pages/Home/types/dto/whileDto";
 // 스택에 넣을 객체를 생성하는 함수
-export const createObjectToAdd = (preprocessedCode: PrintDataToAdd | ForDataToAdd | IfElseDataToAdd): AllObjectItem => {
+export const createObjectToAdd = (
+  preprocessedCode: PrintDataToAdd | ForDataToAdd | IfElseDataToAdd | WhileDto
+): AllObjectItem => {
   const baseObject: AllObjectItem = {
     id: preprocessedCode.id!,
     type: preprocessedCode.type,
@@ -69,34 +72,41 @@ export const createObjectToAdd = (preprocessedCode: PrintDataToAdd | ForDataToAd
       return {
         ...(baseObject as ConditionItem),
         highlights: [],
-        expr: (preprocessedCode as IfElseDataToAdd).expr!,
+        expr: (preprocessedCode as IfElseDataToAdd).expr,
       };
 
     case "elif":
       return {
         ...(baseObject as ConditionItem),
         highlights: [],
-        expr: (preprocessedCode as IfElseDataToAdd).expr!,
+        expr: (preprocessedCode as IfElseDataToAdd).expr,
       };
 
     case "else":
       return {
         ...(baseObject as ConditionItem),
         highlights: [],
-        expr: (preprocessedCode as IfElseDataToAdd).expr!,
+        expr: (preprocessedCode as IfElseDataToAdd).expr,
       };
 
     case "ifelsechange":
       return {
         ...baseObject,
         highlights: (preprocessedCode as IfElseChangeDataToAdd).highlights!,
-        expr: (preprocessedCode as IfElseChangeDataToAdd).expr!,
+        expr: (preprocessedCode as IfElseChangeDataToAdd).expr,
       };
 
     case "variable":
       return {
         ...baseObject,
-        expr: (preprocessedCode as CodeFlowVariableDtoToAdd).expr!,
+        expr: (preprocessedCode as CodeFlowVariableDtoToAdd).expr,
+      };
+    case "whilechangecondition":
+      return {
+        ...baseObject,
+        type: "while",
+        highlights: [],
+        expr: (preprocessedCode as WhileDto).expr,
       };
     default:
       throw new Error(`Unsupported type: ${type}`);

@@ -27,7 +27,7 @@ const ForBox = ({ children, forItem }: Props) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className={cx("code-flow-title-wrap", forItem.isLight && styles.highlight)}
+          className={cx("code-flow-title-wrap")}
         >
           <motion.div className="code-flow-title">
             <span>for</span>

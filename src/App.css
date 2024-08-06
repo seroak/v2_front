@@ -324,3 +324,6 @@ input[type="checkbox"] {
 
   /* popup 끝 */
 }
+.false {
+  background-color: #ff0000 !important;
+}

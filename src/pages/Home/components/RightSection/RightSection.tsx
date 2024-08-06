@@ -71,7 +71,9 @@ const RightSection = () => {
     let accConsoleLog: string = "";
     for (let preprocessedCode of preprocessedCodes) {
       let changedCodeFlows: AllObjectItem[] = [];
-
+      if (preprocessedCode.type.toLowerCase() === "whiledefine") {
+        continue;
+      }
       // 자료구조 시각화 부분이 들어왔을 때
       if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
         (preprocessedCode as VariablesDto).variables.forEach((variable: VariablesItem) => {
