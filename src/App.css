@@ -335,3 +335,6 @@ input[type="checkbox"] {
   margin-top: 11px;
   margin-right: 8px;
 }
+.false {
+  background-color: #ff0000 !important;
+}

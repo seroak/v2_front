@@ -1,6 +1,6 @@
 import { http, HttpResponse } from "msw";
 import successForAndPrintResponseBody from "./samples/testResponseBody.json";
-
+import whileResponseBody from "./samples/whileResponseBody.json";
 interface User {
   userId: string;
   userPassword: string;
@@ -14,7 +14,7 @@ interface SignupUser {
 }
 export const handlers = [
   http.post("/v1/python", () => {
-    return HttpResponse.json(successForAndPrintResponseBody);
+    return HttpResponse.json(whileResponseBody);
   }),
   http.post("http://localhost:8000/login", async ({ request }) => {
     const { userId, userPassword } = (await request.json()) as User;

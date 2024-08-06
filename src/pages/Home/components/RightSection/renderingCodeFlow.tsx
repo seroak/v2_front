@@ -9,12 +9,14 @@ import IfBox from "./components/IfBox/IfBox";
 import ElseBox from "./components/ElseBox/ElseBox";
 import ElifBox from "./components/ElifBox/ElifBox";
 import CodeFlowVariableBox from "./components/CodeFlowVariableBox/CodeFlowVariableBox";
+import WhileBox from "./components/WhileBox/WhileBox";
 
 // type import
 import { ElseItem } from "@/pages/Home/types/elseItem";
 import { ForItem } from "@/pages/Home/types/forItem";
 import { ConditionItem } from "@/pages/Home/types/conditionItem";
 import { CodeFlowVariableItem } from "@/pages/Home/types/codeFlow/codeFlowVariableItem";
+import { WhileItem } from "@/pages/Home/types/codeFlow/whileItem";
 
 //zustand
 import { useArrowStore } from "@/store/arrow";
@@ -109,6 +111,15 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[], trackingId: number
             return (
               <div>
                 <CodeFlowVariableBox codeFlowVariableItem={variableItem} isTracking={isTracking} />
+              </div>
+            );
+          case "while":
+            const whileItem = codeFlow as WhileItem;
+            return (
+              <div key={whileItem.id}>
+                <WhileBox key={index} whileItem={whileItem}>
+                  {renderingCodeFlow(whileItem.child, trackingId)}
+                </WhileBox>
               </div>
             );
           default:
