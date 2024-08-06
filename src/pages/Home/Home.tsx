@@ -59,6 +59,7 @@ export default function Home() {
     async onSuccess(data) {
       try {
         const jsonData = await data.json();
+        console.log(jsonData);
         // 타입 체크 함수
         if (isValidTypeDtoArray(jsonData)) {
           setPreprocessedCodes(jsonData);
