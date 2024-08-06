@@ -1,8 +1,8 @@
 import styles from "./ListWrapper.module.css";
 import { ListBlock } from "./components/ListBlock";
-import { VizListItem } from "@/pages/Home/types/vizListItem";
+import { DataStructureListItem } from "@/pages/Home/types/dataStructureListItem";
 type Props = {
-  listItem: VizListItem;
+  listItem: DataStructureListItem;
 };
 function ListWrapper({ listItem }: Props) {
   const { expr, isLight, name } = listItem;

@@ -34,11 +34,13 @@ describe("renderingCodeFlow 함수", () => {
         step: 2,
         target: "i",
         type: "for",
+        code: "for i in range(0, 3, 2):",
         child: [],
       },
     ];
+    const mockTrakingId = 1;
 
-    render(<>{renderingCodeFlow(mockCodeFlows)}</>);
+    render(<>{renderingCodeFlow(mockCodeFlows, mockTrakingId)}</>);
 
     // ForBox가 렌더링되었는지 확인
     // 테스트를 위해 만든 가짜 ForBox 컴포넌트를 사용
@@ -63,6 +65,7 @@ describe("renderingCodeFlow 함수", () => {
         isStepLight: true,
         start: 0,
         step: 2,
+        code: "for i in range(0, 3, 2):",
         target: "i",
         type: "for",
         child: [
@@ -78,6 +81,7 @@ describe("renderingCodeFlow 함수", () => {
             isStepLight: true,
             start: 0,
             step: 2,
+            code: "for j in range(0, 3, 2):",
             target: "i",
             type: "for",
             child: [],
@@ -85,8 +89,8 @@ describe("renderingCodeFlow 함수", () => {
         ],
       },
     ];
-
-    render(<>{renderingCodeFlow(mockCodeFlows)}</>);
+    const mockTrakingId = 1;
+    render(<>{renderingCodeFlow(mockCodeFlows, mockTrakingId)}</>);
 
     // 외부 ForBox가 렌더링되었는지 확인
     const outerForBox = screen.getByText("For Box: 1");

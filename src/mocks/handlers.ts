@@ -1,5 +1,4 @@
 import { http, HttpResponse } from "msw";
-import successForAndPrintResponseBody from "./samples/testResponseBody.json";
 import whileResponseBody from "./samples/whileResponseBody.json";
 interface User {
   userId: string;

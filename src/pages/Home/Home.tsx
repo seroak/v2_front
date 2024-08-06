@@ -62,6 +62,7 @@ export default function Home() {
         // 타입 체크 함수
         if (isValidTypeDtoArray(jsonData)) {
           setPreprocessedCodes(jsonData);
+          console.log(jsonData);
         } else {
           throw new Error("받은 데이터가 올바르지 않습니다");
         }

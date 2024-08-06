@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 
-import "@/pages/Home/components/RightSection/RightSection.css";
 import cx from "classnames";
 import { WhileItem } from "@/pages/Home/types/codeFlow/whileItem";
 import { AnimatePresence, motion } from "framer-motion";
