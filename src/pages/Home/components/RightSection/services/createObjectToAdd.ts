@@ -8,6 +8,7 @@ import { IfElseDataToAdd } from "@/pages/Home/types/dataToAdd/ifElseDataToAdd";
 import { IfElseChangeDataToAdd } from "@/pages/Home/types/dataToAdd/ifElseChangeDataToAdd";
 import { CodeFlowVariableDtoToAdd } from "@/pages/Home/types/dataToAdd/codeFlowVariableDataToAdd";
 import { WhileDto } from "@/pages/Home/types/dto/whileDto";
+import { CodeFlowListDto } from "@/pages/Home/types/dto/codeFlowListDto";
 // 스택에 넣을 객체를 생성하는 함수
 export const createObjectToAdd = (
   preprocessedCode: PrintDataToAdd | ForDataToAdd | IfElseDataToAdd | WhileDto
@@ -100,6 +101,11 @@ export const createObjectToAdd = (
       return {
         ...baseObject,
         expr: (preprocessedCode as CodeFlowVariableDtoToAdd).expr,
+      };
+    case "list":
+      return {
+        ...baseObject,
+        expr: (preprocessedCode as CodeFlowListDto).expr,
       };
     case "whilechangecondition":
       return {

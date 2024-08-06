@@ -11,6 +11,7 @@ export interface CodeItem {
   end?: number;
   cur?: number;
   expr?: string;
+  code?: string;
   highlights?: number[] | string[];
   condition?: ConditionItem;
   variables?: AssignVizItem[];
