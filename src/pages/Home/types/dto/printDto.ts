@@ -4,6 +4,7 @@ export interface PrintDto {
   expr: string;
   highlights: Array<string>;
   console: string | null;
+  code: string;
   type: string;
 }
 
@@ -14,6 +15,7 @@ export const isPrintDto = (item: any): item is PrintDto => {
     typeof item.expr === "string" &&
     typeof item.highlights === "object" &&
     (typeof item.console === "string" || item.console === null) &&
+    typeof item.code === "string" &&
     typeof item.type === "string"
   );
 };

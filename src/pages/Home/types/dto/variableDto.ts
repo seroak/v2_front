@@ -3,5 +3,6 @@ export interface VariableDto {
   expr: string;
   highlights: number[];
   name: string;
+  code: string;
   type: string;
 }
