@@ -11,7 +11,7 @@ import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Home/types/dto/ValidT
 
 //zustand store
 import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
-
+import { useArrowStore } from "@/store/arrow";
 // 원본 코드 타입 정의
 interface CodeContextType {
   code: string;
@@ -45,7 +45,7 @@ export default function Home() {
   const setConsoleIdx = useConsoleStore((state) => state.setConsoleIdx);
   const consoleIdx = useConsoleStore((state) => state.consoleIdx);
   const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
-
+  const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
   const mutation = useMutation({
     mutationFn: async (code: string) => {
       return fetch("http://localhost:8000/v1/python", {
@@ -77,6 +77,7 @@ export default function Home() {
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setDisplayNone(false);
     mutation.mutate(code);
   };
 
