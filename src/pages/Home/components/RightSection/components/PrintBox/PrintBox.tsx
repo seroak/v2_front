@@ -59,7 +59,10 @@ function printBox({ printItem }: Props) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className={cx(printItem.isLight && printItem.highlights?.includes(index) && "highlight-text")}
+                className={cx(
+                  styles["print-text"],
+                  printItem.isLight && printItem.highlights?.includes(index) && "highlight-text"
+                )}
                 style={{ whiteSpace: "pre", fontSize: "18px" }}
               >
                 {char}

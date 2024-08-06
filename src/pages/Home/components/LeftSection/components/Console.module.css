@@ -1,15 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
 
-.container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  background-color: black;
-  font-family: "Roboto Mono", monospace;
-  font-optical-sizing: auto;
-  font-style: normal;
-}
-
 .scrollContainer {
   height: 300px; /* 원하는 높이로 조절 가능 */
   overflow-y: auto;
