@@ -1,5 +1,5 @@
 import styles from "./ListWrapper.module.css";
-import { ListBlock } from "./components/CodeFlowListBlock";
+import { CodeFlowListBlock } from "./components/CodeFlowListBlock";
 import { DataStructureListItem } from "@/pages/Home/types/dataStructureListItem";
 type Props = {
   listItem: DataStructureListItem;
@@ -13,7 +13,7 @@ function ListWrapper({ listItem }: Props) {
       <span>{name}</span>
       <div className={styles.wrapper}>
         {exprArray?.map((exprItem, index) => {
-          return <ListBlock key={index} exprItem={exprItem} isLight={isLight} index={index} />;
+          return <CodeFlowListBlock key={index} exprItem={exprItem} isLight={isLight} index={index} />;
         })}
       </div>
     </div>
