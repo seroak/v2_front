@@ -4,17 +4,20 @@ import "./RightSection.css";
 import Split from "react-split";
 import _ from "lodash";
 
+// components
+import Arrow from "./components/Arrow/Arrow";
+
 // 타입 정의
 import { CodeItem } from "@/pages/Home/types/codeItem";
 import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
 import { ActivateItem } from "@/pages/Home/types/activateItem";
-import { VariablesItem } from "@/pages/Home/types/variablesItem";
 import { VariablesDto } from "@/pages/Home/types/dto/variablesDto";
 import { ForDto } from "@/pages/Home/types/dto/forDto";
 import { PrintDto } from "@/pages/Home/types/dto/printDto";
 import { IfElseDto } from "@/pages/Home/types/dto/ifElseDto";
 import { CodeFlowVariableDto } from "@/pages/Home/types/dto/codeFlowVariableDto";
 import { PrintItem } from "@/pages/Home/types/printItem";
+import { VariableDto } from "@/pages/Home/types/dto/variableDto";
 
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
@@ -55,9 +58,11 @@ const RightSection = () => {
   const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
   const { preprocessedCodes } = context;
 
+  const [arrowTextList, setArrowTextList] = useState<string[]>([]);
+  const [trackingIdList, setTrackingIdList] = useState<number[]>([]);
   // codeFlowList를 업데이트하는 useEffect
   useEffect(() => {
-    let trackingId: number = 0;
+    const trackingIds: number[] = [];
     let activate: ActivateItem[] = [];
     const usedId: number[] = [];
     const usedName: string[] = [];
@@ -69,12 +74,16 @@ const RightSection = () => {
     const accDataStructuresList: CodeItem[][] = [];
     const accConsoleLogList: string[] = [];
     let accConsoleLog: string = "";
+    const arrowTexts: string[] = [];
     for (let preprocessedCode of preprocessedCodes) {
       let changedCodeFlows: AllObjectItem[] = [];
 
       // 자료구조 시각화 부분이 들어왔을 때
       if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
-        (preprocessedCode as VariablesDto).variables.forEach((variable: VariablesItem) => {
+        (preprocessedCode as VariablesDto).variables.forEach((variable: VariableDto) => {
+          // 자료구조 시각화에서 화살표에 넣을 코드를 넣는다
+          arrowTexts.push(variable.code);
+          trackingIds.push(variable.id);
           // 이미 한번 자료구조 시각화에 표현된 name인 경우
           if (usedName.includes(variable.name!)) {
             const targetName = variable.name!;
@@ -97,6 +106,9 @@ const RightSection = () => {
       else {
         // ifelseDefine 타입
         if (preprocessedCode.type.toLowerCase() === "ifElseDefine".toLocaleLowerCase()) {
+          // ifelseDefine에서 화살표에 넣을 코드를 넣는다
+          arrowTexts.push((preprocessedCode as IfElseDto).code);
+          trackingIds.push((preprocessedCode as IfElseDto).conditions[0].id);
           // ifelse가 들어왔을 때 한번에 모든 노드의 Light를 다 false로  바꿔주는 함수
           const turnoff = turnOffAllNodeLight(accCodeFlow.objects);
 
@@ -125,6 +137,9 @@ const RightSection = () => {
         }
         //그밖의 타입
         else {
+          // 그밖의 타입에서 화살표에 넣을 코드를 넣는다
+          arrowTexts.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).code);
+          trackingIds.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id);
           const toAddObject = createObjectToAdd(
             preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
           );
@@ -149,7 +164,6 @@ const RightSection = () => {
           activate = updateActivate(activate, toAddObject);
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
           accCodeFlow = { objects: finallyCodeFlow };
-          trackingId = toAddObject.id;
         }
       }
       // 불을 켜줘야하는 자료구조의의 name을 담는 배열
@@ -179,6 +193,8 @@ const RightSection = () => {
     setStructuresList(accDataStructuresList);
     setConsole(accConsoleLogList);
     setCodeFlowLength(accCodeFlowList.length);
+    setArrowTextList(arrowTexts);
+    setTrackingIdList(trackingIds);
   }, [preprocessedCodes]);
 
   return (
@@ -202,17 +218,20 @@ const RightSection = () => {
             <p className="data-name">변수</p>
 
             <ul className="var-list">
-              {StructuresList?.length > 0 && consoleIdx >= 0 && renderingStructure(StructuresList[consoleIdx])}
+              {StructuresList?.length > 0 &&
+                consoleIdx >= 0 &&
+                renderingStructure(StructuresList[consoleIdx], trackingIdList[consoleIdx])}
             </ul>
           </div>
         </div>
         <div id="split-2-2" className="view-section2-2">
+          <Arrow code={arrowTextList[consoleIdx]} />
           <div className="view-data">
             <p className="data-name">코드흐름</p>
 
             {codeFlowList?.length > 0 &&
               consoleIdx >= 0 &&
-              renderingCodeFlow(codeFlowList[consoleIdx].objects[0].child)}
+              renderingCodeFlow(codeFlowList[consoleIdx].objects[0].child, trackingIdList[consoleIdx])}
           </div>
         </div>
       </Split>
