@@ -32,13 +32,6 @@ const CodeFlowItem = ({ codeFlow, isTracking, children }: Props) => {
   useEffect(() => {
     if (ref.current && isTracking) {
       const rect = ref.current.getBoundingClientRect();
-      console.log(`Component ${codeFlow.type} (ID: ${codeFlow.id}) position:`, {
-        top: rect.top,
-        left: rect.left,
-        bottom: rect.bottom,
-        right: rect.right,
-        "top-right corner": `(${rect.right}, ${rect.top})`,
-      });
       setTop(rect.top);
       setRight(rect.right);
     }
