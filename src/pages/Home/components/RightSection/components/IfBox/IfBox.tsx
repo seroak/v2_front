@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import "../../RightSection.css";
+
 import styles from "./IfBox.module.css";
 import cx from "classnames";
 import { AnimatePresence, motion } from "framer-motion";

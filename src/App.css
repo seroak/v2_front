@@ -324,6 +324,17 @@ input[type="checkbox"] {
 
   /* popup 끝 */
 }
+.code-target {
+  display: flex;
+  align-items: flex-start;
+  position: absolute;
+  transition: all 0.3s;
+  z-index: 9999;
+}
+.code-target img {
+  margin-top: 11px;
+  margin-right: 8px;
+}
 .false {
   background-color: #ff0000 !important;
 }

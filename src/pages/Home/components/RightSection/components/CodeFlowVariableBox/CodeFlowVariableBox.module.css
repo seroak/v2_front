@@ -14,7 +14,7 @@ span {
   margin-bottom: 4px;
   display: inline-block;
 }
-.var-data > span {
+.var-data span {
   display: inline-block;
   min-width: 10px;
   border-radius: 4px;
@@ -23,14 +23,7 @@ span {
 
   position: relative;
 }
-.var-data > span > span {
-  position: absolute;
-  bottom: -28px;
-  color: rgba(24, 24, 24, 0.3);
-  left: 50%;
-  text-wrap: nowrap;
-  transform: translateX(-50%);
-}
+
 .align-left {
   margin-top: 20px;
   width: 100%;

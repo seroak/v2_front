@@ -9,6 +9,7 @@ export interface ForDto {
     step: string;
   };
   highlights: Array<string>;
+  code: string;
   type: string;
 }
 
@@ -23,6 +24,7 @@ export const isForDto = (item: any): item is ForDto => {
     typeof item.condition.end === "string" &&
     typeof item.condition.step === "string" &&
     typeof item.highlights === "object" &&
+    typeof item.code === "string" &&
     typeof item.type === "string"
   );
 };
