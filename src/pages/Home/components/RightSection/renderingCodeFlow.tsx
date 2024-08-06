@@ -16,6 +16,7 @@ import { ElseItem } from "@/pages/Home/types/elseItem";
 import { ForItem } from "@/pages/Home/types/forItem";
 import { ConditionItem } from "@/pages/Home/types/conditionItem";
 import { CodeFlowVariableItem } from "@/pages/Home/types/codeFlow/codeFlowVariableItem";
+import { CodeFlowListItem } from "@/pages/Home/types/codeFlow/codeFlowListItem";
 import { WhileItem } from "@/pages/Home/types/codeFlow/whileItem";
 
 //zustand
@@ -111,6 +112,14 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[], trackingId: number
             return (
               <div>
                 <CodeFlowVariableBox codeFlowVariableItem={variableItem} isTracking={isTracking} />
+              </div>
+            );
+          case "list":
+            const listItem = codeFlow as CodeFlowListItem;
+            console.log("listItem", listItem);
+            return (
+              <div>
+                <CodeFlowListBox codeFlowVariableItem={listItem} isTracking={isTracking} />
               </div>
             );
           case "while":
