@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
+
 .print {
   display: flex;
   flex-direction: column;
@@ -39,4 +41,11 @@
 }
 .padding {
   padding-bottom: 18px !important;
+}
+.print-text {
+  white-space: "pre";
+  font-size: "18px";
+  font-family: "Roboto Mono", monospace;
+  font-optical-sizing: auto;
+  font-style: normal;
 }
