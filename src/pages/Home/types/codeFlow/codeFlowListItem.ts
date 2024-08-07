@@ -1,4 +1,4 @@
-export interface CodeFlowVariableItem {
+export interface CodeFlowListItem {
   id: number;
   depth: number;
   isLight: boolean;

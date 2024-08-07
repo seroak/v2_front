@@ -1,11 +1,12 @@
-export interface IfElseChangeDto {
+export interface CodeFlowListDto {
   id: number;
   depth: number;
   expr: string;
-  code: string;
   type: string;
+  code: string;
 }
-export const isIfElseChangeDto = (item: any): item is IfElseChangeDto => {
+
+export const isCodeFlowVariableDto = (item: any): item is CodeFlowListDto => {
   return (
     typeof item.id === "number" &&
     typeof item.depth === "number" &&
