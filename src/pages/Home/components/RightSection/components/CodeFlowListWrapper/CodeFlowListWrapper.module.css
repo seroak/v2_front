@@ -2,7 +2,7 @@
 .wrapper {
   display: flex;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 40px;
 }
 .fit-content {
   width: fit-content;
