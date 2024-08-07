@@ -6,7 +6,7 @@ type Props = {
   isLight: boolean;
   index: number;
 };
-export const CodeFlowListBlock = ({ exprItem, isLight, index }: Props) => {
+const CodeFlowListBlock = ({ exprItem, isLight, index }: Props) => {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
       <div className={cx(styles["var-data"], isLight && styles.highlight)}>
@@ -16,3 +16,4 @@ export const CodeFlowListBlock = ({ exprItem, isLight, index }: Props) => {
     </div>
   );
 };
+export default CodeFlowListBlock;
