@@ -98,10 +98,9 @@ const RightSection = () => {
             usedName.push(variable.name!);
           }
 
-          if (variable.type.toLowerCase() === "variable".toLowerCase()) {
-            let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, variable.id!);
-            accCodeFlow = { objects: deletedCodeFlow };
-          }
+          // 코드 흐름 시각화에서 표현된 자료구조 시각화 객체를 삭제하는 부분
+          let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, variable.id!);
+          accCodeFlow = { objects: deletedCodeFlow };
         });
       }
       // 코드 시각화 부분이 들어왔을 때

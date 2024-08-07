@@ -335,6 +335,14 @@ input[type="checkbox"] {
   margin-top: 11px;
   margin-right: 8px;
 }
+/* 코드 흐름 시각화의 자료구조 왼쪽 정렬 */
+.align-left {
+  margin-top: 20px;
+  width: 100%;
+  box-sizing: border-box;
+
+  text-align: left;
+}
 .false {
   background-color: #ff0000 !important;
 }
