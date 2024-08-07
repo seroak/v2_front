@@ -29,6 +29,13 @@ span {
   color: rgba(24, 24, 24, 0.3);
   text-align: center;
 }
+.align-left {
+  margin-top: 20px;
+  width: 100%;
+  box-sizing: border-box;
+
+  text-align: left;
+}
 .highlight {
   background-color: #364fce;
 }

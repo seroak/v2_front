@@ -40,7 +40,7 @@ function CodeFlowListWrapper({ codeFlowListItem, isTracking }: Props) {
   const exprArray = expr?.slice(1, -1).split(",");
 
   return (
-    <div>
+    <div className={styles["align-left"]}>
       <GetCodeFlowWrapperBoxLocation
         key={codeFlowListItem.id}
         codeFlowWrapperItem={codeFlowListItem}
