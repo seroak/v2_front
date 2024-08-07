@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { PreprocessedCodesContext } from "../../Home";
 import "./RightSection.css";
 import Split from "react-split";
@@ -37,6 +37,7 @@ import { deleteCodeFlow } from "./services/deleteCodeFlow";
 
 //zustand store
 import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
+import { useRightSectionStore } from "@/store/arrow";
 
 interface State {
   objects: AllObjectItem[];
@@ -60,6 +61,36 @@ const RightSection = () => {
 
   const [arrowTextList, setArrowTextList] = useState<string[]>([]);
   const [trackingIdList, setTrackingIdList] = useState<number[]>([]);
+
+  const [, setRightSectionSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
+
+  const rightSectionRef = useRef<HTMLDivElement | null>(null);
+
+  const setWidth = useRightSectionStore((state) => state.setWidth);
+  const setHeight = useRightSectionStore((state) => state.setHeight);
+
+  const width = useRightSectionStore((state) => state.width);
+  const height = useRightSectionStore((state) => state.height);
+
+  useEffect(() => {
+    if (!rightSectionRef.current) return;
+    const resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
+      for (let entry of entries) {
+        const { width, height } = entry.contentRect;
+        setRightSectionSize({ width, height });
+        setWidth(width);
+        setHeight(height);
+      }
+    });
+    resizeObserver.observe(rightSectionRef.current);
+
+    return () => {
+      if (rightSectionRef.current) {
+        resizeObserver.unobserve(rightSectionRef.current);
+      }
+    };
+  }, []);
+
   // codeFlowList를 업데이트하는 useEffect
   useEffect(() => {
     const trackingIds: number[] = [];
@@ -200,7 +231,7 @@ const RightSection = () => {
   }, [preprocessedCodes]);
 
   return (
-    <div id="split-2">
+    <div id="split-2" ref={rightSectionRef}>
       <Split
         sizes={[30, 70]}
         minSize={100}
@@ -222,7 +253,7 @@ const RightSection = () => {
             <ul className="var-list">
               {StructuresList?.length > 0 &&
                 consoleIdx >= 0 &&
-                renderingStructure(StructuresList[consoleIdx], trackingIdList[consoleIdx])}
+                renderingStructure(StructuresList[consoleIdx], trackingIdList[consoleIdx], width, height)}
             </ul>
           </div>
         </div>
@@ -233,7 +264,7 @@ const RightSection = () => {
 
             {codeFlowList?.length > 0 &&
               consoleIdx >= 0 &&
-              renderingCodeFlow(codeFlowList[consoleIdx].objects[0].child, trackingIdList[consoleIdx])}
+              renderingCodeFlow(codeFlowList[consoleIdx].objects[0].child, trackingIdList[consoleIdx], width, height)}
           </div>
         </div>
       </Split>
