@@ -2,6 +2,10 @@
 .wrapper {
   display: flex;
   align-items: center;
+  margin-top: 20px;
+}
+.fit-content {
+  width: fit-content;
 }
 .var-data {
   display: flex;
@@ -25,16 +29,10 @@ span {
 
   position: relative;
 }
+
 .index {
   color: rgba(24, 24, 24, 0.3);
   text-align: center;
-}
-.align-left {
-  margin-top: 20px;
-  width: 100%;
-  box-sizing: border-box;
-
-  text-align: left;
 }
 .highlight {
   background-color: #364fce;

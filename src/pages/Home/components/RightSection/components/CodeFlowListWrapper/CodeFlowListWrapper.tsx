@@ -1,4 +1,5 @@
 import { useRef, useEffect, ReactNode } from "react";
+import cx from "classnames";
 import styles from "./CodeFlowListWrapper.module.css";
 //components
 import CodeFlowListBlock from "./components/CodeFlowListBlock";
@@ -40,7 +41,7 @@ function CodeFlowListWrapper({ codeFlowListItem, isTracking }: Props) {
   const exprArray = expr?.slice(1, -1).split(",");
 
   return (
-    <div className={styles["align-left"]}>
+    <div className={cx("align-left", styles["fit-content"])}>
       <GetCodeFlowWrapperBoxLocation
         key={codeFlowListItem.id}
         codeFlowWrapperItem={codeFlowListItem}

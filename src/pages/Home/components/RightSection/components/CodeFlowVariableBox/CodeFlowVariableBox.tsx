@@ -37,7 +37,7 @@ type Props = {
 };
 const CodeFlowVariableBox = ({ codeFlowVariableItem, isTracking }: Props) => {
   return (
-    <div className={styles["align-left"]}>
+    <div className="align-left">
       <div className={cx(styles["var-data"], codeFlowVariableItem.isLight && styles.highlight)}>
         <GetCodeFlowVariableBoxLocation
           key={codeFlowVariableItem.id}
