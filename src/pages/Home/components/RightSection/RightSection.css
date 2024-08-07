@@ -120,23 +120,23 @@ var-list {
   position: relative;
 }
 .code-flow {
-  min-width: 592px;
+  min-width: 492px;
   background-color: #fff;
 }
 .code-flow .code-flow {
-  min-width: 544px;
+  min-width: 444px;
   background-color: #fdfdfe;
 }
 .code-flow .code-flow .code-flow {
-  min-width: 496px;
+  min-width: 396px;
   background-color: #fbfbfe;
 }
 .code-flow .code-flow .code-flow .code-flow {
-  min-width: 448px;
+  min-width: 248px;
   background-color: #f9f9fd;
 }
 .code-flow .code-flow .code-flow .code-flow .code-flow {
-  min-width: 400px;
+  min-width: 300px;
   background-color: #f5f5fc;
 }
 .code-flow-title::before {
