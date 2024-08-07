@@ -12,7 +12,7 @@ interface SignupUser {
   confirmPassword: string;
 }
 export const handlers = [
-  http.post("/v1/python", () => {
+  http.post("/edupi_visualize/v1/python", () => {
     return HttpResponse.json(whileResponseBody);
   }),
   http.post("http://localhost:8000/login", async ({ request }) => {
