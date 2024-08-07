@@ -24,7 +24,6 @@ const Arrow = ({ code }: Props): ReactNode => {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
-        transition={{ duration: 0.3 }}
       >
         <img src="/image/img_target.svg" alt="방향이미지" />
         <p>{code}</p>
