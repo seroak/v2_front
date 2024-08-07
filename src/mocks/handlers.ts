@@ -15,7 +15,7 @@ export const handlers = [
   http.post("/edupi_visualize/v1/python", () => {
     return HttpResponse.json(whileResponseBody);
   }),
-  http.post("http://localhost:8000/login", async ({ request }) => {
+  http.post("/login", async ({ request }) => {
     const { userId, userPassword } = (await request.json()) as User;
 
     // 간단한 인증 로직을 구현
