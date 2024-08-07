@@ -48,7 +48,7 @@ export default function Home() {
   const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
   const mutation = useMutation({
     mutationFn: async (code: string) => {
-      return fetch("http://localhost:8000/v1/python", {
+      return fetch("http://localhost:8080/edupi_visualize/v1/python", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

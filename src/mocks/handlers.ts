@@ -13,10 +13,10 @@ interface SignupUser {
   confirmPassword: string;
 }
 export const handlers = [
-  http.post("/v1/python", () => {
+  http.post("/edupi_visualize/v1/python", () => {
     return HttpResponse.json(testResponseBody);
   }),
-  http.post("http://localhost:8000/login", async ({ request }) => {
+  http.post("/login", async ({ request }) => {
     const { userId, userPassword } = (await request.json()) as User;
 
     // 간단한 인증 로직을 구현

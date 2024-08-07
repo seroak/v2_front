@@ -27,8 +27,10 @@ interface Props {
   codeFlow: AllObjectItem;
   isTracking: boolean;
   children?: ReactNode;
+  width: number;
+  height: number;
 }
-const CodeFlowItem = ({ codeFlow, isTracking, children }: Props) => {
+const CodeFlowItem = ({ codeFlow, isTracking, width, height, children }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const setTop = useArrowStore((state) => state.setTop);
   const setRight = useArrowStore((state) => state.setRight);
@@ -39,12 +41,17 @@ const CodeFlowItem = ({ codeFlow, isTracking, children }: Props) => {
       setTop(rect.top);
       setRight(rect.right);
     }
-  }, [codeFlow.id, codeFlow.type, isTracking]);
+  }, [codeFlow.id, isTracking, ref, width, height]);
 
   return <div ref={ref}>{children}</div>;
 };
 
-export const renderingCodeFlow = (codeFlows: AllObjectItem[], trackingId: number): ReactElement => {
+export const renderingCodeFlow = (
+  codeFlows: AllObjectItem[],
+  trackingId: number,
+  width: number,
+  height: number
+): ReactElement => {
   return (
     <>
       {codeFlows.map((codeFlow, index) => {
@@ -53,18 +60,24 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[], trackingId: number
           case "print": {
             const printItem = codeFlow as PrintItem;
             return (
-              <CodeFlowItem key={index} codeFlow={codeFlow} isTracking={isTracking}>
-                <PrintBox printItem={printItem} />
-                {renderingCodeFlow(printItem.child, trackingId)}
+              <CodeFlowItem
+                key={printItem.id}
+                codeFlow={codeFlow}
+                isTracking={isTracking}
+                width={width}
+                height={height}
+              >
+                <PrintBox key={printItem.id} printItem={printItem} />
+                {renderingCodeFlow(codeFlow.child, trackingId, width, height)}
               </CodeFlowItem>
             );
           }
           case "for": {
             const forItem = codeFlow as ForItem;
             return (
-              <div>
-                <ForBox forItem={forItem} isTracking={isTracking}>
-                  {renderingCodeFlow(forItem.child, trackingId)}
+              <div key={forItem.id}>
+                <ForBox key={forItem.id} forItem={forItem} isTracking={isTracking} width={width} height={height}>
+                  {renderingCodeFlow(codeFlow.child, trackingId, width, height)}
                 </ForBox>
               </div>
             );
@@ -74,9 +87,9 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[], trackingId: number
             return (
               <AnimatePresence key={ifItem.id} mode="wait">
                 <motion.div key={ifItem.id} layout>
-                  <CodeFlowItem key={index} codeFlow={codeFlow} isTracking={isTracking}>
+                  <CodeFlowItem key={index} codeFlow={codeFlow} isTracking={isTracking} width={width} height={height}>
                     <IfBox isLight={codeFlow.isLight} ifItem={ifItem}>
-                      {renderingCodeFlow(codeFlow.child, trackingId)}
+                      {renderingCodeFlow(codeFlow.child, trackingId, width, height)}
                     </IfBox>
                   </CodeFlowItem>
                 </motion.div>
@@ -87,9 +100,9 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[], trackingId: number
             return (
               <AnimatePresence key={elifItem.id} mode="wait">
                 <motion.div key={elifItem.id} layout>
-                  <CodeFlowItem key={index} codeFlow={codeFlow} isTracking={isTracking}>
+                  <CodeFlowItem key={index} codeFlow={codeFlow} isTracking={isTracking} width={width} height={height}>
                     <ElifBox isLight={codeFlow.isLight} elifItem={elifItem}>
-                      {renderingCodeFlow(codeFlow.child, trackingId)}
+                      {renderingCodeFlow(codeFlow.child, trackingId, width, height)}
                     </ElifBox>
                   </CodeFlowItem>
                 </motion.div>
@@ -100,9 +113,9 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[], trackingId: number
             return (
               <AnimatePresence key={elseItem.id} mode="wait">
                 <motion.div key={elseItem.id} layout>
-                  <CodeFlowItem key={index} codeFlow={codeFlow} isTracking={isTracking}>
+                  <CodeFlowItem key={index} codeFlow={codeFlow} isTracking={isTracking} width={width} height={height}>
                     <ElseBox isLight={codeFlow.isLight} elseItem={elseItem}>
-                      {renderingCodeFlow(codeFlow.child, trackingId)}
+                      {renderingCodeFlow(codeFlow.child, trackingId, width, height)}
                     </ElseBox>
                   </CodeFlowItem>
                 </motion.div>
@@ -111,8 +124,14 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[], trackingId: number
           case "variable":
             const variableItem = codeFlow as CodeFlowVariableItem;
             return (
-              <div>
-                <CodeFlowVariableBox codeFlowVariableItem={variableItem} isTracking={isTracking} />
+              <div key={variableItem.id}>
+                <CodeFlowVariableBox
+                  key={variableItem.id}
+                  codeFlowVariableItem={variableItem}
+                  isTracking={isTracking}
+                  width={width}
+                  height={height}
+                />
               </div>
             );
           case "list":
@@ -127,7 +146,7 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[], trackingId: number
             return (
               <div key={whileItem.id}>
                 <WhileBox key={index} whileItem={whileItem}>
-                  {renderingCodeFlow(whileItem.child, trackingId)}
+                  {renderingCodeFlow(codeFlow.child, trackingId, width, height)}
                 </WhileBox>
               </div>
             );
