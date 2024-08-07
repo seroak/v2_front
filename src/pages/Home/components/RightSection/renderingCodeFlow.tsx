@@ -9,6 +9,7 @@ import IfBox from "./components/IfBox/IfBox";
 import ElseBox from "./components/ElseBox/ElseBox";
 import ElifBox from "./components/ElifBox/ElifBox";
 import CodeFlowVariableBox from "./components/CodeFlowVariableBox/CodeFlowVariableBox";
+import CodeFlowListWrapper from "./components/CodeFlowListWrapper/CodeFlowListWrapper";
 import WhileBox from "./components/WhileBox/WhileBox";
 
 // type import
@@ -119,7 +120,7 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[], trackingId: number
             console.log("listItem", listItem);
             return (
               <div>
-                <CodeFlowListBox codeFlowVariableItem={listItem} isTracking={isTracking} />
+                <CodeFlowListWrapper codeFlowListItem={listItem} isTracking={isTracking} />
               </div>
             );
           case "while":
