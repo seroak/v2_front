@@ -36,7 +36,6 @@ type Props = {
   isTracking: boolean;
 };
 function CodeFlowListWrapper({ codeFlowListItem, isTracking }: Props) {
-  console.log("CodeFlowListWrapper", codeFlowListItem);
   const { expr, isLight } = codeFlowListItem;
   const exprArray = expr?.slice(1, -1).split(",");
 

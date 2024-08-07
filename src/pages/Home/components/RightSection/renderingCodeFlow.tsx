@@ -117,7 +117,6 @@ export const renderingCodeFlow = (codeFlows: AllObjectItem[], trackingId: number
             );
           case "list":
             const listItem = codeFlow as CodeFlowListItem;
-            console.log("listItem", listItem);
             return (
               <div>
                 <CodeFlowListWrapper codeFlowListItem={listItem} isTracking={isTracking} />
