@@ -22,13 +22,13 @@ const GetForBoxLocation = ({ forItem, isTracking, width, height, children }: For
   useEffect(() => {
     if (ref.current && isTracking) {
       const rect = ref.current.getBoundingClientRect();
-      setTop(rect.top + 50);
+      setTop(rect.top + 30);
       setRight(rect.right);
     }
   }, [forItem.id, forItem.type, isTracking, width, height]);
 
   return (
-    <div className="useRef" ref={ref}>
+    <div className="useRef" ref={ref} style={{ width: "fit-content" }}>
       {children}
     </div>
   );

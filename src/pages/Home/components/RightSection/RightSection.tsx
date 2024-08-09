@@ -66,6 +66,7 @@ const RightSection = () => {
   const [, setRightSectionSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
   const rightSectionRef = useRef<HTMLDivElement | null>(null);
+  const rightSection2Ref = useRef<HTMLDivElement | null>(null);
 
   const setWidth = useRightSectionStore((state) => state.setWidth);
   const setHeight = useRightSectionStore((state) => state.setHeight);
@@ -73,6 +74,7 @@ const RightSection = () => {
   const width = useRightSectionStore((state) => state.width);
   const height = useRightSectionStore((state) => state.height);
   const setHighlightLines = useEditorStore((state) => state.setHighlightLines);
+
   useEffect(() => {
     if (!rightSectionRef.current) return;
     const resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
@@ -91,6 +93,25 @@ const RightSection = () => {
       }
     };
   }, []);
+  useEffect(() => {
+    if (!rightSection2Ref.current) return;
+    const resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
+      for (let entry of entries) {
+        const { width, height } = entry.contentRect;
+        setRightSectionSize({ width, height });
+        setWidth(width);
+        setHeight(height);
+      }
+    });
+    resizeObserver.observe(rightSection2Ref.current);
+
+    return () => {
+      if (rightSection2Ref.current) {
+        resizeObserver.unobserve(rightSection2Ref.current);
+      }
+    };
+  }, []);
+
   const highlightLine: number[] = [];
   // codeFlowList를 업데이트하는 useEffect
   useEffect(() => {
@@ -237,21 +258,31 @@ const RightSection = () => {
 
   return (
     <div id="split-2" ref={rightSectionRef}>
+      <p className="view-section-title">시각화</p>
       <Split
-        sizes={[30, 70]}
+        sizes={[45, 55]}
         minSize={100}
         expandToMin={false}
         gutterSize={10}
         gutterAlign="center"
         snapOffset={30}
         dragInterval={1}
-        direction="vertical"
-        cursor="row-resize"
-        style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 100px)" }}
+        direction="horizontal"
+        cursor="col-resize"
+        style={{ display: "flex", flexDirection: "row", height: "85vh", width: "100vw " }}
         className="split-container"
       >
         <div id="split-2-1" className="view-section2-1">
-          <p className="view-section-title">시각화</p>
+          <div className="view-data">
+            <p className="data-name">코드흐름</p>
+
+            {codeFlowList?.length > 0 &&
+              consoleIdx >= 0 &&
+              renderingCodeFlow(codeFlowList[consoleIdx].objects[0].child, trackingIdList[consoleIdx], width, height)}
+          </div>
+        </div>
+        <div id="split-2-2" className="view-section2-2" ref={rightSection2Ref}>
+          <Arrow code={arrowTextList[consoleIdx]} />
           <div className="view-data">
             <p className="data-name">변수</p>
 
@@ -260,16 +291,6 @@ const RightSection = () => {
                 consoleIdx >= 0 &&
                 renderingStructure(StructuresList[consoleIdx], trackingIdList[consoleIdx], width, height)}
             </ul>
-          </div>
-        </div>
-        <div id="split-2-2" className="view-section2-2">
-          <Arrow code={arrowTextList[consoleIdx]} />
-          <div className="view-data">
-            <p className="data-name">코드흐름</p>
-
-            {codeFlowList?.length > 0 &&
-              consoleIdx >= 0 &&
-              renderingCodeFlow(codeFlowList[consoleIdx].objects[0].child, trackingIdList[consoleIdx], width, height)}
           </div>
         </div>
       </Split>
