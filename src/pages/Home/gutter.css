@@ -19,10 +19,9 @@
   border-bottom: 1px solid var(--gray01);
   z-index: 1;
 }
-.view-section2-1 + .gutter.gutter-vertical {
-  border-top: 1px solid var(--gray01);
+.view-section2-1 + .gutter.gutter-horizontal {
   border-bottom: none;
   background-image: none;
   background-color: #fdfdfe;
-  height: 10px !important;
+  width: 10px !important;
 }
