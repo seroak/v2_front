@@ -64,9 +64,10 @@ var-list {
   display: inline-block;
   position: relative;
   margin-top: 40px;
+  margin-left: 20px;
 }
 .code-flow + .code-flow {
-  margin-top: 70px !important;
+  margin-top: 60px !important;
 }
 .highlight-border {
   border-color: #364fce !important;
@@ -167,7 +168,7 @@ var-list {
 }
 
 .code-flow-for.code-flow {
-  margin-top: 80px;
+  margin-top: 60px;
 }
 .code-flow-for.code-flow .code-flow-for {
   margin-top: 48px;
@@ -192,7 +193,6 @@ var-list {
 }
 .view-section2-2 .view-data > div {
   display: flex;
-  align-items: center;
   position: relative;
   flex-direction: column;
 }

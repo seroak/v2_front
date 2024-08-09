@@ -134,7 +134,7 @@ export default function Home() {
           </div>
 
           <Split
-            sizes={[50, 50]}
+            sizes={[30, 70]}
             minSize={100}
             expandToMin={false}
             gutterSize={10}
@@ -143,7 +143,6 @@ export default function Home() {
             dragInterval={1}
             direction="horizontal"
             cursor="col-resize"
-            className={styles.splitContainer}
             style={{ display: "flex", width: "100vw", height: "calc(100vh - 100px)" }}
           >
             <LeftSection />
