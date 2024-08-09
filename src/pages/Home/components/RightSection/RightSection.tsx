@@ -38,6 +38,7 @@ import { deleteCodeFlow } from "./services/deleteCodeFlow";
 //zustand store
 import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useRightSectionStore } from "@/store/arrow";
+import { useEditorStore } from "@/store/editor";
 
 interface State {
   objects: AllObjectItem[];
@@ -71,7 +72,7 @@ const RightSection = () => {
 
   const width = useRightSectionStore((state) => state.width);
   const height = useRightSectionStore((state) => state.height);
-
+  const setHighlightLines = useEditorStore((state) => state.setHighlightLines);
   useEffect(() => {
     if (!rightSectionRef.current) return;
     const resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
@@ -90,7 +91,7 @@ const RightSection = () => {
       }
     };
   }, []);
-
+  const highlightLine: number[] = [];
   // codeFlowList를 업데이트하는 useEffect
   useEffect(() => {
     const trackingIds: number[] = [];
@@ -114,6 +115,7 @@ const RightSection = () => {
       // 자료구조 시각화 부분이 들어왔을 때
       if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
         (preprocessedCode as VariablesDto).variables.forEach((variable: VariableDto) => {
+          highlightLine.push(variable.id);
           // 자료구조 시각화에서 화살표에 넣을 코드를 넣는다
           arrowTexts.push(variable.code);
           trackingIds.push(variable.id);
@@ -141,6 +143,7 @@ const RightSection = () => {
           // ifelseDefine에서 화살표에 넣을 코드를 넣는다
           arrowTexts.push((preprocessedCode as IfElseDto).code);
           trackingIds.push((preprocessedCode as IfElseDto).conditions[0].id);
+          highlightLine.push((preprocessedCode as IfElseDto).conditions[0].id);
           // ifelse가 들어왔을 때 한번에 모든 노드의 Light를 다 false로  바꿔주는 함수
           const turnoff = turnOffAllNodeLight(accCodeFlow.objects);
 
@@ -172,6 +175,7 @@ const RightSection = () => {
           // 그밖의 타입에서 화살표에 넣을 코드를 넣는다
           arrowTexts.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).code);
           trackingIds.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id);
+          highlightLine.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id);
           const toAddObject = createObjectToAdd(
             preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
           );
@@ -227,6 +231,7 @@ const RightSection = () => {
     setCodeFlowLength(accCodeFlowList.length);
     setArrowTextList(arrowTexts);
     setTrackingIdList(trackingIds);
+    setHighlightLines(highlightLine);
   }, [preprocessedCodes]);
 
   return (
