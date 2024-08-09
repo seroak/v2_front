@@ -145,9 +145,11 @@ export const renderingCodeFlow = (
             const whileItem = codeFlow as WhileItem;
             return (
               <div key={whileItem.id}>
-                <WhileBox key={index} whileItem={whileItem}>
-                  {renderingCodeFlow(codeFlow.child, trackingId, width, height)}
-                </WhileBox>
+                <CodeFlowItem key={index} codeFlow={codeFlow} isTracking={isTracking} width={width} height={height}>
+                  <WhileBox key={index} whileItem={whileItem}>
+                    {renderingCodeFlow(codeFlow.child, trackingId, width, height)}
+                  </WhileBox>
+                </CodeFlowItem>
               </div>
             );
           default:
