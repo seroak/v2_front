@@ -96,7 +96,7 @@ const RightSection = () => {
   useEffect(() => {
     const trackingIds: number[] = [];
     let activate: ActivateItem[] = [];
-    const usedId: number[] = [];
+    let usedId: number[] = [];
     const usedName: string[] = [];
     let accCodeFlow: State = {
       objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
@@ -133,6 +133,7 @@ const RightSection = () => {
 
           // 코드 흐름 시각화에서 표현된 자료구조 시각화 객체를 삭제하는 부분
           let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, variable.id!);
+          usedId = usedId.filter((id) => id !== variable.id);
           accCodeFlow = { objects: deletedCodeFlow };
         });
       }

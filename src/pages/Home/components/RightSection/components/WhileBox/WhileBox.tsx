@@ -40,7 +40,9 @@ const WhileBox = ({ children, whileItem }: Props) => {
                 )}
               >
                 {whileItem.expr?.split("").map((char, index) => (
-                  <text key={index}>{char}</text>
+                  <span key={index} style={{ all: "unset" }}>
+                    {char}
+                  </span>
                 ))}
               </span>
             </div>
