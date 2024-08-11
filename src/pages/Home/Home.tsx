@@ -45,6 +45,7 @@ export default function Home() {
   // zustand store
   const setConsoleIdx = useConsoleStore((state) => state.setConsoleIdx);
   const consoleIdx = useConsoleStore((state) => state.consoleIdx);
+  const incrementConsoleIdx = useConsoleStore((state) => state.incrementConsoleIdx);
   const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
   const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -87,8 +88,9 @@ export default function Home() {
     setIsPlaying((prev) => !prev);
   };
   const onForward = useCallback(() => {
+    console.log("forward");
     if (consoleIdx < codeFlowLength - 1) {
-      setConsoleIdx(consoleIdx + 1);
+      incrementConsoleIdx();
     }
   }, [consoleIdx, codeFlowLength]);
 
@@ -99,7 +101,7 @@ export default function Home() {
   }, [consoleIdx]);
   useEffect(() => {
     if (isPlaying) {
-      intervalRef.current = setInterval(onForward, 1000);
+      intervalRef.current = setInterval(incrementConsoleIdx, 1000);
     } else {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -111,7 +113,7 @@ export default function Home() {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isPlaying, onForward]);
+  }, [isPlaying]);
   return (
     <CodeContext.Provider value={{ code, setCode }}>
       <PreprocessedCodesContext.Provider value={{ preprocessedCodes, setPreprocessedCodes }}>
