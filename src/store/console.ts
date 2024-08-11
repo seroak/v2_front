@@ -5,6 +5,7 @@ interface ConsoleState {
   consoleIdx: number;
   setConsole: (console: string[]) => void;
   setConsoleIdx: (consoleIdx: number) => void;
+  incrementConsoleIdx: () => void;
   reset: () => void;
 }
 interface CodeFlowLengthState {
@@ -17,6 +18,7 @@ export const useConsoleStore = create<ConsoleState>((set) => ({
   consoleIdx: 0,
   setConsole: (console) => set({ console }),
   setConsoleIdx: (consoleIdx) => set({ consoleIdx }),
+  incrementConsoleIdx: () => set((state) => ({ consoleIdx: state.consoleIdx + 1 })),
   reset: () => set({ console: [] }),
 }));
 
