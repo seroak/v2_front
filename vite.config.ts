@@ -12,7 +12,7 @@ export default ({ mode }: { mode: string }) => {
       },
     },
     server: {
-      port: env.VITE_APP_FRONT_PORT === "dev" ? 8000 : 5000,
+      port: env.VITE_APP_FRONT_PORT === "dev" ? 8080 : 5000,
     },
   });
 };
