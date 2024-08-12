@@ -41,6 +41,7 @@ export default function Home() {
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   // zustand store
   const consoleIdx = useConsoleStore((state) => state.consoleIdx);
+  const resetConsole = useConsoleStore((state) => state.resetConsole);
   const incrementConsoleIdx = useConsoleStore((state) => state.incrementConsoleIdx);
   const decrementConsoleIdx = useConsoleStore((state) => state.decrementConsoleIdx);
   const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
@@ -79,12 +80,14 @@ export default function Home() {
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    resetConsole();
     mutation.mutate(code);
   };
+
   const onPlay = () => {
     setIsPlaying((prev) => !prev);
   };
+
   const onForward = useCallback(() => {
     if (consoleIdx < codeFlowLength - 1) {
       incrementConsoleIdx();
@@ -96,6 +99,7 @@ export default function Home() {
       decrementConsoleIdx();
     }
   }, [consoleIdx]);
+
   useEffect(() => {
     if (isPlaying) {
       intervalRef.current = setInterval(onForward, 1000);
@@ -104,13 +108,13 @@ export default function Home() {
         clearInterval(intervalRef.current);
       }
     }
-
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
   }, [isPlaying, consoleIdx]);
+
   return (
     <CodeContext.Provider value={{ code, setCode }}>
       <PreprocessedCodesContext.Provider value={{ preprocessedCodes, setPreprocessedCodes }}>
