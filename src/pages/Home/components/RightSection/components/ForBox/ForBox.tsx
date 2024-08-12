@@ -42,6 +42,7 @@ type Props = {
 };
 
 const ForBox = ({ children, forItem, isTracking, width, height }: Props) => {
+  console.log(forItem);
   return (
     <AnimatePresence key={forItem.id}>
       <GetForBoxLocation key={forItem.id} forItem={forItem} isTracking={isTracking} width={width} height={height}>
@@ -67,7 +68,7 @@ const ForBox = ({ children, forItem, isTracking, width, height }: Props) => {
 
             <motion.div className="code-flow-var">
               <motion.div>
-                <span className="code-var-title">i</span>
+                <span className="code-var-title">{forItem.target}</span>
                 <span className={cx(forItem.isLight && forItem.isCurLight && "highlight-number")}>{forItem.cur}</span>
               </motion.div>
               <motion.div>

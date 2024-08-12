@@ -1,4 +1,5 @@
-import { createContext, useState, Dispatch, SetStateAction, useCallback } from "react";
+import { createContext, useState, Dispatch, SetStateAction, useCallback, useEffect, useRef } from "react";
+
 import { useMutation } from "@tanstack/react-query";
 import styles from "./Home.module.css";
 import "./gutter.css";
@@ -42,10 +43,13 @@ export default function Home() {
   // 전처리한 코드 state
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   // zustand store
-  const setConsoleIdx = useConsoleStore((state) => state.setConsoleIdx);
   const consoleIdx = useConsoleStore((state) => state.consoleIdx);
+  const incrementConsoleIdx = useConsoleStore((state) => state.incrementConsoleIdx);
+  const decrementConsoleIdx = useConsoleStore((state) => state.decrementConsoleIdx);
   const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
   const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const intervalRef = useRef<number | null>(null);
   const mutation = useMutation({
     mutationFn: async (code: string) => {
       return fetch("http://localhost:8080/edupi_visualize/v1/python", {
@@ -80,19 +84,35 @@ export default function Home() {
     setDisplayNone(false);
     mutation.mutate(code);
   };
-
+  const onPlay = () => {
+    setIsPlaying((prev) => !prev);
+  };
   const onForward = useCallback(() => {
     if (consoleIdx < codeFlowLength - 1) {
-      setConsoleIdx(consoleIdx + 1);
+      incrementConsoleIdx();
     }
   }, [consoleIdx, codeFlowLength]);
 
   const onBack = useCallback(() => {
     if (consoleIdx > 0) {
-      setConsoleIdx(consoleIdx - 1);
+      decrementConsoleIdx();
     }
   }, [consoleIdx]);
+  useEffect(() => {
+    if (isPlaying) {
+      intervalRef.current = setInterval(incrementConsoleIdx, 1000);
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    }
 
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isPlaying]);
   return (
     <CodeContext.Provider value={{ code, setCode }}>
       <PreprocessedCodesContext.Provider value={{ preprocessedCodes, setPreprocessedCodes }}>
@@ -118,7 +138,11 @@ export default function Home() {
                   <img src="/image/icon_play_back.svg" onClick={onBack} alt="뒤로" />
                 </button>
                 <button className="ml8">
-                  <img src="/image/icon_play_stop.svg" alt="일시정지" />
+                  {isPlaying ? (
+                    <img src="/image/icon_play_stop.svg" onClick={onPlay} alt="일시정지" />
+                  ) : (
+                    <img src="/image/icon_play.svg" onClick={onPlay} alt="재생" />
+                  )}
                 </button>
                 <button className="ml8">
                   <img src="/image/icon_play_next.svg" onClick={onForward} alt="다음" />
