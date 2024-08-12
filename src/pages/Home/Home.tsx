@@ -46,6 +46,7 @@ export default function Home() {
   const setConsoleIdx = useConsoleStore((state) => state.setConsoleIdx);
   const consoleIdx = useConsoleStore((state) => state.consoleIdx);
   const incrementConsoleIdx = useConsoleStore((state) => state.incrementConsoleIdx);
+  const decrementConsoleIdx = useConsoleStore((state) => state.decrementConsoleIdx);
   const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
   const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -96,7 +97,7 @@ export default function Home() {
 
   const onBack = useCallback(() => {
     if (consoleIdx > 0) {
-      setConsoleIdx(consoleIdx - 1);
+      decrementConsoleIdx();
     }
   }, [consoleIdx]);
   useEffect(() => {
