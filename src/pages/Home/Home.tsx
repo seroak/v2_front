@@ -35,12 +35,9 @@ export const PreprocessedCodesContext = createContext<PreprocessedCodeContextTyp
 });
 
 export default function Home() {
-  // 원본 코드 state
-
   const [code, setCode] = useState<any>(
     ["a = 3", "for i in range(a):", "   print(' ' * ((a - 1) - i), end = '')", "   print('*' * (2 * i + 1))"].join("\n")
   );
-  // 전처리한 코드 state
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   // zustand store
   const consoleIdx = useConsoleStore((state) => state.consoleIdx);
@@ -66,6 +63,7 @@ export default function Home() {
         // 타입 체크 함수
         if (isValidTypeDtoArray(jsonData)) {
           setPreprocessedCodes(jsonData);
+          setDisplayNone(false);
         } else {
           throw new Error("받은 데이터가 올바르지 않습니다");
         }
@@ -81,7 +79,7 @@ export default function Home() {
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setDisplayNone(false);
+
     mutation.mutate(code);
   };
   const onPlay = () => {
@@ -100,7 +98,7 @@ export default function Home() {
   }, [consoleIdx]);
   useEffect(() => {
     if (isPlaying) {
-      intervalRef.current = setInterval(incrementConsoleIdx, 1000);
+      intervalRef.current = setInterval(onForward, 1000);
     } else {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -112,7 +110,7 @@ export default function Home() {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isPlaying]);
+  }, [isPlaying, consoleIdx]);
   return (
     <CodeContext.Provider value={{ code, setCode }}>
       <PreprocessedCodesContext.Provider value={{ preprocessedCodes, setPreprocessedCodes }}>
