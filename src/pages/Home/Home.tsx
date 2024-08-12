@@ -43,7 +43,6 @@ export default function Home() {
   // 전처리한 코드 state
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   // zustand store
-  const setConsoleIdx = useConsoleStore((state) => state.setConsoleIdx);
   const consoleIdx = useConsoleStore((state) => state.consoleIdx);
   const incrementConsoleIdx = useConsoleStore((state) => state.incrementConsoleIdx);
   const decrementConsoleIdx = useConsoleStore((state) => state.decrementConsoleIdx);
@@ -89,7 +88,6 @@ export default function Home() {
     setIsPlaying((prev) => !prev);
   };
   const onForward = useCallback(() => {
-    console.log("forward");
     if (consoleIdx < codeFlowLength - 1) {
       incrementConsoleIdx();
     }
@@ -140,7 +138,11 @@ export default function Home() {
                   <img src="/image/icon_play_back.svg" onClick={onBack} alt="뒤로" />
                 </button>
                 <button className="ml8">
-                  <img src="/image/icon_play_stop.svg" onClick={onPlay} alt="일시정지" />
+                  {isPlaying ? (
+                    <img src="/image/icon_play_stop.svg" onClick={onPlay} alt="일시정지" />
+                  ) : (
+                    <img src="/image/icon_play.svg" onClick={onPlay} alt="재생" />
+                  )}
                 </button>
                 <button className="ml8">
                   <img src="/image/icon_play_next.svg" onClick={onForward} alt="다음" />
