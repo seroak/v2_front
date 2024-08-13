@@ -32,7 +32,7 @@ function ElseBox({ children, isLight, elseItem }: Props) {
 
           <div className="code-flow-var">
             <div>
-              {isLight && elseItem.expr === "True" ? (
+              {elseItem.expr === "True" ? (
                 <motion.span layout className={cx(isLight && "highlight-number")}>
                   True
                 </motion.span>
