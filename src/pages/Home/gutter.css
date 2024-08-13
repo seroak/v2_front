@@ -10,6 +10,7 @@
   background-color: #f9f9f9;
   border-right: 1px solid var(--gray01);
   z-index: 1;
+  height: 100%;
 }
 .gutter.gutter-vertical {
   background-image: url(/image/icon_slide_btn-column.svg);
@@ -24,4 +25,5 @@
   background-image: none;
   background-color: #fdfdfe;
   width: 10px !important;
+  height: 100%;
 }

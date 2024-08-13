@@ -169,7 +169,7 @@ export default function Home() {
             dragInterval={1}
             direction="horizontal"
             cursor="col-resize"
-            style={{ display: "flex", width: "100vw", height: "calc(100vh - 100px)" }}
+            style={{ display: "flex", width: "100vw", height: "87vh" }}
           >
             <LeftSection />
             <RightSection />
