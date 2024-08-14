@@ -33,7 +33,11 @@ const StructureItem = ({ children, structure, isTracking, height, width }: Props
     }
   }, [structure.id, structure.type, isTracking, height, width]);
 
-  return <div ref={ref}>{children}</div>;
+  return (
+    <div ref={ref} style={{ width: "fit-content" }}>
+      {children}
+    </div>
+  );
 };
 
 export const renderingStructure = (

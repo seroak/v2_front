@@ -3,6 +3,7 @@
   display: flex;
   align-items: center;
   margin-top: 40px;
+  margin-left: 20px;
 }
 .fit-content {
   width: fit-content;

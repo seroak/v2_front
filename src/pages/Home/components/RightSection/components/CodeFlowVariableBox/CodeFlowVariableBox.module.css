@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&display=swap");
 .var-data {
   position: relative;
-  left: 10%;
+  left: 12px;
   display: flex;
   align-items: center;
   gap: 1px;

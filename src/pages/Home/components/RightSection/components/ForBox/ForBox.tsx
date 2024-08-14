@@ -22,7 +22,7 @@ const GetForBoxLocation = ({ forItem, isTracking, width, height, children }: For
   useEffect(() => {
     if (ref.current && isTracking) {
       const rect = ref.current.getBoundingClientRect();
-      setTop(rect.top + 30);
+      setTop(rect.top + 20);
       setRight(rect.right);
     }
   }, [forItem.id, forItem.type, isTracking, width, height]);

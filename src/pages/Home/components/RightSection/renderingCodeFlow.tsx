@@ -43,7 +43,11 @@ const CodeFlowItem = ({ codeFlow, isTracking, width, height, children }: Props) 
     }
   }, [codeFlow.id, isTracking, ref, width, height]);
 
-  return <div ref={ref}>{children}</div>;
+  return (
+    <div style={{ width: "fit-content" }} ref={ref}>
+      {children}
+    </div>
+  );
 };
 
 export const renderingCodeFlow = (
@@ -137,7 +141,7 @@ export const renderingCodeFlow = (
           case "list":
             const listItem = codeFlow as CodeFlowListItem;
             return (
-              <div>
+              <div key={listItem.id} style={{ width: "fit-content" }}>
                 <CodeFlowListWrapper codeFlowListItem={listItem} isTracking={isTracking} />
               </div>
             );
