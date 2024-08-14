@@ -1,7 +1,7 @@
 import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
 
 // 새로운 객체를 CodeFlow에 추가하는 함수
-export const addCodeFlow = (
+export const insertBeyondToDepth = (
   codeFlows: AllObjectItem[], // 현제 코드흐름 시각화 정보를 담고 있는 리스트
   toAddObject: AllObjectItem
 ): AllObjectItem[] => {
@@ -17,7 +17,7 @@ export const addCodeFlow = (
     else if (codeFlow.child && codeFlow.child.length > 0) {
       acc.unshift({
         ...codeFlow,
-        child: addCodeFlow(codeFlow.child, toAddObject),
+        child: insertBeyondToDepth(codeFlow.child, toAddObject),
       });
     } else {
       acc.unshift(codeFlow);
