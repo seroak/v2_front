@@ -42,7 +42,6 @@ type Props = {
 };
 
 const ForBox = ({ children, forItem, isTracking, width, height }: Props) => {
-  console.log(forItem);
   return (
     <AnimatePresence key={forItem.id}>
       <GetForBoxLocation key={forItem.id} forItem={forItem} isTracking={isTracking} width={width} height={height}>

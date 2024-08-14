@@ -18,7 +18,7 @@ const LeftSection = () => {
           dragInterval={1}
           direction="vertical"
           cursor="row-resize"
-          style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+          style={{ display: "flex", flexDirection: "column", height: "83vh" }}
           className={styles.splitContainer}
         >
           <CodeEditor />

@@ -269,11 +269,11 @@ const RightSection = () => {
         dragInterval={1}
         direction="horizontal"
         cursor="col-resize"
-        style={{ display: "flex", flexDirection: "row", height: "85vh", width: "100vw " }}
+        style={{ display: "flex", flexDirection: "row", height: "83vh" }}
         className="split-container"
       >
         <div id="split-2-1" className="view-section2-1">
-          <div className="view-data">
+          <div className="view-data" style={{ height: "100%" }}>
             <p className="data-name">코드흐름</p>
 
             {codeFlowList?.length > 0 &&

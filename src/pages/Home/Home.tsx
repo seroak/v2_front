@@ -35,15 +35,13 @@ export const PreprocessedCodesContext = createContext<PreprocessedCodeContextTyp
 });
 
 export default function Home() {
-  // 원본 코드 state
-
   const [code, setCode] = useState<any>(
     ["a = 3", "for i in range(a):", "   print(' ' * ((a - 1) - i), end = '')", "   print('*' * (2 * i + 1))"].join("\n")
   );
-  // 전처리한 코드 state
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   // zustand store
   const consoleIdx = useConsoleStore((state) => state.consoleIdx);
+  const resetConsole = useConsoleStore((state) => state.resetConsole);
   const incrementConsoleIdx = useConsoleStore((state) => state.incrementConsoleIdx);
   const decrementConsoleIdx = useConsoleStore((state) => state.decrementConsoleIdx);
   const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
@@ -66,6 +64,7 @@ export default function Home() {
         // 타입 체크 함수
         if (isValidTypeDtoArray(jsonData)) {
           setPreprocessedCodes(jsonData);
+          setDisplayNone(false);
         } else {
           throw new Error("받은 데이터가 올바르지 않습니다");
         }
@@ -81,12 +80,14 @@ export default function Home() {
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setDisplayNone(false);
+    resetConsole();
     mutation.mutate(code);
   };
+
   const onPlay = () => {
     setIsPlaying((prev) => !prev);
   };
+
   const onForward = useCallback(() => {
     if (consoleIdx < codeFlowLength - 1) {
       incrementConsoleIdx();
@@ -98,21 +99,22 @@ export default function Home() {
       decrementConsoleIdx();
     }
   }, [consoleIdx]);
+
   useEffect(() => {
     if (isPlaying) {
-      intervalRef.current = setInterval(incrementConsoleIdx, 1000);
+      intervalRef.current = setInterval(onForward, 1000);
     } else {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     }
-
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isPlaying]);
+  }, [isPlaying, consoleIdx]);
+
   return (
     <CodeContext.Provider value={{ code, setCode }}>
       <PreprocessedCodesContext.Provider value={{ preprocessedCodes, setPreprocessedCodes }}>
