@@ -228,10 +228,13 @@ const RightSection = () => {
           else {
             usedId.push(toAddObject.id);
             if (toAddObject.depth > prevTrackingDepth) {
+              console.log("insertIntoDepth");
               changedCodeFlows = insertIntoDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
             } else if (toAddObject.depth === prevTrackingDepth) {
+              console.log("insertEqualToDepth");
               changedCodeFlows = insertEqualToDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
             } else {
+              console.log("insertBeyondToDepth");
               changedCodeFlows = insertBeyondToDepth(accCodeFlow.objects, toAddObject);
             }
           }
@@ -239,7 +242,7 @@ const RightSection = () => {
           activate = updateActivate(activate, toAddObject);
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
           accCodeFlow = { objects: finallyCodeFlow };
-          if (toAddObject.type !== "variable") {
+          if (toAddObject.type !== "variable" && toAddObject.type !== "list") {
             prevTrackingDepth = (preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).depth;
             prevTrackingId = (preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id;
           }
