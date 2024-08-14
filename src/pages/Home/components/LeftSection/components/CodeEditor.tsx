@@ -64,7 +64,7 @@ const CodeEditor = () => {
           options={{
             minimap: { enabled: false },
             scrollBeyondLastLine: false,
-            fontSize: 14,
+            fontSize: 16,
           }}
         />
         <style>{`
