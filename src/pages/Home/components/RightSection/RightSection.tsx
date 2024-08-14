@@ -228,13 +228,10 @@ const RightSection = () => {
           else {
             usedId.push(toAddObject.id);
             if (toAddObject.depth > prevTrackingDepth) {
-              console.log("insertIntoDepth");
               changedCodeFlows = insertIntoDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
             } else if (toAddObject.depth === prevTrackingDepth) {
-              console.log("insertEqualToDepth");
               changedCodeFlows = insertEqualToDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
             } else {
-              console.log("insertBeyondToDepth");
               changedCodeFlows = insertBeyondToDepth(accCodeFlow.objects, toAddObject);
             }
           }
