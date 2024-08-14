@@ -20,7 +20,9 @@ import { PrintItem } from "@/pages/Home/types/printItem";
 import { VariableDto } from "@/pages/Home/types/dto/variableDto";
 
 // services폴더에서 가져온 함수
-import { addCodeFlow } from "./services/addCodeFlow";
+import { insertBeyondToDepth } from "./services/insertBeyondToDepth";
+import { insertIntoDepth } from "./services/insertIntoDepth";
+import { insertEqualToDepth } from "./services/insertEqualToDepth";
 import { updateCodeFlow } from "./services/updateCodeFlow";
 import { turnLight } from "./services/turnLight";
 import { createObjectToAdd } from "./services/createObjectToAdd";
@@ -116,6 +118,8 @@ const RightSection = () => {
   // codeFlowList를 업데이트하는 useEffect
   useEffect(() => {
     const trackingIds: number[] = [];
+    let prevTrackingId: number = 0;
+    let prevTrackingDepth: number = 0;
     let activate: ActivateItem[] = [];
     let usedId: number[] = [];
     const usedName: string[] = [];
@@ -140,6 +144,7 @@ const RightSection = () => {
           // 자료구조 시각화에서 화살표에 넣을 코드를 넣는다
           arrowTexts.push(variable.code);
           trackingIds.push(variable.id);
+
           // 이미 한번 자료구조 시각화에 표현된 name인 경우
           if (usedName.includes(variable.name!)) {
             const targetName = variable.name!;
@@ -165,6 +170,8 @@ const RightSection = () => {
           // ifelseDefine에서 화살표에 넣을 코드를 넣는다
           arrowTexts.push((preprocessedCode as IfElseDto).code);
           trackingIds.push((preprocessedCode as IfElseDto).conditions[0].id);
+          prevTrackingId = (preprocessedCode as IfElseDto).conditions[0].id;
+
           highlightLine.push((preprocessedCode as IfElseDto).conditions[0].id);
           // ifelse가 들어왔을 때 한번에 모든 노드의 Light를 다 false로  바꿔주는 함수
           const turnoff = turnOffAllNodeLight(accCodeFlow.objects);
@@ -186,18 +193,21 @@ const RightSection = () => {
               finallyCodeFlow = refreshCodeFlow(accCodeFlow.objects, toAddObject);
             } else {
               usedId.push(toAddObject.id);
-              finallyCodeFlow = addCodeFlow(accCodeFlow.objects, toAddObject);
+              finallyCodeFlow = insertBeyondToDepth(accCodeFlow.objects, toAddObject);
             }
 
             accCodeFlow = { objects: finallyCodeFlow };
           }
+          prevTrackingDepth = (preprocessedCode as IfElseDto).depth;
         }
         //그밖의 타입
         else {
           // 그밖의 타입에서 화살표에 넣을 코드를 넣는다
           arrowTexts.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).code);
           trackingIds.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id);
+
           highlightLine.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id);
+
           const toAddObject = createObjectToAdd(
             preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
           );
@@ -217,11 +227,22 @@ const RightSection = () => {
           // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
           else {
             usedId.push(toAddObject.id);
-            changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject);
+            if (toAddObject.depth > prevTrackingDepth) {
+              changedCodeFlows = insertIntoDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
+            } else if (toAddObject.depth === prevTrackingDepth) {
+              changedCodeFlows = insertEqualToDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
+            } else {
+              changedCodeFlows = insertBeyondToDepth(accCodeFlow.objects, toAddObject);
+            }
           }
+
           activate = updateActivate(activate, toAddObject);
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
           accCodeFlow = { objects: finallyCodeFlow };
+          if (toAddObject.type !== "variable") {
+            prevTrackingDepth = (preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).depth;
+            prevTrackingId = (preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id;
+          }
         }
       }
       // 불을 켜줘야하는 자료구조의의 name을 담는 배열
