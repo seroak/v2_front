@@ -5,7 +5,6 @@ export const insertIntoDepth = (
   prevTrackingId: number
 ): AllObjectItem[] => {
   return codeFlows.map((codeFlow) => {
-    console.log(prevTrackingId);
     if (codeFlow.id === prevTrackingId) {
       return {
         ...codeFlow,
