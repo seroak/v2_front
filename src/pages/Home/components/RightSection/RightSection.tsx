@@ -172,7 +172,6 @@ const RightSection = () => {
           // ifelseDefine에서 화살표에 넣을 코드를 넣는다
           arrowTexts.push((preprocessedCode as IfElseDto).code);
           trackingIds.push((preprocessedCode as IfElseDto).conditions[0].id);
-          prevTrackingId = (preprocessedCode as IfElseDto).conditions[0].id;
 
           highlightLine.push((preprocessedCode as IfElseDto).conditions[0].id);
           // ifelse가 들어왔을 때 한번에 모든 노드의 Light를 다 false로  바꿔주는 함수
@@ -190,17 +189,22 @@ const RightSection = () => {
             // isLight를 true로 바꿔준다
             toAddObject.isLight = true;
             let finallyCodeFlow: any;
-            if (usedId.includes(toAddObject.id)) {
-              // child부분을 초기화 해주는 함수
-              finallyCodeFlow = refreshCodeFlow(accCodeFlow.objects, toAddObject);
+
+            usedId.push(toAddObject.id);
+            if (toAddObject.depth > prevTrackingDepth) {
+              finallyCodeFlow = insertIntoDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
+              console.log(finallyCodeFlow);
+            } else if (toAddObject.depth === prevTrackingDepth) {
+              finallyCodeFlow = insertEqualToDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
+              console.log(finallyCodeFlow);
             } else {
-              usedId.push(toAddObject.id);
               finallyCodeFlow = addCodeFlow(accCodeFlow.objects, toAddObject);
             }
 
             accCodeFlow = { objects: finallyCodeFlow };
+            prevTrackingId = toAddObject.id;
+            prevTrackingDepth = toAddObject.depth;
           }
-          prevTrackingDepth = (preprocessedCode as IfElseDto).depth;
         }
         //그밖의 타입
         else {
@@ -221,7 +225,7 @@ const RightSection = () => {
               accConsoleLog += printObject.console;
             }
           }
-          console.log(usedId);
+
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
             if (toAddObject.type === "for") {
