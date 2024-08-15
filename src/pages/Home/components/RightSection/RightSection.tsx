@@ -20,7 +20,7 @@ import { PrintItem } from "@/pages/Home/types/printItem";
 import { VariableDto } from "@/pages/Home/types/dto/variableDto";
 
 // services폴더에서 가져온 함수
-import { insertBeyondToDepth } from "./services/insertBeyondToDepth";
+import { addCodeFlow } from "./services/addCodeFlow";
 import { insertIntoDepth } from "./services/insertIntoDepth";
 import { insertEqualToDepth } from "./services/insertEqualToDepth";
 import { updateCodeFlow } from "./services/updateCodeFlow";
@@ -29,6 +29,8 @@ import { createObjectToAdd } from "./services/createObjectToAdd";
 import { updateDataStructure } from "./services/updateDataStructure";
 import { updateActivate } from "./services/updateActivate";
 import { turnOffAllNodeLight } from "./services/turnOffAllNodeLight";
+import { findTargetChild } from "./services/findTargetChild";
+import { findDeleteUsedId } from "./services/findDeleteUsedId";
 
 //rendUtils에서 가져온 함수
 import { renderingStructure } from "./renderingStructure";
@@ -193,7 +195,7 @@ const RightSection = () => {
               finallyCodeFlow = refreshCodeFlow(accCodeFlow.objects, toAddObject);
             } else {
               usedId.push(toAddObject.id);
-              finallyCodeFlow = insertBeyondToDepth(accCodeFlow.objects, toAddObject);
+              finallyCodeFlow = addCodeFlow(accCodeFlow.objects, toAddObject);
             }
 
             accCodeFlow = { objects: finallyCodeFlow };
@@ -219,10 +221,17 @@ const RightSection = () => {
               accConsoleLog += printObject.console;
             }
           }
-
+          console.log(usedId);
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
-            changedCodeFlows = updateCodeFlow(accCodeFlow.objects, toAddObject);
+            if (toAddObject.type === "for") {
+              const targetChild = findTargetChild(accCodeFlow.objects, toAddObject); // 지워야하는 부분까지 트리를 잘라서 리턴하는 함수
+              const idsToDelete = findDeleteUsedId(targetChild); // 지워야하는 부분의 트리를 순회해서  id를 리턴하는 함수
+              usedId = usedId.filter((id) => !idsToDelete.includes(id));
+              changedCodeFlows = refreshCodeFlow(accCodeFlow.objects, toAddObject); // 반복문 안쪽 child를 초기화해주는 부분
+            } else {
+              changedCodeFlows = updateCodeFlow(accCodeFlow.objects, toAddObject);
+            }
           }
           // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
           else {
@@ -232,7 +241,7 @@ const RightSection = () => {
             } else if (toAddObject.depth === prevTrackingDepth) {
               changedCodeFlows = insertEqualToDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
             } else {
-              changedCodeFlows = insertBeyondToDepth(accCodeFlow.objects, toAddObject);
+              changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject);
             }
           }
 
