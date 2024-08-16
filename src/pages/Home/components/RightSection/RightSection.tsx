@@ -93,6 +93,7 @@ const RightSection = () => {
       }
     };
   }, []);
+
   useEffect(() => {
     if (!rightSection2Ref.current) return;
     const resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
