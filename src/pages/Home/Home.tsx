@@ -47,7 +47,7 @@ export default function Home() {
   const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
   const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
   const [isPlaying, setIsPlaying] = useState(false);
-  const intervalRef = useRef<number | null>(null);
+
   const mutation = useMutation({
     mutationFn: async (code: string) => {
       return fetch("http://localhost:8080/edupi_visualize/v1/python", {
@@ -99,7 +99,7 @@ export default function Home() {
       decrementConsoleIdx();
     }
   }, [consoleIdx]);
-
+  const intervalRef = useRef<number | null>(null);
   useEffect(() => {
     if (isPlaying) {
       intervalRef.current = setInterval(onForward, 1000);
@@ -112,6 +112,17 @@ export default function Home() {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
+    };
+  }, [isPlaying, consoleIdx]);
+  let interval = 0;
+  useEffect(() => {
+    if (isPlaying) {
+      interval = setInterval(onForward, 1000);
+    } else {
+      clearInterval(interval);
+    }
+    return () => {
+      clearInterval(interval);
     };
   }, [isPlaying, consoleIdx]);
 

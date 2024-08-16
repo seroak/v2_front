@@ -21,12 +21,16 @@ import { VariableDto } from "@/pages/Home/types/dto/variableDto";
 
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
+import { insertIntoDepth } from "./services/insertIntoDepth";
+import { insertEqualToDepth } from "./services/insertEqualToDepth";
 import { updateCodeFlow } from "./services/updateCodeFlow";
 import { turnLight } from "./services/turnLight";
 import { createObjectToAdd } from "./services/createObjectToAdd";
 import { updateDataStructure } from "./services/updateDataStructure";
 import { updateActivate } from "./services/updateActivate";
 import { turnOffAllNodeLight } from "./services/turnOffAllNodeLight";
+import { findTargetChild } from "./services/findTargetChild";
+import { findDeleteUsedId } from "./services/findDeleteUsedId";
 
 //rendUtils에서 가져온 함수
 import { renderingStructure } from "./renderingStructure";
@@ -93,6 +97,7 @@ const RightSection = () => {
       }
     };
   }, []);
+
   useEffect(() => {
     if (!rightSection2Ref.current) return;
     const resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
@@ -116,6 +121,8 @@ const RightSection = () => {
   // codeFlowList를 업데이트하는 useEffect
   useEffect(() => {
     const trackingIds: number[] = [];
+    let prevTrackingId: number = 0;
+    let prevTrackingDepth: number = 0;
     let activate: ActivateItem[] = [];
     let usedId: number[] = [];
     const usedName: string[] = [];
@@ -140,6 +147,7 @@ const RightSection = () => {
           // 자료구조 시각화에서 화살표에 넣을 코드를 넣는다
           arrowTexts.push(variable.code);
           trackingIds.push(variable.id);
+
           // 이미 한번 자료구조 시각화에 표현된 name인 경우
           if (usedName.includes(variable.name!)) {
             const targetName = variable.name!;
@@ -165,6 +173,7 @@ const RightSection = () => {
           // ifelseDefine에서 화살표에 넣을 코드를 넣는다
           arrowTexts.push((preprocessedCode as IfElseDto).code);
           trackingIds.push((preprocessedCode as IfElseDto).conditions[0].id);
+
           highlightLine.push((preprocessedCode as IfElseDto).conditions[0].id);
           // ifelse가 들어왔을 때 한번에 모든 노드의 Light를 다 false로  바꿔주는 함수
           const turnoff = turnOffAllNodeLight(accCodeFlow.objects);
@@ -181,15 +190,21 @@ const RightSection = () => {
             // isLight를 true로 바꿔준다
             toAddObject.isLight = true;
             let finallyCodeFlow: any;
-            if (usedId.includes(toAddObject.id)) {
-              // child부분을 초기화 해주는 함수
-              finallyCodeFlow = refreshCodeFlow(accCodeFlow.objects, toAddObject);
+
+            usedId.push(toAddObject.id);
+            if (toAddObject.depth > prevTrackingDepth) {
+              finallyCodeFlow = insertIntoDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
+              console.log(finallyCodeFlow);
+            } else if (toAddObject.depth === prevTrackingDepth) {
+              finallyCodeFlow = insertEqualToDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
+              console.log(finallyCodeFlow);
             } else {
-              usedId.push(toAddObject.id);
               finallyCodeFlow = addCodeFlow(accCodeFlow.objects, toAddObject);
             }
 
             accCodeFlow = { objects: finallyCodeFlow };
+            prevTrackingId = toAddObject.id;
+            prevTrackingDepth = toAddObject.depth;
           }
         }
         //그밖의 타입
@@ -197,7 +212,9 @@ const RightSection = () => {
           // 그밖의 타입에서 화살표에 넣을 코드를 넣는다
           arrowTexts.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).code);
           trackingIds.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id);
+
           highlightLine.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id);
+
           const toAddObject = createObjectToAdd(
             preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
           );
@@ -212,16 +229,34 @@ const RightSection = () => {
 
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
-            changedCodeFlows = updateCodeFlow(accCodeFlow.objects, toAddObject);
+            if (toAddObject.type === "for") {
+              const targetChild = findTargetChild(accCodeFlow.objects, toAddObject); // 지워야하는 부분까지 트리를 잘라서 리턴하는 함수
+              const idsToDelete = findDeleteUsedId(targetChild); // 지워야하는 부분의 트리를 순회해서  id를 리턴하는 함수
+              usedId = usedId.filter((id) => !idsToDelete.includes(id));
+              changedCodeFlows = refreshCodeFlow(accCodeFlow.objects, toAddObject); // 반복문 안쪽 child를 초기화해주는 부분
+            } else {
+              changedCodeFlows = updateCodeFlow(accCodeFlow.objects, toAddObject);
+            }
           }
           // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
           else {
             usedId.push(toAddObject.id);
-            changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject);
+            if (toAddObject.depth > prevTrackingDepth) {
+              changedCodeFlows = insertIntoDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
+            } else if (toAddObject.depth === prevTrackingDepth) {
+              changedCodeFlows = insertEqualToDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
+            } else {
+              changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject);
+            }
           }
+
           activate = updateActivate(activate, toAddObject);
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
           accCodeFlow = { objects: finallyCodeFlow };
+          if (toAddObject.type !== "variable" && toAddObject.type !== "list") {
+            prevTrackingDepth = (preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).depth;
+            prevTrackingId = (preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id;
+          }
         }
       }
       // 불을 켜줘야하는 자료구조의의 name을 담는 배열
