@@ -160,7 +160,9 @@ export default function Home() {
                 <button className="ml8">
                   <img src="/image/icon_play_next.svg" onClick={onForward} alt="다음" />
                 </button>
-                <p className={"ml14" + " fz14"}>(23/23)</p>
+                <p className={"ml14" + " fz14"}>
+                  ({consoleIdx}/{codeFlowLength - 1 == -1 ? 0 : codeFlowLength - 1})
+                </p>
                 <p className={"ml24" + " fz14"}>Play Speed</p>
                 <select name="" id="" className={styles.s__select + " ml14"}>
                   <option value="1x">1X</option>
