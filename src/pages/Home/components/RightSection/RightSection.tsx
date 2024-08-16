@@ -260,7 +260,7 @@ const RightSection = () => {
     <div id="split-2" ref={rightSectionRef}>
       <p className="view-section-title">시각화</p>
       <Split
-        sizes={[45, 55]}
+        sizes={[70, 30]}
         minSize={100}
         expandToMin={false}
         gutterSize={10}
