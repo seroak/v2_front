@@ -18,6 +18,7 @@ import { IfElseDto } from "@/pages/Home/types/dto/ifElseDto";
 import { CodeFlowVariableDto } from "@/pages/Home/types/dto/codeFlowVariableDto";
 import { PrintItem } from "@/pages/Home/types/printItem";
 import { VariableDto } from "@/pages/Home/types/dto/variableDto";
+import { WhileDto } from "@/pages/Home/types/dto/whileDto";
 
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
@@ -229,7 +230,8 @@ const RightSection = () => {
 
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
-            if (toAddObject.type === "for") {
+            // 한바퀴 돌아서 안에 있는 내용을 초기화해야 하는 부분이면 여기에서 처리해준다
+            if (toAddObject.type === "for" || toAddObject.type === "while") {
               const targetChild = findTargetChild(accCodeFlow.objects, toAddObject); // 지워야하는 부분까지 트리를 잘라서 리턴하는 함수
               const idsToDelete = findDeleteUsedId(targetChild); // 지워야하는 부분의 트리를 순회해서  id를 리턴하는 함수
               usedId = usedId.filter((id) => !idsToDelete.includes(id));
@@ -254,8 +256,11 @@ const RightSection = () => {
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
           accCodeFlow = { objects: finallyCodeFlow };
           if (toAddObject.type !== "variable" && toAddObject.type !== "list") {
-            prevTrackingDepth = (preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).depth;
-            prevTrackingId = (preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id;
+            prevTrackingDepth = (
+              preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto | WhileDto
+            ).depth;
+            prevTrackingId = (preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto | WhileDto)
+              .id;
           }
         }
       }
