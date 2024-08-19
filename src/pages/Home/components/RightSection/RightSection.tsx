@@ -195,10 +195,8 @@ const RightSection = () => {
             usedId.push(toAddObject.id);
             if (toAddObject.depth > prevTrackingDepth) {
               finallyCodeFlow = insertIntoDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
-              console.log(finallyCodeFlow);
             } else if (toAddObject.depth === prevTrackingDepth) {
               finallyCodeFlow = insertEqualToDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
-              console.log(finallyCodeFlow);
             } else {
               finallyCodeFlow = addCodeFlow(accCodeFlow.objects, toAddObject);
             }
