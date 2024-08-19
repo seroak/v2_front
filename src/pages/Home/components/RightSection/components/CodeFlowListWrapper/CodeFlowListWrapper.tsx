@@ -18,12 +18,12 @@ const GetCodeFlowWrapperBoxLocation = ({ codeFlowWrapperItem, isTracking, childr
   const setRight = useArrowStore((state) => state.setRight);
 
   useEffect(() => {
-    if (ref.current && isTracking) {
+    if (ref.current && codeFlowWrapperItem.isLight) {
       const rect = ref.current.getBoundingClientRect();
       setTop(rect.top - 40);
       setRight(rect.right + 10);
     }
-  }, [codeFlowWrapperItem, codeFlowWrapperItem.type, isTracking]);
+  }, [codeFlowWrapperItem, isTracking]);
 
   return (
     <div className="useRef" ref={ref}>

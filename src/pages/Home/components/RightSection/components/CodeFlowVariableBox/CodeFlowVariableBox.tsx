@@ -26,12 +26,12 @@ const GetCodeFlowVariableBoxLocation = ({
   const setRight = useArrowStore((state) => state.setRight);
 
   useEffect(() => {
-    if (ref.current && isTracking) {
+    if (ref.current && codeFlowVariableItem.isLight) {
       const rect = ref.current.getBoundingClientRect();
       setTop(rect.top - 40);
       setRight(rect.right + 10);
     }
-  }, [codeFlowVariableItem.id, codeFlowVariableItem.type, isTracking, height, width]);
+  }, [codeFlowVariableItem, isTracking, height, width]);
 
   return (
     <div className="useRef" ref={ref}>

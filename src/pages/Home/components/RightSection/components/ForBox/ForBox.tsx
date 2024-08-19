@@ -20,12 +20,12 @@ const GetForBoxLocation = ({ forItem, isTracking, width, height, children }: For
   const setRight = useArrowStore((state) => state.setRight);
 
   useEffect(() => {
-    if (ref.current && isTracking) {
+    if (ref.current && forItem.isLight) {
       const rect = ref.current.getBoundingClientRect();
       setTop(rect.top + 20);
       setRight(rect.right);
     }
-  }, [forItem.id, forItem.type, isTracking, width, height]);
+  }, [forItem, isTracking, width, height]);
 
   return (
     <div className="useRef" ref={ref} style={{ width: "fit-content" }}>

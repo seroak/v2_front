@@ -36,12 +36,13 @@ const CodeFlowItem = ({ codeFlow, isTracking, width, height, children }: Props) 
   const setRight = useArrowStore((state) => state.setRight);
 
   useEffect(() => {
-    if (ref.current && isTracking) {
+    console.log("codeFlow", codeFlow);
+    if (ref.current && codeFlow.isLight) {
       const rect = ref.current.getBoundingClientRect();
       setTop(rect.top);
       setRight(rect.right);
     }
-  }, [codeFlow.id, isTracking, ref, width, height]);
+  }, [codeFlow, isTracking, ref, width, height]);
 
   return (
     <div style={{ width: "fit-content" }} ref={ref}>

@@ -25,13 +25,13 @@ const StructureItem = ({ children, structure, isTracking, height, width }: Props
   const setRight = useArrowStore((state) => state.setRight);
 
   useEffect(() => {
-    if (ref.current && isTracking) {
+    if (ref.current && structure.isLight) {
       const rect = ref.current.getBoundingClientRect();
 
       setTop(rect.top);
       setRight(rect.right);
     }
-  }, [structure.id, structure.type, isTracking, height, width]);
+  }, [structure, isTracking, height, width]);
 
   return (
     <div ref={ref} style={{ width: "fit-content" }}>
@@ -67,7 +67,7 @@ export const renderingStructure = (
                 >
                   <StructureItem
                     key={index}
-                    structure={structure}
+                    structure={variableItem}
                     isTracking={isTracking}
                     height={height}
                     width={width}
