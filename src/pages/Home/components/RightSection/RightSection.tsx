@@ -66,7 +66,6 @@ const RightSection = () => {
   const { preprocessedCodes } = context;
 
   const [arrowTextList, setArrowTextList] = useState<string[]>([]);
-  const [trackingIdList, setTrackingIdList] = useState<number[]>([]);
 
   const [, setRightSectionSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
@@ -121,7 +120,6 @@ const RightSection = () => {
   const highlightLine: number[] = [];
   // codeFlowList를 업데이트하는 useEffect
   useEffect(() => {
-    const trackingIds: number[] = [];
     let prevTrackingId: number = 0;
     let prevTrackingDepth: number = 0;
     let activate: ActivateItem[] = [];
@@ -147,7 +145,6 @@ const RightSection = () => {
           highlightLine.push(variable.id);
           // 자료구조 시각화에서 화살표에 넣을 코드를 넣는다
           arrowTexts.push(variable.code);
-          trackingIds.push(variable.id);
 
           // 이미 한번 자료구조 시각화에 표현된 name인 경우
           if (usedName.includes(variable.name!)) {
@@ -173,7 +170,6 @@ const RightSection = () => {
         if (preprocessedCode.type.toLowerCase() === "ifElseDefine".toLocaleLowerCase()) {
           // ifelseDefine에서 화살표에 넣을 코드를 넣는다
           arrowTexts.push((preprocessedCode as IfElseDto).code);
-          trackingIds.push((preprocessedCode as IfElseDto).conditions[0].id);
 
           highlightLine.push((preprocessedCode as IfElseDto).conditions[0].id);
           // ifelse가 들어왔을 때 한번에 모든 노드의 Light를 다 false로  바꿔주는 함수
@@ -210,7 +206,6 @@ const RightSection = () => {
         else {
           // 그밖의 타입에서 화살표에 넣을 코드를 넣는다
           arrowTexts.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).code);
-          trackingIds.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id);
 
           highlightLine.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id);
 
@@ -290,7 +285,7 @@ const RightSection = () => {
     setConsole(accConsoleLogList);
     setCodeFlowLength(accCodeFlowList.length);
     setArrowTextList(arrowTexts);
-    setTrackingIdList(trackingIds);
+
     setHighlightLines(highlightLine);
   }, [preprocessedCodes]);
 
@@ -316,7 +311,7 @@ const RightSection = () => {
 
             {codeFlowList?.length > 0 &&
               consoleIdx >= 0 &&
-              renderingCodeFlow(codeFlowList[consoleIdx].objects[0].child, trackingIdList[consoleIdx], width, height)}
+              renderingCodeFlow(codeFlowList[consoleIdx].objects[0].child, width, height)}
           </div>
         </div>
         <div id="split-2-2" className="view-section2-2" ref={rightSection2Ref}>
@@ -327,7 +322,7 @@ const RightSection = () => {
             <ul className="var-list">
               {StructuresList?.length > 0 &&
                 consoleIdx >= 0 &&
-                renderingStructure(StructuresList[consoleIdx], trackingIdList[consoleIdx], width, height)}
+                renderingStructure(StructuresList[consoleIdx], width, height)}
             </ul>
           </div>
         </div>
