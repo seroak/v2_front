@@ -82,9 +82,11 @@ export default function Home() {
     event.preventDefault();
     resetConsole();
     mutation.mutate(code);
+    setIsPlaying(() => true);
   };
 
   const onPlay = () => {
+    if (codeFlowLength === 0) return;
     setIsPlaying((prev) => !prev);
   };
 
@@ -113,18 +115,7 @@ export default function Home() {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isPlaying, consoleIdx]);
-  let interval = 0;
-  useEffect(() => {
-    if (isPlaying) {
-      interval = setInterval(onForward, 1000);
-    } else {
-      clearInterval(interval);
-    }
-    return () => {
-      clearInterval(interval);
-    };
-  }, [isPlaying, consoleIdx]);
+  }, [isPlaying, consoleIdx, codeFlowLength]);
 
   return (
     <CodeContext.Provider value={{ code, setCode }}>
