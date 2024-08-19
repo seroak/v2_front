@@ -32,7 +32,9 @@ function IfBox({ children, isLight, ifItem }: Props) {
             <div>
               <span className={cx(isLight && "highlight-number", isLight && ifItem.expr === "False" && styles.false)}>
                 {ifItem.expr?.split("").map((char, index) => (
-                  <text key={index}>{char}</text>
+                  <span key={index} style={{ all: "unset" }}>
+                    {char}
+                  </span>
                 ))}
               </span>
             </div>

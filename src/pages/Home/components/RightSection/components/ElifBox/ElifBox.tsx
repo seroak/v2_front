@@ -35,7 +35,9 @@ function ElifBox({ children, isLight, elifItem }: Props) {
             <div>
               <span className={cx(isLight && "highlight-number", isLight && elifItem.expr === "False" && styles.false)}>
                 {elifItem.expr?.split("").map((char, index) => (
-                  <text key={index}>{char}</text>
+                  <span key={index} style={{ all: "unset" }}>
+                    {char}
+                  </span>
                 ))}
               </span>
             </div>
