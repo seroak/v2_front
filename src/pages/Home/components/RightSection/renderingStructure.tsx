@@ -14,24 +14,24 @@ import { useArrowStore } from "@/store/arrow";
 interface Props {
   children?: ReactNode;
   structure: DataStructureListItem | DataStructureVarItem;
-  isTracking: boolean;
+
   height: number;
   width: number;
 }
 
-const StructureItem = ({ children, structure, isTracking, height, width }: Props) => {
+const StructureItem = ({ children, structure, height, width }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const setTop = useArrowStore((state) => state.setTop);
   const setRight = useArrowStore((state) => state.setRight);
 
   useEffect(() => {
-    if (ref.current && isTracking) {
+    if (ref.current && structure.isLight) {
       const rect = ref.current.getBoundingClientRect();
 
       setTop(rect.top);
       setRight(rect.right);
     }
-  }, [structure.id, structure.type, isTracking, height, width]);
+  }, [structure, height, width]);
 
   return (
     <div ref={ref} style={{ width: "fit-content" }}>
@@ -42,14 +42,12 @@ const StructureItem = ({ children, structure, isTracking, height, width }: Props
 
 export const renderingStructure = (
   structures: DataStructureVarItem[], //변수시각화 리스트
-  trackingId: number, //추적할 아이디
   height: number,
   width: number
 ): ReactElement => {
   return (
     <>
       {structures.map((structure, index) => {
-        const isTracking = structure.id === trackingId;
         switch (structure.type) {
           case "variable": {
             const variableItem = structure as DataStructureVarItem;
@@ -65,13 +63,7 @@ export const renderingStructure = (
                   className="var-list"
                   style={{ display: "inline-block" }}
                 >
-                  <StructureItem
-                    key={index}
-                    structure={structure}
-                    isTracking={isTracking}
-                    height={height}
-                    width={width}
-                  >
+                  <StructureItem key={index} structure={variableItem} height={height} width={width}>
                     <VariableBox value={variableItem.expr!} name={variableItem.name!} isLight={variableItem.isLight!} />
                   </StructureItem>
                 </motion.ul>
@@ -91,13 +83,7 @@ export const renderingStructure = (
                   transition={{ duration: 0.3 }}
                   style={{ display: "inline-block" }}
                 >
-                  <StructureItem
-                    key={index}
-                    structure={structure}
-                    isTracking={isTracking}
-                    height={height}
-                    width={width}
-                  >
+                  <StructureItem key={index} structure={structure} height={height} width={width}>
                     <ListWrapper listItem={listItem} />
                   </StructureItem>
                 </motion.div>

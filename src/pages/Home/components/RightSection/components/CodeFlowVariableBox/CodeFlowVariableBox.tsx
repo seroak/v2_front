@@ -9,14 +9,12 @@ import { CodeFlowVariableItem } from "@/pages/Home/types/codeFlow/codeFlowVariab
 import { useArrowStore } from "@/store/arrow";
 interface CodeFlowVariableItemProps {
   codeFlowVariableItem: CodeFlowVariableItem;
-  isTracking: boolean;
   height: number;
   width: number;
   children?: ReactNode;
 }
 const GetCodeFlowVariableBoxLocation = ({
   codeFlowVariableItem,
-  isTracking,
   height,
   width,
   children,
@@ -26,12 +24,12 @@ const GetCodeFlowVariableBoxLocation = ({
   const setRight = useArrowStore((state) => state.setRight);
 
   useEffect(() => {
-    if (ref.current && isTracking) {
+    if (ref.current && codeFlowVariableItem.isLight) {
       const rect = ref.current.getBoundingClientRect();
       setTop(rect.top - 40);
       setRight(rect.right + 10);
     }
-  }, [codeFlowVariableItem.id, codeFlowVariableItem.type, isTracking, height, width]);
+  }, [codeFlowVariableItem, height, width]);
 
   return (
     <div className="useRef" ref={ref}>
@@ -41,18 +39,16 @@ const GetCodeFlowVariableBoxLocation = ({
 };
 type Props = {
   codeFlowVariableItem: CodeFlowVariableItem;
-  isTracking: boolean;
   height: number;
   width: number;
 };
-const CodeFlowVariableBox = ({ codeFlowVariableItem, isTracking, height, width }: Props) => {
+const CodeFlowVariableBox = ({ codeFlowVariableItem, height, width }: Props) => {
   return (
     <div className="align-left">
       <div className={cx(styles["var-data"], codeFlowVariableItem.isLight && styles.highlight)}>
         <GetCodeFlowVariableBoxLocation
           key={codeFlowVariableItem.id}
           codeFlowVariableItem={codeFlowVariableItem}
-          isTracking={isTracking}
           height={height}
           width={width}
         >

@@ -9,23 +9,22 @@ import { ForItem } from "@/pages/Home/types/forItem";
 import { useArrowStore } from "@/store/arrow";
 interface ForItemProps {
   forItem: ForItem;
-  isTracking: boolean;
   width: number;
   height: number;
   children?: ReactNode;
 }
-const GetForBoxLocation = ({ forItem, isTracking, width, height, children }: ForItemProps) => {
+const GetForBoxLocation = ({ forItem, width, height, children }: ForItemProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const setTop = useArrowStore((state) => state.setTop);
   const setRight = useArrowStore((state) => state.setRight);
 
   useEffect(() => {
-    if (ref.current && isTracking) {
+    if (ref.current && forItem.isLight) {
       const rect = ref.current.getBoundingClientRect();
       setTop(rect.top + 20);
       setRight(rect.right);
     }
-  }, [forItem.id, forItem.type, isTracking, width, height]);
+  }, [forItem, width, height]);
 
   return (
     <div className="useRef" ref={ref} style={{ width: "fit-content" }}>
@@ -36,15 +35,14 @@ const GetForBoxLocation = ({ forItem, isTracking, width, height, children }: For
 type Props = {
   children: ReactNode;
   forItem: ForItem;
-  isTracking: boolean;
   width: number;
   height: number;
 };
 
-const ForBox = ({ children, forItem, isTracking, width, height }: Props) => {
+const ForBox = ({ children, forItem, width, height }: Props) => {
   return (
     <AnimatePresence key={forItem.id}>
-      <GetForBoxLocation key={forItem.id} forItem={forItem} isTracking={isTracking} width={width} height={height}>
+      <GetForBoxLocation key={forItem.id} forItem={forItem} width={width} height={height}>
         <motion.div
           layout
           initial={{ opacity: 0 }}
