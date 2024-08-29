@@ -3,7 +3,7 @@ import { PreprocessedCodesContext } from "../../Home";
 import "./RightSection.css";
 import Split from "react-split";
 import _ from "lodash";
-
+import ResizeObserver from "resize-observer-polyfill";
 // components
 import Arrow from "./components/Arrow/Arrow";
 
