@@ -8,18 +8,17 @@ import ResizeObserver from "resize-observer-polyfill";
 import Arrow from "./components/Arrow/Arrow";
 
 // 타입 정의
-import { CodeItem } from "@/pages/Home/types/codeItem";
-import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
+import { AllObjectItem } from "@/pages/Home/types/codeFlow/allObjectItem";
 import { ActivateItem } from "@/pages/Home/types/activateItem";
 import { VariablesDto } from "@/pages/Home/types/dto/variablesDto";
 import { ForDto } from "@/pages/Home/types/dto/forDto";
 import { PrintDto } from "@/pages/Home/types/dto/printDto";
 import { IfElseDto } from "@/pages/Home/types/dto/ifElseDto";
 import { CodeFlowVariableDto } from "@/pages/Home/types/dto/codeFlowVariableDto";
-import { PrintItem } from "@/pages/Home/types/printItem";
+import { PrintItem } from "@/pages/Home/types/codeFlow/printItem";
 import { VariableDto } from "@/pages/Home/types/dto/variableDto";
 import { WhileDto } from "@/pages/Home/types/dto/whileDto";
-
+import { AllDataStructureItem } from "@/pages/Home/types/dataStructuresItem/allDataStructureItem";
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
 import { insertIntoDepth } from "./services/insertIntoDepth";
@@ -55,7 +54,7 @@ const RightSection = () => {
       objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
     },
   ]);
-  const [StructuresList, setStructuresList] = useState<CodeItem[][]>([[]]); // 변수 데이터 시각화 리스트의 변화과정을 담아두는 리스트
+  const [StructuresList, setStructuresList] = useState<AllDataStructureItem[][]>([[]]); // 변수 데이터 시각화 리스트의 변화과정을 담아두는 리스트
   const context = useContext(PreprocessedCodesContext); // context API로 데이터 가져오기
   if (!context) {
     throw new Error("CodeContext not found"); //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
@@ -128,9 +127,9 @@ const RightSection = () => {
     let accCodeFlow: State = {
       objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
     };
-    let accDataStructures: CodeItem[] = [];
+    let accDataStructures: AllDataStructureItem[] = [];
     const accCodeFlowList: State[] = [];
-    const accDataStructuresList: CodeItem[][] = [];
+    const accDataStructuresList: AllDataStructureItem[][] = [];
     const accConsoleLogList: string[] = [];
     let accConsoleLog: string = "";
     const arrowTexts: string[] = [];
@@ -154,7 +153,7 @@ const RightSection = () => {
           }
           // 처음 시각화해주는 자료구조인 경우
           else {
-            accDataStructures.push(variable as CodeItem);
+            accDataStructures.push(variable as AllDataStructureItem);
             usedName.push(variable.name!);
           }
 

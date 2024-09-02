@@ -1,4 +1,4 @@
-import { AllObjectItem } from "./allObjectItem";
+import { AllObjectItem } from "./codeFlow/allObjectItem";
 
 export interface PrintItem {
   id: number;

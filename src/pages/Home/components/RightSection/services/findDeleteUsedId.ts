@@ -1,4 +1,4 @@
-import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
+import { AllObjectItem } from "@/pages/Home/types/codeFlow/allObjectItem";
 
 export const findDeleteUsedId = (targetChild: AllObjectItem[]): number[] => {
   let idsToDelete: number[] = [];
