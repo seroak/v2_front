@@ -1,4 +1,4 @@
-export interface dataStructureVarItem {
+export interface DataStructureVarItem {
   id: number;
   name: string;
   expr: string;
