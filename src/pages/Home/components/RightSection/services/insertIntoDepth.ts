@@ -1,4 +1,4 @@
-import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
+import { AllObjectItem } from "@/pages/Home/types/codeFlow/allObjectItem";
 export const insertIntoDepth = (
   codeFlows: AllObjectItem[],
   toAddObject: AllObjectItem,

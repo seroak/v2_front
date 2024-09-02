@@ -1,4 +1,4 @@
-import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
+import { AllObjectItem } from "@/pages/Home/types/codeFlow/allObjectItem";
 
 // 객체를 수정해야하는 경우에 실행하는 함수
 export const updateCodeFlow = (

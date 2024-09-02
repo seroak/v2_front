@@ -1,4 +1,4 @@
-import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
+import { AllObjectItem } from "@/pages/Home/types/codeFlow/allObjectItem";
 import { ForItem } from "@/pages/Home/types/forItem";
 import { ConditionItem } from "@/pages/Home/types/conditionItem";
 import { PrintItem } from "@/pages/Home/types/printItem";
