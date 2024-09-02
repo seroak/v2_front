@@ -1,10 +1,10 @@
 import { AllObjectItem } from "./allObjectItem";
 
-export interface WhileItem {
+export interface ConditionItem {
   id: number;
   type: string;
-  expr: string;
-  highlights: number[];
+  expr?: string;
+  highlights?: number[];
   depth: number;
   isLight: boolean;
   child: AllObjectItem[];
