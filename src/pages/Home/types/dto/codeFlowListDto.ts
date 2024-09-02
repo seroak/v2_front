@@ -1,3 +1,4 @@
+// dto는 백엔드로 부터 받은 데이터를 저장하는 타입을 정의합니다.
 export interface CodeFlowListDto {
   id: number;
   depth: number;
