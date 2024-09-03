@@ -1,21 +1,26 @@
 import { ReactNode } from "react";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { renderingCodeFlow } from "@/pages/Home/components/RightSection/renderingCodeFlow.tsx";
-import { ForItem } from "@/pages/Home/types/forItem";
+import { renderingCodeFlow } from "@/pages/Visualization/components/RightSection/renderingCodeFlow";
+import { ForItem } from "@/pages/Visualization/types/codeFlow/forItem";
 type Props = {
   children: ReactNode;
   forItem: ForItem;
 };
 // ForBox 컴포넌트 모킹
 // ForBox의 실제 경로에서 forItem과 children인자만 가지고와서 사용한다
-jest.mock("@/pages/Home/components/RightSection/components/ForBox/ForBox", () => ({ forItem, children }: Props) => (
-  // 실제 ForBox의 컴포넌트를 가지고 오는 것이 아닌 가짜로 만들어서 사용
-  <div data-testid="for-box">
-    For Box: {forItem.id}
-    <div data-testid="for-children">{children}</div>
-  </div>
-));
+jest.mock(
+  "@/pages/Visualization/components/RightSection/components/ForBox/ForBox",
+  () =>
+    ({ forItem, children }: Props) =>
+      (
+        // 실제 ForBox의 컴포넌트를 가지고 오는 것이 아닌 가짜로 만들어서 사용
+        <div data-testid="for-box">
+          For Box: {forItem.id}
+          <div data-testid="for-children">{children}</div>
+        </div>
+      )
+);
 
 describe("renderingCodeFlow 함수", () => {
   it("forBox 컴포넌트 하나만 출력하는 테스트", () => {
