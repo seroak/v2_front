@@ -121,23 +121,23 @@ var-list {
   position: relative;
 }
 .code-flow {
-  min-width: 492px;
+  min-width: 560px;
   background-color: #fff;
 }
 .code-flow .code-flow {
-  min-width: 444px;
+  min-width: 480px;
   background-color: #fdfdfe;
 }
 .code-flow .code-flow .code-flow {
-  min-width: 396px;
+  min-width: 400px;
   background-color: #fbfbfe;
 }
 .code-flow .code-flow .code-flow .code-flow {
-  min-width: 248px;
+  min-width: 320px;
   background-color: #f9f9fd;
 }
 .code-flow .code-flow .code-flow .code-flow .code-flow {
-  min-width: 300px;
+  min-width: 240px;
   background-color: #f5f5fc;
 }
 .code-flow-title::before {

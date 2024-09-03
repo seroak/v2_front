@@ -1,6 +1,5 @@
 import { useRef, useEffect, ReactNode } from "react";
-import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
-import { PrintItem } from "@/pages/Home/types/printItem";
+import { AllObjectItem } from "@/pages/Home/types/codeFlow/allObjectItem";
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactElement } from "react";
 import PrintBox from "./components/PrintBox/PrintBox";
@@ -13,9 +12,10 @@ import CodeFlowListWrapper from "./components/CodeFlowListWrapper/CodeFlowListWr
 import WhileBox from "./components/WhileBox/WhileBox";
 
 // type import
-import { ElseItem } from "@/pages/Home/types/elseItem";
-import { ForItem } from "@/pages/Home/types/forItem";
-import { ConditionItem } from "@/pages/Home/types/conditionItem";
+import { ElseItem } from "@/pages/Home/types/codeFlow/elseItem";
+import { ForItem } from "@/pages/Home/types/codeFlow/forItem";
+import { PrintItem } from "@/pages/Home/types/codeFlow/printItem";
+import { ConditionItem } from "@/pages/Home/types/codeFlow/conditionItem";
 import { CodeFlowVariableItem } from "@/pages/Home/types/codeFlow/codeFlowVariableItem";
 import { CodeFlowListItem } from "@/pages/Home/types/codeFlow/codeFlowListItem";
 import { WhileItem } from "@/pages/Home/types/codeFlow/whileItem";

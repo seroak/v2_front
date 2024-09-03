@@ -1,4 +1,4 @@
-import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
+import { AllObjectItem } from "@/pages/Home/types/codeFlow/allObjectItem";
 
 export const deleteCodeFlow = (codeFlows: AllObjectItem[], toDeleteId: number): AllObjectItem[] => {
   return codeFlows

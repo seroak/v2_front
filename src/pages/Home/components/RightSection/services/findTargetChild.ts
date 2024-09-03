@@ -1,4 +1,4 @@
-import { AllObjectItem } from "@/pages/Home/types/allObjectItem";
+import { AllObjectItem } from "@/pages/Home/types/codeFlow/allObjectItem";
 
 export const findTargetChild = (codeFlows: AllObjectItem[], toAddObject: AllObjectItem): AllObjectItem[] => {
   let targetChild: AllObjectItem[] = [];

@@ -7,6 +7,7 @@ const config: Config = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+    "^monaco-editor$": "<rootDir>/__mocks__/monacoEditorMock.ts", // monaco-editor 목업 사용
   },
   transform: {
     "^.+\\.(ts|tsx)?$": "ts-jest",

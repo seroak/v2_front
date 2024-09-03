@@ -38,11 +38,11 @@ describe("renderingCodeFlow 함수", () => {
         child: [],
       },
     ];
-    const mockTrakingId = 1;
+
     const width = 100;
     const height = 100;
 
-    render(<>{renderingCodeFlow(mockCodeFlows, mockTrakingId, width, height)}</>);
+    render(<>{renderingCodeFlow(mockCodeFlows, width, height)}</>);
 
     // ForBox가 렌더링되었는지 확인
     // 테스트를 위해 만든 가짜 ForBox 컴포넌트를 사용
@@ -91,10 +91,9 @@ describe("renderingCodeFlow 함수", () => {
         ],
       },
     ];
-    const mockTrakingId = 1;
     const width = 100;
     const height = 100;
-    render(<>{renderingCodeFlow(mockCodeFlows, mockTrakingId, width, height)}</>);
+    render(<>{renderingCodeFlow(mockCodeFlows, width, height)}</>);
 
     // 외부 ForBox가 렌더링되었는지 확인
     const outerForBox = screen.getByText("For Box: 1");
