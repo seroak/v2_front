@@ -56,10 +56,20 @@ const Signup = () => {
   };
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      return axios.post("http://localhost:8000/signup", formData, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
+      const req = {
+        email: formData.email,
+        password: formData.password,
+        name: formData.username,
+        phoneNumber: formData.phoneNumber,
+      };
+      return axios.post(
+        "http://localhost:8083/signup",
+        { req },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
     },
     onSuccess() {
       alert("회원가입이 완료되었습니다.");

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styles from "./LoggedInHeader.module.css";
 
 const LoggedInHeader = () => {
@@ -16,9 +17,9 @@ const LoggedInHeader = () => {
         <a href="#">설정</a>
       </div>
       <div>
-        <a href="" className={styles["logout"]}>
-          로그아웃
-        </a>
+        <Link to="" className={styles["logout"]}>
+          <a>로그아웃</a>
+        </Link>
       </div>
     </header>
   );

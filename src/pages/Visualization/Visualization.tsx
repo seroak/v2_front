@@ -3,7 +3,7 @@ import { createContext, useState, Dispatch, SetStateAction, useCallback, useEffe
 import { useMutation } from "@tanstack/react-query";
 import styles from "./Visualization.module.css";
 import "./gutter.css";
-import LoggedInHeader from "../components/LoggedInHeader";
+import PublicHeader from "../components/PublicHeader";
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
 
@@ -120,7 +120,7 @@ export default function Visualization() {
   return (
     <CodeContext.Provider value={{ code, setCode }}>
       <PreprocessedCodesContext.Provider value={{ preprocessedCodes, setPreprocessedCodes }}>
-        <LoggedInHeader />
+        <PublicHeader />
 
         <main className={styles.main}>
           <div className={styles["top-btns"]}>
