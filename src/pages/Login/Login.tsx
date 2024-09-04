@@ -3,26 +3,26 @@ import axios from "axios";
 import PublicHeader from "../components/PublicHeader";
 import { useMutation } from "@tanstack/react-query";
 import { useUserStore } from "@/store/user";
-
+import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [userId, setUserId] = useState<string>("");
   const [userPassword, setUserPassword] = useState<string>("");
   const setLoggedInUserId = useUserStore((state) => state.setLoggedInUserId);
-  const setLoggedInUserPassword = useUserStore((state) => state.setLoggedInUserPassword);
-
+  const setLoggedInUserName = useUserStore((state) => state.setLoggedInUserName);
+  const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: async ({ userId, userPassword }: { userId: string; userPassword: string }) => {
       return axios.post(
-        "http://localhost:8083/login",
+        "http://localhost:8080/edupi_user/v1/member/login",
         { email: userId, password: userPassword },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
     },
     onSuccess(data) {
       const jsonData = data.data;
-
       setLoggedInUserId(jsonData.user.id);
-      setLoggedInUserPassword(jsonData.user.name);
+      setLoggedInUserName(jsonData.user.name);
+      navigate("/");
     },
     onError(error) {
       alert("아이디 또는 비밀번호가 틀렸습니다.");
