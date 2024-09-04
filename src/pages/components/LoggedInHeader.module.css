@@ -35,4 +35,5 @@ header {
 
 .logout {
   color: #5a5a5a;
+  cursor: pointer;
 }
