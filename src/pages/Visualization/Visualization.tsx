@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import styles from "./Visualization.module.css";
 import "./gutter.css";
 import PublicHeader from "../components/PublicHeader";
+import LoggedInHeader from "../components/LoggedInHeader";
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
 
@@ -13,6 +14,7 @@ import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/d
 //zustand store
 import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useArrowStore } from "@/store/arrow";
+import { useUserStore } from "@/store/user";
 // 원본 코드 타입 정의
 interface CodeContextType {
   code: string;
@@ -46,6 +48,7 @@ export default function Visualization() {
   const decrementConsoleIdx = useConsoleStore((state) => state.decrementConsoleIdx);
   const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
   const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
+  const loggedInUserName = useUserStore((state) => state.loggedInUserName);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const mutation = useMutation({
@@ -120,7 +123,7 @@ export default function Visualization() {
   return (
     <CodeContext.Provider value={{ code, setCode }}>
       <PreprocessedCodesContext.Provider value={{ preprocessedCodes, setPreprocessedCodes }}>
-        <PublicHeader />
+        {loggedInUserName === "" ? <PublicHeader /> : <LoggedInHeader />}
 
         <main className={styles.main}>
           <div className={styles["top-btns"]}>
