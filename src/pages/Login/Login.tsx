@@ -13,7 +13,7 @@ const Login = () => {
   const mutation = useMutation({
     mutationFn: async ({ userId, userPassword }: { userId: string; userPassword: string }) => {
       return axios.post(
-        "http://localhost:8080/edupi_user/v1/member/login",
+        "http://localhost:8083/edupi_user/v1/member/login",
         { email: userId, password: userPassword },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );

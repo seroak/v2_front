@@ -20,7 +20,7 @@ if (typeof window !== "undefined") {
 }
 // msw 버그로 인해 fetchUser는 따로 확인 불가능 백엔드 서버 연결해서 확인해야함
 const fetchUser = async (): Promise<User> => {
-  const response = await fetch("htttp://localhost:8080/edupi_user/v1/member/load", {
+  const response = await fetch("htttp://localhost:8083/edupi_user/v1/member/load", {
     method: "GET",
     credentials: "include",
     headers: {
