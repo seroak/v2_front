@@ -113,7 +113,7 @@ export const handlers = [
     }
   }),
 
-  http.post("/signup", async ({ request }) => {
+  http.post("/edupi_user/v1/member/signup", async ({ request }) => {
     const { username } = (await request.json()) as SignupUser;
     if (username === "error") return HttpResponse.json({ success: false, message: "회원가입 실패" }, { status: 500 });
     return HttpResponse.json(
