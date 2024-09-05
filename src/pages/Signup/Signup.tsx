@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import PublicHeader from "../components/PublicHeader";
 import styles from "./Signup.module.css";
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 interface FormData {
   username: string;
@@ -29,7 +30,7 @@ const Signup = () => {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
-
+  const navigate = useNavigate();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const trimmedValue = value.replace(/\s/g, "");
@@ -79,8 +80,7 @@ const Signup = () => {
       });
     },
     onSuccess() {
-      alert("회원가입이 완료되었습니다.");
-      // 랜딩 페이지로 접근하는 코드가 들어가야 할 곳
+      navigate("/login");
     },
     onError(error) {
       console.error("회원가입 에러", error);
@@ -101,9 +101,9 @@ const Signup = () => {
         <img className="mb20" src="/image/img_logo2.png" alt="로고" />
         <p className="mb40">
           이미 계정이 있으신가요?
-          <a className="color-blue" href="">
+          <Link className="color-blue" to="/login">
             로그인
-          </a>
+          </Link>
         </p>
         <form onSubmit={handleSubmit}>
           <div className="login-box">
