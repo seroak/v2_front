@@ -4,7 +4,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import forPrintMockData from "./samples/successForAndPrintResponseBody.json";
 import Home from "../../../src/pages/Visualization/Visualization";
-
+import { MemoryRouter } from "react-router-dom";
 // 브라우저API 모킹
 (window as any).fetch = jest.fn();
 window.alert = jest.fn();
@@ -12,7 +12,11 @@ window.alert = jest.fn();
 // reactQuery를 사용하는 컴포넌트를 테스트하기 위해 컴포넌트를 렌더링 하는 함수
 const renderWithQueryClient = (component: React.ReactElement) => {
   const queryClient = new QueryClient();
-  return render(<QueryClientProvider client={queryClient}>{component}</QueryClientProvider>);
+  return render(
+    <MemoryRouter>
+      <QueryClientProvider client={queryClient}>{component}</QueryClientProvider>
+    </MemoryRouter>
+  );
 };
 
 describe("백엔드로 부터 Object 외에 다른 response body(code) 를 받았을 때", () => {
