@@ -53,7 +53,7 @@ export default function Visualization() {
 
   const mutation = useMutation({
     mutationFn: async (code: string) => {
-      return fetch("http://localhost:8080/edupi_visualize/v1/python", {
+      return fetch("http://GW-ALB-1871726514.ap-northeast-2.elb.amazonaws.com/edupi_visualize/v1/python", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
