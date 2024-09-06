@@ -2,26 +2,20 @@ import { useState, FormEvent, ChangeEvent, Fragment } from "react";
 import axios from "axios";
 import PublicHeader from "../components/PublicHeader";
 import { useMutation } from "@tanstack/react-query";
-import { useUserStore } from "@/store/user";
 import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [userId, setUserId] = useState<string>("");
   const [userPassword, setUserPassword] = useState<string>("");
-  const setLoggedInUserId = useUserStore((state) => state.setLoggedInUserId);
-  const setLoggedInUserName = useUserStore((state) => state.setLoggedInUserName);
   const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: async ({ userId, userPassword }: { userId: string; userPassword: string }) => {
-      return axios.post(
-        "http://localhost:8083/edupi_user/v1/member/login",
-        { email: userId, password: userPassword },
-        { headers: { "Content-Type": "application/json" }, withCredentials: true }
-      );
+      const req = { email: userId, password: userPassword };
+      return axios.post("http://localhost:8080/edupi_user/v1/member/login", req, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
     },
-    onSuccess(data) {
-      const jsonData = data.data;
-      setLoggedInUserId(jsonData.user.id);
-      setLoggedInUserName(jsonData.user.name);
+    onSuccess() {
       navigate("/");
     },
     onError(error) {
