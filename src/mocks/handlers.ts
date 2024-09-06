@@ -30,13 +30,22 @@ export const handlers = [
   http.post("/edupi_visualize/v1/python", () => {
     return HttpResponse.json(testResponseBody);
   }),
-  http.post("/edupi_user/v1/member/load", async ({ request }) => {
-    console.log("Intercepted GET request to /edupi_user/v1/member/load");
 
+  http.get("/edupi_user/v1/member/login/info", async ({ request, cookies }) => {
+    console.log("응답");
+    // Get the token from the cookies
+    console.log(cookies);
+    const cookieHeader = request.headers.get("Cookie");
+    console.log("cookieHeader", cookieHeader);
+    const token = cookieHeader
+      ?.split(";")
+      .find((cookie) => cookie.trim().startsWith("token="))
+      ?.split("=")[1];
+    console.log("token", token);
     // 쿠키에서 토큰을 확인
-    const cookies = request.headers.get("Cookie");
-    const hasToken = cookies && cookies.includes("token=");
-
+    // const cookies = request.headers.get("Cookie");
+    // const hasToken = cookies && cookies.includes("token=");
+    const hasToken = true;
     if (hasToken) {
       return HttpResponse.json(
         {
@@ -71,19 +80,17 @@ export const handlers = [
   http.post("/edupi_user/v1/member/login", async ({ request }) => {
     try {
       const { email, password } = (await request.json()) as User;
-
+      console.log("login");
       if (email === "test@test.com" && password === "test") {
         // JWT 토큰 생성을 기다립니다.
         const token = await generateToken(email);
 
         const expirationDate = new Date(new Date().getTime() + 60 * 60 * 1000);
         console.log("로그인 성공");
-        console.log;
         return HttpResponse.json(
           {
             success: true,
             message: "로그인 성공",
-            user: { id: email, name: "테스트 사용자" },
           },
           {
             status: 200,
