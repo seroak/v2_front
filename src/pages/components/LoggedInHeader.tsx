@@ -26,10 +26,10 @@ const LoggedInHeader = () => {
       </div>
 
       <div>
-        {loggedInUserName === "" ? null : <a style={{ marginRight: "10px" }}>{loggedInUserName}님</a>}
-        <a onClick={logout} className={styles["logout"]}>
-          <a>로그아웃</a>
-        </a>
+        {loggedInUserName === "" ? null : <span style={{ marginRight: "10px" }}>{loggedInUserName}님</span>}
+        <span onClick={logout} className={styles["logout"]}>
+          <span>로그아웃</span>
+        </span>
       </div>
     </header>
   );
