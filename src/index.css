@@ -39,6 +39,9 @@ html,
 body {
   margin: 0; /* 기본 마진 제거 */
 }
+#root {
+  height: auto;
+}
 section {
   width: 100%;
 }
@@ -219,13 +222,14 @@ ol {
 /* 스크롤 */
 
 .s__container {
-  height: inherit;
+  height: auto;
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
 }
 .s__row {
   padding: 0 16px;
+  min-height: 80vh;
 }
 
 :root {
