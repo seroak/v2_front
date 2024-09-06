@@ -32,16 +32,15 @@ export const handlers = [
   }),
 
   http.get("/edupi_user/v1/member/login/info", async ({ request, cookies }) => {
-    console.log("응답");
     // Get the token from the cookies
-    console.log(cookies);
+
     const cookieHeader = request.headers.get("Cookie");
-    console.log("cookieHeader", cookieHeader);
+
     const token = cookieHeader
       ?.split(";")
       .find((cookie) => cookie.trim().startsWith("token="))
       ?.split("=")[1];
-    console.log("token", token);
+
     // 쿠키에서 토큰을 확인
     // const cookies = request.headers.get("Cookie");
     // const hasToken = cookies && cookies.includes("token=");
@@ -80,13 +79,13 @@ export const handlers = [
   http.post("/edupi_user/v1/member/login", async ({ request }) => {
     try {
       const { email, password } = (await request.json()) as User;
-      console.log("login");
+
       if (email === "test@test.com" && password === "test") {
         // JWT 토큰 생성을 기다립니다.
         const token = await generateToken(email);
 
         const expirationDate = new Date(new Date().getTime() + 60 * 60 * 1000);
-        console.log("로그인 성공");
+
         return HttpResponse.json(
           {
             success: true,
