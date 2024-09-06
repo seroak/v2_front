@@ -74,7 +74,7 @@ const Signup = () => {
         name: formData.username,
         phoneNumber: formData.phoneNumber,
       };
-      return axios.post("http://localhost:8083/edupi_user/v1/member/signup", req, {
+      return axios.post("http://localhost:8080/edupi_user/v1/member/signup", req, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
