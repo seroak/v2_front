@@ -1,6 +1,5 @@
 import { useState, useContext, useEffect, useRef } from "react";
 import { PreprocessedCodesContext } from "../../Visualization";
-
 import Split from "react-split";
 import _ from "lodash";
 import ResizeObserver from "resize-observer-polyfill";
