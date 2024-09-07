@@ -1040,12 +1040,17 @@ header .group-btn {
   height: 51px;
 }
 .group-right {
-  width: 1140px;
   padding: 40px 0 0 36px;
 }
 .section-data04 {
   grid-template-columns: 1fr 1fr 1fr;
 }
+@media screen and (max-width: 1740px) {
+  .section-data04 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 .section-data04 li a {
   border-radius: 8px;
   overflow: hidden;
