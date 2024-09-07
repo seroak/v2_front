@@ -229,6 +229,9 @@ ol {
 }
 .s__row {
   padding: 0 16px;
+}
+.modify-s__row {
+  padding: 0 16px;
   min-height: 80vh;
 }
 
