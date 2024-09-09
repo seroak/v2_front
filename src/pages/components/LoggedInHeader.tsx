@@ -1,7 +1,7 @@
 import styles from "./LoggedInHeader.module.css";
 import { useUserStore } from "@/store/user";
 import { Cookies } from "react-cookie";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 const LoggedInHeader = () => {
   const cookies = new Cookies();
   const loggedInUserName = useUserStore((state) => state.loggedInUserName);
@@ -10,6 +10,7 @@ const LoggedInHeader = () => {
     resetUser();
     cookies.remove("token");
   };
+  console.log(NavLink);
   return (
     <header className={styles["bg-blue"]}>
       <div className={styles["header-menu"]}>
@@ -17,12 +18,20 @@ const LoggedInHeader = () => {
           <img src="/image/img_logo.png" alt="로고" />
         </Link>
         {/* <!-- 활성화 할 a태그에 on_active 클래스 추가 --> */}
-        <a href="#">학생목록</a>
-        <Link to="/viz" className={styles["on_active"]}>
+        <NavLink to="/group" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+          학생목록
+        </NavLink>
+
+        <NavLink to="/viz" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
           시각화
-        </Link>
-        <a href="#">과제</a>
-        <a href="#">설정</a>
+        </NavLink>
+
+        <NavLink to="/assignment" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+          과제
+        </NavLink>
+        <NavLink to="/modify" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+          설정
+        </NavLink>
       </div>
 
       <div>
