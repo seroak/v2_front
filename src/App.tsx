@@ -7,6 +7,7 @@ import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
 import Modify from "./pages/Modify/Modify";
 import Group from "./pages/Group/Group";
+import Assginment from "./pages/Assignment/Assignment";
 import { useUserStore } from "./store/user";
 import "./App.css";
 
@@ -71,6 +72,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/modify" element={<Modify />} />
         <Route path="/group" element={<Group />} />
+        <Route path="/assignment" element={<Assginment />} />
       </Routes>
     </Router>
   );

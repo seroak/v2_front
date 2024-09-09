@@ -759,11 +759,17 @@ var-list {
 .section-data02 {
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
+@media screen and (max-width: 1212px) {
+  .section-data02 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
 .section-data02 > li {
   background-color: #fff;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--gray02);
+  min-width: 258px;
 }
 .section-data02-img-wrap {
   height: 190px;
