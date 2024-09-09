@@ -31,15 +31,8 @@ export const handlers = [
     return HttpResponse.json(testResponseBody);
   }),
 
-  http.get("/edupi_user/v1/member/login/info", async ({ request, cookies }) => {
+  http.get("/edupi_user/v1/member/login/info", async () => {
     // Get the token from the cookies
-
-    const cookieHeader = request.headers.get("Cookie");
-
-    const token = cookieHeader
-      ?.split(";")
-      .find((cookie) => cookie.trim().startsWith("token="))
-      ?.split("=")[1];
 
     // 쿠키에서 토큰을 확인
     // const cookies = request.headers.get("Cookie");
