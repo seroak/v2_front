@@ -69,11 +69,11 @@ export default function Visualization() {
           setPreprocessedCodes(jsonData);
           setDisplayNone(false);
         } else {
-          throw new Error("받은 데이터가 올바르지 않습니다");
+          throw new Error("데이터 형식이 올바르지 않습니다");
         }
       } catch (error) {
         console.error("Data processing error:", error);
-        alert("받은 데이터의 형식이 올바르지 않습니다.");
+        alert("데이터의 형식이 올바르지 않습니다.");
       }
     },
     onError(error) {
