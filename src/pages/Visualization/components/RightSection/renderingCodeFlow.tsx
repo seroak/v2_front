@@ -35,7 +35,6 @@ const CodeFlowItem = ({ codeFlow, width, height, children }: Props) => {
   const setRight = useArrowStore((state) => state.setRight);
 
   useEffect(() => {
-    console.log("codeFlow", codeFlow);
     if (ref.current && codeFlow.isLight) {
       const rect = ref.current.getBoundingClientRect();
       setTop(rect.top);
