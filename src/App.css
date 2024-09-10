@@ -759,11 +759,17 @@ var-list {
 .section-data02 {
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
+@media screen and (max-width: 1212px) {
+  .section-data02 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
 .section-data02 > li {
   background-color: #fff;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--gray02);
+  min-width: 258px;
 }
 .section-data02-img-wrap {
   height: 190px;
@@ -1040,12 +1046,17 @@ header .group-btn {
   height: 51px;
 }
 .group-right {
-  width: 1140px;
   padding: 40px 0 0 36px;
 }
 .section-data04 {
   grid-template-columns: 1fr 1fr 1fr;
 }
+@media screen and (max-width: 1740px) {
+  .section-data04 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 .section-data04 li a {
   border-radius: 8px;
   overflow: hidden;

@@ -229,6 +229,9 @@ ol {
 }
 .s__row {
   padding: 0 16px;
+}
+.modify-s__row {
+  padding: 0 16px;
   min-height: 80vh;
 }
 
@@ -237,6 +240,7 @@ ol {
   --white: #fff;
   --blue: #4866ff;
   --gray01: #dddee4;
+  --gray02: #eaeaea;
   --bg01: #fcfcfc;
   --bg02: #f7f7f7;
 }

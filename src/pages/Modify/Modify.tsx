@@ -21,7 +21,7 @@ const Modify = () => {
         </div>
       </div>
       <div className="s__container">
-        <div className="s__row">
+        <div className="modify-s__row">
           <div className="section-title">
             <div className="title-left">
               <h3>초대 대기</h3>
