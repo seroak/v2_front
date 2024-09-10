@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <>
       {loggedInUserName === "" ? <PublicHeader /> : <LoggedInHeader />}
-      <h1>깃허브 엑션 ci/cd 됐냐? s3퍼블릭으로 변경</h1>
+      <h1>푸쉬후 자동 배포 되나?</h1>
     </>
   );
 };
