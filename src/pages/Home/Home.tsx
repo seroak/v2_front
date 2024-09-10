@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <>
       {loggedInUserName === "" ? <PublicHeader /> : <LoggedInHeader />}
-      <h1>푸쉬후 자동 배포 되나?</h1>
+      <h1>s3 퍼블릭 차단</h1>
     </>
   );
 };
