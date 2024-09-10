@@ -7,6 +7,9 @@ header {
   border-bottom: 1px solid var(--gray01);
   background-color: #fff;
 }
+.header-logo img {
+  height: 32px;
+}
 .bg-blue {
   background-color: #f8f9ff;
 }
@@ -35,4 +38,5 @@ header {
 
 .logout {
   color: #5a5a5a;
+  cursor: pointer;
 }

@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import PublicHeader from "../components/PublicHeader";
 import styles from "./Signup.module.css";
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 interface FormData {
   username: string;
@@ -29,7 +30,7 @@ const Signup = () => {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
-
+  const navigate = useNavigate();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const trimmedValue = value.replace(/\s/g, "");
@@ -38,32 +39,48 @@ const Signup = () => {
 
   const validateForm = (): boolean => {
     let newErrors: FormErrors = {};
-    if (!formData.username.trim()) newErrors.username = "사용자 이름은 필수입니다.";
-    if (!formData.email.trim()) newErrors.email = "이메일은 필수입니다.";
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "유효한 이메일 주소를 입력하세요.";
-    if (!formData.phoneNumber) newErrors.phoneNumber = "핸드폰 번호는 필수입니다.";
-    else if (!/^010-\d{3,4}-\d{4}$/.test(formData.phoneNumber))
+    if (!formData.username.trim()) {
+      newErrors.username = "사용자 이름은 필수입니다.";
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = "이메일은 필수입니다.";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "유효한 이메일 주소를 입력하세요.";
+    }
+    if (!formData.phoneNumber) {
+      newErrors.phoneNumber = "핸드폰 번호는 필수입니다.";
+    } else if (!/^010-\d{3,4}-\d{4}$/.test(formData.phoneNumber)) {
       newErrors.phoneNumber = "유효한 핸드폰 번호를 입력하세요.";
-    if (!formData.password) newErrors.password = "비밀번호는 필수입니다.";
-    else if (formData.password.length < 6 || formData.confirmPassword.length > 20)
+    }
+    if (!formData.password) {
+      newErrors.password = "비밀번호는 필수입니다.";
+    } else if (formData.password.length < 6 || formData.confirmPassword.length > 20) {
       newErrors.password = "비밀번호는 최소 8자 이상 20자 이하여야 합니다.";
-    else if (!/^(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]).*$/.test(formData.password))
+    } else if (!/^(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]).*$/.test(formData.password)) {
       newErrors.password = "비밀번호는 최소 1개의 특수 문자를 포함해야 합니다";
-    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
+    }
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      return axios.post("http://localhost:8000/signup", formData, {
+      const req = {
+        email: formData.email,
+        password: formData.password,
+        name: formData.username,
+        phoneNumber: formData.phoneNumber,
+      };
+      return axios.post("http://localhost:8080/edupi_user/v1/member/signup", req, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
     },
     onSuccess() {
-      alert("회원가입이 완료되었습니다.");
-      // 랜딩 페이지로 접근하는 코드가 들어가야 할 곳
+      navigate("/login");
     },
     onError(error) {
       console.error("회원가입 에러", error);
@@ -84,9 +101,9 @@ const Signup = () => {
         <img className="mb20" src="/image/img_logo2.png" alt="로고" />
         <p className="mb40">
           이미 계정이 있으신가요?
-          <a className="color-blue" href="">
+          <Link className="color-blue" to="/login">
             로그인
-          </a>
+          </Link>
         </p>
         <form onSubmit={handleSubmit}>
           <div className="login-box">

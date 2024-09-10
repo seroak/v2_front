@@ -1,16 +1,22 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 interface UserState {
-  loggedInUserId: string;
-  loggedInUserPassword: string;
-  setLoggedInUserId: (user: string) => void;
-  setLoggedInUserPassword: (password: string) => void;
+  loggedInUserEmail: string;
+  loggedInUserName: string;
+  loggedInUserRole: string;
+  setLoggedInUserEmail: (user: string) => void;
+  setLoggedInUserName: (username: string) => void;
+  setLoggedInUserRole: (role: string) => void;
+  resetUser: () => void;
 }
 export const useUserStore = create(
   devtools<UserState>((set) => ({
-    loggedInUserId: "",
-    loggedInUserPassword: "",
-    setLoggedInUserId: (loggedInUserId) => set({ loggedInUserId }),
-    setLoggedInUserPassword: (loggedInUserPassword) => set({ loggedInUserPassword }),
+    loggedInUserEmail: "",
+    loggedInUserName: "",
+    loggedInUserRole: "",
+    setLoggedInUserEmail: (loggedInUserEmail) => set({ loggedInUserEmail }),
+    setLoggedInUserName: (loggedInUserName) => set({ loggedInUserName }),
+    setLoggedInUserRole: (loggedInUserRole) => set({ loggedInUserRole }),
+    resetUser: () => set({ loggedInUserEmail: "", loggedInUserName: "", loggedInUserRole: "" }),
   }))
 );
