@@ -30,8 +30,8 @@ const Modify = () => {
           <ul className="section-data section-data03">
             <li>
               <div className="data03-name">
-                <p>홍길동</p>
-                <span>hong@naver.com</span>
+                <p>김민준</p>
+                <span>minjun@naver.com</span>
                 <span>학번 : 20003204</span>
               </div>
               <div className="data03-btns">
@@ -41,8 +41,8 @@ const Modify = () => {
             </li>
             <li>
               <div className="data03-name">
-                <p>홍길동</p>
-                <span>hong@naver.com</span>
+                <p>이서준</p>
+                <span>seojun@naver.com</span>
                 <span>학번 : 20003204</span>
               </div>
               <div className="data03-btns">
@@ -67,8 +67,8 @@ const Modify = () => {
           <ul className="section-data section-data03">
             <li>
               <div className="data03-name">
-                <p>홍길동</p>
-                <span>hong@naver.com</span>
+                <p>이서윤</p>
+                <span>seoyun@naver.com</span>
                 <span>학번 : 20003204</span>
               </div>
               <div className="data03-btns">
@@ -77,8 +77,8 @@ const Modify = () => {
             </li>
             <li>
               <div className="data03-name">
-                <p>홍길동</p>
-                <span>hong@naver.com</span>
+                <p>이서연</p>
+                <span>seoyeon@naver.com</span>
                 <span>학번 : 20003204</span>
               </div>
               <div className="data03-btns">
@@ -87,8 +87,8 @@ const Modify = () => {
             </li>
             <li>
               <div className="data03-name">
-                <p>홍길동</p>
-                <span>hong@naver.com</span>
+                <p>김지우</p>
+                <span>jiwo@naver.com</span>
                 <span>학번 : 20003204</span>
               </div>
               <div className="data03-btns">
@@ -97,8 +97,8 @@ const Modify = () => {
             </li>
             <li>
               <div className="data03-name">
-                <p>홍길동</p>
-                <span>hong@naver.com</span>
+                <p>박예준</p>
+                <span>yeajun@naver.com</span>
                 <span>학번 : 20003204</span>
               </div>
               <div className="data03-btns">
