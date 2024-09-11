@@ -1,6 +1,9 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
 import PublicHeader from "../components/PublicHeader";
+import PopUpModal01 from "./components/PopUpModal01";
+import PopUpModal02 from "./components/PopUpModal02";
+import cx from "classnames";
 import styles from "./Signup.module.css";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -30,6 +33,14 @@ const Signup = () => {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
+  const [isModal01Open, setIsModal01Open] = useState<boolean>(false);
+  const openModal01 = (): void => setIsModal01Open(true);
+  const closeModal01 = (): void => setIsModal01Open(false);
+
+  const [isModal02Open, setIsModal02Open] = useState<boolean>(false);
+  const openModal02 = (): void => setIsModal02Open(true);
+  const closeModal02 = (): void => setIsModal02Open(false);
+
   const navigate = useNavigate();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -95,8 +106,10 @@ const Signup = () => {
   };
 
   return (
-    <div className="bg-gray">
+    <div className={cx("bg-gray", { "scroll-off": isModal01Open })}>
       <PublicHeader />
+      <PopUpModal01 isOpen={isModal01Open} onClose={closeModal01} />
+      <PopUpModal02 isOpen={isModal02Open} onClose={closeModal02} />
       <div className="login-wrap">
         <img className="mb20" src="/image/img_logo2.png" alt="로고" />
         <p className="mb40">
@@ -172,7 +185,7 @@ const Signup = () => {
                 <input type="checkbox" className="s__checkbox-ck" id="ch01_01" />
                 <label htmlFor="ch01_01">
                   [필수]
-                  <button className="openPopup js-popup-open" data-popid="popupModal01" type="button">
+                  <button className="openPopup" onClick={openModal01} data-popid="popupModal01" type="button">
                     이용약관 동의
                   </button>
                 </label>
@@ -181,7 +194,7 @@ const Signup = () => {
                 <input type="checkbox" className="s__checkbox-ck" id="ch01_02" />
                 <label htmlFor="ch01_02">
                   [필수]
-                  <button className="openPopup js-popup-open" data-popid="popupModal02" type="button">
+                  <button className="openPopup" onClick={openModal02} data-popid="popupModal02" type="button">
                     개인정보 수집 및 이용에 관한 동의
                   </button>
                 </label>
@@ -196,167 +209,6 @@ const Signup = () => {
             </button>
           </div>
         </form>
-      </div>
-
-      <div id="popupModal01" className="popup__section">
-        <div className="popup__dim"></div>
-        <div className="popup__inner">
-          <div className="popup__container__group --popup">
-            <div className="popup__header__group">
-              <h2 className="popup__header__title">이용약관 동의</h2>
-              <button className="popup__header__close js-popup-close">
-                <span className="screen-out">닫기</span>
-              </button>
-            </div>
-            <div className="popup__contents__group js-popup-scroll ps">
-              <p>
-                제1조 (개인정보의 처리 목적)
-                <br />
-                1.(공통) 회사는 개인 정보를 다음의 목적을 위하여 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의
-                용도로는 사용되지 않으며, 이용 목적이 변경되는 경우에는 「개인정보 보호법」 제18조에 따라 별도의 동의를
-                받는 등 필요한 조치를 이행할 예정입니다.
-                <br />
-                - 서비스 회원 가입의사 확인, 회원 식별, 회원자격 유지 및 관리, 서비스 부정이용 방지
-                <br />
-                - 만 14세 미만 아동의 개인정보 수집·처리시 법정대리인의 동의여부 확인, 법정 대리인 권리행사 시 본인 확인
-                <br />
-                - 재화 또는 서비스 제공, 물품 배송, 청구서, 계약서 등의 전송 및 배송
-                <br />
-                - 요금 결제·정산, 본인인증, 환불 처리
-                <br />
-                - 고용보험 환급 교육과정에 대한 수강정보 등록 및 환급서류 제출 용도
-                <br />
-                - 문의사항 또는 고충처리, 공지사항 기타 각종 통지
-                <br />
-                제1조 (개인정보의 처리 목적)
-                <br />
-                1.(공통) 회사는 개인 정보를 다음의 목적을 위하여 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의
-                용도로는 사용되지 않으며, 이용 목적이 변경되는 경우에는 「개인정보 보호법」 제18조에 따라 별도의 동의를
-                받는 등 필요한 조치를 이행할 예정입니다.
-                <br />
-                - 서비스 회원 가입의사 확인, 회원 식별, 회원자격 유지 및 관리, 서비스 부정이용 방지
-                <br />
-                - 만 14세 미만 아동의 개인정보 수집·처리시 법정대리인의 동의여부 확인, 법정 대리인 권리행사 시 본인 확인
-                <br />
-                - 재화 또는 서비스 제공, 물품 배송, 청구서, 계약서 등의 전송 및 배송
-                <br />
-                - 요금 결제·정산, 본인인증, 환불 처리
-                <br />
-                - 고용보험 환급 교육과정에 대한 수강정보 등록 및 환급서류 제출 용도
-                <br />
-                - 문의사항 또는 고충처리, 공지사항 기타 각종 통지
-                <br />
-                제1조 (개인정보의 처리 목적)
-                <br />
-                1.(공통) 회사는 개인 정보를 다음의 목적을 위하여 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의
-                용도로는 사용되지 않으며, 이용 목적이 변경되는 경우에는 「개인정보 보호법」 제18조에 따라 별도의 동의를
-                받는 등 필요한 조치를 이행할 예정입니다.
-                <br />
-                - 서비스 회원 가입의사 확인, 회원 식별, 회원자격 유지 및 관리, 서비스 부정이용 방지
-                <br />
-                - 만 14세 미만 아동의 개인정보 수집·처리시 법정대리인의 동의여부 확인, 법정 대리인 권리행사 시 본인 확인
-                <br />
-                - 재화 또는 서비스 제공, 물품 배송, 청구서, 계약서 등의 전송 및 배송
-                <br />
-                - 요금 결제·정산, 본인인증, 환불 처리
-                <br />
-                - 고용보험 환급 교육과정에 대한 수강정보 등록 및 환급서류 제출 용도
-                <br />
-                - 문의사항 또는 고충처리, 공지사항 기타 각종 통지
-                <br />
-                제1조 (개인정보의 처리 목적)
-                <br />
-                1.(공통) 회사는 개인 정보를 다음의 목적을 위하여 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의
-                용도로는 사용되지 않으며, 이용 목적이 변경되는 경우에는 「개인정보 보호법」 제18조에 따라 별도의 동의를
-                받는 등 필요한 조치를 이행할 예정입니다.
-                <br />
-                - 서비스 회원 가입의사 확인, 회원 식별, 회원자격 유지 및 관리, 서비스 부정이용 방지
-                <br />
-                - 만 14세 미만 아동의 개인정보 수집·처리시 법정대리인의 동의여부 확인, 법정 대리인 권리행사 시 본인 확인
-                <br />
-                - 재화 또는 서비스 제공, 물품 배송, 청구서, 계약서 등의 전송 및 배송
-                <br />
-                - 요금 결제·정산, 본인인증, 환불 처리
-                <br />
-                - 고용보험 환급 교육과정에 대한 수강정보 등록 및 환급서류 제출 용도
-                <br />
-                - 문의사항 또는 고충처리, 공지사항 기타 각종 통지
-                <br />
-                제1조 (개인정보의 처리 목적)
-                <br />
-                1.(공통) 회사는 개인 정보를 다음의 목적을 위하여 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의
-                용도로는 사용되지 않으며, 이용 목적이 변경되는 경우에는 「개인정보 보호법」 제18조에 따라 별도의 동의를
-                받는 등 필요한 조치를 이행할 예정입니다.
-                <br />
-                - 서비스 회원 가입의사 확인, 회원 식별, 회원자격 유지 및 관리, 서비스 부정이용 방지
-                <br />
-                - 만 14세 미만 아동의 개인정보 수집·처리시 법정대리인의 동의여부 확인, 법정 대리인 권리행사 시 본인 확인
-                <br />
-                - 재화 또는 서비스 제공, 물품 배송, 청구서, 계약서 등의 전송 및 배송
-                <br />
-                - 요금 결제·정산, 본인인증, 환불 처리
-                <br />
-                - 고용보험 환급 교육과정에 대한 수강정보 등록 및 환급서류 제출 용도
-                <br />
-                - 문의사항 또는 고충처리, 공지사항 기타 각종 통지
-                <br />
-                제1조 (개인정보의 처리 목적)
-                <br />
-                1.(공통) 회사는 개인 정보를 다음의 목적을 위하여 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의
-                용도로는 사용되지 않으며, 이용 목적이 변경되는 경우에는 「개인정보 보호법」 제18조에 따라 별도의 동의를
-                받는 등 필요한 조치를 이행할 예정입니다.
-                <br />
-                - 서비스 회원 가입의사 확인, 회원 식별, 회원자격 유지 및 관리, 서비스 부정이용 방지
-                <br />
-                - 만 14세 미만 아동의 개인정보 수집·처리시 법정대리인의 동의여부 확인, 법정 대리인 권리행사 시 본인 확인
-                <br />
-                - 재화 또는 서비스 제공, 물품 배송, 청구서, 계약서 등의 전송 및 배송
-                <br />
-                - 요금 결제·정산, 본인인증, 환불 처리
-                <br />
-                - 고용보험 환급 교육과정에 대한 수강정보 등록 및 환급서류 제출 용도
-                <br />
-                - 문의사항 또는 고충처리, 공지사항 기타 각종 통지
-                <br />
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="popupModal02" className="popup__section">
-        <div className="popup__dim"></div>
-        <div className="popup__inner">
-          <div className="popup__container__group --popup">
-            <div className="popup__header__group">
-              <h2 className="popup__header__title">개인정보 수집 및 이용에 관한 동의</h2>
-              <button className="popup__header__close js-popup-close">
-                <span className="screen-out">닫기</span>
-              </button>
-            </div>
-            <div className="popup__contents__group js-popup-scroll ps">
-              <p>
-                제1조 (개인정보의 처리 목적)
-                <br />
-                1.(공통) 회사는 개인 정보를 다음의 목적을 위하여 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의
-                용도로는 사용되지 않으며, 이용 목적이 변경되는 경우에는 「개인정보 보호법」 제18조에 따라 별도의 동의를
-                받는 등 필요한 조치를 이행할 예정입니다.
-                <br />
-                - 서비스 회원 가입의사 확인, 회원 식별, 회원자격 유지 및 관리, 서비스 부정이용 방지
-                <br />
-                - 만 14세 미만 아동의 개인정보 수집·처리시 법정대리인의 동의여부 확인, 법정 대리인 권리행사 시 본인 확인
-                <br />
-                - 재화 또는 서비스 제공, 물품 배송, 청구서, 계약서 등의 전송 및 배송
-                <br />
-                - 요금 결제·정산, 본인인증, 환불 처리
-                <br />
-                - 고용보험 환급 교육과정에 대한 수강정보 등록 및 환급서류 제출 용도
-                <br />
-                - 문의사항 또는 고충처리, 공지사항 기타 각종 통지
-                <br />
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
