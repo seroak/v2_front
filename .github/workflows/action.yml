@@ -1,39 +1,35 @@
-name: Build React App
+name: Build React App and Deploy
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20.x]
-
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
-      - name: Create env file
-        run: |
-          touch .env
-          echo REACT_APP_API_ENDPOINT=${{ secrets.REACT_APP_API_ENDPOINT }} >> .env
-          cat .env
+          node-version: "20.x"
       - name: Npm Install
-        run: |
-          npm install
+        run: npm install
       - name: Npm Build
-        run: |
-          npm run build
+        run: npm run build
       - name: Deploy to S3
         uses: jakejarvis/s3-sync-action@master
         with:
-          args: --acl public-read --delete
+          args: --delete
         env:
           AWS_S3_BUCKET: ${{ secrets.AWS_STAGING_BUCKET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          SOURCE_DIR: "build"
+          SOURCE_DIR: "dist"
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
