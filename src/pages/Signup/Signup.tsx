@@ -161,7 +161,6 @@ const Signup = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              minLength={6}
               placeholder="비밀번호"
               required
             />
