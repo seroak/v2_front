@@ -33,6 +33,10 @@ const Signup = () => {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
+  const [isContainsTwoTypes, setContainsTwoTypes] = useState<number>(0);
+  const [isMoreOrLess, setMoreOrLess] = useState<number>(0);
+  const [isConsecutiveChar, setConsecutiveChar] = useState<number>(0);
+  const [isViewHidden, setIsViewHidden] = useState<boolean>(true);
   const [isTermsOfServiceModalOpen, setIsTermsOfServiceModalOpen] = useState<boolean>(false);
   const openTermsOfServiceModal = (): void => setIsTermsOfServiceModalOpen(true);
   const closeTermsOfServiceModal = (): void => setIsTermsOfServiceModalOpen(false);
@@ -45,6 +49,34 @@ const Signup = () => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const trimmedValue = value.replace(/\s/g, "");
+    // 비밀번호 입력 시, 영문/숫자/특수문자 중 2가지 이상 포함 여부 체크
+    if (
+      name === "password" &&
+      /^(?:(?=.*[a-zA-Z])(?=.*\d)|(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*\d)(?=.*[\W_]))/.test(trimmedValue)
+    ) {
+      setContainsTwoTypes(2);
+    } else {
+      setContainsTwoTypes(1);
+    }
+
+    // 비밀번호 입력 시, 8자 이상 20자 이하 여부 체크
+    if (name === "password" && trimmedValue.length >= 8 && trimmedValue.length <= 20) {
+      setMoreOrLess(2);
+    } else {
+      setMoreOrLess(1);
+    }
+    // 비밀번호 입력 시, 연속 3자 이상 동일한 문자/숫자 제외 여부 체크
+    if (name === "password" && !/(.)\1{2,}/.test(trimmedValue)) {
+      setConsecutiveChar(2);
+    } else {
+      setConsecutiveChar(1);
+    }
+    // 비밀번호 다 지우면 초기화
+    if (name == "password" && trimmedValue.length === 0) {
+      setContainsTwoTypes(0);
+      setMoreOrLess(0);
+      setConsecutiveChar(0);
+    }
     setFormData((prevData) => ({ ...prevData, [name]: trimmedValue }));
   };
 
@@ -104,7 +136,27 @@ const Signup = () => {
       mutation.mutate(formData);
     }
   };
-
+  const togglePasswordVisibility = () => {
+    setIsViewHidden(() => !isViewHidden);
+  };
+  const getIconSrc = (isContainsTwoTypes: number) => {
+    switch (isContainsTwoTypes) {
+      case 0:
+        return "/image/icon_check.svg";
+      case 1:
+        return "/image/icon_x_red.svg";
+      default:
+        return "/image/icon_check_green.svg";
+    }
+  };
+  const getViewHiddenIconSrc = (isViewHidden: boolean) => {
+    switch (isViewHidden) {
+      case true:
+        return "/image/icon_eye.svg";
+      case false:
+        return "/image/icon_eye_off.svg";
+    }
+  };
   return (
     <div className={cx("bg-gray", { "scroll-off": isTermsOfServiceModalOpen })}>
       <PublicHeader />
@@ -129,7 +181,6 @@ const Signup = () => {
               value={formData.username}
               onChange={handleChange}
               placeholder="이름"
-              required
             />
             {errors.email && <div className={styles.errorMessage}>{errors.email}</div>}
             <input
@@ -140,7 +191,6 @@ const Signup = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="이메일"
-              required
             />
             {errors.phoneNumber && <div className={styles.errorMessage}>{errors.phoneNumber}</div>}
             <input
@@ -151,19 +201,67 @@ const Signup = () => {
               placeholder="하이픈(-)을 포함해서 입력해 주세요."
               value={formData.phoneNumber}
               onChange={handleChange}
-              required
             />
             {errors.password && <div className={styles.errorMessage}>{errors.password}</div>}
-            <input
-              className="mb16"
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="비밀번호"
-              required
-            />
+            <div className="input-wraper">
+              <input
+                className={cx({
+                  mb16: true,
+                  "border-red": isContainsTwoTypes === 1,
+                  "input-text-red": isContainsTwoTypes === 1,
+                  "border-green": isContainsTwoTypes === 2,
+                  "input-text-green": isContainsTwoTypes === 2,
+                })}
+                type={isViewHidden ? "password" : "text"}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="비밀번호"
+              />
+              <div className="input-right-section">
+                <button onClick={togglePasswordVisibility} type="button">
+                  <img src={getViewHiddenIconSrc(isViewHidden)} alt="비밀번호 보기" />
+                </button>
+              </div>
+            </div>
+
+            <div className="password-guide-section">
+              <div className="password-guide">
+                <img src={getIconSrc(isContainsTwoTypes)} alt="체크" />
+                <p
+                  className={cx({
+                    "text-green": isContainsTwoTypes === 2,
+                    "text-red": isContainsTwoTypes === 1,
+                  })}
+                >
+                  영문/숫자/특수문자 중, 2가지 이상 포함
+                </p>
+              </div>
+              <div className="password-guide">
+                <img src={getIconSrc(isMoreOrLess)} alt="체크" />
+                <p
+                  className={cx({
+                    "text-green": isMoreOrLess === 2,
+                    "text-red": isMoreOrLess === 1,
+                  })}
+                >
+                  8자 이상 32자 이하 입력 (공백 제외)
+                </p>
+              </div>
+
+              <div className="password-guide">
+                <img src={getIconSrc(isConsecutiveChar)} alt="체크" />
+                <p
+                  className={cx({
+                    "text-green": isConsecutiveChar === 2,
+                    "text-red": isConsecutiveChar === 1,
+                  })}
+                >
+                  연속 3자 이상 동일한 문자/숫자 제외
+                </p>
+              </div>
+            </div>
 
             <input
               className="mb12"
@@ -174,7 +272,7 @@ const Signup = () => {
               onChange={handleChange}
               placeholder="비밀번호 재확인"
             />
-            <p className="mb32 fz14">영문, 숫자, 특수문자를 조합하여 8자 이상으로 구성해주세요.</p>
+
             <div className="s__checkbox-wrap">
               <div className="s__checkbox">
                 <input type="checkbox" className="s__checkbox-total" id="ch01_all" />
