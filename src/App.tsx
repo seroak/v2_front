@@ -13,34 +13,13 @@ import { useUserStore } from "./store/user";
 import "./App.css";
 
 import { setupMSW } from "./mocks/setup";
+import { fetchUser } from "@/services/api";
 
 interface User {
   email: string;
   name: string;
   role: string;
 }
-//zustand
-// 새로고침 이후 get요청을 보내면 msw가 실행되기 전에 보내지는 버그 수정
-// if (typeof window !== "undefined") {
-//   if (import.meta.env.VITE_APP_NODE_ENV === "development") {
-//     worker.start();
-//   }
-// }
-// msw 버그로 인해 fetchUser는 따로 확인 불가능 백엔드 서버 연결해서 확인해야함
-const fetchUser = async (): Promise<User> => {
-  const response = await fetch("http://localhost:8080/edupi_user/v1/member/login/info", {
-    method: "GET",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-  const data = await response.json();
-  return data;
-};
 
 function App() {
   const [isMswReady, setIsMswReady] = useState(false);
@@ -64,6 +43,7 @@ function App() {
       setLoggedInUserRole(data.role);
     }
   }, [data]);
+
   return (
     <Router>
       <Routes>
