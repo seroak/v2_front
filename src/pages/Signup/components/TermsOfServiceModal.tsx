@@ -4,7 +4,7 @@ interface Props {
   isOpen: boolean;
   onClose: any;
 }
-const PopUpModal01 = ({ isOpen, onClose }: Props) => {
+const TermsOfServiceModal = ({ isOpen, onClose }: Props) => {
   useEffect(() => {
     if (isOpen) {
       // 모달이 열릴 때 body에 class를 추가합니다.
@@ -149,4 +149,4 @@ const PopUpModal01 = ({ isOpen, onClose }: Props) => {
     </div>
   );
 };
-export default PopUpModal01;
+export default TermsOfServiceModal;

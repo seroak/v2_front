@@ -1,8 +1,8 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
 import PublicHeader from "../components/PublicHeader";
-import PopUpModal01 from "./components/PopUpModal01";
-import PopUpModal02 from "./components/PopUpModal02";
+import TermsOfServiceModal from "./components/TermsOfServiceModal";
+import ConsentInformationModal from "./components/ConsentInformationModal";
 import cx from "classnames";
 import styles from "./Signup.module.css";
 import axios from "axios";
@@ -33,13 +33,13 @@ const Signup = () => {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
-  const [isModal01Open, setIsModal01Open] = useState<boolean>(false);
-  const openModal01 = (): void => setIsModal01Open(true);
-  const closeModal01 = (): void => setIsModal01Open(false);
+  const [isTermsOfServiceModalOpen, setIsTermsOfServiceModalOpen] = useState<boolean>(false);
+  const openTermsOfServiceModal = (): void => setIsTermsOfServiceModalOpen(true);
+  const closeTermsOfServiceModal = (): void => setIsTermsOfServiceModalOpen(false);
 
-  const [isModal02Open, setIsModal02Open] = useState<boolean>(false);
-  const openModal02 = (): void => setIsModal02Open(true);
-  const closeModal02 = (): void => setIsModal02Open(false);
+  const [isConsentInformationModalOpen, setIsConsentInformationModalOpen] = useState<boolean>(false);
+  const openConsentInformationModal = (): void => setIsConsentInformationModalOpen(true);
+  const closeConsentInformationModal = (): void => setIsConsentInformationModalOpen(false);
 
   const navigate = useNavigate();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -106,10 +106,10 @@ const Signup = () => {
   };
 
   return (
-    <div className={cx("bg-gray", { "scroll-off": isModal01Open })}>
+    <div className={cx("bg-gray", { "scroll-off": isTermsOfServiceModalOpen })}>
       <PublicHeader />
-      <PopUpModal01 isOpen={isModal01Open} onClose={closeModal01} />
-      <PopUpModal02 isOpen={isModal02Open} onClose={closeModal02} />
+      <TermsOfServiceModal isOpen={isTermsOfServiceModalOpen} onClose={closeTermsOfServiceModal} />
+      <ConsentInformationModal isOpen={isConsentInformationModalOpen} onClose={closeConsentInformationModal} />
       <div className="login-wrap">
         <img className="mb20" src="/image/img_logo2.png" alt="로고" />
         <p className="mb40">
@@ -184,7 +184,7 @@ const Signup = () => {
                 <input type="checkbox" className="s__checkbox-ck" id="ch01_01" />
                 <label htmlFor="ch01_01">
                   [필수]
-                  <button className="openPopup" onClick={openModal01} data-popid="popupModal01" type="button">
+                  <button className="openPopup" onClick={openTermsOfServiceModal} type="button">
                     이용약관 동의
                   </button>
                 </label>
@@ -193,7 +193,7 @@ const Signup = () => {
                 <input type="checkbox" className="s__checkbox-ck" id="ch01_02" />
                 <label htmlFor="ch01_02">
                   [필수]
-                  <button className="openPopup" onClick={openModal02} data-popid="popupModal02" type="button">
+                  <button className="openPopup" onClick={openConsentInformationModal} type="button">
                     개인정보 수집 및 이용에 관한 동의
                   </button>
                 </label>
