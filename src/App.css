@@ -38,9 +38,20 @@ button:hover {
   flex-direction: column;
   margin-bottom: 100px;
 }
-.login-box input,
-.login-box button {
+.login-box input {
   width: 400px;
+}
+.login-box .border-red {
+  border: 1px solid rgb(250, 82, 82);
+}
+.login-box .input-text-red {
+  color: rgb(250, 82, 82);
+}
+.login-box .border-green {
+  border: 1px solid rgb(0, 196, 113);
+}
+.login-box .input-text-green {
+  color: rgb(0, 196, 113);
 }
 input:not([type="file"]) {
   box-sizing: border-box;
@@ -52,7 +63,26 @@ input:not([type="file"]) {
 input:not([type="file"])::placeholder {
   color: #c2c2c2;
 }
-
+.input-wraper {
+  position: relative;
+}
+.input-wraper .input-right-section {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  height: 51px;
+  width: 2.75rem;
+}
+.input-wraper img {
+  height: 1.1875rem;
+  width: 1.1875rem;
+}
 .color-blue {
   color: var(--blue);
 }
@@ -138,9 +168,35 @@ input[type="checkbox"] {
   background: url(/image/icon_checkbox_on_disabled.svg) no-repeat;
   background-size: contain;
 }
+.password-guide-section {
+  display: flex;
+  gap: 0.25rem;
+  flex-direction: column;
+}
+.password-guide-section .password-guide {
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+  -webkit-box-align: center;
+  align-items: center;
+}
+.password-guide-section .password-guide img {
+  width: 16px;
+  height: 16px;
+}
+.password-guide-section .password-guide .text-red {
+  color: rgb(250, 82, 82);
+}
+.password-guide-section .password-guide .text-green {
+  color: rgb(0, 196, 113);
+}
+
 .login-box .s__checkbox-wrap {
   flex-direction: column;
   align-items: flex-start;
+}
+.login-box input:focus-visible {
+  outline: none;
 }
 .s__checkbox:nth-child(1) {
   width: 100%;

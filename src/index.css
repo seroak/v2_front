@@ -78,38 +78,6 @@ ul,
 ol {
   list-style: none;
 }
-/* skip */
-.skip {
-  display: block;
-  height: 1px;
-  width: 1px;
-  margin: 0 -1px -1px 0;
-  padding: 0;
-  overflow: hidden;
-  font-size: 0;
-  line-height: 0;
-  background-color: #fff;
-  z-index: 9999;
-  position: relative;
-}
-.skip:hover,
-.skip:active,
-.skip:focus {
-  width: 100%;
-  height: auto;
-  margin: 0;
-  padding: 5px 0;
-  text-indent: 10px;
-  font-weight: bold;
-  font-size: 12px;
-  color: #333;
-  line-height: 1;
-  text-decoration: none !important;
-  position: relative;
-  text-align: center;
-  box-shadow: 0 0 0 1px #000 inset;
-}
-/* 스크롤 */
 
 * {
   margin: 0;
