@@ -32,7 +32,10 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
-  const [errors, setErrors] = useState<FormErrors>({});
+  const emailRef = useRef<HTMLInputElement>(null);
+  const phoneNumberRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const confirmPasswordRef = useRef<HTMLInputElement>(null);
   const [isContainsTwoTypes, setContainsTwoTypes] = useState<number>(0);
   const [isMoreOrLess, setMoreOrLess] = useState<number>(0);
   const [isConsecutiveChar, setConsecutiveChar] = useState<number>(0);
