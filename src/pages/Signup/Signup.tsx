@@ -151,8 +151,31 @@ const Signup = () => {
   });
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (validateForm()) {
+    if (isValidEmail === 2 && isValidPhoneNumber === 2 && isValidConfirmPassword && isContainsTwoTypes === 2) {
       mutation.mutate(formData);
+      return;
+    }
+
+    if (isValidEmail === 1 || isValidEmail === 0) {
+      emailRef.current?.focus();
+      console.log(isValidEmail);
+      setValidEmail(1);
+      return;
+    }
+    if (isValidPhoneNumber === 1 || isValidPhoneNumber === 0) {
+      phoneNumberRef.current?.focus();
+      setValidPhoneNumber(1);
+      return;
+    }
+    if (isContainsTwoTypes === 1 || isContainsTwoTypes === 0) {
+      passwordRef.current?.focus();
+      setContainsTwoTypes(1);
+      return;
+    }
+    if (isValidConfirmPassword === 1 || isValidConfirmPassword === 0) {
+      confirmPasswordRef.current?.focus();
+      setValidConfirmPassword(1);
+      return;
     }
   };
   const togglePasswordVisibility = () => {
