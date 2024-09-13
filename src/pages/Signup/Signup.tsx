@@ -116,35 +116,17 @@ const Signup = () => {
     }
     setFormData((prevData) => ({ ...prevData, [name]: trimmedValue }));
   };
-
-  const validateForm = (): boolean => {
-    let newErrors: FormErrors = {};
-    if (!formData.username.trim()) {
-      newErrors.username = "사용자 이름은 필수입니다.";
-    }
-    if (!formData.email.trim()) {
-      newErrors.email = "이메일은 필수입니다.";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "유효한 이메일 주소를 입력하세요.";
-    }
-    if (!formData.phoneNumber) {
-      newErrors.phoneNumber = "핸드폰 번호는 필수입니다.";
-    } else if (!/^010-\d{3,4}-\d{4}$/.test(formData.phoneNumber)) {
-      newErrors.phoneNumber = "유효한 핸드폰 번호를 입력하세요.";
-    }
-    if (!formData.password) {
-      newErrors.password = "비밀번호는 필수입니다.";
-    } else if (formData.password.length < 6 || formData.confirmPassword.length > 20) {
-      newErrors.password = "비밀번호는 최소 8자 이상 20자 이하여야 합니다.";
-    } else if (!/^(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]).*$/.test(formData.password)) {
-      newErrors.password = "비밀번호는 최소 1개의 특수 문자를 포함해야 합니다";
-    }
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
+  const confirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const trimmedValue = value.replace(/\s/g, "");
+    if (formData.password === trimmedValue) {
+      // 비밀번호와 비밀번호 확인이 일치하는지 체크
+      setValidConfirmPassword(2);
+    } else {
+      setValidConfirmPassword(1); // 비밀번호와 비밀번호 확인이 일치하지 않을 때
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setFormData((prevData) => ({ ...prevData, [name]: trimmedValue }));
   };
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => {
