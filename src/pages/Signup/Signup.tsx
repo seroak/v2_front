@@ -1,12 +1,12 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, useRef, ChangeEvent, FormEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
 import PublicHeader from "../components/PublicHeader";
 import TermsOfServiceModal from "./components/TermsOfServiceModal";
 import ConsentInformationModal from "./components/ConsentInformationModal";
 import cx from "classnames";
-import styles from "./Signup.module.css";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { set } from "lodash";
 
 interface FormData {
   username: string;
@@ -14,14 +14,6 @@ interface FormData {
   phoneNumber: string;
   password: string;
   confirmPassword: string;
-}
-
-interface FormErrors {
-  username?: string;
-  email?: string;
-  phoneNumber?: string;
-  password?: string;
-  confirmPassword?: string;
 }
 
 const Signup = () => {
@@ -54,6 +46,7 @@ const Signup = () => {
   const closeConsentInformationModal = (): void => setIsConsentInformationModalOpen(false);
 
   const navigate = useNavigate();
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const trimmedValue = value.replace(/\s/g, "");
@@ -84,6 +77,7 @@ const Signup = () => {
 
     setFormData((prevData) => ({ ...prevData, [name]: trimmedValue }));
   };
+  const passwordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const trimmedValue = value.replace(/\s/g, "");
     // 비밀번호 입력 시, 영문/숫자/특수문자 중 2가지 이상 포함 여부 체크
@@ -128,6 +122,7 @@ const Signup = () => {
 
     setFormData((prevData) => ({ ...prevData, [name]: trimmedValue }));
   };
+
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => {
       const req = {
@@ -217,7 +212,6 @@ const Signup = () => {
         </p>
         <form onSubmit={handleSubmit}>
           <div className="login-box">
-            {errors.username && <div className={styles.errorMessage}>{errors.username}</div>}
             <input
               className="mb16"
               type="text"
@@ -227,27 +221,53 @@ const Signup = () => {
               onChange={handleChange}
               placeholder="이름"
             />
-            {errors.email && <div className={styles.errorMessage}>{errors.email}</div>}
+
             <input
-              className="mb16"
+              className={cx({
+                mb16: true,
+                "border-red": isValidEmail === 1,
+                "input-text-red": isValidEmail === 1,
+              })}
               type="text"
+              ref={emailRef}
               id="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={emailChange}
               placeholder="이메일"
             />
-            {errors.phoneNumber && <div className={styles.errorMessage}>{errors.phoneNumber}</div>}
+            {isValidEmail == 1 && (
+              <div className="guide-section">
+                <div className="guide">
+                  <img src="image/icon_x_red.svg" alt="체크" />
+                  <p className="text-red">이메일 형식이 올바르지 않습니다</p>
+                </div>
+              </div>
+            )}
+
             <input
-              className="mb16"
+              className={cx({
+                mb16: true,
+                "border-red": isValidPhoneNumber === 1,
+                "input-text-red": isValidPhoneNumber === 1,
+              })}
+              ref={phoneNumberRef}
               type="phoneNumber"
               id="phoneNumber"
               name="phoneNumber"
               placeholder="하이픈(-)을 포함해서 입력해 주세요."
               value={formData.phoneNumber}
-              onChange={handleChange}
+              onChange={phoneNumberChange}
             />
-            {errors.password && <div className={styles.errorMessage}>{errors.password}</div>}
+            {isValidPhoneNumber == 1 && (
+              <div className="guide-section">
+                <div className="guide">
+                  <img src="image/icon_x_red.svg" alt="체크" />
+                  <p className="text-red">핸드폰 형식이 올바르지 않습니다</p>
+                </div>
+              </div>
+            )}
+
             <div className="input-wraper">
               <input
                 className={cx({
@@ -258,10 +278,11 @@ const Signup = () => {
                   "input-text-green": isContainsTwoTypes === 2,
                 })}
                 type={isViewHidden ? "password" : "text"}
+                ref={passwordRef}
                 id="password"
                 name="password"
                 value={formData.password}
-                onChange={handleChange}
+                onChange={passwordChange}
                 placeholder="비밀번호"
               />
               <div className="input-right-section">
@@ -270,9 +291,8 @@ const Signup = () => {
                 </button>
               </div>
             </div>
-
-            <div className="password-guide-section">
-              <div className="password-guide">
+            <div className="guide-section">
+              <div className="guide">
                 <img src={getIconSrc(isContainsTwoTypes)} alt="체크" />
                 <p
                   className={cx({
@@ -283,7 +303,7 @@ const Signup = () => {
                   영문/숫자/특수문자 중, 2가지 이상 포함
                 </p>
               </div>
-              <div className="password-guide">
+              <div className="guide">
                 <img src={getIconSrc(isMoreOrLess)} alt="체크" />
                 <p
                   className={cx({
@@ -295,7 +315,7 @@ const Signup = () => {
                 </p>
               </div>
 
-              <div className="password-guide">
+              <div className="guide">
                 <img src={getIconSrc(isConsecutiveChar)} alt="체크" />
                 <p
                   className={cx({
@@ -307,17 +327,36 @@ const Signup = () => {
                 </p>
               </div>
             </div>
+            <div className="input-wraper">
+              <input
+                className={cx({
+                  mb12: true,
+                  "border-red": isValidConfirmPassword == 1,
+                  "input-text-red": isValidConfirmPassword == 1,
+                })}
+                id="confirmPassword"
+                ref={confirmPasswordRef}
+                type={isViewHiddenConfirm ? "password" : "text"}
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={confirmPasswordChange}
+                placeholder="비밀번호 재확인"
+              />
+              <div className="input-right-section">
+                <button onClick={toggleConfirmPasswordVisibility} type="button">
+                  <img src={getViewHiddenIconSrc(isViewHiddenConfirm)} alt="비밀번호 보기" />
+                </button>
+              </div>
+            </div>
 
-            <input
-              className="mb12"
-              id="confirmPassword"
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              placeholder="비밀번호 재확인"
-            />
-
+            {isValidConfirmPassword == 1 && (
+              <div className="guide-section">
+                <div className="guide">
+                  <img src="image/icon_x_red.svg" alt="체크" />
+                  <p className="text-red">비밀번호가 일치하지 않습니다</p>
+                </div>
+              </div>
+            )}
             <div className="s__checkbox-wrap">
               <div className="s__checkbox">
                 <input type="checkbox" className="s__checkbox-total" id="ch01_all" />
