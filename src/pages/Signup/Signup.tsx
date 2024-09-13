@@ -181,6 +181,9 @@ const Signup = () => {
   const togglePasswordVisibility = () => {
     setIsViewHidden(() => !isViewHidden);
   };
+  const toggleConfirmPasswordVisibility = () => {
+    setIsViewHiddenConfirm(() => !isViewHiddenConfirm);
+  };
   const getIconSrc = (isContainsTwoTypes: number) => {
     switch (isContainsTwoTypes) {
       case 0:
