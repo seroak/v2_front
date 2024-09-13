@@ -40,7 +40,12 @@ const Signup = () => {
   const [isMoreOrLess, setMoreOrLess] = useState<number>(0);
   const [isConsecutiveChar, setConsecutiveChar] = useState<number>(0);
   const [isViewHidden, setIsViewHidden] = useState<boolean>(true);
+  const [isViewHiddenConfirm, setIsViewHiddenConfirm] = useState<boolean>(true);
+  const [isValidEmail, setValidEmail] = useState<number>(0); // 이메일이 유효한지 체크하는 state
+  const [isValidPhoneNumber, setValidPhoneNumber] = useState<number>(0); // 전화번호가 유효한지 체크하는 state
+  const [isValidConfirmPassword, setValidConfirmPassword] = useState<number>(0); // 비밀번호가 일치하는지 체크하는 state
   const [isTermsOfServiceModalOpen, setIsTermsOfServiceModalOpen] = useState<boolean>(false);
+
   const openTermsOfServiceModal = (): void => setIsTermsOfServiceModalOpen(true);
   const closeTermsOfServiceModal = (): void => setIsTermsOfServiceModalOpen(false);
 
