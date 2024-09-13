@@ -168,26 +168,27 @@ input[type="checkbox"] {
   background: url(/image/icon_checkbox_on_disabled.svg) no-repeat;
   background-size: contain;
 }
-.password-guide-section {
+.guide-section {
   display: flex;
   gap: 0.25rem;
   flex-direction: column;
+  margin-bottom: 5px;
 }
-.password-guide-section .password-guide {
+.guide-section .guide {
   width: 100%;
   display: flex;
   gap: 0.5rem;
   -webkit-box-align: center;
   align-items: center;
 }
-.password-guide-section .password-guide img {
+.guide-section .guide img {
   width: 16px;
   height: 16px;
 }
-.password-guide-section .password-guide .text-red {
+.guide-section .guide .text-red {
   color: rgb(250, 82, 82);
 }
-.password-guide-section .password-guide .text-green {
+.guide-section .guide .text-green {
   color: rgb(0, 196, 113);
 }
 
