@@ -57,6 +57,35 @@ const Signup = () => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const trimmedValue = value.replace(/\s/g, "");
+
+    setFormData((prevData) => ({ ...prevData, [name]: trimmedValue }));
+  };
+
+  const phoneNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const trimmedValue = value.replace(/\s/g, "");
+    if (/^010-\d{3,4}-\d{4}$/.test(trimmedValue)) {
+      setValidPhoneNumber(2);
+    } else {
+      setValidPhoneNumber(1);
+    }
+
+    setFormData((prevData) => ({ ...prevData, [name]: trimmedValue }));
+  };
+
+  const emailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const trimmedValue = value.replace(/\s/g, "");
+    if (/\S+@\S+\.\S+/.test(trimmedValue)) {
+      setValidEmail(2);
+    } else {
+      setValidEmail(1);
+    }
+
+    setFormData((prevData) => ({ ...prevData, [name]: trimmedValue }));
+  };
+    const { name, value } = e.target;
+    const trimmedValue = value.replace(/\s/g, "");
     // 비밀번호 입력 시, 영문/숫자/특수문자 중 2가지 이상 포함 여부 체크
     if (
       name === "password" &&
