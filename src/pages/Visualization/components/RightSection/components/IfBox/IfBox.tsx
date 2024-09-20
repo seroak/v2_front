@@ -6,7 +6,6 @@ import { ConditionItem } from "@/pages/Visualization/types/codeFlow/conditionIte
 
 type Props = { children?: ReactNode; isLight: boolean; ifItem: ConditionItem };
 function IfBox({ children, isLight, ifItem }: Props) {
-  console.log(ifItem);
   return (
     <AnimatePresence key={ifItem.id}>
       <motion.div
