@@ -1,9 +1,9 @@
 import { useState, FormEvent, ChangeEvent, Fragment } from "react";
-import axios from "axios";
 import PublicHeader from "../components/PublicHeader";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "@/store/user";
+import { fetchUser, login } from "@/services/api";
 
 const Login = () => {
   const [userId, setUserId] = useState<string>("");
@@ -12,20 +12,22 @@ const Login = () => {
   const setLoggedInUserName = useUserStore((state) => state.setLoggedInUserName);
   const setLoggedInUserRole = useUserStore((state) => state.setLoggedInUserRole);
   const navigate = useNavigate();
+  const { data: userData, refetch } = useQuery({ queryKey: ["user"], queryFn: fetchUser });
   const mutation = useMutation({
     mutationFn: async ({ userId, userPassword }: { userId: string; userPassword: string }) => {
       const req = { email: userId, password: userPassword };
-      return axios.post("http://localhost:8080/edupi_user/v1/member/login", req, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
+      return await login(req);
     },
-    onSuccess(data) {
-      const { email, name, role } = data.data;
-      setLoggedInUserEmail(email);
-      setLoggedInUserName(name);
-      setLoggedInUserRole(role);
-      navigate("/");
+    onSuccess() {
+      refetch();
+      if (userData) {
+        setLoggedInUserEmail(userData.email);
+        setLoggedInUserName(userData.name);
+        setLoggedInUserRole(userData.role);
+        navigate("/");
+      } else {
+        console.error("유저 데이터가 없습니다");
+      }
     },
     onError(error) {
       alert("아이디 또는 비밀번호가 틀렸습니다.");
@@ -59,7 +61,7 @@ const Login = () => {
             <div className="login-box">
               <input
                 className="mb12"
-                type="email"
+                type="text"
                 placeholder="이메일"
                 value={userId}
                 onChange={(e) => handleUserIdChange(e)}
