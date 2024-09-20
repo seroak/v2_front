@@ -56,14 +56,29 @@ const Signup = () => {
 
   const phoneNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const trimmedValue = value.replace(/\s/g, "");
-    if (/^010-\d{3,4}-\d{4}$/.test(trimmedValue)) {
+
+    // 숫자만 추출
+    const numbersOnly = value.replace(/[^\d]/g, "");
+
+    // 숫자를 그룹으로 나누고 하이픈 추가
+    let formattedNumber = "";
+    if (numbersOnly.length <= 3) {
+      formattedNumber = numbersOnly;
+    } else if (numbersOnly.length <= 7) {
+      formattedNumber = `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3)}`;
+    } else {
+      formattedNumber = `${numbersOnly.slice(0, 3)}-${numbersOnly.slice(3, 7)}-${numbersOnly.slice(7, 11)}`;
+    }
+
+    // 유효성 검사
+    if (/^010-\d{3,4}-\d{4}$/.test(formattedNumber)) {
       setValidPhoneNumber(2);
     } else {
       setValidPhoneNumber(1);
     }
 
-    setFormData((prevData) => ({ ...prevData, [name]: trimmedValue }));
+    // 상태 업데이트
+    setFormData((prevData) => ({ ...prevData, [name]: formattedNumber }));
   };
 
   const emailChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -146,14 +161,9 @@ const Signup = () => {
   });
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isValidEmail === 2 && isValidPhoneNumber === 2 && isValidConfirmPassword && isContainsTwoTypes === 2) {
-      mutation.mutate(formData);
-      return;
-    }
 
     if (isValidEmail === 1 || isValidEmail === 0) {
       emailRef.current?.focus();
-      console.log(isValidEmail);
       setValidEmail(1);
       return;
     }
@@ -170,6 +180,15 @@ const Signup = () => {
     if (isValidConfirmPassword === 1 || isValidConfirmPassword === 0) {
       confirmPasswordRef.current?.focus();
       setValidConfirmPassword(1);
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      confirmPasswordRef.current?.focus();
+      setValidConfirmPassword(1);
+      return;
+    }
+    if (isValidEmail === 2 && isValidPhoneNumber === 2 && isValidConfirmPassword && isContainsTwoTypes === 2) {
+      mutation.mutate(formData);
       return;
     }
   };
@@ -255,7 +274,7 @@ const Signup = () => {
               type="phoneNumber"
               id="phoneNumber"
               name="phoneNumber"
-              placeholder="하이픈(-)을 포함해서 입력해 주세요."
+              placeholder="휴대전화 번호"
               value={formData.phoneNumber}
               onChange={phoneNumberChange}
             />
