@@ -13,6 +13,7 @@ import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/d
 
 //zustand store
 import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
+import { useEditorStore } from "@/store/editor";
 import { useArrowStore } from "@/store/arrow";
 import { useUserStore } from "@/store/user";
 // 원본 코드 타입 정의
@@ -42,13 +43,15 @@ export default function Visualization() {
   );
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   // zustand store
-  const consoleIdx = useConsoleStore((state) => state.consoleIdx);
+  const consoleIdx = useConsoleStore((state) => state.stepIdx);
   const resetConsole = useConsoleStore((state) => state.resetConsole);
-  const incrementConsoleIdx = useConsoleStore((state) => state.incrementConsoleIdx);
-  const decrementConsoleIdx = useConsoleStore((state) => state.decrementConsoleIdx);
+  const incrementStepIdx = useConsoleStore((state) => state.incrementStepIdx);
+  const decrementStepIdx = useConsoleStore((state) => state.decrementStepIdx);
   const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
   const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
   const loggedInUserName = useUserStore((state) => state.loggedInUserName);
+  const setErrorLine = useEditorStore((state) => state.setErrorLine);
+
   const [isPlaying, setIsPlaying] = useState(false);
 
   const mutation = useMutation({
@@ -62,23 +65,27 @@ export default function Visualization() {
       });
     },
     async onSuccess(data) {
-      try {
-        const jsonData = await data.json();
-        // 타입 체크 함수
-        if (isValidTypeDtoArray(jsonData)) {
-          setPreprocessedCodes(jsonData);
-          setDisplayNone(false);
-        } else {
-          throw new Error("데이터 형식이 올바르지 않습니다");
-        }
-      } catch (error) {
-        console.error("Data processing error:", error);
-        alert("데이터의 형식이 올바르지 않습니다.");
+      const jsonData = await data.json();
+      console.log("jsonData", jsonData);
+      // 타입 체크 함수
+      // Todo
+      // try 캐치 삭제 함  밑에 코드에서 error.message에 메시가 들어오는지 확인
+      if (isValidTypeDtoArray(jsonData)) {
+        setPreprocessedCodes(jsonData);
+        setDisplayNone(false);
+      } else {
+        throw new Error("데이터 형식이 올바르지 않습니다");
       }
     },
     onError(error) {
       console.error("Submit Error:", error);
-      alert("코드 처리 중 에러가 발생했습니다.");
+      console.log(error);
+      if (error.message === "데이터 형식이 올바르지 않습니다") {
+        alert("데이터의 형식이 올바르지 않습니다.");
+      } else {
+        setErrorLine({ lineNumber: 1, message: "syntax error" });
+        alert("코드 처리 중 에러가 발생했습니다.");
+      }
     },
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -95,13 +102,13 @@ export default function Visualization() {
 
   const onForward = useCallback(() => {
     if (consoleIdx < codeFlowLength - 1) {
-      incrementConsoleIdx();
+      incrementStepIdx();
     }
   }, [consoleIdx, codeFlowLength]);
 
   const onBack = useCallback(() => {
     if (consoleIdx > 0) {
-      decrementConsoleIdx();
+      decrementStepIdx();
     }
   }, [consoleIdx]);
   const intervalRef = useRef<number | null>(null);
