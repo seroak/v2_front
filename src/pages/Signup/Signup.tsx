@@ -6,7 +6,6 @@ import ConsentInformationModal from "./components/ConsentInformationModal";
 import cx from "classnames";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { set } from "lodash";
 
 interface FormData {
   username: string;
@@ -60,7 +59,7 @@ const Signup = () => {
     // 숫자만 추출
     const numbersOnly = value.replace(/[^\d]/g, "");
 
-    // 숫자를 그룹으로 나누고 하이픈 추가
+    // 숫자에 하이픈 추가
     let formattedNumber = "";
     if (numbersOnly.length <= 3) {
       formattedNumber = numbersOnly;
@@ -290,7 +289,7 @@ const Signup = () => {
             <div className="input-wraper">
               <input
                 className={cx({
-                  mb16: true,
+                  mb5: true,
                   "border-red": isContainsTwoTypes === 1,
                   "input-text-red": isContainsTwoTypes === 1,
                   "border-green": isContainsTwoTypes === 2,
