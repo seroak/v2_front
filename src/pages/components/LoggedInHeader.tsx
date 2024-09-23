@@ -10,7 +10,7 @@ const LoggedInHeader = () => {
     resetUser();
     cookies.remove("token");
   };
-  console.log(NavLink);
+
   return (
     <header className={styles["bg-blue"]}>
       <div className={styles["header-menu"]}>
