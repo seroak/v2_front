@@ -1126,3 +1126,77 @@ header .group-btn {
 .border-false {
   border: 1px solid #ff0000 !important;
 }
+
+/* EmailCheck 컴포넌트 */
+.check-message {
+  margin-right: auto;
+  margin-left: auto;
+  padding: 4.5rem 1rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.check-mesaage-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+.check-message h2 {
+  text-decoration: none;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.625rem;
+  line-height: 1.35;
+  margin: 0px;
+}
+.check-message p {
+  color: inherit;
+  font-size: 1rem;
+  text-decoration: none;
+  text-align: center;
+  line-height: 1.5;
+  text-underline-position: under;
+}
+.check-img-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.check-Button {
+  display: inline-block;
+  padding: 0px 1.375rem;
+  appearance: none;
+  text-align: left;
+  text-decoration: none;
+  box-sizing: border-box;
+  height: 2.625rem;
+  width: auto;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  position: relative;
+  line-height: 1;
+  font-size: 1rem;
+  user-select: none;
+  cursor: pointer;
+  border: 0.0625rem solid transparent;
+  background-color: rgb(0, 196, 113);
+  color: rgb(255, 255, 255);
+}
+.check-Button-inner {
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.check-Button-label {
+  white-space: nowrap;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+}
