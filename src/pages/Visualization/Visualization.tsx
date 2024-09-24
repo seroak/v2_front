@@ -66,7 +66,6 @@ export default function Visualization() {
     },
     async onSuccess(data) {
       const jsonData = await data.json();
-      console.log("jsonData", jsonData);
       // 타입 체크 함수
       // Todo
       // try 캐치 삭제 함  밑에 코드에서 error.message에 메시가 들어오는지 확인
@@ -79,7 +78,6 @@ export default function Visualization() {
     },
     onError(error) {
       console.error("Submit Error:", error);
-      console.log(error);
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         alert("데이터의 형식이 올바르지 않습니다.");
       } else {
