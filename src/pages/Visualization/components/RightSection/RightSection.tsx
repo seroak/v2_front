@@ -285,8 +285,6 @@ const RightSection = () => {
     setArrowTextList(arrowTexts);
 
     setHighlightLines(highlightLine);
-    console.log("highlightLine", highlightLine);
-    console.log("console", accConsoleLogList);
   }, [preprocessedCodes]);
 
   return (

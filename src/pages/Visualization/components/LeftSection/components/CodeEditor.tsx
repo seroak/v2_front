@@ -29,7 +29,6 @@ const CodeEditor = () => {
   }, [stepIdx, highlightLines]);
 
   useEffect(() => {
-    console.log("errorLine", errorLine);
     if (errorLine) {
       displayErrorLine(errorLine);
     }
