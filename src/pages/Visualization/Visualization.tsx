@@ -67,8 +67,6 @@ export default function Visualization() {
     async onSuccess(data) {
       const jsonData = await data.json();
       // 타입 체크 함수
-      // Todo
-      // try 캐치 삭제 함  밑에 코드에서 error.message에 메시가 들어오는지 확인
       if (isValidTypeDtoArray(jsonData)) {
         setPreprocessedCodes(jsonData);
         setDisplayNone(false);
