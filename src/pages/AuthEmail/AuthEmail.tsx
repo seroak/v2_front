@@ -7,7 +7,7 @@ const AuthEmail = () => {
   useEffect(() => {
     const fetchData = async () => {
       // 쿼리 스트링에서 값을 추출
-      const email = searchParams.get("email"); // 예시: ?
+      const email = searchParams.get("email");
       if (!email) {
         console.error("No email found in query string");
         return;
@@ -36,7 +36,7 @@ const AuthEmail = () => {
     };
 
     fetchData();
-  }, []); // location과 navigate 의존성 추가
+  }, []);
 
   return null;
 };
