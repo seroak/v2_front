@@ -37,7 +37,7 @@ describe("백엔드로 부터 Object 외에 다른 response body(code) 를 받�
     await waitFor(() => {
       // waitFor 함수를 사용하여 비동기 처리가 완료될 때까지 기다린다
       expect((window as any).fetch).toHaveBeenCalledWith(
-        "http://localhost:8080/edupi_visualize/v1/python",
+        "http://localhost:8080/edupi-visualize/v1/python",
         expect.any(Object)
       );
     });
@@ -62,7 +62,7 @@ describe("백엔드로 부터 정상적인 response body(code) 를 받았을 때
     await waitFor(() => {
       // waitFor 함수를 사용하여 비동기 처리가 완료될 때까지 기다린다
       expect((window as any).fetch).toHaveBeenCalledWith(
-        "http://localhost:8080/edupi_visualize/v1/python",
+        "http://localhost:8080/edupi-visualize/v1/python",
         expect.any(Object)
       );
     });

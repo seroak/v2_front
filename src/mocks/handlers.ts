@@ -27,11 +27,11 @@ interface SignupUser {
 }
 
 export const handlers = [
-  http.post("/edupi_visualize/v1/python", () => {
+  http.post("/edupi-visualize/v1/python", () => {
     return HttpResponse.json(testResponseBody);
   }),
 
-  http.get("/edupi_user/v1/member/login/info", async () => {
+  http.get("/edupi-user/v1/member/login/info", async () => {
     // Get the token from the cookies
 
     // 쿠키에서 토큰을 확인
@@ -69,7 +69,7 @@ export const handlers = [
     }
   }),
 
-  http.post("/edupi_user/v1/member/login", async ({ request }) => {
+  http.post("/edupi-user/v1/member/login", async ({ request }) => {
     try {
       const { email, password } = (await request.json()) as User;
 
@@ -112,7 +112,7 @@ export const handlers = [
     }
   }),
 
-  http.post("/edupi_user/v1/member/signup", async ({ request }) => {
+  http.post("/edupi-user/v1/member/signup", async ({ request }) => {
     const { username } = (await request.json()) as SignupUser;
     if (username === "error") return HttpResponse.json({ success: false, message: "회원가입 실패" }, { status: 500 });
     return HttpResponse.json(
