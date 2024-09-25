@@ -30,7 +30,7 @@ export const getGroup = async () => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-
+    console.log("클래스 정보 가져오기 get요청");
     const data = await response.json();
     return data;
   } catch (error) {

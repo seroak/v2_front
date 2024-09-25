@@ -51,6 +51,7 @@ const Group = () => {
     mutationFn: async (createClass: string) => {
       return fetch("http://localhost:8080/edupi-lms/v1/classroom", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: createClass }),
       });
