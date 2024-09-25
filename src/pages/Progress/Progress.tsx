@@ -1,8 +1,10 @@
 import { useState } from "react";
 import LoggedInHeader from "../components/LoggedInHeader";
+import { useParams } from "react-router-dom";
 const Progress = () => {
   const [date, setDate] = useState<string>("2024-01-01");
-
+  const params = useParams();
+  const roomId = params.roomId;
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDate(e.target.value);
   };
@@ -10,13 +12,14 @@ const Progress = () => {
   const formatDate = (dateString: string) => {
     return dateString.replace(/-/g, ". ");
   };
+
   return (
     <div>
       <LoggedInHeader />
       <div className="group-wrap">
         <div className="group-left">
           <img src="/image/icon_group.svg" alt="그룹" />
-          <h2 className="group-title">파이썬 기초 1반</h2>
+          <h2 className="group-title">파이썬 기초 {roomId}반</h2>
         </div>
       </div>
       <div className="s__container">
