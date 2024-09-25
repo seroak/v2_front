@@ -147,7 +147,7 @@ const SignupWrap = () => {
         name: formData.username,
         phoneNumber: formData.phoneNumber,
       };
-      return axios.post("http://localhost:8080/edupi-user/v1/member/signup", req, {
+      return axios.post("http://localhost:8080/edupi-user/v1/account/signup", req, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
