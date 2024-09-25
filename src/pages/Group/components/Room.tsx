@@ -1,12 +1,17 @@
-import { ReactNode } from "react";
-
-const Room = (): ReactNode => {
+interface ClassData {
+  id: number;
+  totalPeople: number;
+}
+interface props {
+  classData: ClassData;
+}
+const Room = ({ classData }: props) => {
   return (
     <li>
-      <a href="">
+      <a href={`http://localhost:8080/group/progress/${classData.id}`}>
         <div className="data04-name">
-          <p>파이썬 기초 1반</p>
-          <span>인원 : 23명</span>
+          <p>파이썬 기초 {classData.id}반</p>
+          <span>인원 : {classData.totalPeople}명</span>
           <span>초대 대기 : 1명</span>
         </div>
         <img src="/image/icon_right_arrow2.svg" alt="" />
