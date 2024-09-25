@@ -123,4 +123,53 @@ export const handlers = [
       { status: 200 }
     );
   }),
+  http.get("http://localhost:8080/edupi-lms/v1/classroom", () => {
+    console.log("MSW intercepted the request");
+    return HttpResponse.json(
+      {
+        success: true,
+        host: {
+          classroomCount: 3,
+          classrooms: [
+            {
+              id: 1,
+              name: "classroom1",
+              totalPeople: 1,
+            },
+            {
+              id: 2,
+              name: "classroom2",
+              totalPeople: 1,
+            },
+            {
+              id: 3,
+              name: "classroom3",
+              totalPeople: 1,
+            },
+          ],
+        },
+        guest: {
+          classroomCount: 3,
+          classrooms: [
+            {
+              id: 1,
+              name: "classroom1",
+              totalPeople: 1,
+            },
+            {
+              id: 2,
+              name: "classroom2",
+              totalPeople: 1,
+            },
+            {
+              id: 3,
+              name: "classroom3",
+              totalPeople: 1,
+            },
+          ],
+        },
+      },
+      { status: 200 }
+    );
+  }),
 ];
