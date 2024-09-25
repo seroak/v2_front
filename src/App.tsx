@@ -10,7 +10,9 @@ import Group from "./pages/Group/Group";
 import Assginment from "./pages/Assignment/Assignment";
 import Progress from "./pages/Progress/Progress";
 import AuthEmail from "./pages/AuthEmail/AuthEmail";
+
 import { useUserStore } from "./store/user";
+import { useMswReadyStore } from "@/store/mswReady";
 import "./App.css";
 
 import { setupMSW } from "./mocks/setup";
@@ -23,7 +25,7 @@ interface User {
 }
 
 function App() {
-  const [isMswReady, setIsMswReady] = useState(false);
+  const { isMswReady, setIsMswReady } = useMswReadyStore((state) => state);
 
   useEffect(() => {
     if (import.meta.env.VITE_APP_NODE_ENV === "development") {
@@ -32,6 +34,7 @@ function App() {
       setIsMswReady(true);
     }
   }, []);
+
   const { data } = useQuery<User>({ queryKey: ["user"], queryFn: fetchUser, enabled: isMswReady });
   const setLoggedInUserEmail = useUserStore((state) => state.setLoggedInUserEmail);
   const setLoggedInUserName = useUserStore((state) => state.setLoggedInUserName);
@@ -55,8 +58,8 @@ function App() {
         <Route path="/modify" element={<Modify />} />
         <Route path="/group" element={<Group />} />
         <Route path="/assignment" element={<Assginment />} />
-        <Route path="/progress" element={<Progress />} />
         <Route path="/auth/email" element={<AuthEmail />} />
+        <Route path="/group/progress/:roomId" element={<Progress />} />
       </Routes>
     </Router>
   );
