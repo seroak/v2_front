@@ -49,12 +49,20 @@ const Group = () => {
   };
   const mutation = useMutation({
     mutationFn: async (createClass: string) => {
-      return fetch("http://localhost:8080/edupi-lms/v1/classroom", {
+      const response = await fetch("http://localhost:8080/edupi-lms/v1/classroom", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: createClass }),
       });
+
+      if (!response.ok) {
+        // response.ok가 false이면 (상태 코드가 200-299 범위 밖이면) 에러를 throw합니다.
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
+      }
+
+      return response.json();
     },
     async onSuccess(data) {
       const jsonData = await data.json();
