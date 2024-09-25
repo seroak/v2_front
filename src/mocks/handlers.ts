@@ -124,7 +124,6 @@ export const handlers = [
     );
   }),
   http.get("http://localhost:8080/edupi-lms/v1/classroom", () => {
-    console.log("MSW intercepted the request");
     return HttpResponse.json(
       {
         success: true,
@@ -171,5 +170,10 @@ export const handlers = [
       },
       { status: 200 }
     );
+  }),
+  http.post("http://localhost:8080/edupi-lms/v1/classroom", () => {
+    return HttpResponse.json({
+      message: "클래스룸 생성 완료",
+    });
   }),
 ];
