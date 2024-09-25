@@ -1,6 +1,41 @@
+import { useEffect, useState } from "react";
 import LoggedInHeader from "../components/LoggedInHeader";
 import Room from "./components/Room";
-const Group: React.FC = () => {
+import { useMswReadyStore } from "@/store/mswReady";
+import { useUserStore } from "@/store/user";
+import { useQuery } from "@tanstack/react-query";
+import { getGroup } from "@/services/api";
+interface Classroom {
+  id: number;
+  name: string;
+  totalPeople: number;
+}
+
+interface GroupData {
+  host: {
+    classrooms: Classroom[];
+  };
+  guest: {
+    classrooms: Classroom[];
+  };
+}
+const Group = () => {
+  const isMswReady = useMswReadyStore((state) => state.isMswReady);
+  const LoggedInUserName = useUserStore((state) => state.loggedInUserName);
+  const { data } = useQuery<GroupData>({
+    queryKey: ["group"],
+    queryFn: getGroup,
+    enabled: isMswReady,
+  });
+
+  const [hostClassRooms, setHostClassRooms] = useState<Classroom[]>([]);
+  const [guestClassRooms, setGuestClassRooms] = useState<Classroom[]>([]);
+  useEffect(() => {
+    if (data) {
+      setHostClassRooms(data.host.classrooms);
+      setGuestClassRooms(data.guest.classrooms);
+    }
+  }, [data]);
   return (
     <div className="bg2" style={{ minWidth: "1521px" }}>
       <LoggedInHeader />
@@ -17,7 +52,7 @@ const Group: React.FC = () => {
       <div className="group-data-wrap">
         <div className="group-data-left">
           <div className="user-info">
-            <p>김철수님</p>
+            <p>{LoggedInUserName}님</p>
             <span>kim0000@naver.com</span>
             <ul className="user-group-data">
               <li>
@@ -39,7 +74,7 @@ const Group: React.FC = () => {
         <div className="group-right">
           <div className="section-title">
             <div className="title-left">
-              <h3>그룹</h3>
+              <h3>학습방</h3>
             </div>
             <div className="title-right">
               <div className="search-wrap">
@@ -51,47 +86,27 @@ const Group: React.FC = () => {
             </div>
           </div>
           <ul className="section-data section-data04">
-            <Room />
-            <li>
-              <a href="">
-                <div className="data04-name">
-                  <p>파이썬 기초 1반</p>
-                  <span>인원 : 23명</span>
-                  <span>초대 대기 : 1명</span>
-                </div>
-                <img src="/image/icon_right_arrow2.svg" alt="" />
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <div className="data04-name">
-                  <p>파이썬 기초 1반</p>
-                  <span>인원 : 23명</span>
-                  <span>초대 대기 : 1명</span>
-                </div>
-                <img src="/image/icon_right_arrow2.svg" alt="" />
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <div className="data04-name">
-                  <p>파이썬 기초 1반</p>
-                  <span>인원 : 23명</span>
-                  <span>초대 대기 : 1명</span>
-                </div>
-                <img src="/image/icon_right_arrow2.svg" alt="" />
-              </a>
-            </li>
-            <li>
-              <a href="">
-                <div className="data04-name">
-                  <p>파이썬 기초 1반</p>
-                  <span>인원 : 23명</span>
-                  <span>초대 대기 : 1명</span>
-                </div>
-                <img src="/image/icon_right_arrow2.svg" alt="" />
-              </a>
-            </li>
+            {hostClassRooms.map((item) => (
+              <Room key={item.id} classData={item} />
+            ))}
+          </ul>
+          <div className="section-title">
+            <div className="title-left">
+              <h3>강의방</h3>
+            </div>
+            <div className="title-right">
+              <div className="search-wrap">
+                <input type="text" placeholder="그룹 검색" />
+                <button>
+                  <img src="/image/icon_search.svg" alt="검색" />
+                </button>
+              </div>
+            </div>
+          </div>
+          <ul className="section-data section-data04">
+            {guestClassRooms.map((item) => (
+              <Room key={item.id} classData={item} />
+            ))}
           </ul>
         </div>
       </div>
