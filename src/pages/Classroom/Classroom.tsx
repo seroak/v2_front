@@ -57,7 +57,7 @@ const Progress = () => {
         console.log("sse");
         refetch();
       };
-      eventSource.addEventListener("message", function (e) {
+      eventSource.addEventListener("action", function (e) {
         console.log("서버로 부터 데이터가 옴");
         console.log(e.data);
       });
