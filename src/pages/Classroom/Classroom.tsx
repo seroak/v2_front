@@ -47,7 +47,7 @@ const Progress = () => {
     const queryClient = useQueryClient();
 
     const subscribe = useCallback(() => {
-      const eventSource = new EventSource(url);
+      const eventSource = new EventSource(url, { withCredentials: true });
 
       eventSource.onmessage = (event) => {
         const newData = JSON.parse(event.data);
