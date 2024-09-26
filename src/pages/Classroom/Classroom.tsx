@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import LoggedInHeader from "../components/LoggedInHeader";
+import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -34,11 +35,13 @@ const Progress = () => {
   const formatDate = (dateString: string) => {
     return dateString.replace(/-/g, ". ");
   };
+
   const { data: progressData, refetch } = useQuery({
     queryKey: ["progress"],
     queryFn: getProgress,
     enabled: isMswReady,
   });
+  useEffect(() => {}, [progressData]);
   const useSSE = (url: string) => {
     const [data, setData] = useState(null);
     const queryClient = useQueryClient();
@@ -67,7 +70,7 @@ const Progress = () => {
     return { data };
   };
 
-  const { data: sseData } = useSSE(`http://localhost/edupi-lms/v1/progrss/connect?classroomId=${classroomId}`);
+  const { data: sseData } = useSSE(`http://localhost/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
   console.log(sseData);
 
   return (
@@ -140,17 +143,7 @@ const Progress = () => {
             </div>
           </div>
           <ul className="section-data section-data01">
-            <li>
-              <a href="#">
-                <div>
-                  <p>홍길동</p>
-                  <span>제출시간 14:02</span>
-                </div>
-                <div className="progress-success">
-                  <p>성공</p>
-                </div>
-              </a>
-            </li>
+            <Guest />
             <li>
               <a href="#">
                 <div>
