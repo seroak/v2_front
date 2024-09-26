@@ -13,6 +13,7 @@ interface FormData {
   password: string;
   confirmPassword: string;
 }
+// 회원가입 체크 3가지 상태 정의
 enum CheckType {
   Gray = "gray",
   Red = "red",
@@ -31,9 +32,9 @@ const SignupWrap = () => {
   const phoneNumberRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
-  const [containsTwoTypes, setContainsTwoTypes] = useState<CheckType>(CheckType.Gray);
-  const [moreOrLess, setMoreOrLess] = useState<CheckType>(CheckType.Gray);
-  const [consecutiveChar, setConsecutiveChar] = useState<CheckType>(CheckType.Gray);
+  const [containsTwoTypes, setContainsTwoTypes] = useState<CheckType>(CheckType.Gray); //영문/숫자/특수문자 중, 2가지 이상 포함
+  const [moreOrLess, setMoreOrLess] = useState<CheckType>(CheckType.Gray); //8자 이상 32자 이하 입력 (공백 제외)
+  const [consecutiveChar, setConsecutiveChar] = useState<CheckType>(CheckType.Gray); //연속 3자 이상 동일한 문자/숫자 제외
   const [isViewHidden, setIsViewHidden] = useState<boolean>(true);
   const [isViewHiddenConfirm, setIsViewHiddenConfirm] = useState<boolean>(true);
   const [isValidEmail, setValidEmail] = useState<CheckType>(CheckType.Gray); // 이메일이 유효한지 체크하는 state
@@ -360,7 +361,7 @@ const SignupWrap = () => {
             <div className="input-wraper">
               <input
                 className={cx({
-                  mb12: true,
+                  mb5: true,
                   "border-red": isValidConfirmPassword == "red",
                   "input-text-red": isValidConfirmPassword == "red",
                 })}
@@ -387,7 +388,7 @@ const SignupWrap = () => {
                 </div>
               </div>
             )}
-            <div className="s__checkbox-wrap">
+            <div className="s__checkbox-wrap mt10">
               <div className="s__checkbox">
                 <input type="checkbox" className="s__checkbox-total" id="ch01_all" />
                 <label htmlFor="ch01_all">모두 동의합니다.</label>
