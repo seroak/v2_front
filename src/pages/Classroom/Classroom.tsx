@@ -61,7 +61,9 @@ const Progress = () => {
         console.log("서버로 부터 데이터가 옴");
         console.log(e.data);
       });
-
+      addEventListener("message", (event) => {
+        console.log(event.data);
+      });
       // connection되면
       eventSource.addEventListener("open", function (e) {
         console.log("서버로 연결이 됨");
