@@ -8,7 +8,7 @@ import Home from "./pages/Home/Home";
 import Modify from "./pages/Modify/Modify";
 import Group from "./pages/Group/Group";
 import Assginment from "./pages/Assignment/Assignment";
-import Progress from "./pages/Progress/Progress";
+import Progress from "./pages/Classroom/Classroom";
 import AuthEmail from "./pages/AuthEmail/AuthEmail";
 
 import { useUserStore } from "./store/user";
