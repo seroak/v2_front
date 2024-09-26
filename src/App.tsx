@@ -8,7 +8,7 @@ import Home from "./pages/Home/Home";
 import Modify from "./pages/Modify/Modify";
 import Group from "./pages/Group/Group";
 import Assginment from "./pages/Assignment/Assignment";
-import Progress from "./pages/Classroom/Classroom";
+import Clssroom from "./pages/Classroom/Classroom";
 import AuthEmail from "./pages/AuthEmail/AuthEmail";
 
 import { useUserStore } from "./store/user";
@@ -59,7 +59,7 @@ function App() {
         <Route path="/group" element={<Group />} />
         <Route path="/assignment" element={<Assginment />} />
         <Route path="/auth/email" element={<AuthEmail />} />
-        <Route path="/group/progress/:classroomId" element={<Progress />} />
+        <Route path="/group/classroom/:classroomId" element={<Clssroom />} />
       </Routes>
     </Router>
   );
