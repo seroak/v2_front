@@ -50,7 +50,6 @@ const Group = () => {
   const mutation = useMutation({
     mutationFn: createClass,
     async onSuccess(data) {
-      console.log(data); //성공 로그
       refetch();
     },
     onError(error) {

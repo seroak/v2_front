@@ -30,7 +30,6 @@ export const getGroup = async () => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    console.log("클래스 정보 가져오기 get요청");
     const data = await response.json();
     return data;
   } catch (error) {
@@ -46,7 +45,6 @@ export const createClass = async (createClassName: string) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name: createClassName }),
   });
-  console.log(response);
   if (!response.ok) {
     // response.ok가 false이면 (상태 코드가 200-299 범위 밖이면) 에러를 throw합니다.
     const errorData = await response.json().catch(() => null);
