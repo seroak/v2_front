@@ -127,53 +127,80 @@ export const handlers = [
     return HttpResponse.json(
       {
         success: true,
-        host: {
-          classroomCount: 3,
-          classrooms: [
-            {
-              id: 1,
-              name: "classroom1",
-              totalPeople: 1,
-            },
-            {
-              id: 2,
-              name: "classroom2",
-              totalPeople: 1,
-            },
-            {
-              id: 3,
-              name: "classroom3",
-              totalPeople: 1,
-            },
-          ],
-        },
-        guest: {
-          classroomCount: 3,
-          classrooms: [
-            {
-              id: 1,
-              name: "classroom1",
-              totalPeople: 1,
-            },
-            {
-              id: 2,
-              name: "classroom2",
-              totalPeople: 1,
-            },
-            {
-              id: 3,
-              name: "classroom3",
-              totalPeople: 1,
-            },
-          ],
+        result: {
+          host: {
+            classroomCount: 3,
+            classrooms: [
+              {
+                id: 1,
+                name: "classroom1",
+                totalPeople: 1,
+              },
+              {
+                id: 2,
+                name: "classroom2",
+                totalPeople: 1,
+              },
+              {
+                id: 3,
+                name: "classroom3",
+                totalPeople: 1,
+              },
+            ],
+          },
+          guest: {
+            classroomCount: 3,
+            classrooms: [
+              {
+                id: 1,
+                name: "classroom1",
+                totalPeople: 1,
+              },
+              {
+                id: 2,
+                name: "classroom2",
+                totalPeople: 1,
+              },
+              {
+                id: 3,
+                name: "classroom3",
+                totalPeople: 1,
+              },
+            ],
+          },
         },
       },
       { status: 200 }
     );
   }),
-  http.post("http://localhost:8080/edupi-lms/v1/classroom", () => {
+  http.get("http://localhost:8080/edupi-lms/v1/classroom/account/guest", () => {
     return HttpResponse.json({
-      message: "클래스룸 생성 완료",
+      success: true,
+      result: {
+        className: "파이썬 기초 1반",
+        totalInfo: {
+          ing: 4,
+          complete: 5,
+          help: 2,
+        },
+        guest: [
+          {
+            guestId: 1,
+            name: "김민수",
+            status: 1,
+          },
+          {
+            guestId: 2,
+            name: "박철수",
+            status: 1,
+          },
+          {
+            guestId: 3,
+            name: "신지연",
+            status: 1,
+          },
+        ],
+      },
     });
   }),
 ];
