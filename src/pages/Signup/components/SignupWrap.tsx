@@ -211,7 +211,6 @@ const SignupWrap = () => {
     setIsViewHiddenConfirm(() => !isViewHiddenConfirm);
   };
   const getIconSrc = (flag: string) => {
-    console.log(flag);
     switch (flag) {
       case "gray":
         return "/image/icon_check.svg";
