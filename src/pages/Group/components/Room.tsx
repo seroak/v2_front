@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 interface ClassData {
   id: number;
   name: string;
@@ -9,7 +11,7 @@ interface props {
 const Room = ({ classData }: props) => {
   return (
     <li>
-      <a href={`http://localhost:8080/group/progress/${classData.id}`}>
+      <Link to={`http://localhost:8080/group/progress/${classData.id}`}>
         <div className="data04-name">
           <p>
             {classData.name} {classData.id}반
@@ -18,7 +20,7 @@ const Room = ({ classData }: props) => {
           <span>초대 대기 : 1명</span>
         </div>
         <img src="/image/icon_right_arrow2.svg" alt="" />
-      </a>
+      </Link>
     </li>
   );
 };
