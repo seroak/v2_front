@@ -19,13 +19,36 @@ const CodeEditor = () => {
   const { code, setCode } = context;
   const highlightLines = useEditorStore((state) => state.highlightLines);
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
-  const consoleIdx = useConsoleStore((state) => state.consoleIdx);
+  const stepIdx = useConsoleStore((state) => state.stepIdx);
+  const errorLine = useEditorStore((state) => state.errorLine);
 
   useEffect(() => {
     if (editorRef.current) {
-      highlightLine(highlightLines[consoleIdx]);
+      highlightLine(highlightLines[stepIdx]);
     }
-  }, [consoleIdx, highlightLines]);
+  }, [stepIdx, highlightLines]);
+
+  useEffect(() => {
+    if (errorLine) {
+      displayErrorLine(errorLine);
+    }
+  }, [errorLine]);
+
+  const displayErrorLine = (errorLine: { lineNumber: number; message: string } | null) => {
+    if (!editorRef.current) return;
+
+    const newDecorationIds = editorRef.current.deltaDecorations(decorationIds, [
+      {
+        range: new monaco.Range(errorLine!.lineNumber, 1, errorLine!.lineNumber, 1),
+        options: {
+          isWholeLine: true,
+          className: "error-Line",
+        },
+      },
+    ]);
+
+    setDecorationIds(newDecorationIds);
+  };
 
   const handleEditorDidMount: OnMount = (editor) => {
     editorRef.current = editor;
@@ -70,6 +93,9 @@ const CodeEditor = () => {
         <style>{`
           .myLineHighlight {
             background-color: #EAECFF;
+          }
+          .error-Line {
+            background-color: #FF0000;
           }
         `}</style>
       </div>

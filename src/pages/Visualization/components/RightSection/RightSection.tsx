@@ -59,7 +59,7 @@ const RightSection = () => {
     throw new Error("CodeContext not found"); //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
   }
   const setConsole = useConsoleStore((state) => state.setConsole);
-  const consoleIdx = useConsoleStore((state) => state.consoleIdx);
+  const stepIdx = useConsoleStore((state) => state.stepIdx);
   const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
   const { preprocessedCodes } = context;
 
@@ -308,19 +308,17 @@ const RightSection = () => {
             <p className="data-name">코드흐름</p>
 
             {codeFlowList?.length > 0 &&
-              consoleIdx >= 0 &&
-              renderingCodeFlow(codeFlowList[consoleIdx].objects[0].child, width, height)}
+              stepIdx >= 0 &&
+              renderingCodeFlow(codeFlowList[stepIdx].objects[0].child, width, height)}
           </div>
         </div>
         <div id="split-2-2" className="view-section2-2" ref={rightSection2Ref}>
-          <Arrow code={arrowTextList[consoleIdx]} />
+          <Arrow code={arrowTextList[stepIdx]} />
           <div className="view-data">
             <p className="data-name">변수</p>
 
             <ul className="var-list">
-              {StructuresList?.length > 0 &&
-                consoleIdx >= 0 &&
-                renderingStructure(StructuresList[consoleIdx], width, height)}
+              {StructuresList?.length > 0 && stepIdx >= 0 && renderingStructure(StructuresList[stepIdx], width, height)}
             </ul>
           </div>
         </div>

@@ -9,6 +9,7 @@ import Modify from "./pages/Modify/Modify";
 import Group from "./pages/Group/Group";
 import Assginment from "./pages/Assignment/Assignment";
 import Progress from "./pages/Progress/Progress";
+import AuthEmail from "./pages/AuthEmail/AuthEmail";
 import { useUserStore } from "./store/user";
 import "./App.css";
 
@@ -55,6 +56,7 @@ function App() {
         <Route path="/group" element={<Group />} />
         <Route path="/assignment" element={<Assginment />} />
         <Route path="/progress" element={<Progress />} />
+        <Route path="/auth/email" element={<AuthEmail />} />
       </Routes>
     </Router>
   );
