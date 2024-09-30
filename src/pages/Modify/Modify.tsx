@@ -28,17 +28,20 @@ const Modify = () => {
   const params = useParams();
   const classroomId = params.classroomId;
   const [guests, setGuests] = useState<GuestType[]>();
+  const [guestEmail, setGuestEmail] = useState<string | undefined>();
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const inviteClassroom = async (classroomId: string) => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/edupi-lms/v1/classroom/account/invite?clssroomId=${classroomId}`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          classroomId: classroomId,
+          email: guestEmail,
+          role: 2,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -76,6 +79,26 @@ const Modify = () => {
     queryFn: getClassroomData,
     enabled: isMswReady,
   });
+  const changeGuestEmail = (e: ChangeEvent<HTMLInputElement>) => {
+    setGuestEmail(e.target.value);
+  };
+  const submitInviteGuest = () => {
+    if (guestEmail) {
+      mutation.mutate(guestEmail);
+    } else {
+      console.error("클래스 이름을 입력하세요");
+    }
+  };
+  const mutation = useMutation({
+    mutationFn: inviteClassroom,
+    async onSuccess(data) {
+      console.log(data);
+      getClassroomRefetch();
+    },
+    onError(error) {
+      console.error("클래스룸 초대 에러", error);
+    },
+  });
 
   console.log(classroomId);
   useEffect(() => {
@@ -97,8 +120,8 @@ const Modify = () => {
         <div className="group-link">
           <p className="link-name">클래스룸 초대</p>
           <div className="invite-wrap">
-            <input className="invite-input"></input>
-            <button className="invite-button">
+            <input className="invite-input" value={guestEmail} onChange={changeGuestEmail}></input>
+            <button className="invite-button" onClick={submitInviteGuest}>
               <p>초대하기</p>
             </button>
           </div>
