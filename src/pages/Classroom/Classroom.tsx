@@ -62,6 +62,7 @@ const Progress = () => {
         console.log(e.data);
       });
       addEventListener("message", (event) => {
+        console.log("message 리스너");
         console.log(event.data);
       });
       // connection되면
