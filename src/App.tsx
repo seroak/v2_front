@@ -5,7 +5,7 @@ import Visualization from "./pages/Visualization/Visualization";
 import Signup from "./pages/Signup/Signup";
 import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
-import Modify from "./pages/Modify/Modify";
+import Manage from "./pages/Manage/Manage";
 import ClassRoomSpace from "./pages/ClassRoomSpace/ClassRoomSpace";
 import Assginment from "./pages/Assignment/Assignment";
 import Clssroom from "./pages/Classroom/Classroom";
@@ -55,7 +55,7 @@ function App() {
         <Route path="/viz" element={<Visualization />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/group/classroom/modify/:classroomId" element={<Modify />} />
+        <Route path="/group/classroom/manage/:classroomId" element={<Manage />} />
         <Route path="/classroomspace" element={<ClassRoomSpace />} />
         <Route path="/assignment" element={<Assginment />} />
         <Route path="/auth/email" element={<AuthEmail />} />

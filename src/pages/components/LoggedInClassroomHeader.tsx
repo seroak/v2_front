@@ -32,7 +32,7 @@ const LoggedInHeader = () => {
           과제
         </NavLink>
         <NavLink
-          to={`/group/classroom/modify/${classroomId}`}
+          to={`/group/classroom/manage/${classroomId}`}
           className={({ isActive }) => (isActive ? styles["on_active"] : "")}
         >
           설정

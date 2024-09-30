@@ -29,7 +29,7 @@ const LoggedInHeader = () => {
         <NavLink to="/assignment" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
           과제
         </NavLink>
-        <NavLink to="/modify" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+        <NavLink to="/manage" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
           설정
         </NavLink>
       </div>
