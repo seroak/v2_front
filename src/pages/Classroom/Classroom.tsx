@@ -5,43 +5,66 @@ import { useMswReadyStore } from "@/store/mswReady";
 import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-const getProgress = async () => {
-  try {
-    const response = await fetch("http://localhost:8080/edupi-lms/v1/classroom", {
-      method: "GET",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-    });
+interface GuestType {
+  guestId: number;
+  name: string;
+  status: number;
+}
+interface TotalInfoType {
+  ing: number;
+  complete: number;
+  help: number;
+}
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("An error occurred:", error);
-    throw error;
-  }
-};
-const Progress = () => {
-  const [date, setDate] = useState<string>("2024-01-01");
+interface ClassroomData {
+  result: {
+    className: string;
+    totalInfo: TotalInfoType;
+    guest: GuestType[];
+  };
+}
+const Classroom = () => {
+  const [guests, setGuests] = useState<GuestType[]>();
+  const [totalInfo, setTotalInfo] = useState<TotalInfoType>();
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const params = useParams();
   const classroomId = params.classroomId;
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDate(e.target.value);
-  };
 
-  const formatDate = (dateString: string) => {
-    return dateString.replace(/-/g, ". ");
-  };
+  // classroom 안에서 표현되는 학생 정보를 가져오는 api
+  const getGusetData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/edupi-lms/v1/classroom/account/guest?clssroomId=${classroomId}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
-  const { data: progressData, refetch } = useQuery({
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("An error occurred:", error);
+      throw error;
+    }
+  };
+  const { data: progressData, refetch } = useQuery<ClassroomData>({
     queryKey: ["progress"],
-    queryFn: getProgress,
+    queryFn: getGusetData,
     enabled: isMswReady,
   });
-  useEffect(() => {}, [progressData]);
+  useEffect(() => {
+    if (progressData) {
+      console.log(progressData);
+      setGuests(progressData.result.guest);
+      setTotalInfo(progressData.result.totalInfo);
+    }
+  }, [progressData]);
+
   const useSSE = (url: string) => {
     const [data, setData] = useState(null);
     const queryClient = useQueryClient();
@@ -57,9 +80,13 @@ const Progress = () => {
         console.log("sse");
         refetch();
       };
-      eventSource.addEventListener("action", function (e) {
+      eventSource.addEventListener("action", (event) => {
+        const newData = JSON.parse(event.data);
+        setData(newData);
+        // setQueryData로 값 캐싱
+        queryClient.setQueryData(["sse-data"], newData);
         console.log("서버로 부터 데이터가 옴");
-        console.log(e.data);
+        refetch();
       });
       addEventListener("message", (event) => {
         console.log("message 리스너");
@@ -75,6 +102,7 @@ const Progress = () => {
       };
     }, [url, queryClient]);
 
+    // 요청을 끊을 때 일어나는 useEffect
     useEffect(() => {
       const unsubscribe = subscribe();
       return unsubscribe;
@@ -98,47 +126,33 @@ const Progress = () => {
       <div className="s__container">
         <div className="s__row">
           <div className="progress-info">
-            <div className="progress-date-data">
-              <button>
-                <img src="/image/icon_left_arrow.svg" alt="이전" />
-              </button>
-              <div className="progress-date">
-                <input type="date" value={date} id="dateInput" onChange={handleDateChange} />
-                <label htmlFor="dateInput" className="date-label">
-                  {formatDate(date)}
-                </label>
-              </div>
-              <button>
-                <img src="/image/icon_right_arrow.svg" alt="다음" />
-              </button>
-            </div>
             <ul className="progress-data">
               <li>
                 <img src="/image/progress01.svg" alt="전체" />
                 <div>
                   <p>전체</p>
-                  <p>23</p>
+                  <p>{totalInfo && totalInfo?.ing + totalInfo?.complete + totalInfo?.help}</p>
                 </div>
               </li>
               <li>
                 <img src="/image/progress02.svg" alt="미제출" />
                 <div>
-                  <p>미제출</p>
-                  <p>9</p>
+                  <p>제출 중</p>
+                  <p>{totalInfo?.ing}</p>
                 </div>
               </li>
               <li>
                 <img src="/image/progress03.svg" alt="성공" />
                 <div>
-                  <p>성공</p>
-                  <p>8</p>
+                  <p>제출 완료</p>
+                  <p>{totalInfo?.complete}</p>
                 </div>
               </li>
               <li>
                 <img src="/image/progress04.svg" alt="실패" />
                 <div>
-                  <p>실패</p>
-                  <p>0</p>
+                  <p>도움</p>
+                  <p>{totalInfo?.help}</p>
                 </div>
               </li>
             </ul>
@@ -156,67 +170,13 @@ const Progress = () => {
             </div>
           </div>
           <ul className="section-data section-data01">
-            <Guest />
-            <li>
-              <a href="#">
-                <div>
-                  <p>홍길동</p>
-                  <span>제출시간 14:02</span>
-                </div>
-                <div className="progress-fail">
-                  <p>실패</p>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <div>
-                  <p>홍길동</p>
-                  <span>제출시간 --:--</span>
-                </div>
-                <div className="progress-not">
-                  <p>미제출</p>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <div>
-                  <p>홍길동</p>
-                  <span>제출시간 14:02</span>
-                </div>
-                <div className="progress-success">
-                  <p>성공</p>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <div>
-                  <p>홍길동</p>
-                  <span>제출시간 14:02</span>
-                </div>
-                <div className="progress-fail">
-                  <p>실패</p>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <div>
-                  <p>홍길동</p>
-                  <span>제출시간 --:--</span>
-                </div>
-                <div className="progress-not">
-                  <p>미제출</p>
-                </div>
-              </a>
-            </li>
+            {guests?.map((guest) => (
+              <Guest key={guest.guestId} guest={guest} />
+            ))}
           </ul>
         </div>
       </div>
-      <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     </div>
   );
 };
-export default Progress;
+export default Classroom;
