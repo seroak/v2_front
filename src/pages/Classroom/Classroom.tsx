@@ -34,7 +34,7 @@ const Classroom = () => {
   // classroom 안에서 표현되는 학생 정보를 가져오는 api
   const getGusetData = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account?clssroomId=${classroomId}`, {
+      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account?classroomId=${classroomId}`, {
         method: "GET",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -53,7 +53,7 @@ const Classroom = () => {
 
   const getClassroomData = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/info?clssroomId=${classroomId}`, {
+      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/info?classroomId=${classroomId}`, {
         method: "GET",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
