@@ -128,47 +128,25 @@ export const handlers = [
     return HttpResponse.json(
       {
         success: true,
+        code: "CM-200000",
+        detail: "Success retrieved my classrooms",
         result: {
-          host: {
-            classroomCount: 3,
-            classrooms: [
-              {
-                id: 1,
-                name: "classroom1",
-                totalPeople: 1,
-              },
-              {
-                id: 2,
-                name: "classroom2",
-                totalPeople: 1,
-              },
-              {
-                id: 3,
-                name: "classroom3",
-                totalPeople: 1,
-              },
-            ],
-          },
-          guest: {
-            classroomCount: 3,
-            classrooms: [
-              {
-                id: 1,
-                name: "classroom1",
-                totalPeople: 1,
-              },
-              {
-                id: 2,
-                name: "classroom2",
-                totalPeople: 1,
-              },
-              {
-                id: 3,
-                name: "classroom3",
-                totalPeople: 1,
-              },
-            ],
-          },
+          host: [
+            {
+              id: 6,
+              name: "classroom2",
+              role: "HOST",
+              totalPeople: 1,
+            },
+          ],
+          guest: [
+            {
+              id: 1,
+              name: "classroom1",
+              role: "GUEST",
+              totalPeople: 1,
+            },
+          ],
         },
       },
       { status: 200 }
