@@ -23,14 +23,17 @@ interface ClassroomData {
     guests: GuestType[];
   };
 }
-
+interface props {
+  classroomId: number;
+  guestEmail: string;
+}
 const Modify = () => {
   const params = useParams();
-  const classroomId = params.classroomId;
+  const classroomId = Number(params.classroomId);
   const [guests, setGuests] = useState<GuestType[]>();
   const [guestEmail, setGuestEmail] = useState<string | undefined>();
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
-  const inviteClassroom = async (classroomId: string) => {
+  const inviteClassroom = async ({ classroomId, guestEmail }: props) => {
     try {
       console.log("classroomId", classroomId, "guestEmail", guestEmail, "role", 2);
       const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account`, {
@@ -82,7 +85,7 @@ const Modify = () => {
   };
   const submitInviteGuest = () => {
     if (guestEmail) {
-      mutation.mutate(guestEmail);
+      mutation.mutate({ classroomId, guestEmail });
     } else {
       console.error("클래스 이름을 입력하세요");
     }
