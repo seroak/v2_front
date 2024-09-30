@@ -25,7 +25,7 @@ const Group = () => {
   const classroomId = params.classroomId;
   const getClassroomData = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom?clssroomId=${classroomId}`, {
+      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom?classroomId=${classroomId}`, {
         method: "GET",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
