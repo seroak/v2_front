@@ -6,7 +6,7 @@ import Signup from "./pages/Signup/Signup";
 import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
 import Modify from "./pages/Modify/Modify";
-import Group from "./pages/Group/Group";
+import ClassRoomSpace from "./pages/ClassRoomSpace/ClassRoomSpace";
 import Assginment from "./pages/Assignment/Assignment";
 import Clssroom from "./pages/Classroom/Classroom";
 import AuthEmail from "./pages/AuthEmail/AuthEmail";
@@ -56,7 +56,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/group/classroom/modify/:classroomId" element={<Modify />} />
-        <Route path="/group" element={<Group />} />
+        <Route path="/classroomspace" element={<ClassRoomSpace />} />
         <Route path="/assignment" element={<Assginment />} />
         <Route path="/auth/email" element={<AuthEmail />} />
         <Route path="/group/classroom/:classroomId" element={<Clssroom />} />
