@@ -55,7 +55,7 @@ const Modify = () => {
   };
   const getClassroomData = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account?clssroomId=${classroomId}`, {
+      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account?classroomId=${classroomId}`, {
         method: "GET",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -107,7 +107,7 @@ const Modify = () => {
 
   return (
     <div className="bg">
-      <LoggedInClassroomHeader classroom={classroomId} />
+      <LoggedInClassroomHeader />
       <div id="header02" className="bg-blue"></div>
       <div className="group-wrap">
         <div className="group-left">
