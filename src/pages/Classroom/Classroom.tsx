@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import LoggedInHeader from "../components/LoggedInHeader";
+import LoggedInClassroomHeader from "@/pages/components/LoggedInClassroomHeader";
 import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useParams } from "react-router-dom";
@@ -7,6 +7,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface GuestType {
   guestId: number;
+  email: string;
   name: string;
   status: number;
 }
@@ -52,17 +53,48 @@ const Classroom = () => {
       throw error;
     }
   };
-  const { data: progressData, refetch } = useQuery<ClassroomData>({
-    queryKey: ["progress"],
+
+  const getClassroomData = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/info?clssroomId=${classroomId}`, {
+        method: "GET",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("An error occurred:", error);
+      throw error;
+    }
+  };
+
+  const { data: guestData, refetch: guestDataRefetch } = useQuery<ClassroomData>({
+    queryKey: ["gutestData"],
     queryFn: getGusetData,
     enabled: isMswReady,
   });
+  const { data: classroomData, refetch: classroomDataRefetch } = useQuery<ClassroomData>({
+    queryKey: ["classroomData"],
+    queryFn: getClassroomData,
+    enabled: isMswReady,
+  });
+
   useEffect(() => {
-    if (progressData) {
-      setGuests(progressData.result.guest);
-      setTotalInfo(progressData.result.totalInfo);
+    if (guestData) {
+      setGuests(guestData.result.guest);
     }
-  }, [progressData]);
+  }, [guestData]);
+
+  useEffect(() => {
+    if (classroomData) {
+      setTotalInfo(classroomData.result.totalInfo);
+    }
+  }, [classroomData]);
 
   const useSSE = (url: string) => {
     const [data, setData] = useState(null);
@@ -77,7 +109,8 @@ const Classroom = () => {
         // setQueryData로 값 캐싱
         queryClient.setQueryData(["sse-data"], newData);
         console.log("sse");
-        refetch();
+        guestDataRefetch();
+        classroomDataRefetch();
       };
       eventSource.addEventListener("action", (event) => {
         const newData = JSON.parse(event.data);
@@ -85,7 +118,8 @@ const Classroom = () => {
         // setQueryData로 값 캐싱
         queryClient.setQueryData(["sse-data"], newData);
         console.log("서버로 부터 데이터가 옴");
-        refetch();
+        guestDataRefetch();
+        classroomDataRefetch();
       });
       addEventListener("message", (event) => {
         console.log("message 리스너");
@@ -115,7 +149,7 @@ const Classroom = () => {
 
   return (
     <div>
-      <LoggedInHeader />
+      <LoggedInClassroomHeader />
       <div className="group-wrap">
         <div className="group-left">
           <img src="/image/icon_group.svg" alt="그룹" />
