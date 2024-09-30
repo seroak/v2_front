@@ -63,6 +63,20 @@ const Classroom = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+      let ing = data.result.totalActionInfo.find((item: any) => item.name === "ING")?.count;
+      if (!ing) {
+        ing = 0;
+      }
+      let complete = data.result.totalActionInfo.find((item: any) => item.name === "COMPLETE")?.count;
+      if (!complete) {
+        complete = 0;
+      }
+      let help = data.result.totalActionInfo.find((item: any) => item.name === "HELP")?.count;
+      if (!help) {
+        help = 0;
+      }
+      data.result.totalInfo = { ing, complete, help };
+      console.log(data);
       return data;
     } catch (error) {
       console.error("An error occurred:", error);

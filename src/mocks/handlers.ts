@@ -185,12 +185,21 @@ export const handlers = [
     return HttpResponse.json({
       success: true,
       result: {
-        className: "파이썬 기초 1반",
-        totalInfo: {
-          ing: 4,
-          complete: 5,
-          help: 2,
-        },
+        className: "classroom1",
+        totalActionInfo: [
+          {
+            name: "ING",
+            count: 3,
+          },
+          {
+            name: "HELP",
+            count: 1,
+          },
+          {
+            name: "COMPLETE",
+            count: 1,
+          },
+        ],
       },
     });
   }),
