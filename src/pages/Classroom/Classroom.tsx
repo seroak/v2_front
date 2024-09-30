@@ -70,7 +70,7 @@ const Progress = () => {
     return { data };
   };
 
-  const { data: sseData } = useSSE(`http://localhost/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
+  const { data: sseData } = useSSE(`http://localhost:8080/edupi-lms/v1/progress/connect/?classroomId=${classroomId}`);
   console.log(sseData);
 
   return (
