@@ -55,7 +55,7 @@ function App() {
         <Route path="/viz" element={<Visualization />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/modify" element={<Modify />} />
+        <Route path="/group/classroom/modify/:classroomId" element={<Modify />} />
         <Route path="/group" element={<Group />} />
         <Route path="/assignment" element={<Assginment />} />
         <Route path="/auth/email" element={<AuthEmail />} />
