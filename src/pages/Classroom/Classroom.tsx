@@ -6,10 +6,11 @@ import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface GuestType {
-  guestId: number;
+  id: number;
   email: string;
   name: string;
   status: number;
+  role: number;
 }
 interface TotalInfoType {
   ing: number;
@@ -97,6 +98,7 @@ const Classroom = () => {
 
   useEffect(() => {
     if (guestData) {
+      console.log(guestData);
       setGuests(guestData.result.guests);
     }
   }, [guestData]);
@@ -215,7 +217,7 @@ const Classroom = () => {
           </div>
           <ul className="section-data section-data01">
             {guests?.map((guest) => (
-              <Guest key={guest.guestId} guest={guest} />
+              <Guest key={guest.id} guest={guest} />
             ))}
           </ul>
         </div>
