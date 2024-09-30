@@ -216,4 +216,17 @@ export const handlers = [
       },
     });
   }),
+  http.post("http://localhost:8080/edupi-lms/v1/classroom/account", async () => {
+    return HttpResponse.json({
+      code: "CM-200000",
+      detail: "success create classroom account",
+      result: {
+        id: 19,
+        email: "test2@naver.com",
+        name: "학습자2",
+        status: 0,
+        role: 2,
+      },
+    });
+  }),
 ];
