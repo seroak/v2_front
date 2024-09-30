@@ -26,7 +26,7 @@ const Progress = () => {
   const [date, setDate] = useState<string>("2024-01-01");
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const params = useParams();
-  const roomId = params.roomId;
+  const classroomId = params.roomId;
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDate(e.target.value);
   };
@@ -34,7 +34,11 @@ const Progress = () => {
   const formatDate = (dateString: string) => {
     return dateString.replace(/-/g, ". ");
   };
-  const { progressData, refetch } = useQuery({ queryKey: ["progress"], queryFn: getProgress, enabled: isMswReady });
+  const { data: progressData, refetch } = useQuery({
+    queryKey: ["progress"],
+    queryFn: getProgress,
+    enabled: isMswReady,
+  });
   const useSSE = (url: string) => {
     const [data, setData] = useState(null);
     const queryClient = useQueryClient();
@@ -63,7 +67,8 @@ const Progress = () => {
     return { data };
   };
 
-  const { data } = useSSE("http://your-server-url/sse-endpoint");
+  const { data: sseData } = useSSE(`http://localhost/edupi-lms/v1/progrss/connect?classroomId=${classroomId}`);
+  console.log(sseData);
 
   return (
     <div>
@@ -71,7 +76,7 @@ const Progress = () => {
       <div className="group-wrap">
         <div className="group-left">
           <img src="/image/icon_group.svg" alt="그룹" />
-          <h2 className="group-title">파이썬 기초 {roomId}반</h2>
+          <h2 className="group-title">파이썬 기초 {classroomId}반</h2>
         </div>
       </div>
       <div className="s__container">
