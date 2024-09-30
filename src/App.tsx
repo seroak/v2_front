@@ -59,7 +59,7 @@ function App() {
         <Route path="/group" element={<Group />} />
         <Route path="/assignment" element={<Assginment />} />
         <Route path="/auth/email" element={<AuthEmail />} />
-        <Route path="/group/progress/:roomId" element={<Progress />} />
+        <Route path="/group/progress/:classroomId" element={<Progress />} />
       </Routes>
     </Router>
   );
