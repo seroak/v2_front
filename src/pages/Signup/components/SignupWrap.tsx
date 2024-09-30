@@ -169,22 +169,22 @@ const SignupWrap = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (isValidEmail === "red" || isValidEmail === "gray") {
+    if (isValidEmail === CheckType.Red || isValidEmail === CheckType.Gray) {
       emailRef.current?.focus();
       setValidEmail(CheckType.Red);
       return;
     }
-    if (isValidPhoneNumber === "red" || isValidPhoneNumber === "gray") {
+    if (isValidPhoneNumber === CheckType.Red || isValidPhoneNumber === CheckType.Gray) {
       phoneNumberRef.current?.focus();
       setValidPhoneNumber(CheckType.Red);
       return;
     }
-    if (containsTwoTypes === "red" || containsTwoTypes === "gray") {
+    if (containsTwoTypes === CheckType.Red || containsTwoTypes === CheckType.Gray) {
       passwordRef.current?.focus();
       setContainsTwoTypes(CheckType.Red);
       return;
     }
-    if (isValidConfirmPassword === "red" || isValidConfirmPassword === "gray") {
+    if (isValidConfirmPassword === CheckType.Red || isValidConfirmPassword === CheckType.Gray) {
       confirmPasswordRef.current?.focus();
       setValidConfirmPassword(CheckType.Red);
       return;
@@ -195,10 +195,10 @@ const SignupWrap = () => {
       return;
     }
     if (
-      isValidEmail === "green" &&
-      isValidPhoneNumber === "green" &&
+      isValidEmail === CheckType.Green &&
+      isValidPhoneNumber === CheckType.Green &&
       isValidConfirmPassword &&
-      containsTwoTypes === "green"
+      containsTwoTypes === CheckType.Green
     ) {
       mutation.mutate(formData);
       return;
@@ -213,11 +213,11 @@ const SignupWrap = () => {
   const getIconSrc = (flag: string) => {
     console.log(flag);
     switch (flag) {
-      case "gray":
+      case CheckType.Gray:
         return "/image/icon_check.svg";
-      case "red":
+      case CheckType.Red:
         return "/image/icon_x_red.svg";
-      case "green":
+      case CheckType.Green:
         return "/image/icon_check_green.svg";
       default:
         null;
@@ -256,8 +256,8 @@ const SignupWrap = () => {
             <input
               className={cx({
                 mb16: true,
-                "border-red": isValidEmail === "red",
-                "input-text-red": isValidEmail === "red",
+                "border-red": isValidEmail === CheckType.Red,
+                "input-text-red": isValidEmail === CheckType.Red,
               })}
               type="text"
               ref={emailRef}
@@ -267,7 +267,7 @@ const SignupWrap = () => {
               onChange={emailChange}
               placeholder="이메일"
             />
-            {isValidEmail == "red" && (
+            {isValidEmail == CheckType.Red && (
               <div className="guide-section">
                 <div className="guide">
                   <img src="image/icon_x_red.svg" alt="체크" />
@@ -279,8 +279,8 @@ const SignupWrap = () => {
             <input
               className={cx({
                 mb16: true,
-                "border-red": isValidPhoneNumber === "red",
-                "input-text-red": isValidPhoneNumber === "red",
+                "border-red": isValidPhoneNumber === CheckType.Red,
+                "input-text-red": isValidPhoneNumber === CheckType.Red,
               })}
               ref={phoneNumberRef}
               type="phoneNumber"
@@ -290,7 +290,7 @@ const SignupWrap = () => {
               value={formData.phoneNumber}
               onChange={phoneNumberChange}
             />
-            {isValidPhoneNumber == "red" && (
+            {isValidPhoneNumber == CheckType.Red && (
               <div className="guide-section">
                 <div className="guide">
                   <img src="image/icon_x_red.svg" alt="체크" />
@@ -303,10 +303,10 @@ const SignupWrap = () => {
               <input
                 className={cx({
                   mb5: true,
-                  "border-red": containsTwoTypes === "red",
-                  "input-text-red": containsTwoTypes === "red",
-                  "border-green": containsTwoTypes === "green",
-                  "input-text-green": containsTwoTypes === "green",
+                  "border-red": containsTwoTypes === CheckType.Red,
+                  "input-text-red": containsTwoTypes === CheckType.Red,
+                  "border-green": containsTwoTypes === CheckType.Green,
+                  "input-text-green": containsTwoTypes === CheckType.Green,
                 })}
                 type={isViewHidden ? "password" : "text"}
                 ref={passwordRef}
@@ -327,8 +327,8 @@ const SignupWrap = () => {
                 <img src={getIconSrc(containsTwoTypes)} alt="체크" />
                 <p
                   className={cx({
-                    "text-green": containsTwoTypes === "green",
-                    "text-red": containsTwoTypes === "red",
+                    "text-green": containsTwoTypes === CheckType.Green,
+                    "text-red": containsTwoTypes === CheckType.Red,
                   })}
                 >
                   영문/숫자/특수문자 중, 2가지 이상 포함
@@ -338,8 +338,8 @@ const SignupWrap = () => {
                 <img src={getIconSrc(moreOrLess)} alt="체크" />
                 <p
                   className={cx({
-                    "text-green": moreOrLess === "green",
-                    "text-red": moreOrLess === "red",
+                    "text-green": moreOrLess === CheckType.Green,
+                    "text-red": moreOrLess === CheckType.Red,
                   })}
                 >
                   8자 이상 32자 이하 입력 (공백 제외)
@@ -350,8 +350,8 @@ const SignupWrap = () => {
                 <img src={getIconSrc(consecutiveChar)} alt="체크" />
                 <p
                   className={cx({
-                    "text-green": consecutiveChar === "green",
-                    "text-red": consecutiveChar === "red",
+                    "text-green": consecutiveChar === CheckType.Green,
+                    "text-red": consecutiveChar === CheckType.Red,
                   })}
                 >
                   연속 3자 이상 동일한 문자/숫자 제외
@@ -362,8 +362,8 @@ const SignupWrap = () => {
               <input
                 className={cx({
                   mb5: true,
-                  "border-red": isValidConfirmPassword == "red",
-                  "input-text-red": isValidConfirmPassword == "red",
+                  "border-red": isValidConfirmPassword == CheckType.Red,
+                  "input-text-red": isValidConfirmPassword == CheckType.Red,
                 })}
                 id="confirmPassword"
                 ref={confirmPasswordRef}
@@ -380,7 +380,7 @@ const SignupWrap = () => {
               </div>
             </div>
 
-            {isValidConfirmPassword == "red" && (
+            {isValidConfirmPassword == CheckType.Red && (
               <div className="guide-section">
                 <div className="guide">
                   <img src="image/icon_x_red.svg" alt="체크" />
