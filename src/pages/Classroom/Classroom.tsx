@@ -4,6 +4,7 @@ import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getClassGuestData, getClassTotalActionInfo } from "@/services/api";
 
 interface GuestType {
   id: number;
@@ -30,69 +31,16 @@ const Classroom = () => {
   const [totalInfo, setTotalInfo] = useState<TotalInfoType>();
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const params = useParams();
-  const classroomId = params.classroomId;
-
-  // classroom 안에서 표현되는 학생 정보를 가져오는 api
-  const getGusetData = async () => {
-    try {
-      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account?classroomId=${classroomId}`, {
-        method: "GET",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("An error occurred:", error);
-      throw error;
-    }
-  };
-
-  const getClassroomData = async () => {
-    try {
-      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/info?classroomId=${classroomId}`, {
-        method: "GET",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      let ing = data.result.totalActionInfo.find((item: any) => item.name === "ING")?.count;
-      if (!ing) {
-        ing = 0;
-      }
-      let complete = data.result.totalActionInfo.find((item: any) => item.name === "COMPLETE")?.count;
-      if (!complete) {
-        complete = 0;
-      }
-      let help = data.result.totalActionInfo.find((item: any) => item.name === "HELP")?.count;
-      if (!help) {
-        help = 0;
-      }
-      data.result.totalInfo = { ing, complete, help };
-      console.log(data);
-      return data;
-    } catch (error) {
-      console.error("An error occurred:", error);
-      throw error;
-    }
-  };
+  const classroomId = Number(params.classroomId);
 
   const { data: guestData, refetch: guestDataRefetch } = useQuery<ClassroomData>({
-    queryKey: ["gutestData"],
-    queryFn: getGusetData,
+    queryKey: ["ClassGuestData", classroomId],
+    queryFn: () => getClassGuestData(classroomId),
     enabled: isMswReady,
   });
   const { data: classroomData, refetch: classroomDataRefetch } = useQuery<ClassroomData>({
-    queryKey: ["classroomData"],
-    queryFn: getClassroomData,
+    queryKey: ["ClassTotalActionInfo", classroomId],
+    queryFn: () => getClassTotalActionInfo(classroomId),
     enabled: isMswReady,
   });
 
