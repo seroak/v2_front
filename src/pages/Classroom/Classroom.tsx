@@ -59,7 +59,6 @@ const Classroom = () => {
   });
   useEffect(() => {
     if (progressData) {
-      console.log(progressData);
       setGuests(progressData.result.guest);
       setTotalInfo(progressData.result.totalInfo);
     }
