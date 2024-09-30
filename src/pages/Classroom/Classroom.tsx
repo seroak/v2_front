@@ -54,6 +54,7 @@ const Progress = () => {
         setData(newData);
         // setQueryData로 값 캐싱
         queryClient.setQueryData(["sse-data"], newData);
+        console.log("sse");
         refetch();
       };
 
