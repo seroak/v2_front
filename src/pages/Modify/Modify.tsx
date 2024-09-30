@@ -35,7 +35,6 @@ const Modify = () => {
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const inviteClassroom = async ({ classroomId, guestEmail }: props) => {
     try {
-      console.log("classroomId", classroomId, "guestEmail", guestEmail, "role", 2);
       const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account`, {
         method: "POST",
         credentials: "include",
@@ -93,7 +92,6 @@ const Modify = () => {
   const mutation = useMutation({
     mutationFn: inviteClassroom,
     async onSuccess(data) {
-      console.log(data);
       getClassroomRefetch();
     },
     onError(error) {
@@ -102,7 +100,6 @@ const Modify = () => {
   });
 
   useEffect(() => {
-    console.log(data);
     if (data) {
       setGuests(data.result.guests);
     }

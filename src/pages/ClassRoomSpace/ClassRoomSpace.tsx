@@ -37,7 +37,6 @@ const ClassRoomSpace = () => {
   const [groupTotalPeople, setTotalPeople] = useState<number>();
   useEffect(() => {
     if (data) {
-      console.log(data.result.hosts);
       setHostClassRooms(data.result.hosts);
       setGuestClassRooms(data.result.guests);
       setGroupCount(data.result.hosts.length + data.result.guests.length);
