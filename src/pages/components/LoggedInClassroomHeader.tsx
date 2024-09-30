@@ -12,7 +12,6 @@ const LoggedInHeader = () => {
     resetUser();
     cookies.remove("token");
   };
-  console.log(params);
   const classroomId = params.classroomId;
   return (
     <header className={styles["bg-blue"]}>
