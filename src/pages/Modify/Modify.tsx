@@ -3,7 +3,7 @@ import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 interface GuestType {
   guestId: number;
   email: string;
