@@ -46,7 +46,6 @@ const Classroom = () => {
 
   useEffect(() => {
     if (guestData) {
-      console.log(guestData);
       setGuests(guestData.result.guests);
     }
   }, [guestData]);
@@ -69,7 +68,6 @@ const Classroom = () => {
         setData(newData);
         // setQueryData로 값 캐싱
         queryClient.setQueryData(["sse-data"], newData);
-        console.log("sse");
         guestDataRefetch();
         classroomDataRefetch();
       };
@@ -84,7 +82,6 @@ const Classroom = () => {
       });
       addEventListener("message", (event) => {
         console.log("message 리스너");
-        console.log(event.data);
       });
       // connection되면
       eventSource.addEventListener("open", function (e) {
@@ -106,7 +103,6 @@ const Classroom = () => {
   };
 
   const { data: sseData } = useSSE(`http://localhost:8080/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
-  console.log("sseData", sseData);
 
   return (
     <div>
