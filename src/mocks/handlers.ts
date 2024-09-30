@@ -123,6 +123,7 @@ export const handlers = [
       { status: 200 }
     );
   }),
+
   http.get("http://localhost:8080/edupi-lms/v1/classroom", () => {
     return HttpResponse.json(
       {
@@ -173,7 +174,36 @@ export const handlers = [
       { status: 200 }
     );
   }),
+
   http.get("http://localhost:8080/edupi-lms/v1/classroom/account/guest", () => {
+    return HttpResponse.json({
+      success: true,
+      result: {
+        guest: [
+          {
+            guestId: 1,
+            name: "김민수",
+            email: "i1004gy.naver.com",
+            status: 1,
+          },
+          {
+            guestId: 2,
+            name: "박철수",
+            email: "i1004gy.naver.com",
+            status: 1,
+          },
+          {
+            guestId: 3,
+            name: "신지연",
+            email: "i1004gy.naver.com",
+            status: 1,
+          },
+        ],
+      },
+    });
+  }),
+
+  http.get("http://localhost:8080/edupi-lms/v1/classroom/info", () => {
     return HttpResponse.json({
       success: true,
       result: {
@@ -183,23 +213,6 @@ export const handlers = [
           complete: 5,
           help: 2,
         },
-        guest: [
-          {
-            guestId: 1,
-            name: "김민수",
-            status: 1,
-          },
-          {
-            guestId: 2,
-            name: "박철수",
-            status: 1,
-          },
-          {
-            guestId: 3,
-            name: "신지연",
-            status: 1,
-          },
-        ],
       },
     });
   }),
