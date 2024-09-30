@@ -20,7 +20,7 @@ interface ClassroomData {
   result: {
     className: string;
     totalInfo: TotalInfoType;
-    guest: GuestType[];
+    guests: GuestType[];
   };
 }
 
@@ -55,14 +55,11 @@ const Modify = () => {
   };
   const getClassroomData = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/edupi-lms/v1/classroom/account/guest?clssroomId=${classroomId}`,
-        {
-          method: "GET",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account?clssroomId=${classroomId}`, {
+        method: "GET",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -104,7 +101,7 @@ const Modify = () => {
   useEffect(() => {
     console.log(data);
     if (data) {
-      setGuests(data.result.guest);
+      setGuests(data.result.guests);
     }
   }, [data]);
 

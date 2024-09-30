@@ -21,7 +21,7 @@ interface ClassroomData {
   result: {
     className: string;
     totalInfo: TotalInfoType;
-    guest: GuestType[];
+    guests: GuestType[];
   };
 }
 const Classroom = () => {
@@ -34,14 +34,11 @@ const Classroom = () => {
   // classroom 안에서 표현되는 학생 정보를 가져오는 api
   const getGusetData = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/edupi-lms/v1/classroom/account/guest?clssroomId=${classroomId}`,
-        {
-          method: "GET",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account?clssroomId=${classroomId}`, {
+        method: "GET",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -86,7 +83,7 @@ const Classroom = () => {
 
   useEffect(() => {
     if (guestData) {
-      setGuests(guestData.result.guest);
+      setGuests(guestData.result.guests);
     }
   }, [guestData]);
 
@@ -145,7 +142,7 @@ const Classroom = () => {
   };
 
   const { data: sseData } = useSSE(`http://localhost:8080/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
-  console.log(sseData);
+  console.log("sseData", sseData);
 
   return (
     <div>

@@ -131,7 +131,7 @@ export const handlers = [
         code: "CM-200000",
         detail: "Success retrieved my classrooms",
         result: {
-          host: [
+          hosts: [
             {
               id: 6,
               name: "classroom2",
@@ -139,7 +139,7 @@ export const handlers = [
               totalPeople: 1,
             },
           ],
-          guest: [
+          guests: [
             {
               id: 1,
               name: "classroom1",
@@ -153,11 +153,11 @@ export const handlers = [
     );
   }),
 
-  http.get("http://localhost:8080/edupi-lms/v1/classroom/account/guest", () => {
+  http.get("http://localhost:8080/edupi-lms/v1/classroom/account", () => {
     return HttpResponse.json({
       success: true,
       result: {
-        guest: [
+        guests: [
           {
             guestId: 1,
             name: "김민수",
