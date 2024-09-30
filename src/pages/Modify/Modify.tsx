@@ -32,6 +32,7 @@ const Modify = () => {
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const inviteClassroom = async (classroomId: string) => {
     try {
+      console.log("classroomId", classroomId, "guestEmail", guestEmail, "role", 2);
       const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account`, {
         method: "POST",
         credentials: "include",
@@ -97,7 +98,6 @@ const Modify = () => {
     },
   });
 
-  console.log(classroomId);
   useEffect(() => {
     console.log(data);
     if (data) {
