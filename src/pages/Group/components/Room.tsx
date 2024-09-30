@@ -9,7 +9,7 @@ interface props {
 const Room = ({ classData }: props) => {
   return (
     <li>
-      <a href={`http://localhost:8080/group/progress/${classData.id}`}>
+      <a href={`http://localhost:5000/group/progress/${classData.id}`}>
         <div className="data04-name">
           <p>
             {classData.name} {classData.id}반
