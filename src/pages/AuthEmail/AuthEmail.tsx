@@ -15,7 +15,7 @@ const AuthEmail = () => {
 
       try {
         // 쿼리 스트링 값을 fetch 요청에 포함
-        const response = await fetch(`http://localhost:8080/edupi_user/v1/member/activate`, {
+        const response = await fetch(`http://localhost:8080/edupi-user/v1/account/activate`, {
           method: "POST",
           credentials: "include",
           headers: {

@@ -1,8 +1,32 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import LoggedInHeader from "../components/LoggedInHeader";
+import { useMswReadyStore } from "@/store/mswReady";
+import { useParams } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+const getProgress = async () => {
+  try {
+    const response = await fetch("http://localhost:8080/edupi-lms/v1/classroom", {
+      method: "GET",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("An error occurred:", error);
+    throw error;
+  }
+};
 const Progress = () => {
   const [date, setDate] = useState<string>("2024-01-01");
-
+  const isMswReady = useMswReadyStore((state) => state.isMswReady);
+  const params = useParams();
+  const roomId = params.roomId;
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDate(e.target.value);
   };
@@ -10,13 +34,44 @@ const Progress = () => {
   const formatDate = (dateString: string) => {
     return dateString.replace(/-/g, ". ");
   };
+  const { progressData, refetch } = useQuery({ queryKey: ["progress"], queryFn: getProgress, enabled: isMswReady });
+  const useSSE = (url: string) => {
+    const [data, setData] = useState(null);
+    const queryClient = useQueryClient();
+
+    const subscribe = useCallback(() => {
+      const eventSource = new EventSource(url);
+
+      eventSource.onmessage = (event) => {
+        const newData = JSON.parse(event.data);
+        setData(newData);
+        // setQueryData로 값 캐싱
+        queryClient.setQueryData(["sse-data"], newData);
+        refetch();
+      };
+
+      return () => {
+        eventSource.close();
+      };
+    }, [url, queryClient]);
+
+    useEffect(() => {
+      const unsubscribe = subscribe();
+      return unsubscribe;
+    }, [subscribe]);
+
+    return { data };
+  };
+
+  const { data } = useSSE("http://your-server-url/sse-endpoint");
+
   return (
     <div>
       <LoggedInHeader />
       <div className="group-wrap">
         <div className="group-left">
           <img src="/image/icon_group.svg" alt="그룹" />
-          <h2 className="group-title">파이썬 기초 1반</h2>
+          <h2 className="group-title">파이썬 기초 {roomId}반</h2>
         </div>
       </div>
       <div className="s__container">

@@ -56,7 +56,7 @@ export default function Visualization() {
 
   const mutation = useMutation({
     mutationFn: async (code: string) => {
-      return fetch("http://localhost:8080/edupi_visualize/v1/python", {
+      return fetch("http://localhost:8080/edupi-visualize/v1/python", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
