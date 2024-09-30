@@ -1,7 +1,9 @@
 interface GuestType {
-  guestId: number;
+  id: number;
+  email: string;
   name: string;
   status: number | string;
+  role: number;
 }
 interface props {
   guest: GuestType;
