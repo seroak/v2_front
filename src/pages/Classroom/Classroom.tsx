@@ -27,7 +27,7 @@ const Progress = () => {
   const [date, setDate] = useState<string>("2024-01-01");
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const params = useParams();
-  const classroomId = params.roomId;
+  const classroomId = params.classroomId;
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDate(e.target.value);
   };
@@ -70,7 +70,7 @@ const Progress = () => {
     return { data };
   };
 
-  const { data: sseData } = useSSE(`http://localhost:8080/edupi-lms/v1/progress/connect/?classroomId=${classroomId}`);
+  const { data: sseData } = useSSE(`http://localhost:8080/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
   console.log(sseData);
 
   return (
