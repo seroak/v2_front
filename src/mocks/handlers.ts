@@ -27,10 +27,37 @@ interface SignupUser {
 }
 
 export const handlers = [
-  http.post("/edupi-visualize/v1/python", () => {
-    return HttpResponse.json(testResponseBody);
-  }),
+  // 시각화 요청 성공
+  // http.post("http://localhost:8080/edupi-visualize/v1/python", () => {
+  //   return HttpResponse.json(
+  //     {
+  //       success: false,
+  //       code: "CS-200000",
+  //       detail: "success code analysis",
+  //       result: { code: testResponseBody },
+  //     },
+  //     {
+  //       status: 200,
+  //     }
+  //   );
+  // }),
 
+  // 시각화 요청 실패
+  http.post("http://localhost:8080/edupi-visualize/v1/python", () => {
+    return HttpResponse.json(
+      {
+        success: false,
+        code: "CS_400001",
+        detail: "코드 문법 오류입니다",
+        result: {
+          error: "1:7: F821 undefined name 'a'",
+        },
+      },
+      {
+        status: 400,
+      }
+    );
+  }),
   http.get("/edupi-user/v1/account/login/info", async () => {
     // Get the token from the cookies
 
