@@ -12,13 +12,15 @@ interface Classroom {
 }
 
 interface GroupData {
-  host: {
-    classroomCount: number;
-    classrooms: Classroom[];
-  };
-  guest: {
-    classroomCount: number;
-    classrooms: Classroom[];
+  result: {
+    host: {
+      classroomCount: number;
+      classrooms: Classroom[];
+    };
+    guest: {
+      classroomCount: number;
+      classrooms: Classroom[];
+    };
   };
 }
 const Group = () => {
@@ -37,11 +39,11 @@ const Group = () => {
   const [groupTotalPeople, setTotalPeople] = useState<number>();
   useEffect(() => {
     if (data) {
-      setHostClassRooms(data.host.classrooms);
-      setGuestClassRooms(data.guest.classrooms);
-      setGroupCount(data.host.classroomCount + data.guest.classroomCount);
-      const totalHost = data.host.classrooms.reduce((acc: number, item) => acc + item.totalPeople, 0);
-      const totalGuest = data.guest.classrooms.reduce((acc: number, item) => acc + item.totalPeople, 0);
+      setHostClassRooms(data.result.host.classrooms);
+      setGuestClassRooms(data.result.guest.classrooms);
+      setGroupCount(data.result.host.classroomCount + data.result.guest.classroomCount);
+      const totalHost = data.result.host.classrooms.reduce((acc: number, item) => acc + item.totalPeople, 0);
+      const totalGuest = data.result.guest.classrooms.reduce((acc: number, item) => acc + item.totalPeople, 0);
       setTotalPeople(totalHost + totalGuest);
     }
   }, [data]);
