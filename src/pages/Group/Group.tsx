@@ -4,6 +4,7 @@ import Room from "./components/Room";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useUserStore } from "@/store/user";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 import { getGroup, createClass } from "@/services/api";
 interface Classroom {
   id: number;
@@ -13,16 +14,36 @@ interface Classroom {
 
 interface GroupData {
   result: {
-    host: Classroom[];
-    guest: Classroom[];
+    hosts: Classroom[];
+    guests: Classroom[];
   };
 }
 const Group = () => {
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const LoggedInUserName = useUserStore((state) => state.loggedInUserName);
+  const params = useParams();
+  const classroomId = params.classroomId;
+  const getClassroomData = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom?clssroomId=${classroomId}`, {
+        method: "GET",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("An error occurred:", error);
+      throw error;
+    }
+  };
   const { data, refetch } = useQuery<GroupData>({
     queryKey: ["group"],
-    queryFn: getGroup,
+    queryFn: getClassroomData,
     enabled: isMswReady,
   });
 
@@ -33,11 +54,12 @@ const Group = () => {
   const [groupTotalPeople, setTotalPeople] = useState<number>();
   useEffect(() => {
     if (data) {
-      setHostClassRooms(data.result.host);
-      setGuestClassRooms(data.result.guest);
-      setGroupCount(data.result.host.length + data.result.guest.length);
-      const totalHost = data.result.host.reduce((acc: number, item) => acc + item.totalPeople, 0);
-      const totalGuest = data.result.guest.reduce((acc: number, item) => acc + item.totalPeople, 0);
+      console.log(data.result.hosts);
+      setHostClassRooms(data.result.hosts);
+      setGuestClassRooms(data.result.guests);
+      setGroupCount(data.result.hosts.length + data.result.guests.length);
+      const totalHost = data.result.hosts.reduce((acc: number, item) => acc + item.totalPeople, 0);
+      const totalGuest = data.result.guests.reduce((acc: number, item) => acc + item.totalPeople, 0);
       setTotalPeople(totalHost + totalGuest);
     }
   }, [data]);
