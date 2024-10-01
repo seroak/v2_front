@@ -10,7 +10,7 @@ interface props {
 const Room = ({ classData }: props) => {
   return (
     <li>
-      <Link to={`http://localhost:5000/classroomspace/classroom/${classData.id}`}>
+      <Link to={`/classroomspace/classroom/${classData.id}`}>
         <div className="data04-name">
           <p>
             {classData.name} {classData.id}반
