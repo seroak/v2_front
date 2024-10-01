@@ -11,7 +11,7 @@ interface props {
 const fetchEmissionGuest = async (classroomAccountId: number) => {
   try {
     const response = await fetch(
-      `http://localhost:8080/edupi-lms/v1/classroom/account?classroomAcountId=${classroomAccountId}`,
+      `http://localhost:8080/edupi-lms/v1/classroom/account?classroomAccountId=${classroomAccountId}`,
       {
         method: "DELETE",
         credentials: "include",
