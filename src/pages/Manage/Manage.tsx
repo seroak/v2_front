@@ -4,8 +4,9 @@ import { useMswReadyStore } from "@/store/mswReady";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
+import { getClassGuestData } from "@/services/api";
 interface GuestType {
-  guestId: number;
+  id: number;
   email: string;
   name: string;
   status: number;
@@ -56,27 +57,10 @@ const Modify = () => {
       throw error;
     }
   };
-  const getClassroomData = async () => {
-    try {
-      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account?classroomId=${classroomId}`, {
-        method: "GET",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-      });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("An error occurred:", error);
-      throw error;
-    }
-  };
   const { data, refetch: getClassroomRefetch } = useQuery<ClassroomData>({
     queryKey: ["classroomData"],
-    queryFn: getClassroomData,
+    queryFn: () => getClassGuestData(classroomId),
     enabled: isMswReady,
   });
   const changeGuestEmail = (e: ChangeEvent<HTMLInputElement>) => {
@@ -104,7 +88,38 @@ const Modify = () => {
       setGuests(data.result.guests);
     }
   }, [data]);
-
+  const fetchDeleteClassroom = async (classroomId: number) => {
+    try {
+      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/${classroomId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("An error occurred:", error);
+      throw error;
+    }
+  };
+  const useDeleteClassroom = () => {
+    return useMutation({
+      mutationFn: fetchDeleteClassroom,
+      onSuccess: () => {
+        alert("클래스룸이 삭제되었습니다.");
+      },
+      onError: (error) => {
+        console.error("An error occurred:", error);
+        alert("클래스룸 삭제에 실패했습니다.");
+      },
+    });
+  };
+  const deleteClassroomMutation = useDeleteClassroom();
+  const handleDeleteClassroom = () => {
+    deleteClassroomMutation.mutate(classroomId);
+  };
   return (
     <div className="bg">
       <LoggedInClassroomHeader />
@@ -141,11 +156,11 @@ const Modify = () => {
           </div>
           <ul className="section-data section-data03">
             {guests?.map((guest) => (
-              <Guest key={guest.guestId} guest={guest} />
+              <Guest key={guest.id} guest={guest} />
             ))}
           </ul>
           <div className="right-btns">
-            <button className="red">
+            <button className="red" onClick={handleDeleteClassroom}>
               <img src="/image/icon_delete.svg" alt="그룹삭제" />
               클래스룸 삭제
             </button>
