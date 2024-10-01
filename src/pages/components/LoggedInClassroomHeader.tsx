@@ -3,7 +3,7 @@ import { useUserStore } from "@/store/user";
 import { Cookies } from "react-cookie";
 import { Link, NavLink, useParams } from "react-router-dom";
 
-const LoggedInHeader = () => {
+const LoggedInClassroomHeader = () => {
   const params = useParams();
   const cookies = new Cookies();
   const loggedInUserName = useUserStore((state) => state.loggedInUserName);
@@ -24,7 +24,10 @@ const LoggedInHeader = () => {
           학생목록
         </NavLink>
 
-        <NavLink to="/viz" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+        <NavLink
+          to={`/classroomspace/classroom/viz/${classroomId}`}
+          className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+        >
           시각화
         </NavLink>
 
@@ -48,4 +51,4 @@ const LoggedInHeader = () => {
     </header>
   );
 };
-export default LoggedInHeader;
+export default LoggedInClassroomHeader;
