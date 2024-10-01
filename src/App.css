@@ -1222,3 +1222,54 @@ header .group-btn {
   -webkit-box-align: center;
   align-items: center;
 }
+
+/* 도움 요청 floating 버튼 */
+.floating-buttons {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 25px;
+  color: white;
+  text-decoration: none;
+  font-family: Arial, sans-serif;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-help {
+  background-color: #4f46e5;
+}
+
+.btn-help:hover {
+  background-color: #4338ca;
+}
+
+.btn-complete {
+  background-color: #0d9488;
+}
+
+.btn-complete:hover {
+  background-color: #0f766e;
+}
+
+.btn img {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+}
