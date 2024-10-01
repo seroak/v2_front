@@ -20,8 +20,12 @@ const LoggedInClassroomHeader = () => {
           <img src="/image/img_logo.png" alt="로고" />
         </Link>
         {/* <!-- 활성화 할 a태그에 on_active 클래스 추가 --> */}
-        <NavLink to="/classroomspace" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-          학생목록
+        <NavLink
+          to={`/classroomspace/classroom/${classroomId}`}
+          end
+          className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+        >
+          진척도
         </NavLink>
 
         <NavLink
@@ -31,9 +35,6 @@ const LoggedInClassroomHeader = () => {
           시각화
         </NavLink>
 
-        <NavLink to="/assignment" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-          과제
-        </NavLink>
         <NavLink
           to={`/classroomspace/classroom/manage/${classroomId}`}
           className={({ isActive }) => (isActive ? styles["on_active"] : "")}
@@ -43,10 +44,24 @@ const LoggedInClassroomHeader = () => {
       </div>
 
       <div>
-        {loggedInUserName === "" ? null : <span style={{ marginRight: "10px" }}>{loggedInUserName}님</span>}
-        <span onClick={logout} className={styles["logout"]}>
+        <NavLink
+          to={`/classroomspace`}
+          end
+          className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+          style={{ marginRight: "10px" }}
+        >
+          <button className="nav-button">
+            <span>나가기</span>
+          </button>
+        </NavLink>
+        <button
+          onClick={logout}
+          className={styles["logout"] + " nav-button"}
+          style={{ marginRight: "10px", color: "gray" }}
+        >
           <span>로그아웃</span>
-        </span>
+        </button>
+        {loggedInUserName === "" ? null : <span>{loggedInUserName}이규열님</span>}
       </div>
     </header>
   );
