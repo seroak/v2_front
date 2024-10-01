@@ -55,11 +55,11 @@ function App() {
         <Route path="/viz" element={<Visualization />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/group/classroom/manage/:classroomId" element={<Manage />} />
+        <Route path="/classroomspace/classroom/manage/:classroomId" element={<Manage />} />
         <Route path="/classroomspace" element={<ClassroomSpace />} />
         <Route path="/assignment" element={<Assginment />} />
         <Route path="/auth/email" element={<AuthEmail />} />
-        <Route path="/group/classroom/:classroomId" element={<Clssroom />} />
+        <Route path="/classroomspace/classroom/:classroomId" element={<Clssroom />} />
       </Routes>
     </Router>
   );

@@ -20,7 +20,7 @@ const LoggedInHeader = () => {
           <img src="/image/img_logo.png" alt="로고" />
         </Link>
         {/* <!-- 활성화 할 a태그에 on_active 클래스 추가 --> */}
-        <NavLink to="/group" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+        <NavLink to="/classroomspace" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
           학생목록
         </NavLink>
 
@@ -32,7 +32,7 @@ const LoggedInHeader = () => {
           과제
         </NavLink>
         <NavLink
-          to={`/group/classroom/manage/${classroomId}`}
+          to={`/classroomspace/classroom/manage/${classroomId}`}
           className={({ isActive }) => (isActive ? styles["on_active"] : "")}
         >
           설정
