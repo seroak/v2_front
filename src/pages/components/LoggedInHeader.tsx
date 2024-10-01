@@ -19,18 +19,11 @@ const LoggedInHeader = () => {
         </Link>
         {/* <!-- 활성화 할 a태그에 on_active 클래스 추가 --> */}
         <NavLink to="/classroomspace" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-          학생목록
+          클래스룸 스페이스
         </NavLink>
 
         <NavLink to="/viz" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
           시각화
-        </NavLink>
-
-        <NavLink to="/assignment" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-          과제
-        </NavLink>
-        <NavLink to="/manage" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-          설정
         </NavLink>
       </div>
 
