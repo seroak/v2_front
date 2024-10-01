@@ -156,7 +156,7 @@ const Modify = () => {
           </div>
           <ul className="section-data section-data03">
             {guests?.map((guest) => (
-              <Guest key={guest.id} guest={guest} />
+              <Guest key={guest.id} guest={guest} getClassroomRefetch={getClassroomRefetch} />
             ))}
           </ul>
           <div className="right-btns">

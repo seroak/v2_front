@@ -7,6 +7,7 @@ interface GuestType {
 }
 interface props {
   guest: GuestType;
+  getClassroomRefetch: () => void;
 }
 const fetchEmissionGuest = async (classroomAccountId: number) => {
   try {
@@ -28,12 +29,13 @@ const fetchEmissionGuest = async (classroomAccountId: number) => {
   }
 };
 
-const Guest = ({ guest }: props) => {
+const Guest = ({ guest, getClassroomRefetch }: props) => {
   const useEmissoionGuestMutation = () => {
     return useMutation({
       mutationFn: fetchEmissionGuest,
       onSuccess: () => {
         alert("방출되었습니다.");
+        getClassroomRefetch();
       },
       onError: (error) => {
         console.error("An error occurred:", error);
