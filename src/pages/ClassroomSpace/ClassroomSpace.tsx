@@ -108,7 +108,7 @@ const ClassroomSpace = () => {
         <div className="group-right">
           <div className="section-title">
             <div className="title-left">
-              <h3>학습방</h3>
+              <h3>강의방</h3>
             </div>
             <div className="title-right">
               <div className="search-wrap">
@@ -126,7 +126,7 @@ const ClassroomSpace = () => {
           </ul>
           <div className="section-title">
             <div className="title-left">
-              <h3>강의방</h3>
+              <h3>학습방</h3>
             </div>
             <div className="title-right">
               <div className="search-wrap">

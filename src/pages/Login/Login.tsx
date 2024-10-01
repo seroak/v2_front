@@ -4,7 +4,11 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "@/store/user";
 import { fetchUser, login } from "@/services/api";
-
+interface User {
+  email: string;
+  name: string;
+  role: string;
+}
 const Login = () => {
   const [userId, setUserId] = useState<string>("");
   const [userPassword, setUserPassword] = useState<string>("");
@@ -18,16 +22,10 @@ const Login = () => {
       const req = { email: userId, password: userPassword };
       return await login(req);
     },
-    onSuccess() {
+    onSuccess(data) {
       refetch();
-      if (userData) {
-        setLoggedInUserEmail(userData.email);
-        setLoggedInUserName(userData.name);
-        setLoggedInUserRole(userData.role);
-        navigate("/");
-      } else {
-        console.error("유저 데이터가 없습니다");
-      }
+
+      navigate("/");
     },
     onError(error) {
       alert("아이디 또는 비밀번호가 틀렸습니다.");

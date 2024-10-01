@@ -1,16 +1,17 @@
 import styles from "./LoggedInHeader.module.css";
 import { useUserStore } from "@/store/user";
-import { Cookies } from "react-cookie";
+import { useCookies } from "react-cookie";
 import { Link, NavLink } from "react-router-dom";
 const LoggedInHeader = () => {
-  const cookies = new Cookies();
+  const [cookies, setCookie, removeCookie] = useCookies(["token"], {
+    doNotParse: true,
+  });
   const loggedInUserName = useUserStore((state) => state.loggedInUserName);
   const resetUser = useUserStore((state) => state.resetUser);
   const logout = () => {
     resetUser();
-    cookies.remove("token");
+    removeCookie("token", { path: "/" });
   };
-
   return (
     <header className={styles["bg-blue"]}>
       <div className={styles["header-menu"]}>

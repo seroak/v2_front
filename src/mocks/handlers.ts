@@ -42,7 +42,9 @@ export const handlers = [
       return HttpResponse.json(
         {
           success: true,
-          user: { id: "test@test.com", name: "테스트 사용자" },
+          email: "test@test.com",
+          name: "테스트 사용자",
+          role: "2",
         },
         {
           status: 200,

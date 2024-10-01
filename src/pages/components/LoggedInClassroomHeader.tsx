@@ -9,6 +9,7 @@ const LoggedInClassroomHeader = () => {
   const loggedInUserName = useUserStore((state) => state.loggedInUserName);
   const resetUser = useUserStore((state) => state.resetUser);
   const logout = () => {
+    console.log("로그아웃");
     resetUser();
     cookies.remove("token");
   };
@@ -61,7 +62,7 @@ const LoggedInClassroomHeader = () => {
         >
           <span>로그아웃</span>
         </button>
-        {loggedInUserName === "" ? null : <span>{loggedInUserName}이규열님</span>}
+        {loggedInUserName === "" ? null : <span>{loggedInUserName}님</span>}
       </div>
     </header>
   );
