@@ -15,7 +15,11 @@ import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/d
 import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
 import { useArrowStore } from "@/store/arrow";
-import { useUserStore } from "@/store/user";
+enum ActionType {
+  ING = 1,
+  COMPLETE = 2,
+  HELP = 3,
+}
 // 원본 코드 타입 정의
 interface CodeContextType {
   code: string;
@@ -51,7 +55,7 @@ const VisualizationClassroom = () => {
   const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
 
   const setErrorLine = useEditorStore((state) => state.setErrorLine);
-
+  const [actionType, setActionType] = useState<ActionType>(ActionType.ING);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const params = useParams();
@@ -162,10 +166,17 @@ const VisualizationClassroom = () => {
     });
   };
   const guestActionMutation = useGuestActionMutation();
+
+  const handelIngRequest = () => {
+    setActionType(ActionType.ING);
+    guestActionMutation.mutate({ classroomId: classroomId, action: 1 });
+  };
   const handleHelpRequest = () => {
+    setActionType(ActionType.HELP);
     guestActionMutation.mutate({ classroomId: classroomId, action: 2 });
   };
   const handleCompleteRequest = () => {
+    setActionType(ActionType.COMPLETE);
     guestActionMutation.mutate({ classroomId: classroomId, action: 3 });
   };
   return (
@@ -230,20 +241,42 @@ const VisualizationClassroom = () => {
             <RightSection />
           </Split>
           <div className="floating-buttons">
-            <button className="btn btn-help" onClick={handleHelpRequest}>
-              <img
-                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'%3E%3C/circle%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3'%3E%3C/path%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'%3E%3C/line%3E%3C/svg%3E"
-                alt="도움말 아이콘"
-              />
-              도움 요청
-            </button>
-            <button className="btn btn-complete" onClick={handleCompleteRequest}>
-              <img
-                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'%3E%3C/path%3E%3Cpolyline points='22 4 12 14.01 9 11.01'%3E%3C/polyline%3E%3C/svg%3E"
-                alt="완료 아이콘"
-              />
-              완료
-            </button>
+            {actionType === ActionType.HELP && (
+              <button className="btn btn-cancel" onClick={handelIngRequest}>
+                <img
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6L6 18'%3E%3C/path%3E%3Cpath d='M6 6l12 12'%3E%3C/path%3E%3C/svg%3E"
+                  alt="취소 아이콘"
+                />
+                취소
+              </button>
+            )}
+            {actionType === ActionType.ING && (
+              <button className="btn btn-help" onClick={handleHelpRequest}>
+                <img
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'%3E%3C/circle%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3'%3E%3C/path%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'%3E%3C/line%3E%3C/svg%3E"
+                  alt="도움말 아이콘"
+                />
+                도움 요청
+              </button>
+            )}
+            {actionType === ActionType.ING && (
+              <button className="btn btn-complete" onClick={handleCompleteRequest}>
+                <img
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'%3E%3C/path%3E%3Cpolyline points='22 4 12 14.01 9 11.01'%3E%3C/polyline%3E%3C/svg%3E"
+                  alt="완료 아이콘"
+                />
+                완료
+              </button>
+            )}
+            {actionType === ActionType.COMPLETE && (
+              <button className="btn btn-cancel" onClick={handelIngRequest}>
+                <img
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6L6 18'%3E%3C/path%3E%3Cpath d='M6 6l12 12'%3E%3C/path%3E%3C/svg%3E"
+                  alt="취소 아이콘"
+                />
+                취소
+              </button>
+            )}
           </div>
         </main>
       </PreprocessedCodesContext.Provider>
