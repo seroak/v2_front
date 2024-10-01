@@ -90,7 +90,7 @@ const Modify = () => {
   }, [data]);
   const fetchDeleteClassroom = async (classroomId: number) => {
     try {
-      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/${classroomId}`, {
+      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom?classroomId=${classroomId}`, {
         method: "DELETE",
         credentials: "include",
       });

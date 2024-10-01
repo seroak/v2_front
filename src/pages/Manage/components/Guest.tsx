@@ -10,10 +10,13 @@ interface props {
 }
 const fetchEmissionGuest = async (classroomAccountId: number) => {
   try {
-    const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account/${classroomAccountId}`, {
-      method: "DELETE",
-      credentials: "include",
-    });
+    const response = await fetch(
+      `http://localhost:8080/edupi-lms/v1/classroom/account?classroomAcountId=${classroomAccountId}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+      }
+    );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
