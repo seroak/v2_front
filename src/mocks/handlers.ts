@@ -216,4 +216,12 @@ export const handlers = [
       },
     });
   }),
+
+  http.post("http://localhost:8080/edupi-lms/v1/progress/send", async () => {
+    return HttpResponse.json({
+      code: "CM-200000",
+      detail: "액션이 변경되었습니다.",
+      result: 1,
+    });
+  }),
 ];
