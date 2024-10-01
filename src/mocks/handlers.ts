@@ -159,19 +159,19 @@ export const handlers = [
       result: {
         guests: [
           {
-            guestId: 1,
+            id: 1,
             name: "김민수",
             email: "i1004gy.naver.com",
             status: 1,
           },
           {
-            guestId: 2,
+            id: 2,
             name: "박철수",
             email: "i1004gy.naver.com",
             status: 1,
           },
           {
-            guestId: 3,
+            id: 3,
             name: "신지연",
             email: "i1004gy.naver.com",
             status: 1,
