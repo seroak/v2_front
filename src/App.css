@@ -770,6 +770,10 @@ var-list {
   background: #f9fafb;
   height: 100%;
 }
+.classroom-right {
+  display: flex;
+  align-items: center;
+}
 .title-right button {
   padding: 9.5px 24px;
   border-radius: 6px;
