@@ -6,7 +6,7 @@ const Home = () => {
   console.log(loggedInUserName);
   return (
     <>
-      {loggedInUserName === undefined ? <PublicHeader /> : <LoggedInHeader />}
+      {loggedInUserName === "" ? <PublicHeader /> : <LoggedInHeader />}
       <h1>메인 페이지입니다</h1>
     </>
   );
