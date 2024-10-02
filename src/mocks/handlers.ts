@@ -233,4 +233,11 @@ export const handlers = [
       result: 1, // 1 : ING, 2 : HELP, 3 : COMPLETE, 0: 올 일 없음
     });
   }),
+  http.post("http://localhost:8080/edupi-lms/v1/classroom/action/init", async () => {
+    return HttpResponse.json({
+      code: "CM-200000",
+      detail: "Success update actions in classroom",
+      result: 2, // 변경된 상태 수
+    });
+  }),
 ];
