@@ -48,14 +48,12 @@ const Classroom = () => {
     if (guestData) {
       setGuests(guestData.result.guests);
     }
-    console.log("guestData 재실행", guestData);
   }, [guestData]);
 
   useEffect(() => {
     if (classroomData) {
       setTotalInfo(classroomData.result.totalInfo);
     }
-    console.log("classroomData 재실행", classroomData);
   }, [classroomData]);
 
   const useSSE = (url: string) => {
@@ -82,9 +80,6 @@ const Classroom = () => {
         guestDataRefetch();
         classroomDataRefetch();
       });
-      addEventListener("message", (event) => {
-        console.log("message 리스너");
-      });
       // connection되면
       eventSource.addEventListener("open", function (e) {
         console.log("서버로 연결이 됨");
@@ -105,7 +100,7 @@ const Classroom = () => {
   };
 
   const { data: sseData } = useSSE(`http://localhost:8080/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
-
+  console.log("sseData", sseData);
   return (
     <div>
       <LoggedInClassroomHeader />
