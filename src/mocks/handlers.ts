@@ -226,4 +226,11 @@ export const handlers = [
       result: 1,
     });
   }),
+  http.get("http://localhost:8080/edupi-lms/v1/guest/action/status", async () => {
+    return HttpResponse.json({
+      code: "CM-200000",
+      detail: "Success retrieved classroom info",
+      result: 1, // 1 : ING, 2 : HELP, 3 : COMPLETE, 0: 올 일 없음
+    });
+  }),
 ];
