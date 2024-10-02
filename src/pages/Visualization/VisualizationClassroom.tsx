@@ -10,7 +10,7 @@ import RightSection from "./components/RightSection/RightSection";
 
 import Split from "react-split";
 import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
-
+import { fetchGuestActionRequest } from "@/services/api";
 //zustand store
 import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
@@ -163,31 +163,6 @@ const VisualizationClassroom = () => {
       }
     };
   }, [isPlaying, consoleIdx, codeFlowLength]);
-  const fetchGuestActionRequest = async (req: any) => {
-    try {
-      const response = await fetch("http://localhost:8080/edupi-lms/v1/progress/send", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          classroomId: req.classroomId,
-          action: req.action,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("An error occurred:", error);
-      throw error;
-    }
-  };
 
   const useGuestActionMutation = () => {
     return useMutation({

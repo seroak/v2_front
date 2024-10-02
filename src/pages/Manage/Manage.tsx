@@ -4,7 +4,7 @@ import { useMswReadyStore } from "@/store/mswReady";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
-import { getClassGuestData } from "@/services/api";
+import { getClassGuestData, fetchDeleteClassroom } from "@/services/api";
 interface GuestType {
   id: number;
   email: string;
@@ -89,22 +89,6 @@ const Modify = () => {
       setGuests(data.result.guests);
     }
   }, [data]);
-  const fetchDeleteClassroom = async (classroomId: number) => {
-    try {
-      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom?classroomId=${classroomId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("An error occurred:", error);
-      throw error;
-    }
-  };
 
   const deleteClassroomMutation = useMutation({
     mutationFn: fetchDeleteClassroom,

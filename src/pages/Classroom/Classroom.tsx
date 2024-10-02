@@ -4,7 +4,7 @@ import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { getClassGuestData, getClassTotalActionInfo } from "@/services/api";
+import { getClassGuestData, getClassTotalActionInfo, fetchClassOver } from "@/services/api";
 
 interface GuestType {
   id: number;
@@ -56,21 +56,6 @@ const Classroom = () => {
       setTotalInfo(classroomData.result.totalInfo);
     }
   }, [classroomData]);
-  const fetchClassOver = async (classroomId: number) => {
-    const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/action/init`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ classroomId: classroomId }),
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  };
 
   const classOverMutation = useMutation({
     mutationFn: fetchClassOver,

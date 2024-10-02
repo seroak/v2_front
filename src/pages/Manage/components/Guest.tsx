@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { fetchEmissionGuest } from "@/services/api";
 interface GuestType {
   id: number;
   name: string;
@@ -9,25 +10,6 @@ interface props {
   guest: GuestType;
   getClassroomRefetch: () => void;
 }
-const fetchEmissionGuest = async (classroomAccountId: number) => {
-  try {
-    const response = await fetch(
-      `http://localhost:8080/edupi-lms/v1/classroom/account?classroomAccountId=${classroomAccountId}`,
-      {
-        method: "DELETE",
-        credentials: "include",
-      }
-    );
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("An error occurred:", error);
-    throw error;
-  }
-};
 
 const Guest = ({ guest, getClassroomRefetch }: props) => {
   const useEmissoionGuestMutation = () => {
@@ -44,7 +26,6 @@ const Guest = ({ guest, getClassroomRefetch }: props) => {
     });
   };
   const emissionGuestMutation = useEmissoionGuestMutation();
-  console.log(guest);
   const id = Number(guest.id);
   const handleEmissionGuest = () => {
     emissionGuestMutation.mutate(id);
