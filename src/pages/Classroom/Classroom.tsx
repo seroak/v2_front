@@ -48,12 +48,14 @@ const Classroom = () => {
     if (guestData) {
       setGuests(guestData.result.guests);
     }
+    console.log("guestData 재실행", guestData);
   }, [guestData]);
 
   useEffect(() => {
     if (classroomData) {
       setTotalInfo(classroomData.result.totalInfo);
     }
+    console.log("classroomData 재실행", classroomData);
   }, [classroomData]);
 
   const useSSE = (url: string) => {
