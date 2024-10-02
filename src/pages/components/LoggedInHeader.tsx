@@ -1,16 +1,30 @@
 import styles from "./LoggedInHeader.module.css";
 import { useUserStore } from "@/store/user";
-import { useCookies } from "react-cookie";
+
 import { Link, NavLink } from "react-router-dom";
 const LoggedInHeader = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"], {
-    doNotParse: true,
-  });
   const loggedInUserName = useUserStore((state) => state.loggedInUserName);
   const resetUser = useUserStore((state) => state.resetUser);
+  const fetchLogout = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/edupi-user/v1/account/logout", {
+        method: "GET",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      resetUser();
+      return data;
+    } catch (error) {
+      console.error("An error occurred:", error);
+      throw error;
+    }
+  };
   const logout = () => {
-    resetUser();
-    removeCookie("token", { path: "/" });
+    fetchLogout();
   };
   return (
     <header className={styles["bg-blue"]}>
