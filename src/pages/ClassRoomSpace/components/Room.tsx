@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-
 interface ClassData {
   id: number;
   name: string;
@@ -11,7 +10,7 @@ interface props {
 const Room = ({ classData }: props) => {
   return (
     <li>
-      <Link to={`http://localhost:8080/group/progress/${classData.id}`}>
+      <Link to={`classroomSpace/classroom/${classData.id}`}>
         <div className="data04-name">
           <p>
             {classData.name} {classData.id}반

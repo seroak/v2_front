@@ -4,7 +4,8 @@ import Room from "./components/Room";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useUserStore } from "@/store/user";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { getGroup, createClass } from "@/services/api";
+import { useParams } from "react-router-dom";
+import { createClass, getHostGuestData } from "@/services/api";
 interface Classroom {
   id: number;
   name: string;
@@ -12,21 +13,20 @@ interface Classroom {
 }
 
 interface GroupData {
-  host: {
-    classroomCount: number;
-    classrooms: Classroom[];
-  };
-  guest: {
-    classroomCount: number;
-    classrooms: Classroom[];
+  result: {
+    hosts: Classroom[];
+    guests: Classroom[];
   };
 }
-const Group = () => {
+const ClassRoomSpace = () => {
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const LoggedInUserName = useUserStore((state) => state.loggedInUserName);
+  const params = useParams();
+  const classroomId = Number(params.classroomId);
+
   const { data, refetch } = useQuery<GroupData>({
-    queryKey: ["group"],
-    queryFn: getGroup,
+    queryKey: ["classroomspace", classroomId],
+    queryFn: () => getHostGuestData(classroomId),
     enabled: isMswReady,
   });
 
@@ -37,11 +37,11 @@ const Group = () => {
   const [groupTotalPeople, setTotalPeople] = useState<number>();
   useEffect(() => {
     if (data) {
-      setHostClassRooms(data.host.classrooms);
-      setGuestClassRooms(data.guest.classrooms);
-      setGroupCount(data.host.classroomCount + data.guest.classroomCount);
-      const totalHost = data.host.classrooms.reduce((acc: number, item) => acc + item.totalPeople, 0);
-      const totalGuest = data.guest.classrooms.reduce((acc: number, item) => acc + item.totalPeople, 0);
+      setHostClassRooms(data.result.hosts);
+      setGuestClassRooms(data.result.guests);
+      setGroupCount(data.result.hosts.length + data.result.guests.length);
+      const totalHost = data.result.hosts.reduce((acc: number, item) => acc + item.totalPeople, 0);
+      const totalGuest = data.result.guests.reduce((acc: number, item) => acc + item.totalPeople, 0);
       setTotalPeople(totalHost + totalGuest);
     }
   }, [data]);
@@ -147,4 +147,4 @@ const Group = () => {
     </div>
   );
 };
-export default Group;
+export default ClassRoomSpace;

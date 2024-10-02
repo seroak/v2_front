@@ -1,8 +1,10 @@
 import styles from "./LoggedInHeader.module.css";
 import { useUserStore } from "@/store/user";
 import { Cookies } from "react-cookie";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
+
 const LoggedInHeader = () => {
+  const params = useParams();
   const cookies = new Cookies();
   const loggedInUserName = useUserStore((state) => state.loggedInUserName);
   const resetUser = useUserStore((state) => state.resetUser);
@@ -10,7 +12,7 @@ const LoggedInHeader = () => {
     resetUser();
     cookies.remove("token");
   };
-
+  const classroomId = params.classroomId;
   return (
     <header className={styles["bg-blue"]}>
       <div className={styles["header-menu"]}>
@@ -29,7 +31,10 @@ const LoggedInHeader = () => {
         <NavLink to="/assignment" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
           과제
         </NavLink>
-        <NavLink to="/manage" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+        <NavLink
+          to={`/group/classroom/manage/${classroomId}`}
+          className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+        >
           설정
         </NavLink>
       </div>
