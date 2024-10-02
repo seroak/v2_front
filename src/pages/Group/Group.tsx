@@ -13,9 +13,11 @@ interface Classroom {
 
 interface GroupData {
   host: {
+    classroomCount: number;
     classrooms: Classroom[];
   };
   guest: {
+    classroomCount: number;
     classrooms: Classroom[];
   };
 }
@@ -31,10 +33,16 @@ const Group = () => {
   const [hostClassRooms, setHostClassRooms] = useState<Classroom[]>([]);
   const [guestClassRooms, setGuestClassRooms] = useState<Classroom[]>([]);
   const [createClassName, setCreateCalssName] = useState<string | undefined>();
+  const [groupCount, setGroupCount] = useState<number>();
+  const [groupTotalPeople, setTotalPeople] = useState<number>();
   useEffect(() => {
     if (data) {
       setHostClassRooms(data.host.classrooms);
       setGuestClassRooms(data.guest.classrooms);
+      setGroupCount(data.host.classroomCount + data.guest.classroomCount);
+      const totalHost = data.host.classrooms.reduce((acc: number, item) => acc + item.totalPeople, 0);
+      const totalGuest = data.guest.classrooms.reduce((acc: number, item) => acc + item.totalPeople, 0);
+      setTotalPeople(totalHost + totalGuest);
     }
   }, [data]);
   const changeCreateClassName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -77,11 +85,11 @@ const Group = () => {
             <ul className="user-group-data">
               <li>
                 <p>생성된 그룹 수</p>
-                <p>8</p>
+                <p>{groupCount}</p>
               </li>
               <li>
                 <p>전체 학생 수</p>
-                <p>400</p>
+                <p>{groupTotalPeople}</p>
               </li>
             </ul>
             <label htmlFor="addgroup">그룹 생성</label>

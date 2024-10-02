@@ -2,7 +2,7 @@ import { useState, useRef, ChangeEvent, FormEvent, useContext } from "react";
 import ConsentInformationModal from "./ConsentInformationModal";
 import TermsOfServiceModal from "./TermsOfServiceModal";
 import { useMutation } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { TrySignupContext } from "../Signup";
 import cx from "classnames";
 import axios from "axios";
@@ -12,6 +12,12 @@ interface FormData {
   phoneNumber: string;
   password: string;
   confirmPassword: string;
+}
+// 회원가입 체크 3가지 상태 정의
+enum CheckType {
+  Gray = "gray",
+  Red = "red",
+  Green = "green",
 }
 
 const SignupWrap = () => {
@@ -26,14 +32,14 @@ const SignupWrap = () => {
   const phoneNumberRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
-  const [isContainsTwoTypes, setContainsTwoTypes] = useState<number>(0);
-  const [isMoreOrLess, setMoreOrLess] = useState<number>(0);
-  const [isConsecutiveChar, setConsecutiveChar] = useState<number>(0);
+  const [containsTwoTypes, setContainsTwoTypes] = useState<CheckType>(CheckType.Gray); //영문/숫자/특수문자 중, 2가지 이상 포함
+  const [moreOrLess, setMoreOrLess] = useState<CheckType>(CheckType.Gray); //8자 이상 32자 이하 입력 (공백 제외)
+  const [consecutiveChar, setConsecutiveChar] = useState<CheckType>(CheckType.Gray); //연속 3자 이상 동일한 문자/숫자 제외
   const [isViewHidden, setIsViewHidden] = useState<boolean>(true);
   const [isViewHiddenConfirm, setIsViewHiddenConfirm] = useState<boolean>(true);
-  const [isValidEmail, setValidEmail] = useState<number>(0); // 이메일이 유효한지 체크하는 state
-  const [isValidPhoneNumber, setValidPhoneNumber] = useState<number>(0); // 전화번호가 유효한지 체크하는 state
-  const [isValidConfirmPassword, setValidConfirmPassword] = useState<number>(0); // 비밀번호가 일치하는지 체크하는 state
+  const [isValidEmail, setValidEmail] = useState<CheckType>(CheckType.Gray); // 이메일이 유효한지 체크하는 state
+  const [isValidPhoneNumber, setValidPhoneNumber] = useState<CheckType>(CheckType.Gray); // 전화번호가 유효한지 체크하는 state
+  const [isValidConfirmPassword, setValidConfirmPassword] = useState<CheckType>(CheckType.Gray); // 비밀번호가 일치하는지 체크하는 state
   const [isTermsOfServiceModalOpen, setIsTermsOfServiceModalOpen] = useState<boolean>(false);
   const context = useContext(TrySignupContext);
   if (!context) {
@@ -73,9 +79,9 @@ const SignupWrap = () => {
 
     // 유효성 검사
     if (/^010-\d{3,4}-\d{4}$/.test(formattedNumber)) {
-      setValidPhoneNumber(2);
+      setValidPhoneNumber(CheckType.Green);
     } else {
-      setValidPhoneNumber(1);
+      setValidPhoneNumber(CheckType.Red);
     }
 
     // 상태 업데이트
@@ -86,9 +92,9 @@ const SignupWrap = () => {
     const { name, value } = e.target;
     const trimmedValue = value.replace(/\s/g, "");
     if (/\S+@\S+\.\S+/.test(trimmedValue)) {
-      setValidEmail(2);
+      setValidEmail(CheckType.Green);
     } else {
-      setValidEmail(1);
+      setValidEmail(CheckType.Red);
     }
 
     setFormData((prevData) => ({ ...prevData, [name]: trimmedValue }));
@@ -101,28 +107,28 @@ const SignupWrap = () => {
       name === "password" &&
       /^(?:(?=.*[a-zA-Z])(?=.*\d)|(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*\d)(?=.*[\W_]))/.test(trimmedValue)
     ) {
-      setContainsTwoTypes(2);
+      setContainsTwoTypes(CheckType.Green);
     } else {
-      setContainsTwoTypes(1);
+      setContainsTwoTypes(CheckType.Red);
     }
 
     // 비밀번호 입력 시, 8자 이상 20자 이하 여부 체크
     if (name === "password" && trimmedValue.length >= 8 && trimmedValue.length <= 20) {
-      setMoreOrLess(2);
+      setMoreOrLess(CheckType.Green);
     } else {
-      setMoreOrLess(1);
+      setMoreOrLess(CheckType.Red);
     }
     // 비밀번호 입력 시, 연속 3자 이상 동일한 문자/숫자 제외 여부 체크
     if (name === "password" && !/(.)\1{2,}/.test(trimmedValue)) {
-      setConsecutiveChar(2);
+      setConsecutiveChar(CheckType.Green);
     } else {
-      setConsecutiveChar(1);
+      setConsecutiveChar(CheckType.Red);
     }
     // 비밀번호 다 지우면 초기화
     if (name == "password" && trimmedValue.length === 0) {
-      setContainsTwoTypes(0);
-      setMoreOrLess(0);
-      setConsecutiveChar(0);
+      setContainsTwoTypes(CheckType.Gray);
+      setMoreOrLess(CheckType.Gray);
+      setConsecutiveChar(CheckType.Gray);
     }
     setFormData((prevData) => ({ ...prevData, [name]: trimmedValue }));
   };
@@ -131,9 +137,9 @@ const SignupWrap = () => {
     const trimmedValue = value.replace(/\s/g, "");
     if (formData.password === trimmedValue) {
       // 비밀번호와 비밀번호 확인이 일치하는지 체크
-      setValidConfirmPassword(2);
+      setValidConfirmPassword(CheckType.Green);
     } else {
-      setValidConfirmPassword(1); // 비밀번호와 비밀번호 확인이 일치하지 않을 때
+      setValidConfirmPassword(CheckType.Red); // 비밀번호와 비밀번호 확인이 일치하지 않을 때
     }
 
     setFormData((prevData) => ({ ...prevData, [name]: trimmedValue }));
@@ -163,32 +169,37 @@ const SignupWrap = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (isValidEmail === 1 || isValidEmail === 0) {
+    if (isValidEmail === CheckType.Red || isValidEmail === CheckType.Gray) {
       emailRef.current?.focus();
-      setValidEmail(1);
+      setValidEmail(CheckType.Red);
       return;
     }
-    if (isValidPhoneNumber === 1 || isValidPhoneNumber === 0) {
+    if (isValidPhoneNumber === CheckType.Red || isValidPhoneNumber === CheckType.Gray) {
       phoneNumberRef.current?.focus();
-      setValidPhoneNumber(1);
+      setValidPhoneNumber(CheckType.Red);
       return;
     }
-    if (isContainsTwoTypes === 1 || isContainsTwoTypes === 0) {
+    if (containsTwoTypes === CheckType.Red || containsTwoTypes === CheckType.Gray) {
       passwordRef.current?.focus();
-      setContainsTwoTypes(1);
+      setContainsTwoTypes(CheckType.Red);
       return;
     }
-    if (isValidConfirmPassword === 1 || isValidConfirmPassword === 0) {
+    if (isValidConfirmPassword === CheckType.Red || isValidConfirmPassword === CheckType.Gray) {
       confirmPasswordRef.current?.focus();
-      setValidConfirmPassword(1);
+      setValidConfirmPassword(CheckType.Red);
       return;
     }
     if (formData.password !== formData.confirmPassword) {
       confirmPasswordRef.current?.focus();
-      setValidConfirmPassword(1);
+      setValidConfirmPassword(CheckType.Red);
       return;
     }
-    if (isValidEmail === 2 && isValidPhoneNumber === 2 && isValidConfirmPassword && isContainsTwoTypes === 2) {
+    if (
+      isValidEmail === CheckType.Green &&
+      isValidPhoneNumber === CheckType.Green &&
+      isValidConfirmPassword &&
+      containsTwoTypes === CheckType.Green
+    ) {
       mutation.mutate(formData);
       return;
     }
@@ -199,23 +210,24 @@ const SignupWrap = () => {
   const toggleConfirmPasswordVisibility = () => {
     setIsViewHiddenConfirm(() => !isViewHiddenConfirm);
   };
-  const getIconSrc = (isContainsTwoTypes: number) => {
-    switch (isContainsTwoTypes) {
-      case 0:
+  const getIconSrc = (flag: string) => {
+    console.log(flag);
+    switch (flag) {
+      case CheckType.Gray:
         return "/image/icon_check.svg";
-      case 1:
+      case CheckType.Red:
         return "/image/icon_x_red.svg";
-      default:
+      case CheckType.Green:
         return "/image/icon_check_green.svg";
+      default:
+        null;
     }
   };
   const getViewHiddenIconSrc = (isViewHidden: boolean) => {
-    switch (isViewHidden) {
-      case true:
-        return "/image/icon_eye.svg";
-      case false:
-        return "/image/icon_eye_off.svg";
+    if (isViewHidden) {
+      return "/image/icon_eye.svg";
     }
+    return "/image/icon_eye_off.svg";
   };
   return (
     <>
@@ -244,8 +256,8 @@ const SignupWrap = () => {
             <input
               className={cx({
                 mb16: true,
-                "border-red": isValidEmail === 1,
-                "input-text-red": isValidEmail === 1,
+                "border-red": isValidEmail === CheckType.Red,
+                "input-text-red": isValidEmail === CheckType.Red,
               })}
               type="text"
               ref={emailRef}
@@ -255,7 +267,7 @@ const SignupWrap = () => {
               onChange={emailChange}
               placeholder="이메일"
             />
-            {isValidEmail == 1 && (
+            {isValidEmail == CheckType.Red && (
               <div className="guide-section">
                 <div className="guide">
                   <img src="image/icon_x_red.svg" alt="체크" />
@@ -267,8 +279,8 @@ const SignupWrap = () => {
             <input
               className={cx({
                 mb16: true,
-                "border-red": isValidPhoneNumber === 1,
-                "input-text-red": isValidPhoneNumber === 1,
+                "border-red": isValidPhoneNumber === CheckType.Red,
+                "input-text-red": isValidPhoneNumber === CheckType.Red,
               })}
               ref={phoneNumberRef}
               type="phoneNumber"
@@ -278,7 +290,7 @@ const SignupWrap = () => {
               value={formData.phoneNumber}
               onChange={phoneNumberChange}
             />
-            {isValidPhoneNumber == 1 && (
+            {isValidPhoneNumber == CheckType.Red && (
               <div className="guide-section">
                 <div className="guide">
                   <img src="image/icon_x_red.svg" alt="체크" />
@@ -291,10 +303,10 @@ const SignupWrap = () => {
               <input
                 className={cx({
                   mb5: true,
-                  "border-red": isContainsTwoTypes === 1,
-                  "input-text-red": isContainsTwoTypes === 1,
-                  "border-green": isContainsTwoTypes === 2,
-                  "input-text-green": isContainsTwoTypes === 2,
+                  "border-red": containsTwoTypes === CheckType.Red,
+                  "input-text-red": containsTwoTypes === CheckType.Red,
+                  "border-green": containsTwoTypes === CheckType.Green,
+                  "input-text-green": containsTwoTypes === CheckType.Green,
                 })}
                 type={isViewHidden ? "password" : "text"}
                 ref={passwordRef}
@@ -312,22 +324,22 @@ const SignupWrap = () => {
             </div>
             <div className="guide-section">
               <div className="guide">
-                <img src={getIconSrc(isContainsTwoTypes)} alt="체크" />
+                <img src={getIconSrc(containsTwoTypes)} alt="체크" />
                 <p
                   className={cx({
-                    "text-green": isContainsTwoTypes === 2,
-                    "text-red": isContainsTwoTypes === 1,
+                    "text-green": containsTwoTypes === CheckType.Green,
+                    "text-red": containsTwoTypes === CheckType.Red,
                   })}
                 >
                   영문/숫자/특수문자 중, 2가지 이상 포함
                 </p>
               </div>
               <div className="guide">
-                <img src={getIconSrc(isMoreOrLess)} alt="체크" />
+                <img src={getIconSrc(moreOrLess)} alt="체크" />
                 <p
                   className={cx({
-                    "text-green": isMoreOrLess === 2,
-                    "text-red": isMoreOrLess === 1,
+                    "text-green": moreOrLess === CheckType.Green,
+                    "text-red": moreOrLess === CheckType.Red,
                   })}
                 >
                   8자 이상 32자 이하 입력 (공백 제외)
@@ -335,11 +347,11 @@ const SignupWrap = () => {
               </div>
 
               <div className="guide">
-                <img src={getIconSrc(isConsecutiveChar)} alt="체크" />
+                <img src={getIconSrc(consecutiveChar)} alt="체크" />
                 <p
                   className={cx({
-                    "text-green": isConsecutiveChar === 2,
-                    "text-red": isConsecutiveChar === 1,
+                    "text-green": consecutiveChar === CheckType.Green,
+                    "text-red": consecutiveChar === CheckType.Red,
                   })}
                 >
                   연속 3자 이상 동일한 문자/숫자 제외
@@ -349,9 +361,9 @@ const SignupWrap = () => {
             <div className="input-wraper">
               <input
                 className={cx({
-                  mb12: true,
-                  "border-red": isValidConfirmPassword == 1,
-                  "input-text-red": isValidConfirmPassword == 1,
+                  mb5: true,
+                  "border-red": isValidConfirmPassword == CheckType.Red,
+                  "input-text-red": isValidConfirmPassword == CheckType.Red,
                 })}
                 id="confirmPassword"
                 ref={confirmPasswordRef}
@@ -368,7 +380,7 @@ const SignupWrap = () => {
               </div>
             </div>
 
-            {isValidConfirmPassword == 1 && (
+            {isValidConfirmPassword == CheckType.Red && (
               <div className="guide-section">
                 <div className="guide">
                   <img src="image/icon_x_red.svg" alt="체크" />
@@ -376,7 +388,7 @@ const SignupWrap = () => {
                 </div>
               </div>
             )}
-            <div className="s__checkbox-wrap">
+            <div className="s__checkbox-wrap mt10">
               <div className="s__checkbox">
                 <input type="checkbox" className="s__checkbox-total" id="ch01_all" />
                 <label htmlFor="ch01_all">모두 동의합니다.</label>
