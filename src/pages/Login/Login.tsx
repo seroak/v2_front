@@ -2,29 +2,21 @@ import { useState, FormEvent, ChangeEvent, Fragment } from "react";
 import PublicHeader from "../components/PublicHeader";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { useUserStore } from "@/store/user";
 import { fetchUser, login } from "@/services/api";
-interface User {
-  email: string;
-  name: string;
-  role: string;
-}
+
 const Login = () => {
   const [userId, setUserId] = useState<string>("");
   const [userPassword, setUserPassword] = useState<string>("");
-  const setLoggedInUserEmail = useUserStore((state) => state.setLoggedInUserEmail);
-  const setLoggedInUserName = useUserStore((state) => state.setLoggedInUserName);
-  const setLoggedInUserRole = useUserStore((state) => state.setLoggedInUserRole);
+
   const navigate = useNavigate();
-  const { data: userData, refetch } = useQuery({ queryKey: ["user"], queryFn: fetchUser });
+  const { refetch } = useQuery({ queryKey: ["user"], queryFn: fetchUser });
   const mutation = useMutation({
     mutationFn: async ({ userId, userPassword }: { userId: string; userPassword: string }) => {
       const req = { email: userId, password: userPassword };
       return await login(req);
     },
-    onSuccess(data) {
+    onSuccess() {
       refetch();
-
       navigate("/");
     },
     onError(error) {

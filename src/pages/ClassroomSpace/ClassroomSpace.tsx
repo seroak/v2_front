@@ -22,6 +22,7 @@ interface GroupData {
 const ClassroomSpace = () => {
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const LoggedInUserName = useUserStore((state) => state.loggedInUserName);
+  const LoggedInUserEmail = useUserStore((state) => state.loggedInUserEmail);
   const params = useParams();
   const classroomId = Number(params.classroomId);
 
@@ -34,16 +35,11 @@ const ClassroomSpace = () => {
   const [hostClassRooms, setHostClassRooms] = useState<Classroom[]>([]);
   const [guestClassRooms, setGuestClassRooms] = useState<Classroom[]>([]);
   const [createClassName, setCreateCalssName] = useState<string | undefined>();
-  const [groupCount, setGroupCount] = useState<number>();
-  const [groupTotalPeople, setTotalPeople] = useState<number>();
+
   useEffect(() => {
     if (data) {
       setHostClassRooms(data.result.hosts);
       setGuestClassRooms(data.result.guests);
-      setGroupCount(data.result.hosts.length + data.result.guests.length);
-      const totalHost = data.result.hosts.reduce((acc: number, item) => acc + item.totalPeople, 0);
-      const totalGuest = data.result.guests.reduce((acc: number, item) => acc + item.totalPeople, 0);
-      setTotalPeople(totalHost + totalGuest);
     }
   }, [data]);
   const changeCreateClassName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +54,7 @@ const ClassroomSpace = () => {
   };
   const mutation = useMutation({
     mutationFn: createClass,
-    async onSuccess(data) {
+    async onSuccess() {
       refetch();
     },
     onError(error) {
@@ -71,7 +67,7 @@ const ClassroomSpace = () => {
       <div className="group-copywriting">
         <div className="s__container">
           <div className="s__row">
-            <p>GROUP</p>
+            <p>Classroom</p>
             <h2>함께 배우고, 더 빨리 성장하세요!</h2>
             <span>혼자보다 함께할 때 더 많이, 더 빨리 배울 수 있습니다.</span>
           </div>
@@ -82,15 +78,15 @@ const ClassroomSpace = () => {
         <div className="group-data-left">
           <div className="user-info">
             <p>{LoggedInUserName}님</p>
-            <span>kim0000@naver.com</span>
+            <span>{LoggedInUserEmail}</span>
             <ul className="user-group-data">
               <li>
-                <p>생성된 그룹 수</p>
-                <p>{groupCount}</p>
+                <p>강의방 수</p>
+                <p>{hostClassRooms.length}</p>
               </li>
               <li>
-                <p>전체 학생 수</p>
-                <p>{groupTotalPeople}</p>
+                <p>학습방 수</p>
+                <p>{guestClassRooms.length}</p>
               </li>
             </ul>
             <label htmlFor="addgroup">그룹 생성</label>
