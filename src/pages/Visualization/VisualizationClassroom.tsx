@@ -89,7 +89,6 @@ const VisualizationClassroom = () => {
   });
   // 새로고침시 상태 업데이트
   useEffect(() => {
-    console.log("마운트될때 refetch 실행");
     refetch();
   });
   // guestStatus의 상태가 바뀔 때마다 actionType 업데이트

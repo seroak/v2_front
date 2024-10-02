@@ -20,7 +20,7 @@ const LoggedInHeader = () => {
         </Link>
         {/* <!-- 활성화 할 a태그에 on_active 클래스 추가 --> */}
         <NavLink to="/classroomspace" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-          클래스룸 스페이스
+          클래스룸
         </NavLink>
 
         <NavLink to="/viz" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
