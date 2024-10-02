@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect } from "react";
 import LoggedInClassroomHeader from "@/pages/components/LoggedInClassroomHeader";
 import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
-import { useParams } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { getClassGuestData, getClassTotalActionInfo } from "@/services/api";
 
 interface GuestType {
@@ -30,6 +30,7 @@ const Classroom = () => {
   const [guests, setGuests] = useState<GuestType[]>();
   const [totalInfo, setTotalInfo] = useState<TotalInfoType>();
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
+  const navigate = useNavigate();
   const params = useParams();
   const classroomId = Number(params.classroomId);
 
@@ -55,6 +56,36 @@ const Classroom = () => {
       setTotalInfo(classroomData.result.totalInfo);
     }
   }, [classroomData]);
+  const fetchClassOver = async (classroomId: number) => {
+    const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/action/init`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ classroomId: classroomId }),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  };
+
+  const classOverMutation = useMutation({
+    mutationFn: fetchClassOver,
+    onSuccess: () => {
+      classroomDataRefetch();
+      navigate("/classroomspace");
+    },
+    onError: (error) => {
+      console.error("An error occurred:", error);
+    },
+  });
+
+  const handleClassOver = () => {
+    classOverMutation.mutate(classroomId);
+  };
 
   const useSSE = (url: string) => {
     const [data, setData] = useState(null);
@@ -75,7 +106,7 @@ const Classroom = () => {
         const newData = JSON.parse(event.data);
         setData(newData);
         // setQueryData로 값 캐싱
-        queryClient.setQueryData(["sse-data"], newData);
+        queryClient.setQueryData(["sse-data", classroomId], newData);
         console.log("서버로 부터 데이터가 옴");
         guestDataRefetch();
         classroomDataRefetch();
@@ -147,7 +178,14 @@ const Classroom = () => {
             <div className="title-left">
               <h3>제출현황</h3>
             </div>
-            <div className="title-right">
+
+            <div className="classroom-right">
+              <div className="right-btns" style={{ marginRight: "15px" }}>
+                <button className="red" onClick={handleClassOver}>
+                  <img src="/image/icon_on_off.svg" alt="그룹삭제" />
+                  수업 종료
+                </button>
+              </div>
               <select name="" id="" className="s__select">
                 <option value="1">이름순</option>
                 <option value="2">제출순</option>
