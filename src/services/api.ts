@@ -108,3 +108,81 @@ export const getClassTotalActionInfo = async (classroomId: number) => {
     throw error;
   }
 };
+export const fetchDeleteClassroom = async (classroomId: number) => {
+  try {
+    const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom?classroomId=${classroomId}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("An error occurred:", error);
+    throw error;
+  }
+};
+
+export const fetchClassOver = async (classroomId: number) => {
+  const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/action/init`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ classroomId: classroomId }),
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const fetchGuestActionRequest = async (req: any) => {
+  try {
+    const response = await fetch("http://localhost:8080/edupi-lms/v1/progress/send", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        classroomId: req.classroomId,
+        action: req.action,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("An error occurred:", error);
+    throw error;
+  }
+};
+
+export const fetchEmissionGuest = async (classroomAccountId: number) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/edupi-lms/v1/classroom/account?classroomAccountId=${classroomAccountId}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("An error occurred:", error);
+    throw error;
+  }
+};
