@@ -167,9 +167,7 @@ const VisualizationClassroom = () => {
   const useGuestActionMutation = () => {
     return useMutation({
       mutationFn: fetchGuestActionRequest,
-      onSuccess: (data) => {
-        console.log("Success:", data);
-      },
+      onSuccess: () => {},
       onError: (error) => {
         console.error("Submit Error:", error);
       },

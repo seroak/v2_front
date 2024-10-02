@@ -43,7 +43,6 @@ function App() {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
       setLoggedInUserEmail(data.email);
       setLoggedInUserName(data.name);
       setLoggedInUserRole(data.role);
