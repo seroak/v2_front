@@ -2,7 +2,7 @@ import LoggedInClassroomHeader from "@/pages/components/LoggedInClassroomHeader"
 import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
 import { getClassGuestData } from "@/services/api";
 interface GuestType {
@@ -34,6 +34,7 @@ const Modify = () => {
   const [guests, setGuests] = useState<GuestType[]>();
   const [guestEmail, setGuestEmail] = useState<string | undefined>();
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
+  const navigate = useNavigate();
   const inviteClassroom = async ({ classroomId, guestEmail }: props) => {
     try {
       const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account`, {
@@ -104,19 +105,19 @@ const Modify = () => {
       throw error;
     }
   };
-  const useDeleteClassroom = () => {
-    return useMutation({
-      mutationFn: fetchDeleteClassroom,
-      onSuccess: () => {
-        alert("클래스룸이 삭제되었습니다.");
-      },
-      onError: (error) => {
-        console.error("An error occurred:", error);
-        alert("클래스룸 삭제에 실패했습니다.");
-      },
-    });
-  };
-  const deleteClassroomMutation = useDeleteClassroom();
+
+  const deleteClassroomMutation = useMutation({
+    mutationFn: fetchDeleteClassroom,
+    onSuccess: () => {
+      alert("클래스룸이 삭제되었습니다.");
+      navigate("/classroomspace");
+    },
+    onError: (error) => {
+      console.error("An error occurred:", error);
+      alert("클래스룸 삭제에 실패했습니다.");
+    },
+  });
+
   const handleDeleteClassroom = () => {
     deleteClassroomMutation.mutate(classroomId);
   };
