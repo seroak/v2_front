@@ -57,11 +57,14 @@ export const createClass = async (createClassName: string) => {
 
 export const getClassGuestData = async (classroomId: number) => {
   try {
-    const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account?classroomId=${classroomId}`, {
-      method: "GET",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-    });
+    const response = await fetch(
+      `http://localhost:8080/edupi-lms/v1/classroom/account/progress?classroomId=${classroomId}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
