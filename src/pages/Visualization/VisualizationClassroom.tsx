@@ -1,6 +1,6 @@
 import { createContext, useState, Dispatch, SetStateAction, useCallback, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import styles from "./Visualization.module.css";
 import "./gutter.css";
 
@@ -15,6 +15,8 @@ import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/d
 import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
 import { useArrowStore } from "@/store/arrow";
+import { useMswReadyStore } from "@/store/mswReady";
+
 enum ActionType {
   ING = 1,
   COMPLETE = 2,
@@ -57,9 +59,42 @@ const VisualizationClassroom = () => {
   const setErrorLine = useEditorStore((state) => state.setErrorLine);
   const [actionType, setActionType] = useState<ActionType>(ActionType.ING);
   const [isPlaying, setIsPlaying] = useState(false);
-
+  const { isMswReady } = useMswReadyStore((state) => state);
   const params = useParams();
   const classroomId = Number(params.classroomId);
+  const getGusetStatus = async (classroomId: number) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/edupi-lms/v1/guest/action/status?classroomId=${classroomId}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("An error occurred:", error);
+      throw error;
+    }
+  };
+  const { data: guestStatus, refetch } = useQuery({
+    queryKey: ["vizclassroom", classroomId],
+    queryFn: () => getGusetStatus(classroomId),
+    enabled: isMswReady,
+  });
+  // 새로고침시 상태 업데이트
+  useEffect(() => {
+    refetch();
+  });
+  // guestStatus의 상태가 바뀔 때마다 actionType 업데이트
+  useEffect(() => {
+    setActionType(guestStatus?.result);
+  }, [guestStatus]);
   const mutation = useMutation({
     mutationFn: async (code: string) => {
       return fetch("http://localhost:8080/edupi-visualize/v1/python", {
