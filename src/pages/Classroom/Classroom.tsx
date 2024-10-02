@@ -99,8 +99,7 @@ const Classroom = () => {
     return { data };
   };
 
-  const { data: sseData } = useSSE(`http://localhost:8080/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
-  console.log("sseData", sseData);
+  useSSE(`http://localhost:8080/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
   return (
     <div>
       <LoggedInClassroomHeader />
