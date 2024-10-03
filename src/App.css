@@ -1234,11 +1234,13 @@ header .group-btn {
   border-radius: 0 16px 16px 16px;
   box-shadow: 0 0 16px rgba(72, 102, 255, 0.2);
   font-weight: 500;
+  z-index: 9999;
+  background-color: #fff;
 }
 .gpt-comment img {
   width: 24px;
   height: 24px;
-
+}
 /* 도움 요청 floating 버튼 */
 .floating-buttons {
   position: fixed;

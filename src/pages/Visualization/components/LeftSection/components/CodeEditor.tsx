@@ -1,51 +1,12 @@
-import { useContext, Fragment, useRef, useEffect, useState } from "react";
+import { useContext, Fragment, useRef, useEffect } from "react";
 import Editor, { OnMount } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import { CodeContext } from "../../../Visualization";
-import GptComment from "./GptComment";
 // Zustand
 import { useEditorStore } from "@/store/editor";
 import { useConsoleStore } from "@/store/console";
 import { useGptToggleStore } from "@/store/gptToggle";
-// 커스텀 훅: 호버 상태 관리
-const useHover = () => {
-  const [isHovering, setIsHovering] = useState(false);
-  const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
-
-  const handleMouseEnter = (event) => {
-    setIsHovering(true);
-    setHoverPosition({ x: event.clientX, y: event.clientY });
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovering(false);
-  };
-
-  return { isHovering, hoverPosition, handleMouseEnter, handleMouseLeave };
-};
-
-// 호버 컨텐츠 컴포넌트
-const HoverContent = ({ children, position }) => {
-  return ReactDOM.createPortal(
-    <div
-      style={{
-        position: "fixed",
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-        backgroundColor: "white",
-        border: "1px solid #ccc",
-        padding: "10px",
-        borderRadius: "4px",
-        boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-        zIndex: 1000,
-      }}
-    >
-      {children}
-    </div>,
-    document.body
-  );
-};
-
+import { useTimeoutStore } from "@/store/timeout";
 const CodeEditor = () => {
   const context = useContext(CodeContext);
   const decorationsCollectionRef = useRef<monaco.editor.IEditorDecorationsCollection | null>(null);
@@ -60,8 +21,14 @@ const CodeEditor = () => {
   const stepIdx = useConsoleStore((state) => state.stepIdx);
   const errorLine = useEditorStore((state) => state.errorLine);
   const setIsGptToggle = useGptToggleStore((state) => state.setIsGptToggle);
-  const { isHovering, hoverPosition, handleMouseEnter, handleMouseLeave } = useHover();
-  const [hoverContent, setHoverContent] = useState(null);
+  const { setTimeoutId, clearCurrentTimeout } = useTimeoutStore();
+  const timeoutRef = useRef<number | null>(null);
+  // 컴포넌트가 언마운트될 때 timeout 정리
+  useEffect(() => {
+    return () => {
+      clearCurrentTimeout();
+    };
+  }, [clearCurrentTimeout]);
 
   useEffect(() => {
     if (editorRef.current) {
@@ -125,15 +92,25 @@ const CodeEditor = () => {
           }
           if (errorDecoration && errorDecoration.range.startLineNumber !== lineNumber) {
             console.log("에러라인에서 벗어남", lineNumber);
-            setIsGptToggle(false);
+            clearCurrentTimeout();
+            timeoutRef.current = window.setTimeout(() => {
+              setIsGptToggle(false);
+              setTimeoutId(null);
+            }, 300);
+            setTimeoutId(timeoutRef.current);
           }
         }
       }
     });
 
     editor.onMouseLeave(() => {
+      clearCurrentTimeout();
       console.log("완전히  에디터에서 벗어남");
-      setIsGptToggle(false);
+      const newTimeoutId = window.setTimeout(() => {
+        setIsGptToggle(false);
+        setTimeoutId(null);
+      }, 300);
+      setTimeoutId(newTimeoutId);
     });
     // Hover provider 등록 (한 번만 등록)
     monacoInstance.languages.registerHoverProvider("python", {

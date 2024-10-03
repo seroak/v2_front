@@ -39,7 +39,7 @@ const GptComment = () => {
   };
 
   return (
-    <div className="gpt-comment" style={{ top: "100px", left: "16px" }}>
+    <div className="gpt-comment" style={{ top: "100px", left: "16px", zIndex: 9999 }}>
       <img src="/image/icon_gpt.svg" alt="gpt" />
       <p>괄호가 하나 부족해요!</p>
     </div>
