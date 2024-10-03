@@ -3,7 +3,7 @@ import { useUserStore } from "@/store/user";
 import { Cookies } from "react-cookie";
 import { Link, NavLink, useParams } from "react-router-dom";
 
-const LoggedInHeader = () => {
+const LoggedInClassroomHeader = () => {
   const params = useParams();
   const cookies = new Cookies();
   const loggedInUserName = useUserStore((state) => state.loggedInUserName);
@@ -20,19 +20,23 @@ const LoggedInHeader = () => {
           <img src="/image/img_logo.png" alt="로고" />
         </Link>
         {/* <!-- 활성화 할 a태그에 on_active 클래스 추가 --> */}
-        <NavLink to="/group" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-          학생목록
+        <NavLink
+          to={`/classroomspace/classroom/${classroomId}`}
+          end
+          className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+        >
+          진척도
         </NavLink>
 
-        <NavLink to="/viz" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+        <NavLink
+          to={`/classroomspace/classroom/viz/${classroomId}`}
+          className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+        >
           시각화
         </NavLink>
 
-        <NavLink to="/assignment" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-          과제
-        </NavLink>
         <NavLink
-          to={`/group/classroom/manage/${classroomId}`}
+          to={`/classroomspace/classroom/manage/${classroomId}`}
           className={({ isActive }) => (isActive ? styles["on_active"] : "")}
         >
           설정
@@ -40,12 +44,26 @@ const LoggedInHeader = () => {
       </div>
 
       <div>
-        {loggedInUserName === "" ? null : <span style={{ marginRight: "10px" }}>{loggedInUserName}님</span>}
-        <span onClick={logout} className={styles["logout"]}>
+        <NavLink
+          to={`/classroomspace`}
+          end
+          className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+          style={{ marginRight: "10px" }}
+        >
+          <button className="nav-button">
+            <span>나가기</span>
+          </button>
+        </NavLink>
+        <button
+          onClick={logout}
+          className={styles["logout"] + " nav-button"}
+          style={{ marginRight: "10px", color: "gray" }}
+        >
           <span>로그아웃</span>
-        </span>
+        </button>
+        {loggedInUserName === "" ? null : <span>{loggedInUserName}님</span>}
       </div>
     </header>
   );
 };
-export default LoggedInHeader;
+export default LoggedInClassroomHeader;
