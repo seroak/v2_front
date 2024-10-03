@@ -4,7 +4,7 @@ import { useMswReadyStore } from "@/store/mswReady";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
-import { getClassGuestData, fetchDeleteClassroom } from "@/services/api";
+import { getClassGuestData, fetchDeleteClassroom, getClassTotalActionInfo } from "@/services/api";
 interface GuestType {
   id: number;
   email: string;
@@ -19,9 +19,13 @@ interface TotalInfoType {
 
 interface ClassroomData {
   result: {
+    guests: GuestType[];
+  };
+}
+interface GetClassTotalActionInfoType {
+  result: {
     className: string;
     totalInfo: TotalInfoType;
-    guests: GuestType[];
   };
 }
 interface props {
@@ -58,9 +62,14 @@ const Modify = () => {
       throw error;
     }
   };
+  const { data: classroomData, refetch: classroomDataRefetch } = useQuery<GetClassTotalActionInfoType>({
+    queryKey: ["ClassTotalActionInfo", classroomId],
+    queryFn: () => getClassTotalActionInfo(classroomId),
+    enabled: isMswReady,
+  });
 
   const { data, refetch: getClassroomRefetch } = useQuery<ClassroomData>({
-    queryKey: ["classroomData"],
+    queryKey: ["classroomData", classroomId],
     queryFn: () => getClassGuestData(classroomId),
     enabled: isMswReady,
   });
@@ -76,8 +85,9 @@ const Modify = () => {
   };
   const mutation = useMutation({
     mutationFn: inviteClassroom,
-    async onSuccess(data) {
+    async onSuccess() {
       getClassroomRefetch();
+      classroomDataRefetch();
     },
     onError(error) {
       console.error("클래스룸 초대 에러", error);
@@ -112,7 +122,7 @@ const Modify = () => {
       <div className="group-wrap">
         <div className="group-left">
           <img src="/image/icon_group.svg" alt="그룹" />
-          <h2 className="group-title">파이썬 기초 1반</h2>
+          <h2 className="group-title">{classroomData?.result.className}</h2>
         </div>
         <div className="group-link">
           <p className="link-name">클래스룸 초대</p>

@@ -21,9 +21,13 @@ interface TotalInfoType {
 
 interface ClassroomData {
   result: {
+    guests: GuestType[];
+  };
+}
+interface GetClassTotalActionInfoType {
+  result: {
     className: string;
     totalInfo: TotalInfoType;
-    guests: GuestType[];
   };
 }
 const Classroom = () => {
@@ -39,7 +43,7 @@ const Classroom = () => {
     queryFn: () => getClassGuestData(classroomId),
     enabled: isMswReady,
   });
-  const { data: classroomData, refetch: classroomDataRefetch } = useQuery<ClassroomData>({
+  const { data: classroomData, refetch: classroomDataRefetch } = useQuery<GetClassTotalActionInfoType>({
     queryKey: ["ClassTotalActionInfo", classroomId],
     queryFn: () => getClassTotalActionInfo(classroomId),
     enabled: isMswReady,
@@ -97,7 +101,7 @@ const Classroom = () => {
         classroomDataRefetch();
       });
       // connection되면
-      eventSource.addEventListener("open", function (e) {
+      eventSource.addEventListener("open", function () {
         console.log("서버로 연결이 됨");
       });
 
@@ -122,7 +126,7 @@ const Classroom = () => {
       <div className="group-wrap">
         <div className="group-left">
           <img src="/image/icon_group.svg" alt="그룹" />
-          <h2 className="group-title">파이썬 기초 {classroomId}반</h2>
+          <h2 className="group-title">{classroomData?.result.className}</h2>
         </div>
       </div>
       <div className="s__container">
