@@ -35,7 +35,6 @@ const ClassroomSpace = () => {
   const [hostClassRooms, setHostClassRooms] = useState<Classroom[]>([]);
   const [guestClassRooms, setGuestClassRooms] = useState<Classroom[]>([]);
   const [createClassName, setCreateCalssName] = useState<string | undefined>();
-
   useEffect(() => {
     if (data) {
       setHostClassRooms(data.result.hosts);
