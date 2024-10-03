@@ -1,10 +1,12 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import LoggedInHeader from "../components/LoggedInHeader";
-import Room from "./components/Room";
+import HostRoom from "./components/HostRoom";
+import GusetRoom from "./components/GuestRoom";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useUserStore } from "@/store/user";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { getGroup, createClass } from "@/services/api";
+import { useParams } from "react-router-dom";
+import { createClass, getHostGuestData } from "@/services/api";
 interface Classroom {
   id: number;
   name: string;
@@ -12,37 +14,31 @@ interface Classroom {
 }
 
 interface GroupData {
-  host: {
-    classroomCount: number;
-    classrooms: Classroom[];
-  };
-  guest: {
-    classroomCount: number;
-    classrooms: Classroom[];
+  result: {
+    hosts: Classroom[];
+    guests: Classroom[];
   };
 }
-const Group = () => {
+const ClassroomSpace = () => {
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const LoggedInUserName = useUserStore((state) => state.loggedInUserName);
+  const LoggedInUserEmail = useUserStore((state) => state.loggedInUserEmail);
+  const params = useParams();
+  const classroomId = Number(params.classroomId);
+
   const { data, refetch } = useQuery<GroupData>({
-    queryKey: ["group"],
-    queryFn: getGroup,
+    queryKey: ["classroomspace", classroomId],
+    queryFn: () => getHostGuestData(classroomId),
     enabled: isMswReady,
   });
 
   const [hostClassRooms, setHostClassRooms] = useState<Classroom[]>([]);
   const [guestClassRooms, setGuestClassRooms] = useState<Classroom[]>([]);
   const [createClassName, setCreateCalssName] = useState<string | undefined>();
-  const [groupCount, setGroupCount] = useState<number>();
-  const [groupTotalPeople, setTotalPeople] = useState<number>();
   useEffect(() => {
     if (data) {
-      setHostClassRooms(data.host.classrooms);
-      setGuestClassRooms(data.guest.classrooms);
-      setGroupCount(data.host.classroomCount + data.guest.classroomCount);
-      const totalHost = data.host.classrooms.reduce((acc: number, item) => acc + item.totalPeople, 0);
-      const totalGuest = data.guest.classrooms.reduce((acc: number, item) => acc + item.totalPeople, 0);
-      setTotalPeople(totalHost + totalGuest);
+      setHostClassRooms(data.result.hosts);
+      setGuestClassRooms(data.result.guests);
     }
   }, [data]);
   const changeCreateClassName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +53,7 @@ const Group = () => {
   };
   const mutation = useMutation({
     mutationFn: createClass,
-    async onSuccess(data) {
+    async onSuccess() {
       refetch();
     },
     onError(error) {
@@ -70,7 +66,7 @@ const Group = () => {
       <div className="group-copywriting">
         <div className="s__container">
           <div className="s__row">
-            <p>GROUP</p>
+            <p>Classroom</p>
             <h2>함께 배우고, 더 빨리 성장하세요!</h2>
             <span>혼자보다 함께할 때 더 많이, 더 빨리 배울 수 있습니다.</span>
           </div>
@@ -81,15 +77,15 @@ const Group = () => {
         <div className="group-data-left">
           <div className="user-info">
             <p>{LoggedInUserName}님</p>
-            <span>kim0000@naver.com</span>
+            <span>{LoggedInUserEmail}</span>
             <ul className="user-group-data">
               <li>
-                <p>생성된 그룹 수</p>
-                <p>{groupCount}</p>
+                <p>강의방 수</p>
+                <p>{hostClassRooms.length}</p>
               </li>
               <li>
-                <p>전체 학생 수</p>
-                <p>{groupTotalPeople}</p>
+                <p>학습방 수</p>
+                <p>{guestClassRooms.length}</p>
               </li>
             </ul>
             <label htmlFor="addgroup">그룹 생성</label>
@@ -108,24 +104,6 @@ const Group = () => {
         <div className="group-right">
           <div className="section-title">
             <div className="title-left">
-              <h3>학습방</h3>
-            </div>
-            <div className="title-right">
-              <div className="search-wrap">
-                <input type="text" placeholder="그룹 검색" />
-                <button>
-                  <img src="/image/icon_search.svg" alt="검색" />
-                </button>
-              </div>
-            </div>
-          </div>
-          <ul className="section-data section-data04">
-            {hostClassRooms.map((item) => (
-              <Room key={item.id} classData={item} />
-            ))}
-          </ul>
-          <div className="section-title">
-            <div className="title-left">
               <h3>강의방</h3>
             </div>
             <div className="title-right">
@@ -138,8 +116,26 @@ const Group = () => {
             </div>
           </div>
           <ul className="section-data section-data04">
+            {hostClassRooms.map((item) => (
+              <HostRoom key={item.id} classData={item} />
+            ))}
+          </ul>
+          <div className="section-title">
+            <div className="title-left">
+              <h3>학습방</h3>
+            </div>
+            <div className="title-right">
+              <div className="search-wrap">
+                <input type="text" placeholder="그룹 검색" />
+                <button>
+                  <img src="/image/icon_search.svg" alt="검색" />
+                </button>
+              </div>
+            </div>
+          </div>
+          <ul className="section-data section-data04">
             {guestClassRooms.map((item) => (
-              <Room key={item.id} classData={item} />
+              <GusetRoom key={item.id} classData={item} />
             ))}
           </ul>
         </div>
@@ -147,4 +143,4 @@ const Group = () => {
     </div>
   );
 };
-export default Group;
+export default ClassroomSpace;

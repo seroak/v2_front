@@ -718,7 +718,7 @@ var-list {
 .section-data01 li div:nth-child(2) {
   display: flex;
   align-items: center;
-  width: 106px;
+  width: 120px;
   border-radius: 12px;
 }
 .section-data01 li div:nth-child(2)::before {
@@ -769,6 +769,10 @@ var-list {
 .bg {
   background: #f9fafb;
   height: 100%;
+}
+.classroom-right {
+  display: flex;
+  align-items: center;
 }
 .title-right button {
   padding: 9.5px 24px;
@@ -953,7 +957,29 @@ var-list {
   color: var(--blue);
   gap: 6px;
   height: 51px;
-  width: 170px;
+  width: 120px;
+}
+.invite-wrap {
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  border: 1px solid var(--gray01);
+  width: 400px;
+}
+.invite-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blue);
+  gap: 6px;
+  height: 51px;
+  width: 100px;
+}
+.invite-input {
+  padding: 0 12px 0 24px;
+  border: none !important;
+  width: 300px;
 }
 .link-data {
   padding: 0 12px 0 24px;
@@ -1200,6 +1226,7 @@ header .group-btn {
   -webkit-box-align: center;
   align-items: center;
 }
+<<<<<<< HEAD
 .gpt-comment {
   position: absolute;
   display: inline-flex;
@@ -1212,4 +1239,125 @@ header .group-btn {
 .gpt-comment img {
   width: 24px;
   height: 24px;
+=======
+
+/* 도움 요청 floating 버튼 */
+.floating-buttons {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 25px;
+  color: white;
+  text-decoration: none;
+  font-family: Arial, sans-serif;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-width: 140px;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-help {
+  background-color: #4f46e5;
+}
+
+.btn-help:hover {
+  background-color: #4338ca;
+}
+
+.btn-help:active {
+  background-color: #3730a3;
+}
+
+.btn-solve {
+  background-color: #2563eb;
+}
+
+.btn-solve:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-solve:active {
+  background-color: #1e40af;
+}
+
+.btn-complete {
+  background-color: #0d9488;
+}
+
+.btn-complete:hover {
+  background-color: #0f766e;
+}
+
+.btn-complete:active {
+  background-color: #115e59;
+}
+.btn-cancel {
+  background-color: #f87171;
+}
+
+.btn-cancel:hover {
+  background-color: #ef4444;
+}
+
+.btn-cancel:active {
+  background-color: #dc2626;
+}
+.btn img {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  transition: transform 0.2s ease;
+}
+
+.btn:active img {
+  transform: scale(0.9);
+}
+
+.btn.clicked {
+  animation: clickEffect 0.4s ease;
+}
+
+@keyframes clickEffect {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 네브바 버튼*/
+.nav-button {
+  color: #7353ea;
+  box-shadow: none;
+  height: 38px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 5px 15px;
+  border-radius: 8px;
+  line-height: 1.75;
+>>>>>>> feature/issue161
 }

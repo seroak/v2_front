@@ -19,9 +19,10 @@ export const login = (req: LoginUser) =>
     headers: { "Content-Type": "application/json" },
     withCredentials: true,
   });
-export const getGroup = async () => {
+
+export const getHostGuestData = async (classroomId: number) => {
   try {
-    const response = await fetch("http://localhost:8080/edupi-lms/v1/classroom", {
+    const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom?classroomId=${classroomId}`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -52,4 +53,154 @@ export const createClass = async (createClassName: string) => {
   }
 
   return response.json();
+};
+
+export const getClassGuestData = async (classroomId: number) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/edupi-lms/v1/classroom/account/progress?classroomId=${classroomId}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("An error occurred:", error);
+    throw error;
+  }
+};
+
+export const getClassTotalActionInfo = async (classroomId: number) => {
+  try {
+    const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/info?classroomId=${classroomId}`, {
+      method: "GET",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    let ing = data.result.totalActionInfo.find((item: any) => item.name === "ING")?.count;
+    if (!ing) {
+      ing = 0;
+    }
+    let complete = data.result.totalActionInfo.find((item: any) => item.name === "COMPLETE")?.count;
+    if (!complete) {
+      complete = 0;
+    }
+    let help = data.result.totalActionInfo.find((item: any) => item.name === "HELP")?.count;
+    if (!help) {
+      help = 0;
+    }
+    data.result.totalInfo = { ing, complete, help };
+    return data;
+  } catch (error) {
+    console.error("An error occurred:", error);
+    throw error;
+  }
+};
+export const fetchDeleteClassroom = async (classroomId: number) => {
+  try {
+    const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom?classroomId=${classroomId}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("An error occurred:", error);
+    throw error;
+  }
+};
+
+export const fetchClassOver = async (classroomId: number) => {
+  const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/action/init`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ classroomId: classroomId }),
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const fetchGuestActionRequest = async (req: any) => {
+  try {
+    const response = await fetch("http://localhost:8080/edupi-lms/v1/progress/send", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        classroomId: req.classroomId,
+        action: req.action,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("An error occurred:", error);
+    throw error;
+  }
+};
+
+export const fetchEmissionGuest = async (classroomAccountId: number) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/edupi-lms/v1/classroom/account?classroomAccountId=${classroomAccountId}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("An error occurred:", error);
+    throw error;
+  }
+};
+
+export const fetchLogout = async () => {
+  try {
+    const response = await fetch("http://localhost:8080/edupi-user/v1/account/logout", {
+      method: "GET",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return;
+  } catch (error) {
+    console.error("An error occurred:", error);
+    throw error;
+  }
 };

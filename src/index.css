@@ -38,7 +38,7 @@
 html,
 body {
   margin: 0; /* 기본 마진 제거 */
-  background-color: var(--bg02);
+  background-color: #f9fafb;
   height: 100%;
 }
 #root {

@@ -69,7 +69,9 @@ export const handlers = [
       return HttpResponse.json(
         {
           success: true,
-          user: { id: "test@test.com", name: "테스트 사용자" },
+          email: "test@test.com",
+          name: "테스트 사용자",
+          role: "2",
         },
         {
           status: 200,
@@ -150,46 +152,27 @@ export const handlers = [
       { status: 200 }
     );
   }),
+
   http.get("http://localhost:8080/edupi-lms/v1/classroom", () => {
     return HttpResponse.json(
       {
         success: true,
-        host: {
-          classroomCount: 3,
-          classrooms: [
+        code: "CM-200000",
+        detail: "Success retrieved my classrooms",
+        result: {
+          hosts: [
             {
-              id: 1,
-              name: "classroom1",
-              totalPeople: 1,
-            },
-            {
-              id: 2,
+              id: 6,
               name: "classroom2",
-              totalPeople: 1,
-            },
-            {
-              id: 3,
-              name: "classroom3",
+              role: "HOST",
               totalPeople: 1,
             },
           ],
-        },
-        guest: {
-          classroomCount: 3,
-          classrooms: [
+          guests: [
             {
               id: 1,
               name: "classroom1",
-              totalPeople: 1,
-            },
-            {
-              id: 2,
-              name: "classroom2",
-              totalPeople: 1,
-            },
-            {
-              id: 3,
-              name: "classroom3",
+              role: "GUEST",
               totalPeople: 1,
             },
           ],
@@ -198,9 +181,90 @@ export const handlers = [
       { status: 200 }
     );
   }),
-  http.post("http://localhost:8080/edupi-lms/v1/classroom", () => {
+
+  http.get("http://localhost:8080/edupi-lms/v1/classroom/account", () => {
     return HttpResponse.json({
-      message: "클래스룸 생성 완료",
+      success: true,
+      result: {
+        guests: [
+          {
+            id: 1,
+            name: "김민수",
+            email: "i1004gy.naver.com",
+            status: 1,
+          },
+          {
+            id: 2,
+            name: "박철수",
+            email: "i1004gy.naver.com",
+            status: 1,
+          },
+          {
+            id: 3,
+            name: "신지연",
+            email: "i1004gy.naver.com",
+            status: 1,
+          },
+        ],
+      },
+    });
+  }),
+
+  http.get("http://localhost:8080/edupi-lms/v1/classroom/info", () => {
+    return HttpResponse.json({
+      success: true,
+      result: {
+        className: "classroom1",
+        totalActionInfo: [
+          {
+            name: "ING",
+            count: 3,
+          },
+          {
+            name: "HELP",
+            count: 1,
+          },
+          {
+            name: "COMPLETE",
+            count: 1,
+          },
+        ],
+      },
+    });
+  }),
+  http.post("http://localhost:8080/edupi-lms/v1/classroom/account", async () => {
+    return HttpResponse.json({
+      code: "CM-200000",
+      detail: "success create classroom account",
+      result: {
+        id: 19,
+        email: "test2@naver.com",
+        name: "학습자2",
+        status: 0,
+        role: 2,
+      },
+    });
+  }),
+
+  http.post("http://localhost:8080/edupi-lms/v1/progress/send", async () => {
+    return HttpResponse.json({
+      code: "CM-200000",
+      detail: "액션이 변경되었습니다.",
+      result: 1,
+    });
+  }),
+  http.get("http://localhost:8080/edupi-lms/v1/guest/action/status", async () => {
+    return HttpResponse.json({
+      code: "CM-200000",
+      detail: "Success retrieved classroom info",
+      result: 1, // 1 : ING, 2 : HELP, 3 : COMPLETE, 0: 올 일 없음
+    });
+  }),
+  http.post("http://localhost:8080/edupi-lms/v1/classroom/action/init", async () => {
+    return HttpResponse.json({
+      code: "CM-200000",
+      detail: "Success update actions in classroom",
+      result: 2, // 변경된 상태 수
     });
   }),
 ];

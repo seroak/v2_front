@@ -1,16 +1,20 @@
 import styles from "./LoggedInHeader.module.css";
 import { useUserStore } from "@/store/user";
-import { Cookies } from "react-cookie";
-import { Link, NavLink } from "react-router-dom";
+import { fetchLogout } from "@/services/api";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 const LoggedInHeader = () => {
-  const cookies = new Cookies();
   const loggedInUserName = useUserStore((state) => state.loggedInUserName);
   const resetUser = useUserStore((state) => state.resetUser);
-  const logout = () => {
-    resetUser();
-    cookies.remove("token");
+  const navigate = useNavigate();
+  const logout = async () => {
+    try {
+      fetchLogout();
+      resetUser();
+      navigate("/");
+    } catch {
+      console.error("로그아웃 에러");
+    }
   };
-
   return (
     <header className={styles["bg-blue"]}>
       <div className={styles["header-menu"]}>
@@ -18,19 +22,12 @@ const LoggedInHeader = () => {
           <img src="/image/img_logo.png" alt="로고" />
         </Link>
         {/* <!-- 활성화 할 a태그에 on_active 클래스 추가 --> */}
-        <NavLink to="/group" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-          학생목록
+        <NavLink to="/classroomspace" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+          클래스룸
         </NavLink>
 
         <NavLink to="/viz" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
           시각화
-        </NavLink>
-
-        <NavLink to="/assignment" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-          과제
-        </NavLink>
-        <NavLink to="/modify" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-          설정
         </NavLink>
       </div>
 
