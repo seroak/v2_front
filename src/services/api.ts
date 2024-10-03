@@ -186,3 +186,21 @@ export const fetchEmissionGuest = async (classroomAccountId: number) => {
     throw error;
   }
 };
+
+export const fetchLogout = async () => {
+  try {
+    const response = await fetch("http://localhost:8080/edupi-user/v1/account/logout", {
+      method: "GET",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return;
+  } catch (error) {
+    console.error("An error occurred:", error);
+    throw error;
+  }
+};

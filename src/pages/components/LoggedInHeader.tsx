@@ -1,30 +1,19 @@
 import styles from "./LoggedInHeader.module.css";
 import { useUserStore } from "@/store/user";
-
-import { Link, NavLink } from "react-router-dom";
+import { fetchLogout } from "@/services/api";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 const LoggedInHeader = () => {
   const loggedInUserName = useUserStore((state) => state.loggedInUserName);
   const resetUser = useUserStore((state) => state.resetUser);
-  const fetchLogout = async () => {
+  const navigate = useNavigate();
+  const logout = async () => {
     try {
-      const response = await fetch("http://localhost:8080/edupi-user/v1/account/logout", {
-        method: "GET",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
+      fetchLogout();
       resetUser();
-      return;
-    } catch (error) {
-      console.error("An error occurred:", error);
-      throw error;
+      navigate("/");
+    } catch {
+      console.error("로그아웃 에러");
     }
-  };
-  const logout = () => {
-    fetchLogout();
   };
   return (
     <header className={styles["bg-blue"]}>
