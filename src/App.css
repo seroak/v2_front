@@ -1226,7 +1226,6 @@ header .group-btn {
   -webkit-box-align: center;
   align-items: center;
 }
-<<<<<<< HEAD
 .gpt-comment {
   position: absolute;
   display: inline-flex;
@@ -1239,7 +1238,6 @@ header .group-btn {
 .gpt-comment img {
   width: 24px;
   height: 24px;
-=======
 
 /* 도움 요청 floating 버튼 */
 .floating-buttons {
@@ -1359,5 +1357,4 @@ header .group-btn {
   padding: 5px 15px;
   border-radius: 8px;
   line-height: 1.75;
->>>>>>> feature/issue161
 }
