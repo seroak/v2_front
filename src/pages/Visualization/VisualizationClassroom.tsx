@@ -10,7 +10,7 @@ import RightSection from "./components/RightSection/RightSection";
 
 import Split from "react-split";
 import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
-import { fetchGuestActionRequest } from "@/services/api";
+import { fetchGuestActionRequest, fetchVisualize } from "@/services/api";
 //zustand store
 import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
@@ -96,15 +96,7 @@ const VisualizationClassroom = () => {
     setActionType(guestStatus?.result);
   }, [guestStatus]);
   const mutation = useMutation({
-    mutationFn: async (code: string) => {
-      return fetch("http://localhost:8080/edupi-visualize/v1/python", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ source_code: code }),
-      });
-    },
+    mutationFn: fetchVisualize,
     async onSuccess(data) {
       const jsonData = await data.json();
       // 타입 체크 함수
