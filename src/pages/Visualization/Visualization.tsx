@@ -17,7 +17,7 @@ import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
 import { useArrowStore } from "@/store/arrow";
 import { useUserStore } from "@/store/user";
-import { useGptToggleStore } from "@/store/gptToggle";
+import { useGptTooltipStore } from "@/store/gptTooltip";
 // 원본 코드 타입 정의
 interface CodeContextType {
   code: string;
@@ -53,7 +53,7 @@ export default function Visualization() {
   const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
   const loggedInUserName = useUserStore((state) => state.loggedInUserName);
   const setErrorLine = useEditorStore((state) => state.setErrorLine);
-  const isGptToggle = useGptToggleStore((state) => state.isGptToggle);
+  const isGptToggle = useGptTooltipStore((state) => state.isGptToggle);
 
   const [isPlaying, setIsPlaying] = useState(false);
 
