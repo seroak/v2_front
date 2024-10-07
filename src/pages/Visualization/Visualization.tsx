@@ -8,7 +8,7 @@ import LoggedInHeader from "../components/LoggedInHeader";
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
 import GptComment from "./components/LeftSection/components/GptComment";
-
+import { fetchVisualize } from "@/services/api";
 import Split from "react-split";
 import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
 
@@ -54,23 +54,12 @@ export default function Visualization() {
   const loggedInUserName = useUserStore((state) => state.loggedInUserName);
   const setErrorLine = useEditorStore((state) => state.setErrorLine);
   const isGptToggle = useGptTooltipStore((state) => state.isGptToggle);
+  const setConsole = useConsoleStore((state) => state.setConsole);
 
   const [isPlaying, setIsPlaying] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: async (code: string) => {
-      const response = await fetch("http://localhost:8080/edupi-visualize/v1/python", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ source_code: code }),
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    },
+    mutationFn: fetchVisualize,
     async onSuccess(data) {
       // 타입 체크 함수
       if (isValidTypeDtoArray(data.result.code)) {
@@ -85,7 +74,14 @@ export default function Visualization() {
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         alert("데이터의 형식이 올바르지 않습니다.");
       } else {
-        setErrorLine({ lineNumber: 1, message: "syntax error" });
+        console.log(error);
+        const linNumber = Number((error as any).result.error[0]);
+        const message = (error as any).result.error;
+        console.log(linNumber, message);
+
+        setErrorLine({ lineNumber: linNumber, message: message });
+
+        setConsole([message]);
         alert("코드 처리 중 에러가 발생했습니다.");
       }
     },
