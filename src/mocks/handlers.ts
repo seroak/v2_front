@@ -267,4 +267,19 @@ export const handlers = [
       result: 2, // 변경된 상태 수
     });
   }),
+  http.post("http://localhost:8080/edupi-syntax/v1/advice/correct", async () => {
+    return HttpResponse.json({
+      code: "CS-200000",
+      detail: "success correct",
+      result: {
+        reason: "코드에서 괄호가 닫히지 않아 문법 오류가 발생하였습니다.",
+        modified_codes: [
+          {
+            line: 1,
+            code: "print(a)",
+          },
+        ],
+      },
+    });
+  }),
 ];
