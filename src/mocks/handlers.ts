@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse, delay } from "msw";
 import * as jose from "jose";
 import testResponseBody from "./samples/testResponseBody.json";
 
@@ -27,8 +27,8 @@ interface SignupUser {
 }
 
 export const handlers = [
-  // 시각화 요청 성공
-  // http.post("http://localhost:8080/edupi-visualize/v1/python", () => {
+  // //시각화 요청 성공
+  // http.post("http://localhost:8080/edupi-syntax/v1/execute/visualize", () => {
   //   return HttpResponse.json(
   //     {
   //       success: false,
@@ -43,14 +43,14 @@ export const handlers = [
   // }),
 
   // 시각화 요청 실패
-  http.post("http://localhost:8080/edupi-visualize/v1/python", () => {
+  http.post("http://localhost:8080/edupi-syntax/v1/execute/visualize", async () => {
     return HttpResponse.json(
       {
         success: false,
         code: "CS_400001",
         detail: "코드 문법 오류입니다",
         result: {
-          error: "1:7: F821 undefined name 'a'",
+          error: "3:7: F821 undefined name 'a'",
         },
       },
       {
@@ -268,15 +268,20 @@ export const handlers = [
     });
   }),
   http.post("http://localhost:8080/edupi-syntax/v1/advice/correct", async () => {
+    await delay(1000);
     return HttpResponse.json({
       code: "CS-200000",
       detail: "success correct",
       result: {
-        reason: "코드에서 괄호가 닫히지 않아 문법 오류가 발생하였습니다.",
+        reason: "코드에서 반복문을 잘못 작성하여 오류가 발생했습니다.",
         modified_codes: [
           {
             line: 1,
-            code: "print(a)",
+            code: "for i in range(10):",
+          },
+          {
+            line: 2,
+            code: "    print(i)",
           },
         ],
       },
