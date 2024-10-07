@@ -7,6 +7,7 @@ const GptComment = () => {
   const context = useContext(CodeContext);
   const { setTimeoutId, clearCurrentTimeout } = useTimeoutStore();
   const { setIsGptToggle, isGptToggle } = useGptTooltipStore();
+  const { gptLeft, gptTop } = useGptTooltipStore();
   const timeoutRef = useRef<number | null>(null);
   if (!context) {
     console.error("CodeContext not found");
@@ -56,7 +57,7 @@ const GptComment = () => {
   return (
     <div
       className="gpt-comment"
-      style={{ top: "100px", left: "16px", zIndex: 9999 }}
+      style={{ top: gptTop, left: gptLeft, zIndex: 9999 }}
       onMouseOver={handleMouseOver}
       onMouseLeave={handleMouseLeave}
     >

@@ -10,7 +10,7 @@ import { useTimeoutStore } from "@/store/timeout";
 const CodeEditor = () => {
   const context = useContext(CodeContext);
   const decorationsCollectionRef = useRef<monaco.editor.IEditorDecorationsCollection | null>(null);
-  const [isEditorReady, setIsEditorReady] = useState(false);
+
   if (!context) {
     console.error("CodeContext not found");
     return null;
@@ -75,7 +75,6 @@ const CodeEditor = () => {
 
   const handleEditorDidMount: OnMount = (editor, monacoInstance) => {
     editorRef.current = editor;
-    setIsEditorReady(true);
 
     editor.onMouseMove((e) => {
       if (e.target.type === monaco.editor.MouseTargetType.CONTENT_TEXT) {
@@ -94,11 +93,11 @@ const CodeEditor = () => {
 
               const globalLeft = editorCoords.left + errorLineCoords.left;
               const globalTop = editorCoords.top + errorLineCoords.top;
-
-              const lineHeight = editor.getOption(monacoInstance.editor.EditorOption.lineHeight);
+              console.log("globalLeft", globalLeft);
+              console.log("globalTop", globalTop);
 
               setGptLeft(globalLeft);
-              setGptTop(globalTop + lineHeight);
+              setGptTop(globalTop + 30);
             }
           }
 
