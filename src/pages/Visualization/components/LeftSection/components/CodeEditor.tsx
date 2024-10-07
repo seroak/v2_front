@@ -53,8 +53,19 @@ const CodeEditor = () => {
     if (!model) return;
 
     const { lineNumber, message } = errorLine;
-    const startColumn = 1;
+
     const endColumn = model.getLineMaxColumn(lineNumber);
+
+    const lineContent = model.getLineContent(lineNumber);
+    let startColumn = 1;
+    for (let i of lineContent) {
+      console.log(i);
+      if (i === " ") {
+        startColumn++;
+      } else {
+        break;
+      }
+    }
 
     if (!decorationsCollectionRef.current) {
       decorationsCollectionRef.current = editor.createDecorationsCollection();
@@ -64,10 +75,9 @@ const CodeEditor = () => {
       {
         range: new monaco.Range(lineNumber, startColumn, lineNumber, endColumn),
         options: {
-          isWholeLine: true,
+          isWholeLine: false,
           className: "error-line",
           inlineClassName: "red-thick-underline",
-          hoverMessage: { value: message },
         },
       },
     ]);
@@ -93,8 +103,6 @@ const CodeEditor = () => {
 
               const globalLeft = editorCoords.left + errorLineCoords.left;
               const globalTop = editorCoords.top + errorLineCoords.top;
-              console.log("globalLeft", globalLeft);
-              console.log("globalTop", globalTop);
 
               setGptLeft(globalLeft);
               setGptTop(globalTop + 30);
@@ -117,11 +125,18 @@ const CodeEditor = () => {
           }
         }
       }
+
+      clearCurrentTimeout();
+      timeoutRef.current = window.setTimeout(() => {
+        setIsGptToggle(false);
+        setTimeoutId(null);
+      }, 300);
+      setTimeoutId(timeoutRef.current);
     });
 
     editor.onMouseLeave(() => {
       clearCurrentTimeout();
-      console.log("완전히  에디터에서 벗어남");
+
       timeoutRef.current = window.setTimeout(() => {
         setIsGptToggle(false);
         setTimeoutId(null);
