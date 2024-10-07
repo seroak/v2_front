@@ -1,15 +1,16 @@
-import { useContext, Fragment, useRef, useEffect } from "react";
+import { useContext, Fragment, useRef, useEffect, useState } from "react";
 import Editor, { OnMount } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import { CodeContext } from "../../../Visualization";
 // Zustand
 import { useEditorStore } from "@/store/editor";
 import { useConsoleStore } from "@/store/console";
-import { useGptToggleStore } from "@/store/gptToggle";
+import { useGptTooltipStore } from "@/store/gptTooltip";
 import { useTimeoutStore } from "@/store/timeout";
 const CodeEditor = () => {
   const context = useContext(CodeContext);
   const decorationsCollectionRef = useRef<monaco.editor.IEditorDecorationsCollection | null>(null);
+  const [isEditorReady, setIsEditorReady] = useState(false);
   if (!context) {
     console.error("CodeContext not found");
     return null;
@@ -20,7 +21,8 @@ const CodeEditor = () => {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
   const errorLine = useEditorStore((state) => state.errorLine);
-  const setIsGptToggle = useGptToggleStore((state) => state.setIsGptToggle);
+  const setIsGptToggle = useGptTooltipStore((state) => state.setIsGptToggle);
+  const { setGptTop, setGptLeft } = useGptTooltipStore();
   const { setTimeoutId, clearCurrentTimeout } = useTimeoutStore();
   const timeoutRef = useRef<number | null>(null);
   // 컴포넌트가 언마운트될 때 timeout 정리
@@ -39,6 +41,7 @@ const CodeEditor = () => {
   useEffect(() => {
     if (editorRef.current && errorLine) {
       displayErrorLine(errorLine);
+      handleEditorDidMount(editorRef.current, monaco);
     }
   }, [errorLine]);
 
@@ -72,26 +75,40 @@ const CodeEditor = () => {
 
   const handleEditorDidMount: OnMount = (editor, monacoInstance) => {
     editorRef.current = editor;
-
-    // 마우스 호버 이벤트 리스너 추가
+    setIsEditorReady(true);
 
     editor.onMouseMove((e) => {
       if (e.target.type === monaco.editor.MouseTargetType.CONTENT_TEXT) {
         const position = e.target.position;
-        if (position) {
+        if (position && errorLine) {
           const lineNumber = position.lineNumber;
+          if (lineNumber === errorLine.lineNumber) {
+            const errorLineCoords = editor.getScrolledVisiblePosition({
+              lineNumber: errorLine.lineNumber,
+              column: 1,
+            });
 
-          // 에러 데코레이션 찾기
-          const decorations = editorRef.current?.getModel()?.getAllDecorations() || [];
+            const editorDomNode = editor.getDomNode();
+            if (editorDomNode && errorLineCoords) {
+              const editorCoords = editorDomNode.getBoundingClientRect();
+
+              const globalLeft = editorCoords.left + errorLineCoords.left;
+              const globalTop = editorCoords.top + errorLineCoords.top;
+
+              const lineHeight = editor.getOption(monacoInstance.editor.EditorOption.lineHeight);
+
+              setGptLeft(globalLeft);
+              setGptTop(globalTop + lineHeight);
+            }
+          }
+
+          const decorations = editor.getModel()?.getAllDecorations() || [];
           const errorDecoration = decorations.find((d) => d.options.className === "error-line");
 
-          // 에러 라인에 마우스가 있을 때
           if (errorDecoration && errorDecoration.range.startLineNumber === lineNumber) {
-            console.log("에러라인에 호버", lineNumber);
+            clearCurrentTimeout();
             setIsGptToggle(true);
-          }
-          if (errorDecoration && errorDecoration.range.startLineNumber !== lineNumber) {
-            console.log("에러라인에서 벗어남", lineNumber);
+          } else if (errorDecoration && errorDecoration.range.startLineNumber !== lineNumber) {
             clearCurrentTimeout();
             timeoutRef.current = window.setTimeout(() => {
               setIsGptToggle(false);
@@ -106,11 +123,11 @@ const CodeEditor = () => {
     editor.onMouseLeave(() => {
       clearCurrentTimeout();
       console.log("완전히  에디터에서 벗어남");
-      const newTimeoutId = window.setTimeout(() => {
+      timeoutRef.current = window.setTimeout(() => {
         setIsGptToggle(false);
         setTimeoutId(null);
       }, 300);
-      setTimeoutId(newTimeoutId);
+      setTimeoutId(timeoutRef.current);
     });
     // Hover provider 등록 (한 번만 등록)
     monacoInstance.languages.registerHoverProvider("python", {
