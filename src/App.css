@@ -1360,3 +1360,77 @@ header .group-btn {
   border-radius: 8px;
   line-height: 1.75;
 }
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.code-container {
+  display: flex;
+  font-family: "Consolas", monospace;
+  background-color: #1e1e1e;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.line-numbers {
+  display: flex;
+  flex-direction: column;
+  padding: 1em 0.5em;
+
+  color: #858585;
+  user-select: none;
+  text-align: right;
+}
+
+.line-numbers span {
+  height: 1.5em;
+  line-height: 1.5;
+}
+
+.code-content {
+  flex-grow: 1;
+  padding: 1em;
+  padding-top: 1.3em;
+  color: #d4d4d4;
+  position: relative;
+}
+
+.code-content span {
+  display: block;
+  height: 1.5em;
+  line-height: 1.5;
+  white-space: pre;
+}
+
+.code-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(transparent, transparent 1.5em, #333333 1.5em, #333333 calc(1.5em + 1px));
+  background-position: 0 1.3em;
+  pointer-events: none;
+}
