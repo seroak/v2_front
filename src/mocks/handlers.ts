@@ -283,6 +283,14 @@ export const handlers = [
             line: 2,
             code: "    print(i)",
           },
+          {
+            line: 4,
+            code: "    print(i)",
+          },
+          {
+            line: 5,
+            code: "    print(i)",
+          },
         ],
       },
     });
