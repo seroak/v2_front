@@ -131,7 +131,7 @@ export default function Visualization() {
         {loggedInUserName === "" ? <PublicHeader /> : <LoggedInHeader />}
 
         <main className={styles.main}>
-          {isGptToggle && <GptComment />}
+          <GptComment />
           <div className={styles["top-btns"]}>
             <div>
               <button type="button" className={styles["playcode-btn"]}>
