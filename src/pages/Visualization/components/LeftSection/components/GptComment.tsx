@@ -49,14 +49,29 @@ const GptComment = () => {
   const mutation = useMutation({
     mutationFn: gptCorrect,
     async onSuccess(data) {
-      console.log("data", data);
       setReason(data.result.reason);
-      setModifiedCode(data.result.modified_codes);
+      const newModifiedCode = data.result.modified_codes.reduce((acc: ModifidCode[], cur: ModifidCode) => {
+        if (acc.length === 0) {
+          acc.push(cur);
+          return acc;
+        }
+        if (acc[acc.length - 1].line - cur.line !== -1) {
+          acc.push({ line: 0, code: "" });
+          acc.push(cur);
+          return acc;
+        }
+        acc.push(cur);
+        return acc;
+      }, []);
+      setModifiedCode(newModifiedCode);
     },
     onError(error) {
       console.error("An error occurred:", error);
     },
   });
+  const handleAprrove = () => {};
+
+  const handleReject = () => {};
 
   const handleCorrect = async () => {
     mutation.mutate();
@@ -72,24 +87,46 @@ const GptComment = () => {
       <img src="/image/icon_gpt.svg" alt="gpt" />
 
       {mutation.isSuccess ? (
-        <div>
+        <div className="gpt-success">
           이유: {reason}
           <br />
           <div className="code-container">
             <div className="line-numbers">
               {modifiedCode.map((code, index) => (
                 <div key={index}>
-                  <span>{code.line}</span>
+                  {code.line === 0 ? (
+                    <div className="ellipsis-container">
+                      <div className="line ellipsis">⋮</div>
+                    </div>
+                  ) : (
+                    <span>{code.line}</span>
+                  )}
                 </div>
               ))}
             </div>
             <div className="code-content">
               {modifiedCode.map((code, index) => (
                 <div key={index}>
-                  <span>{code.code}</span>
+                  {code.code === "" ? (
+                    <div className="ellipsis-container">
+                      <div className="line ellipsis">
+                        <span>⋮</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <span>{code.code}</span>
+                  )}
                 </div>
               ))}
             </div>
+          </div>
+          <div className="button-left">
+            <button className="approve" onClick={handleAprrove}>
+              수락
+            </button>
+            <button className="reject" onClick={handleReject}>
+              거절
+            </button>
           </div>
         </div>
       ) : mutation.isPending ? (
