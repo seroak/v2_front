@@ -54,6 +54,7 @@ export default function Visualization() {
   const loggedInUserName = useUserStore((state) => state.loggedInUserName);
   const setErrorLine = useEditorStore((state) => state.setErrorLine);
   const isGptToggle = useGptTooltipStore((state) => state.isGptToggle);
+  const gptPin = useGptTooltipStore((state) => state.gptPin);
   const setConsole = useConsoleStore((state) => state.setConsole);
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -74,11 +75,8 @@ export default function Visualization() {
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         alert("데이터의 형식이 올바르지 않습니다.");
       } else {
-        console.log(error);
         const linNumber = Number((error as any).result.error[0]);
         const message = (error as any).result.error;
-        console.log(linNumber, message);
-
         setErrorLine({ lineNumber: linNumber, message: message });
 
         setConsole([message]);
@@ -131,7 +129,7 @@ export default function Visualization() {
         {loggedInUserName === "" ? <PublicHeader /> : <LoggedInHeader />}
 
         <main className={styles.main}>
-          <GptComment />
+          {(gptPin || isGptToggle) && <GptComment />}
           <div className={styles["top-btns"]}>
             <div>
               <button type="button" className={styles["playcode-btn"]}>
