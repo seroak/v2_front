@@ -1395,11 +1395,11 @@ header .group-btn {
   border: 1px solid #e1e4e8;
 }
 
-.line-numbers {
+.gpt-line-numbers {
   display: flex;
   flex-direction: column;
-  padding: 1em 0.5em;
-
+  padding: 0.2em 0.5em;
+  background-color: #f6f8fa;
   color: #8996a3;
   user-select: none;
   text-align: right;
@@ -1444,6 +1444,7 @@ header .group-btn {
 }
 .code-content span {
   white-space: pre-wrap;
+  margin-top: 2px;
 }
 
 .code-content::before {
@@ -1453,13 +1454,12 @@ header .group-btn {
   left: 0;
   right: 0;
   bottom: 0;
-  background: repeating-linear-gradient(transparent, transparent 20px, #5c5f63 20px, #f6f8fa 21px);
+  background: repeating-linear-gradient(transparent, transparent 24px, #5c5f63 24px, #f6f8fa 25px);
   pointer-events: none;
 }
 
-.gpt-success .button-left {
+.button-left {
   display: flex;
-
   justify-content: end;
 }
 .button-left button {
