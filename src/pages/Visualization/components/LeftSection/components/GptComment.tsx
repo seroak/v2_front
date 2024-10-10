@@ -102,12 +102,18 @@ const GptComment = () => {
     },
   });
   const handleAprrove = () => {
+    console.log("수정된 코드", modifiedCode);
     const newCode = code
       .split("\n")
       .map((line, index) => {
-        if (modifiedCode[index] && modifiedCode[index].line === index + 1) {
-          return modifiedCode[index].code;
+        console.log(line);
+        console.log(modifiedCode[index]);
+        for (let tmp of modifiedCode) {
+          if (tmp.line === index + 1) {
+            return tmp.code;
+          }
         }
+
         return line;
       })
       .join("\n");
