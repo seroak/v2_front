@@ -281,17 +281,27 @@ export const handlers = [
           },
           {
             line: 2,
-            code: "    print(i)",
+            code: "   print(i)",
           },
           {
             line: 4,
-            code: "    print(i)",
+            code: "   print(i)",
           },
           {
             line: 5,
-            code: "    print(i)",
+            code: "   print(i)",
           },
         ],
+      },
+    });
+  }),
+  http.post("http://localhost:8080/edupi-syntax/v1/advice/hint", async () => {
+    return HttpResponse.json({
+      code: "CS-200000",
+      detail: "success serve hint",
+      result: {
+        line: 2,
+        hint: "a는 선언된 변수가 아닙니다. a를 초기화 해주세요",
       },
     });
   }),
