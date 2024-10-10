@@ -1,37 +1,72 @@
 import { useMutation } from "@tanstack/react-query";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { CodeContext } from "@/pages/Visualization/Visualization";
 import { useTimeoutStore } from "@/store/timeout";
 import { useGptTooltipStore } from "@/store/gptTooltip";
 import { useEditorStore } from "@/store/editor";
-interface ModifidCode {
+import { useGptMutationStore } from "@/store/gptMutation";
+
+interface ModifiedCode {
   line: number;
   code: string;
 }
+
+interface GptCorrectResponse {
+  result: {
+    reason: string;
+    modified_codes: ModifiedCode[];
+  };
+}
+
+interface GptHintResponse {
+  result: {
+    hint: string;
+    line: number;
+  };
+}
+
 const GptComment = () => {
   const context = useContext(CodeContext);
   const { setTimeoutId, clearCurrentTimeout } = useTimeoutStore();
-  const { setIsGptToggle } = useGptTooltipStore();
+  const { setIsGptToggle, gptPin, setGptPin, gptLeft, gptTop } = useGptTooltipStore();
   const { resetEditor, errorLine } = useEditorStore();
-  const gptPin = useGptTooltipStore((state) => state.gptPin);
-  const setGptPin = useGptTooltipStore((state) => state.setGptPin);
-  const [hint, setHint] = useState<string>("");
-  const [hintLine, setHintLine] = useState<number>(0);
-  const { gptLeft, gptTop } = useGptTooltipStore();
+  const {
+    isGptCorrectSuccess,
+    isGptHintSuccess,
+    reason,
+    hint,
+    hintLine,
+    modifiedCode,
+    setGptCorrectSuccess,
+    setGptHintSuccess,
+    setReason,
+    setHint,
+    setHintLine,
+    setModifiedCode,
+    resetState,
+  } = useGptMutationStore();
 
-  const [reason, setReason] = useState<string>("");
-  const [modifiedCode, setModifiedCode] = useState<ModifidCode[]>([]);
   const timeoutRef = useRef<number | null>(null);
+
   if (!context) {
     console.error("CodeContext not found");
     return null;
   }
 
   const { code, setCode } = context;
+  // 간단한 구문 강조 함수
+  const highlightSyntax = (code: string) => {
+    return code
+      .replace(/(\/\/.*)/g, '<span style="color: #888;">$1</span>')
+      .replace(/('.*?'|".*?")/g, '<span style="color: #a11;">$1</span>')
+      .replace(/\b(function|const|let|var|return|if|else|for|while)\b/g, '<span style="color: #11a;">$1</span>')
+      .replace(/\b(true|false|null|undefined)\b/g, '<span style="color: #a1a;">$1</span>');
+  };
   const handleMouseOver = () => {
     clearCurrentTimeout();
     setIsGptToggle(true);
   };
+
   const handleMouseLeave = () => {
     clearCurrentTimeout();
 
@@ -43,7 +78,8 @@ const GptComment = () => {
       setTimeoutId(timeoutRef.current);
     }
   };
-  const fetchGptCorrect = async (code: any) => {
+
+  const fetchGptCorrect = async (code: string): Promise<GptCorrectResponse> => {
     const response = await fetch("http://localhost:8080/edupi-syntax/v1/advice/correct", {
       method: "POST",
       credentials: "include",
@@ -60,7 +96,7 @@ const GptComment = () => {
     mutationFn: fetchGptCorrect,
     async onSuccess(data) {
       setReason(data.result.reason);
-      const newModifiedCode = data.result.modified_codes.reduce((acc: ModifidCode[], cur: ModifidCode) => {
+      const newModifiedCode = data.result.modified_codes.reduce((acc: ModifiedCode[], cur: ModifiedCode) => {
         if (acc.length === 0) {
           acc.push(cur);
           return acc;
@@ -73,66 +109,66 @@ const GptComment = () => {
         acc.push(cur);
         return acc;
       }, []);
+      console.log(newModifiedCode);
       setModifiedCode(newModifiedCode);
+      setGptCorrectSuccess(true);
     },
     onError(error) {
       console.error("An error occurred:", error);
+      // TODO: Add user-facing error handling
     },
   });
-  const fetchGptHint = async (code: any) => {
+
+  const fetchGptHint = async (code: string, lineNumber: number): Promise<GptHintResponse> => {
     const response = await fetch("http://localhost:8080/edupi-syntax/v1/advice/hint", {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ line: errorLine?.lineNumber, source_code: code }),
+      body: JSON.stringify({ line: lineNumber, source_code: code }),
     });
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
     return response.json();
   };
+
   const gptHintMutation = useMutation({
-    mutationFn: fetchGptHint,
-    async onSuccess(data) {
+    mutationFn: () => fetchGptHint(code, errorLine?.lineNumber || 1),
+    onSuccess(data) {
       setHint(data.result.hint);
       setHintLine(data.result.line);
+      setGptHintSuccess(true);
     },
     onError(error) {
       console.error("An error occurred:", error);
+      // TODO: Add user-facing error handling
     },
   });
-  const handleAprrove = () => {
-    console.log("수정된 코드", modifiedCode);
+
+  const handleApprove = () => {
     const newCode = code
       .split("\n")
       .map((line, index) => {
-        console.log(line);
-        console.log(modifiedCode[index]);
-        for (let tmp of modifiedCode) {
-          if (tmp.line === index + 1) {
-            return tmp.code;
-          }
-        }
-
-        return line;
+        const modifiedLine = modifiedCode.find((tmp) => tmp.line === index + 1);
+        return modifiedLine ? modifiedLine.code : line;
       })
       .join("\n");
-    console.log("원래 코드", code);
-    console.log("전처리된 코드", newCode);
+    console.log(newCode);
     setCode(newCode);
     setGptPin(false);
     setIsGptToggle(false);
+    resetState();
+    resetEditor();
   };
 
-  // 창을 닫는 버튼
   const handleReject = () => {
     clearCurrentTimeout();
     setIsGptToggle(false);
     setGptPin(false);
+    resetState();
   };
 
-  // 즉시 교정 버튼
-  const handleCorrect = async () => {
+  const handleCorrect = () => {
     setGptPin(true);
     clearCurrentTimeout();
     setIsGptToggle(true);
@@ -140,12 +176,17 @@ const GptComment = () => {
     gptCorrectMutation.mutate(code);
   };
 
-  // 힌트보기 버튼
-  const handleHint = async () => {
+  const handleHint = () => {
     setGptPin(true);
     clearCurrentTimeout();
     setIsGptToggle(true);
-    gptHintMutation.mutate(code);
+    gptHintMutation.mutate();
+  };
+  const handleCloseHint = () => {
+    clearCurrentTimeout();
+    setIsGptToggle(false);
+    setGptPin(false);
+    resetState();
   };
 
   return (
@@ -155,58 +196,48 @@ const GptComment = () => {
       onMouseOver={handleMouseOver}
       onMouseLeave={handleMouseLeave}
     >
-      <img src="/image/icon_gpt.svg" alt="gpt" />
-
-      {gptCorrectMutation.isSuccess ? (
+      {isGptCorrectSuccess ? (
         <div className="gpt-success">
-          이유: {reason}
+          <img
+            className="gpt-icon"
+            style={{ width: "30px", height: "30px" }}
+            src="/image/icon_gpt2.svg"
+            alt="즉시교정"
+          />
+          {reason}
+
           <br />
           <div className="code-container">
-            <div className="gpt-line-numbers">
-              {modifiedCode.map((code, index) => (
-                <div key={index}>
-                  {code.line === 0 ? (
-                    <div className="ellipsis-container">
-                      <div className="line ellipsis">⋮</div>
+            <pre className="highlighted-code">
+              {modifiedCode.map((code, index) =>
+                code.code === "" ? (
+                  <div key={index} className="ellipsis-container">
+                    <div className="line ellipsis">
+                      <span style={{ color: "black" }}>⋮</span>
                     </div>
-                  ) : (
-                    <span>{code.line}</span>
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="code-content">
-              {modifiedCode.map((code, index) => (
-                <div key={index}>
-                  {code.code === "" ? (
-                    <div className="ellipsis-container">
-                      <div className="line ellipsis">
-                        <span>⋮</span>
-                      </div>
-                    </div>
-                  ) : (
-                    <span>{code.code}</span>
-                  )}
-                </div>
-              ))}
-            </div>
+                  </div>
+                ) : (
+                  <div key={index} dangerouslySetInnerHTML={{ __html: highlightSyntax(code.code) }} />
+                )
+              )}
+            </pre>
           </div>
           <div className="button-left">
-            <button className="approve" onClick={handleAprrove}>
-              수락
+            <button className="approve" onClick={handleApprove}>
+              교정
             </button>
             <button className="reject" onClick={handleReject}>
               거절
             </button>
           </div>
         </div>
-      ) : gptHintMutation.isSuccess ? (
+      ) : isGptHintSuccess ? (
         <div className="gpt-hint">
           <div>힌트 라인: {hintLine}</div>
           <div>힌트: {hint}</div>
           <div className="button-left">
-            <button className="approve" onClick={handleAprrove}>
-              수락
+            <button className="approve" onClick={handleCloseHint}>
+              확인
             </button>
           </div>
         </div>
@@ -216,11 +247,18 @@ const GptComment = () => {
         </div>
       ) : (
         <>
-          <button onClick={handleCorrect}>즉시교정</button>
-          <button onClick={handleHint}>힌트보기</button>
+          <button className="instant-correction" onClick={handleCorrect}>
+            <img src="/image/icon_correction.svg" style={{ width: 15, height: 15 }} alt="즉시교정" />
+            즉시교정
+          </button>
+          <button className="view-hint" onClick={handleHint}>
+            <img src="/image/icon_hint.svg" style={{ width: 15, height: 16 }} alt="힌트보기" />
+            힌트보기
+          </button>
         </>
       )}
     </div>
   );
 };
+
 export default GptComment;
