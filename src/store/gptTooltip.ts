@@ -7,6 +7,8 @@ interface GptTooltipState {
   setGptTop: (gptTop: number) => void;
   gptLeft: number;
   setGptLeft: (gptLeft: number) => void;
+  gptPin: boolean;
+  setGptPin: (gptPin: boolean) => void;
 }
 export const useGptTooltipStore = create(
   devtools<GptTooltipState>((set) => ({
@@ -16,5 +18,7 @@ export const useGptTooltipStore = create(
     setGptTop: (gptTop) => set({ gptTop }),
     gptLeft: 0,
     setGptLeft: (gptLeft) => set({ gptLeft }),
+    gptPin: false,
+    setGptPin: (gptPin) => set({ gptPin }),
   }))
 );
