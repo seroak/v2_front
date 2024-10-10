@@ -21,9 +21,11 @@ const CodeEditor = () => {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
   const errorLine = useEditorStore((state) => state.errorLine);
+  const resetEditor = useEditorStore((state) => state.resetEditor);
   const setIsGptToggle = useGptTooltipStore((state) => state.setIsGptToggle);
   const { setGptTop, setGptLeft } = useGptTooltipStore();
   const { setTimeoutId, clearCurrentTimeout } = useTimeoutStore();
+  const { gptPin, setGptPin } = useGptTooltipStore();
   const timeoutRef = useRef<number | null>(null);
   // 컴포넌트가 언마운트될 때 timeout 정리
   useEffect(() => {
@@ -44,7 +46,16 @@ const CodeEditor = () => {
       handleEditorDidMount(editorRef.current, monaco);
     }
   }, [errorLine]);
+  const handleResetEditor = () => {
+    resetEditor();
 
+    if (editorRef.current) {
+      // 데코레이션 컬렉션 리셋
+      if (decorationsCollectionRef.current) {
+        decorationsCollectionRef.current.clear();
+      }
+    }
+  };
   const displayErrorLine = (errorLine: { lineNumber: number; message: string } | null) => {
     if (!editorRef.current || !errorLine) return;
 
@@ -59,7 +70,6 @@ const CodeEditor = () => {
     const lineContent = model.getLineContent(lineNumber);
     let startColumn = 1;
     for (let i of lineContent) {
-      console.log(i);
       if (i === " ") {
         startColumn++;
       } else {
@@ -92,12 +102,20 @@ const CodeEditor = () => {
         if (position && errorLine) {
           const lineNumber = position.lineNumber;
           if (lineNumber === errorLine.lineNumber) {
+            const model = editor.getModel();
+            const lineContent = model?.getLineContent(lineNumber);
+            const firstNonWhitespace = lineContent?.search(/\S/);
+            let column: number = 0;
+            if (firstNonWhitespace && firstNonWhitespace !== -1) {
+              // 실제 텍스트가 시작하는 열(column) 위치
+              column = firstNonWhitespace + 1; // Monaco는 1-based indexing 사용
+            }
             const errorLineCoords = editor.getScrolledVisiblePosition({
               lineNumber: errorLine.lineNumber,
-              column: 1,
+              column: column,
             });
-
             const editorDomNode = editor.getDomNode();
+
             if (editorDomNode && errorLineCoords) {
               const editorCoords = editorDomNode.getBoundingClientRect();
 
@@ -111,37 +129,48 @@ const CodeEditor = () => {
 
           const decorations = editor.getModel()?.getAllDecorations() || [];
           const errorDecoration = decorations.find((d) => d.options.className === "error-line");
-
+          // 에러 라인에 마우스가 올라가면 gpt 툴팁을 보여줌
           if (errorDecoration && errorDecoration.range.startLineNumber === lineNumber) {
             clearCurrentTimeout();
             setIsGptToggle(true);
-          } else if (errorDecoration && errorDecoration.range.startLineNumber !== lineNumber) {
+            return;
+          }
+          // 에러 라인에서 마우스가 벗어나면 gpt 툴팁을 숨김
+          else if (errorDecoration && errorDecoration.range.startLineNumber !== lineNumber) {
             clearCurrentTimeout();
-            timeoutRef.current = window.setTimeout(() => {
-              setIsGptToggle(false);
-              setTimeoutId(null);
-            }, 300);
-            setTimeoutId(timeoutRef.current);
+            if (!gptPin) {
+              timeoutRef.current = window.setTimeout(() => {
+                setIsGptToggle(false);
+                setTimeoutId(null);
+              }, 300);
+              setTimeoutId(timeoutRef.current);
+              return;
+            }
           }
         }
       }
+      // 에디터 번호가 아닌 다른 곳에 마우스가 올라가면 gpt 툴팁을 숨김
 
-      clearCurrentTimeout();
-      timeoutRef.current = window.setTimeout(() => {
-        setIsGptToggle(false);
-        setTimeoutId(null);
-      }, 300);
-      setTimeoutId(timeoutRef.current);
+      if (!gptPin) {
+        clearCurrentTimeout();
+
+        timeoutRef.current = window.setTimeout(() => {
+          setIsGptToggle(false);
+          setTimeoutId(null);
+        }, 300);
+        setTimeoutId(timeoutRef.current);
+      }
     });
-
+    // 에디터에서 마우스가 벗어나면 gpt 툴팁을 숨김
     editor.onMouseLeave(() => {
       clearCurrentTimeout();
-
-      timeoutRef.current = window.setTimeout(() => {
-        setIsGptToggle(false);
-        setTimeoutId(null);
-      }, 300);
-      setTimeoutId(timeoutRef.current);
+      if (!gptPin) {
+        timeoutRef.current = window.setTimeout(() => {
+          setIsGptToggle(false);
+          setTimeoutId(null);
+        }, 300);
+        setTimeoutId(timeoutRef.current);
+      }
     });
     // Hover provider 등록 (한 번만 등록)
     monacoInstance.languages.registerHoverProvider("python", {
@@ -190,7 +219,10 @@ const CodeEditor = () => {
           defaultLanguage="python"
           value={code}
           onMount={handleEditorDidMount}
-          onChange={(value) => setCode(value || "")}
+          onChange={(value) => {
+            setCode(value || "");
+            handleResetEditor();
+          }}
           options={{
             minimap: { enabled: false },
             scrollBeyondLastLine: false,
