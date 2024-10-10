@@ -25,7 +25,7 @@ const CodeEditor = () => {
   const setIsGptToggle = useGptTooltipStore((state) => state.setIsGptToggle);
   const { setGptTop, setGptLeft } = useGptTooltipStore();
   const { setTimeoutId, clearCurrentTimeout } = useTimeoutStore();
-  const { gptPin, setGptPin } = useGptTooltipStore();
+  const { gptPin } = useGptTooltipStore();
   const timeoutRef = useRef<number | null>(null);
   // 컴포넌트가 언마운트될 때 timeout 정리
   useEffect(() => {
