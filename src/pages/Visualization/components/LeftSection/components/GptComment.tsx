@@ -111,6 +111,8 @@ const GptComment = () => {
         return line;
       })
       .join("\n");
+    console.log("원래 코드", code);
+    console.log("전처리된 코드", newCode);
     setCode(newCode);
     setGptPin(false);
     setIsGptToggle(false);
