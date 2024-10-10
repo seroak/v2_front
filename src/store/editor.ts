@@ -6,6 +6,8 @@ interface EditorState {
   errorLine: { lineNumber: number; message: string } | null;
   setErrorLine: (errorLine: { lineNumber: number; message: string } | null) => void;
   resetEditor: () => void;
+  focus: boolean;
+  setFocus: (focus: boolean) => void;
 }
 export const useEditorStore = create(
   devtools<EditorState>((set) => ({
@@ -14,5 +16,7 @@ export const useEditorStore = create(
     errorLine: null,
     setErrorLine: (errorLine) => set({ errorLine }),
     resetEditor: () => set({ errorLine: null }),
+    focus: false,
+    setFocus: (focus) => set({ focus }),
   }))
 );
