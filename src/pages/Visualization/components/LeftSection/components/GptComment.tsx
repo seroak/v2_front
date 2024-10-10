@@ -12,12 +12,13 @@ const GptComment = () => {
   const context = useContext(CodeContext);
   const { setTimeoutId, clearCurrentTimeout } = useTimeoutStore();
   const { setIsGptToggle } = useGptTooltipStore();
-  const { resetEditor } = useEditorStore();
+  const { resetEditor, errorLine } = useEditorStore();
   const gptPin = useGptTooltipStore((state) => state.gptPin);
   const setGptPin = useGptTooltipStore((state) => state.setGptPin);
   const [hint, setHint] = useState<string>("");
   const [hintLine, setHintLine] = useState<number>(0);
   const { gptLeft, gptTop } = useGptTooltipStore();
+
   const [reason, setReason] = useState<string>("");
   const [modifiedCode, setModifiedCode] = useState<ModifidCode[]>([]);
   const timeoutRef = useRef<number | null>(null);
@@ -83,7 +84,7 @@ const GptComment = () => {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ source_code: code }),
+      body: JSON.stringify({ line: errorLine, source_code: code }),
     });
     if (!response.ok) {
       throw new Error("Network response was not ok");
