@@ -1,13 +1,35 @@
+import { useMutation } from "@tanstack/react-query";
+import { fetchEmissionGuest } from "@/services/api";
 interface GuestType {
-  guestId: number;
+  id: number;
   name: string;
   email: string;
   status: number | string;
 }
 interface props {
   guest: GuestType;
+  getClassroomRefetch: () => void;
 }
-const Guest = ({ guest }: props) => {
+
+const Guest = ({ guest, getClassroomRefetch }: props) => {
+  const useEmissoionGuestMutation = () => {
+    return useMutation({
+      mutationFn: fetchEmissionGuest,
+      onSuccess: () => {
+        alert("방출되었습니다.");
+        getClassroomRefetch();
+      },
+      onError: (error) => {
+        console.error("An error occurred:", error);
+        alert("방출에 실패했습니다.");
+      },
+    });
+  };
+  const emissionGuestMutation = useEmissoionGuestMutation();
+  const id = Number(guest.id);
+  const handleEmissionGuest = () => {
+    emissionGuestMutation.mutate(id);
+  };
   return (
     <li>
       <div className="data03-name">
@@ -15,7 +37,9 @@ const Guest = ({ guest }: props) => {
         <span>{guest.email}</span>
       </div>
       <div className="data03-btns">
-        <button className="red">방출</button>
+        <button className="red" onClick={handleEmissionGuest}>
+          방출
+        </button>
       </div>
     </li>
   );

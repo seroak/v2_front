@@ -2,9 +2,9 @@ import { useState, useCallback, useEffect } from "react";
 import LoggedInClassroomHeader from "@/pages/components/LoggedInClassroomHeader";
 import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
-import { useParams } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getClassGuestData, getClassTotalActionInfo } from "@/services/api";
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { getClassGuestData, getClassTotalActionInfo, fetchClassOver } from "@/services/api";
 
 interface GuestType {
   id: number;
@@ -21,15 +21,20 @@ interface TotalInfoType {
 
 interface ClassroomData {
   result: {
+    guests: GuestType[];
+  };
+}
+interface GetClassTotalActionInfoType {
+  result: {
     className: string;
     totalInfo: TotalInfoType;
-    guests: GuestType[];
   };
 }
 const Classroom = () => {
   const [guests, setGuests] = useState<GuestType[]>();
   const [totalInfo, setTotalInfo] = useState<TotalInfoType>();
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
+  const navigate = useNavigate();
   const params = useParams();
   const classroomId = Number(params.classroomId);
 
@@ -38,7 +43,7 @@ const Classroom = () => {
     queryFn: () => getClassGuestData(classroomId),
     enabled: isMswReady,
   });
-  const { data: classroomData, refetch: classroomDataRefetch } = useQuery<ClassroomData>({
+  const { data: classroomData, refetch: classroomDataRefetch } = useQuery<GetClassTotalActionInfoType>({
     queryKey: ["ClassTotalActionInfo", classroomId],
     queryFn: () => getClassTotalActionInfo(classroomId),
     enabled: isMswReady,
@@ -55,6 +60,21 @@ const Classroom = () => {
       setTotalInfo(classroomData.result.totalInfo);
     }
   }, [classroomData]);
+
+  const classOverMutation = useMutation({
+    mutationFn: fetchClassOver,
+    onSuccess: () => {
+      classroomDataRefetch();
+      navigate("/classroomspace");
+    },
+    onError: (error) => {
+      console.error("An error occurred:", error);
+    },
+  });
+
+  const handleClassOver = () => {
+    classOverMutation.mutate(classroomId);
+  };
 
   const useSSE = (url: string) => {
     const [data, setData] = useState(null);
@@ -75,16 +95,13 @@ const Classroom = () => {
         const newData = JSON.parse(event.data);
         setData(newData);
         // setQueryData로 값 캐싱
-        queryClient.setQueryData(["sse-data"], newData);
+        queryClient.setQueryData(["sse-data", classroomId], newData);
         console.log("서버로 부터 데이터가 옴");
         guestDataRefetch();
         classroomDataRefetch();
       });
-      addEventListener("message", (event) => {
-        console.log("message 리스너");
-      });
       // connection되면
-      eventSource.addEventListener("open", function (e) {
+      eventSource.addEventListener("open", function () {
         console.log("서버로 연결이 됨");
       });
 
@@ -102,15 +119,14 @@ const Classroom = () => {
     return { data };
   };
 
-  const { data: sseData } = useSSE(`http://localhost:8080/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
-
+  useSSE(`http://localhost:8080/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
   return (
     <div>
       <LoggedInClassroomHeader />
       <div className="group-wrap">
         <div className="group-left">
           <img src="/image/icon_group.svg" alt="그룹" />
-          <h2 className="group-title">파이썬 기초 {classroomId}반</h2>
+          <h2 className="group-title">{classroomData?.result.className}</h2>
         </div>
       </div>
       <div className="s__container">
@@ -151,7 +167,14 @@ const Classroom = () => {
             <div className="title-left">
               <h3>제출현황</h3>
             </div>
-            <div className="title-right">
+
+            <div className="classroom-right">
+              <div className="right-btns" style={{ marginRight: "15px" }}>
+                <button className="red" onClick={handleClassOver}>
+                  <img src="/image/icon_on_off.svg" alt="그룹삭제" />
+                  수업 종료
+                </button>
+              </div>
               <select name="" id="" className="s__select">
                 <option value="1">이름순</option>
                 <option value="2">제출순</option>

@@ -1,16 +1,22 @@
+import { fetchLogout } from "@/services/api";
 import styles from "./LoggedInHeader.module.css";
 import { useUserStore } from "@/store/user";
-import { Cookies } from "react-cookie";
-import { Link, NavLink, useParams } from "react-router-dom";
+
+import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 
 const LoggedInClassroomHeader = () => {
   const params = useParams();
-  const cookies = new Cookies();
-  const loggedInUserName = useUserStore((state) => state.loggedInUserName);
   const resetUser = useUserStore((state) => state.resetUser);
-  const logout = () => {
-    resetUser();
-    cookies.remove("token");
+  const loggedInUserName = useUserStore((state) => state.loggedInUserName);
+  const navigate = useNavigate();
+  const logout = async () => {
+    try {
+      fetchLogout();
+      resetUser();
+      navigate("/");
+    } catch {
+      console.error("로그아웃 에러");
+    }
   };
   const classroomId = params.classroomId;
   return (

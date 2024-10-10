@@ -2,10 +2,11 @@ import LoggedInClassroomHeader from "@/pages/components/LoggedInClassroomHeader"
 import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
+import { getClassGuestData, fetchDeleteClassroom, getClassTotalActionInfo } from "@/services/api";
 interface GuestType {
-  guestId: number;
+  id: number;
   email: string;
   name: string;
   status: number;
@@ -18,9 +19,13 @@ interface TotalInfoType {
 
 interface ClassroomData {
   result: {
+    guests: GuestType[];
+  };
+}
+interface GetClassTotalActionInfoType {
+  result: {
     className: string;
     totalInfo: TotalInfoType;
-    guests: GuestType[];
   };
 }
 interface props {
@@ -33,6 +38,7 @@ const Modify = () => {
   const [guests, setGuests] = useState<GuestType[]>();
   const [guestEmail, setGuestEmail] = useState<string | undefined>();
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
+  const navigate = useNavigate();
   const inviteClassroom = async ({ classroomId, guestEmail }: props) => {
     try {
       const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account`, {
@@ -56,27 +62,15 @@ const Modify = () => {
       throw error;
     }
   };
-  const getClassroomData = async () => {
-    try {
-      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account?classroomId=${classroomId}`, {
-        method: "GET",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-      });
+  const { data: classroomData, refetch: classroomDataRefetch } = useQuery<GetClassTotalActionInfoType>({
+    queryKey: ["ClassTotalActionInfo", classroomId],
+    queryFn: () => getClassTotalActionInfo(classroomId),
+    enabled: isMswReady,
+  });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("An error occurred:", error);
-      throw error;
-    }
-  };
   const { data, refetch: getClassroomRefetch } = useQuery<ClassroomData>({
-    queryKey: ["classroomData"],
-    queryFn: getClassroomData,
+    queryKey: ["classroomData", classroomId],
+    queryFn: () => getClassGuestData(classroomId),
     enabled: isMswReady,
   });
   const changeGuestEmail = (e: ChangeEvent<HTMLInputElement>) => {
@@ -91,8 +85,9 @@ const Modify = () => {
   };
   const mutation = useMutation({
     mutationFn: inviteClassroom,
-    async onSuccess(data) {
+    async onSuccess() {
       getClassroomRefetch();
+      classroomDataRefetch();
     },
     onError(error) {
       console.error("클래스룸 초대 에러", error);
@@ -105,6 +100,21 @@ const Modify = () => {
     }
   }, [data]);
 
+  const deleteClassroomMutation = useMutation({
+    mutationFn: fetchDeleteClassroom,
+    onSuccess: () => {
+      alert("클래스룸이 삭제되었습니다.");
+      navigate("/classroomspace");
+    },
+    onError: (error) => {
+      console.error("An error occurred:", error);
+      alert("클래스룸 삭제에 실패했습니다.");
+    },
+  });
+
+  const handleDeleteClassroom = () => {
+    deleteClassroomMutation.mutate(classroomId);
+  };
   return (
     <div className="bg">
       <LoggedInClassroomHeader />
@@ -112,7 +122,7 @@ const Modify = () => {
       <div className="group-wrap">
         <div className="group-left">
           <img src="/image/icon_group.svg" alt="그룹" />
-          <h2 className="group-title">파이썬 기초 1반</h2>
+          <h2 className="group-title">{classroomData?.result.className}</h2>
         </div>
         <div className="group-link">
           <p className="link-name">클래스룸 초대</p>
@@ -141,11 +151,11 @@ const Modify = () => {
           </div>
           <ul className="section-data section-data03">
             {guests?.map((guest) => (
-              <Guest key={guest.guestId} guest={guest} />
+              <Guest key={guest.id} guest={guest} getClassroomRefetch={getClassroomRefetch} />
             ))}
           </ul>
           <div className="right-btns">
-            <button className="red">
+            <button className="red" onClick={handleDeleteClassroom}>
               <img src="/image/icon_delete.svg" alt="그룹삭제" />
               클래스룸 삭제
             </button>
