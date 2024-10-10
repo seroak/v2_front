@@ -8,6 +8,7 @@ import LoggedInHeader from "../components/LoggedInHeader";
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
 import GptComment from "./components/LeftSection/components/GptComment";
+import GptIcon from "./components/LeftSection/components/GptIcon";
 import { fetchVisualize } from "@/services/api";
 import Split from "react-split";
 import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
@@ -53,6 +54,7 @@ export default function Visualization() {
   const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
   const loggedInUserName = useUserStore((state) => state.loggedInUserName);
   const setErrorLine = useEditorStore((state) => state.setErrorLine);
+  const { focus } = useEditorStore();
   const isGptToggle = useGptTooltipStore((state) => state.isGptToggle);
   const gptPin = useGptTooltipStore((state) => state.gptPin);
   const setConsole = useConsoleStore((state) => state.setConsole);
@@ -129,7 +131,8 @@ export default function Visualization() {
         {loggedInUserName === "" ? <PublicHeader /> : <LoggedInHeader />}
 
         <main className={styles.main}>
-          {(gptPin || isGptToggle) && <GptComment />}
+          {focus && gptPin ? <GptIcon /> : (gptPin || isGptToggle) && <GptComment />}
+          <GptComment />
           <div className={styles["top-btns"]}>
             <div>
               <button type="button" className={styles["playcode-btn"]}>
