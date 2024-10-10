@@ -22,10 +22,11 @@ const CodeEditor = () => {
   const stepIdx = useConsoleStore((state) => state.stepIdx);
   const errorLine = useEditorStore((state) => state.errorLine);
   const resetEditor = useEditorStore((state) => state.resetEditor);
+  const { setFocus } = useEditorStore();
   const setIsGptToggle = useGptTooltipStore((state) => state.setIsGptToggle);
   const { setGptTop, setGptLeft } = useGptTooltipStore();
   const { setTimeoutId, clearCurrentTimeout } = useTimeoutStore();
-  const { gptPin } = useGptTooltipStore();
+  const { gptPin, setGptPin } = useGptTooltipStore();
   const timeoutRef = useRef<number | null>(null);
   // 컴포넌트가 언마운트될 때 timeout 정리
   useEffect(() => {
@@ -48,7 +49,8 @@ const CodeEditor = () => {
   }, [errorLine]);
   const handleResetEditor = () => {
     resetEditor();
-
+    setGptPin(false);
+    setIsGptToggle(false);
     if (editorRef.current) {
       // 데코레이션 컬렉션 리셋
       if (decorationsCollectionRef.current) {
@@ -63,7 +65,7 @@ const CodeEditor = () => {
     const model = editor.getModel();
     if (!model) return;
 
-    const { lineNumber, message } = errorLine;
+    const { lineNumber } = errorLine;
 
     const endColumn = model.getLineMaxColumn(lineNumber);
 
@@ -191,6 +193,16 @@ const CodeEditor = () => {
           };
         }
       },
+    });
+    // 포커스 이벤트 리스너 추가
+    editor.onDidFocusEditorText(() => {
+      console.log("Editor has gained focus");
+      setFocus(true);
+    });
+    // 포커스 해제 이벤트 리스너 추가
+    editor.onDidBlurEditorText(() => {
+      console.log("Editor has lost focus");
+      setFocus(false);
     });
   };
 
