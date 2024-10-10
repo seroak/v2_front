@@ -84,7 +84,7 @@ const GptComment = () => {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ line: errorLine, source_code: code }),
+      body: JSON.stringify({ line: errorLine?.lineNumber, source_code: code }),
     });
     if (!response.ok) {
       throw new Error("Network response was not ok");
