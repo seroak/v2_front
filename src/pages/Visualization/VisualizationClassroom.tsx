@@ -114,10 +114,8 @@ const VisualizationClassroom = () => {
     onError(error) {
       console.error("Submit Error:", error);
       if (error.message === "데이터 형식이 올바르지 않습니다") {
-        alert("데이터의 형식이 올바르지 않습니다.");
       } else {
         setErrorLine({ lineNumber: 1, message: "syntax error" });
-        alert("코드 처리 중 에러가 발생했습니다.");
       }
     },
   });

@@ -75,14 +75,12 @@ export default function Visualization() {
     onError(error) {
       console.error("Submit Error:", error);
       if (error.message === "데이터 형식이 올바르지 않습니다") {
-        alert("데이터의 형식이 올바르지 않습니다.");
       } else {
         const linNumber = Number((error as any).result.error[0]);
         const message = (error as any).result.error;
         setErrorLine({ lineNumber: linNumber, message: message });
 
         setConsole([message]);
-        alert("코드 처리 중 에러가 발생했습니다.");
       }
     },
   });
