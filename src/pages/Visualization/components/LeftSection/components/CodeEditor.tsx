@@ -7,6 +7,7 @@ import { useEditorStore } from "@/store/editor";
 import { useConsoleStore } from "@/store/console";
 import { useGptTooltipStore } from "@/store/gptTooltip";
 import { useTimeoutStore } from "@/store/timeout";
+import { useResetEditor } from "@/store/resetEditor";
 const CodeEditor = () => {
   const context = useContext(CodeContext);
   const decorationsCollectionRef = useRef<monaco.editor.IEditorDecorationsCollection | null>(null);
@@ -27,7 +28,9 @@ const CodeEditor = () => {
   const { setGptTop, setGptLeft } = useGptTooltipStore();
   const { setTimeoutId, clearCurrentTimeout } = useTimeoutStore();
   const { gptPin, setGptPin } = useGptTooltipStore();
+  const { resetTrigger } = useResetEditor();
   const timeoutRef = useRef<number | null>(null);
+
   // 컴포넌트가 언마운트될 때 timeout 정리
   useEffect(() => {
     return () => {
@@ -58,6 +61,9 @@ const CodeEditor = () => {
       }
     }
   };
+  useEffect(() => {
+    handleResetEditor();
+  }, [resetTrigger]);
   const displayErrorLine = (errorLine: { lineNumber: number; message: string } | null) => {
     if (!editorRef.current || !errorLine) return;
 

@@ -1,10 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useRef } from "react";
 import { CodeContext } from "@/pages/Visualization/Visualization";
 import { useTimeoutStore } from "@/store/timeout";
 import { useGptTooltipStore } from "@/store/gptTooltip";
 import { useEditorStore } from "@/store/editor";
 import { useGptMutationStore } from "@/store/gptMutation";
+import { useResetEditor } from "@/store/resetEditor";
 
 interface ModifiedCode {
   line: number;
@@ -30,6 +31,7 @@ const GptComment = () => {
   const { setTimeoutId, clearCurrentTimeout } = useTimeoutStore();
   const { setIsGptToggle, gptPin, setGptPin, gptLeft, gptTop } = useGptTooltipStore();
   const { resetEditor, errorLine } = useEditorStore();
+  const { resetTrigger, setResetTrigger } = useResetEditor();
   const {
     isGptCorrectSuccess,
     isGptHintSuccess,
@@ -159,6 +161,7 @@ const GptComment = () => {
     setIsGptToggle(false);
     resetState();
     resetEditor();
+    setResetTrigger(!resetTrigger);
   };
 
   const handleReject = () => {
