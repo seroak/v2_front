@@ -132,7 +132,7 @@ export default function Visualization() {
 
         <main className={styles.main}>
           {focus && gptPin ? <GptIcon /> : (gptPin || isGptToggle) && <GptComment />}
-          <GptComment />
+
           <div className={styles["top-btns"]}>
             <div>
               <button type="button" className={styles["playcode-btn"]}>

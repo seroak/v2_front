@@ -1226,6 +1226,17 @@ header .group-btn {
   -webkit-box-align: center;
   align-items: center;
 }
+.gpt-comment-small {
+  position: absolute;
+  display: inline-flex;
+  padding: 14px 3px 14px 20px;
+  gap: 7px;
+  border-radius: 0 16px 16px 16px;
+  box-shadow: 0 0 16px rgba(72, 102, 255, 0.2);
+  font-weight: 500;
+  z-index: 9999;
+  background-color: #fff;
+}
 .gpt-comment {
   position: absolute;
   display: inline-flex;
@@ -1238,6 +1249,8 @@ header .group-btn {
   background-color: #fff;
 }
 .gpt-success {
+  max-width: 400px;
+  min-width: 300px;
   margin: 10px 35px 17px 35px;
 }
 .gpt-comment img {
@@ -1499,6 +1512,7 @@ header .group-btn {
   font-family: monospace;
   white-space: pre;
   background-color: #f0f0f0;
+  overflow: auto;
 
   border-radius: 5px;
   width: 100%;
@@ -1538,6 +1552,16 @@ header .group-btn {
   color: #ffffff;
 }
 .gpt-icon {
+  position: absolute;
+  left: 12px;
+  top: 18px;
+}
+.gpt-icon-hint {
+  position: absolute;
+  left: 8px;
+  top: 18px;
+}
+gpt-icon-small {
   position: absolute;
   left: 12px;
   top: 18px;

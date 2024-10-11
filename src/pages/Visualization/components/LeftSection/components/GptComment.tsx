@@ -233,12 +233,19 @@ const GptComment = () => {
         </div>
       ) : isGptHintSuccess ? (
         <div className="gpt-hint">
-          <div>힌트 라인: {hintLine}</div>
-          <div>힌트: {hint}</div>
-          <div className="button-left">
-            <button className="approve" onClick={handleCloseHint}>
-              확인
-            </button>
+          <div className="gpt-success">
+            <img
+              className="gpt-icon"
+              style={{ width: "30px", height: "30px" }}
+              src="/image/icon_gpt2.svg"
+              alt="즉시교정"
+            />
+            {hint}
+            <div className="button-left">
+              <button className="approve" onClick={handleCloseHint}>
+                확인
+              </button>
+            </div>
           </div>
         </div>
       ) : gptCorrectMutation.isPending || gptHintMutation.isPending ? (
