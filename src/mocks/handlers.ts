@@ -27,11 +27,9 @@ interface SignupUser {
 }
 
 export const handlers = [
-<<<<<<< HEAD
   http.post("/edupi-visualize/v1/python", () => {
     return HttpResponse.json(UDFResponseBody);
   }),
-=======
   // //시각화 요청 성공
   // http.post("http://localhost:8080/edupi-syntax/v1/execute/visualize", () => {
   //   return HttpResponse.json(
@@ -46,7 +44,6 @@ export const handlers = [
   //     }
   //   );
   // }),
->>>>>>> origin/feature/issue159
 
   // 시각화 요청 실패
   http.post("http://localhost:8080/edupi-syntax/v1/execute/visualize", async () => {
