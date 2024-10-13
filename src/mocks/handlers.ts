@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
 import * as jose from "jose";
-import testResponseBody from "./samples/testResponseBody.json";
-
+import testResponseBody from "./samples/testResponseBody";
+import UDFResponseBody from "./samples/UDFResponseBody";
 const JWT_SECRET = new TextEncoder().encode("your_jwt_secret_key");
 
 async function generateToken(userId: string) {
@@ -28,7 +28,7 @@ interface SignupUser {
 
 export const handlers = [
   http.post("/edupi-visualize/v1/python", () => {
-    return HttpResponse.json(testResponseBody);
+    return HttpResponse.json(UDFResponseBody);
   }),
 
   http.get("/edupi-user/v1/account/login/info", async () => {
