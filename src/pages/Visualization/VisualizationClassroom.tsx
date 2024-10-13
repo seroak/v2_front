@@ -7,15 +7,17 @@ import "./gutter.css";
 import LoggedInClassroomHeader from "../components/LoggedInClassroomHeader";
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
-
+import GptIcon from "./components/LeftSection/components/GptIcon";
+import GptComment from "./components/LeftSection/components/GptComment";
 import Split from "react-split";
 import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
-import { fetchGuestActionRequest } from "@/services/api";
+import { fetchGuestActionRequest, fetchVisualize } from "@/services/api";
 //zustand store
 import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
 import { useArrowStore } from "@/store/arrow";
 import { useMswReadyStore } from "@/store/mswReady";
+import { useGptTooltipStore } from "@/store/gptTooltip";
 
 enum ActionType {
   ING = 1,
@@ -55,7 +57,9 @@ const VisualizationClassroom = () => {
   const decrementStepIdx = useConsoleStore((state) => state.decrementStepIdx);
   const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
   const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
-
+  const { focus } = useEditorStore();
+  const isGptToggle = useGptTooltipStore((state) => state.isGptToggle);
+  const gptPin = useGptTooltipStore((state) => state.gptPin);
   const setErrorLine = useEditorStore((state) => state.setErrorLine);
   const [actionType, setActionType] = useState<ActionType>(ActionType.ING);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -96,15 +100,7 @@ const VisualizationClassroom = () => {
     setActionType(guestStatus?.result);
   }, [guestStatus]);
   const mutation = useMutation({
-    mutationFn: async (code: string) => {
-      return fetch("http://localhost:8080/edupi-visualize/v1/python", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ source_code: code }),
-      });
-    },
+    mutationFn: fetchVisualize,
     async onSuccess(data) {
       const jsonData = await data.json();
       // 타입 체크 함수
@@ -118,10 +114,8 @@ const VisualizationClassroom = () => {
     onError(error) {
       console.error("Submit Error:", error);
       if (error.message === "데이터 형식이 올바르지 않습니다") {
-        alert("데이터의 형식이 올바르지 않습니다.");
       } else {
         setErrorLine({ lineNumber: 1, message: "syntax error" });
-        alert("코드 처리 중 에러가 발생했습니다.");
       }
     },
   });
@@ -193,6 +187,7 @@ const VisualizationClassroom = () => {
         <LoggedInClassroomHeader />
 
         <main className={styles.main}>
+          {focus && gptPin ? <GptIcon /> : (gptPin || isGptToggle) && <GptComment />}
           <div className={styles["top-btns"]}>
             <div>
               <button type="button" className={styles["playcode-btn"]}>

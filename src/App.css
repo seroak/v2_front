@@ -1226,7 +1226,37 @@ header .group-btn {
   -webkit-box-align: center;
   align-items: center;
 }
-
+.gpt-comment-small {
+  position: absolute;
+  display: inline-flex;
+  padding: 14px 3px 14px 20px;
+  gap: 7px;
+  border-radius: 0 16px 16px 16px;
+  box-shadow: 0 0 16px rgba(72, 102, 255, 0.2);
+  font-weight: 500;
+  z-index: 9999;
+  background-color: #fff;
+}
+.gpt-comment {
+  position: absolute;
+  display: inline-flex;
+  padding: 14px 15px 8px 20px;
+  gap: 7px;
+  border-radius: 0 16px 16px 16px;
+  box-shadow: 0 0 16px rgba(72, 102, 255, 0.2);
+  font-weight: 500;
+  z-index: 9999;
+  background-color: #fff;
+}
+.gpt-success {
+  max-width: 400px;
+  min-width: 300px;
+  margin: 10px 35px 17px 35px;
+}
+.gpt-comment img {
+  width: 24px;
+  height: 24px;
+}
 /* 도움 요청 floating 버튼 */
 .floating-buttons {
   position: fixed;
@@ -1345,4 +1375,194 @@ header .group-btn {
   padding: 5px 15px;
   border-radius: 8px;
   line-height: 1.75;
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.code-container {
+  display: flex;
+  font-family: "Consolas", monospace;
+  background-color: #ffffff;
+  border-radius: 4px;
+  overflow: hidden;
+  font-size: 14px;
+  border: 1px solid #e1e4e8;
+  margin-top: 13px;
+}
+
+.gpt-line-numbers {
+  display: flex;
+  flex-direction: column;
+  padding: 0.2em 0.5em;
+  background-color: #f6f8fa;
+  color: #8996a3;
+  user-select: none;
+  text-align: right;
+  border-right: 1px solid #e1e4e8;
+}
+
+.code-content {
+  flex-grow: 1;
+  padding: 0em 1em;
+
+  color: #24292e;
+  position: relative;
+}
+
+.line {
+  height: 20px;
+  line-height: 20px;
+}
+
+.ellipsis {
+  color: #a0a0a0;
+  text-align: center;
+  position: relative;
+}
+
+.code-content .ellipsis::before {
+  content: "";
+  position: absolute;
+  left: -1em;
+  right: -1em;
+  height: 1px;
+  background: #e1e4e8;
+  top: 50%;
+  z-index: 1;
+}
+
+.code-content .ellipsis span {
+  position: relative;
+  z-index: 2;
+  background-color: #ffffff;
+  padding: 0 8px;
+}
+.code-content span {
+  white-space: pre-wrap;
+  margin-top: 2px;
+}
+
+.code-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(transparent, transparent 24px, #5c5f63 24px, #f6f8fa 25px);
+  pointer-events: none;
+}
+
+.button-left {
+  margin-top: 20px;
+  display: flex;
+  justify-content: end;
+  gap: 6px;
+}
+.button-left button {
+  padding: 8px 20px;
+  border-radius: 6px;
+
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  display: flex;
+}
+
+.button-left .approve {
+  background-color: #15a461;
+  border-color: #15a461;
+
+  font-weight: bolder;
+  color: #ffffff;
+}
+.button-left .approve:hover {
+  background-color: #15a461;
+}
+.button-left .reject {
+  background-color: #f54a5b;
+  color: white;
+}
+.button-left .reject:hover {
+  background-color: #cf222e;
+}
+.highlighted-code {
+  font-family: monospace;
+  white-space: pre;
+  background-color: #f0f0f0;
+  overflow: auto;
+
+  border-radius: 5px;
+  width: 100%;
+}
+.instant-correction {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  width: 108px;
+  height: 35px;
+  gap: 6px;
+  background-color: #4caf50;
+  border-color: #4caf50;
+  font-weight: bolder;
+  color: #ffffff;
+}
+
+.view-hint {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 108px;
+  height: 35px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #ffc107;
+  border-color: #ffc107;
+  font-weight: bolder;
+  color: #ffffff;
+}
+.gpt-icon {
+  position: absolute;
+  left: 12px;
+  top: 18px;
+}
+.gpt-icon-hint {
+  position: absolute;
+  left: 8px;
+  top: 18px;
+}
+gpt-icon-small {
+  position: absolute;
+  left: 12px;
+  top: 18px;
 }
