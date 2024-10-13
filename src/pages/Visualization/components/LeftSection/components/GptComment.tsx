@@ -109,7 +109,7 @@ const GptComment = () => {
         acc.push(cur);
         return acc;
       }, []);
-      console.log(newModifiedCode);
+
       setModifiedCode(newModifiedCode);
       setGptCorrectSuccess(true);
     },
@@ -153,7 +153,7 @@ const GptComment = () => {
         return modifiedLine ? modifiedLine.code : line;
       })
       .join("\n");
-    console.log(newCode);
+
     setCode(newCode);
     setGptPin(false);
     setIsGptToggle(false);
