@@ -56,7 +56,7 @@ export const renderingStructure = (
           <div key={index}>
             <div className="call-stack-box">
               <span className="call-stack-name">{key}</span>
-              {structures[key].map((structure, structureIndex) => {
+              {structures[key].map((structure) => {
                 switch (structure.type) {
                   case "variable": {
                     const variableItem = structure as DataStructureVarItem;
