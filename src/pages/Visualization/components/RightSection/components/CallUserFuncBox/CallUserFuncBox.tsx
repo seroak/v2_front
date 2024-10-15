@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { AnimatePresence } from "framer-motion";
+
 import styles from "./CallUserFuncBox.module.css";
 import { CallUserFuncItem } from "@/pages/Visualization/types/codeFlow/callUserFuncItem";
 import cx from "classnames";
@@ -10,8 +10,9 @@ interface CallUserFuncProps {
 
 const CallUserFuncBox = ({ callUserFuncItem, children }: CallUserFuncProps): ReactNode => {
   const { signature } = callUserFuncItem;
+
   return (
-    <AnimatePresence>
+    <>
       <div>
         <div className={styles["return-val"]}>
           <span>result</span>
@@ -28,10 +29,11 @@ const CallUserFuncBox = ({ callUserFuncItem, children }: CallUserFuncProps): Rea
           <div className={styles["func-box-content-text"]}>{signature}</div>
         </div>
         <div className={styles["func-box-children"]}>
-          함수 안에 코드흐름 들어갈 부분{children && <div>{children}</div>}
+          함수 안에 코드흐름 들어갈 부분
+          {children && <div>{children}</div>}
         </div>
       </div>
-    </AnimatePresence>
+    </>
   );
 };
 

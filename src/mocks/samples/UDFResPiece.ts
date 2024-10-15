@@ -23,6 +23,25 @@ const UDFResPiece = [
     code: "result=isEven(name)",
     type: "callUserFunc",
   },
+  {
+    // 오른쪽 변수 부분
+    // isEven 콜스택 만드는 부분
+    args: [
+      {
+        expr: "22",
+        name: "name",
+        type: "variable",
+      },
+      {
+        expr: "010-3042",
+        name: "phoneNumber",
+        type: "variable",
+      },
+    ],
+    callStackName: "isEven",
+    code: "result=isEven(name)",
+    type: "createCallStack",
+  },
 ];
 
 export default UDFResPiece;

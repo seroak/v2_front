@@ -19,7 +19,7 @@ import { VariableDto } from "@/pages/Visualization/types/dto/variableDto";
 import { WhileDto } from "@/pages/Visualization/types/dto/whileDto";
 import { AllDataStructureItem } from "@/pages/Visualization/types/dataStructuresItem/allDataStructureItem";
 import { WarperDataStructureItem } from "@/pages/Visualization/types/dataStructuresItem/warperDataStructureItem";
-
+import { CreateCallStackDto } from "@/pages/Visualization/types/dto/createCallStackDto";
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
 import { insertIntoDepth } from "./services/insertIntoDepth";
@@ -177,6 +177,14 @@ const RightSection = () => {
       }
       // 함수 생성으로 새로운 함수 콜스택이 나올 떄
       else if (preprocessedCode.type.toLowerCase() === "createCallStack".toLowerCase()) {
+        accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName] = [];
+        for (let arg of (preprocessedCode as CreateCallStackDto).args) {
+          accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].push({
+            expr: arg.expr,
+            name: arg.name,
+            type: arg.type,
+          });
+        }
       }
       // 코드 시각화 부분이 들어왔을 때
       else {
