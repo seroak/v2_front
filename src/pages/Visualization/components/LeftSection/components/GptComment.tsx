@@ -5,6 +5,9 @@ import { useTimeoutStore } from "@/store/timeout";
 import { useGptTooltipStore } from "@/store/gptTooltip";
 import { useEditorStore } from "@/store/editor";
 import { useGptMutationStore } from "@/store/gptMutation";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
 
 interface ModifiedCode {
   line: number;
@@ -200,7 +203,6 @@ const GptComment = () => {
         <div className="gpt-success">
           <img
             className="gpt-icon"
-            style={{ width: "30px", height: "30px" }}
             src="/image/icon_gpt2.svg"
             alt="즉시교정"
           />
@@ -214,11 +216,15 @@ const GptComment = () => {
                   code.code === "" ? (
                       <div key={index} className="ellipsis-container">
                         <div className="line ellipsis">
-                          <span style={{color: "black"}}>⋮</span>
+                          <span style={{color: "gray"}}>...</span>
                         </div>
                       </div>
                   ) : (
-                      <div key={index} dangerouslySetInnerHTML={{__html: highlightSyntax(code.code)}}/>
+                      <SyntaxHighlighter language={"python"} style={oneLight}>
+                        {code.code}
+                      </SyntaxHighlighter>
+
+                      // <div key={index} dangerouslySetInnerHTML={{__html: highlightSyntax(code.code)}}/>
                   )
               )}
             </pre>
@@ -238,7 +244,6 @@ const GptComment = () => {
             <div className="gpt-success">
               <img
                   className="gpt-icon"
-                  style={{width: "30px", height: "30px"}}
                   src="/image/icon_gpt2.svg"
                   alt="즉시교정"
               />

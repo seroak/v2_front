@@ -274,11 +274,11 @@ export const handlers = [
       code: "CS-200000",
       detail: "success correct",
       result: {
-        reason: "코드에서 반복문을 잘못 작성하여 오류가 발생했습니다.",
+        reason: "코드에서 반복문을 잘못 작성하여 오류가 발생했습니다. i를 선언하고 반복문을 실행하세요",
         modified_codes: [
           {
             line: 1,
-            code: "for i in range(10):",
+            code: "for i in range(10):for i in range(10):for i in range(10):for i in range(10):for i in range(10):for i in range(10):for i in range(10):for i in range(10):for i in range(10):for i in range(10):",
           },
           {
             line: 2,
@@ -292,6 +292,26 @@ export const handlers = [
             line: 5,
             code: "   print(i)",
           },
+          {
+            line: 6,
+            code: "   dsddd(i)",
+          },
+          {
+            line: 6,
+            code: "   dsddd(i)",
+          },
+          {
+            line: 6,
+            code: "   dsddd(i)",
+          },
+          {
+            line: 6,
+            code: "   dsddd(i)",
+          }, {
+            line: 6,
+            code: "   dsddd(i)",
+          },
+
         ],
       },
     });
