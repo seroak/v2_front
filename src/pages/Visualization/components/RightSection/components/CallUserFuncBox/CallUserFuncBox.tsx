@@ -9,7 +9,7 @@ interface CallUserFuncProps {
 }
 
 const CallUserFuncBox = ({ callUserFuncItem, children }: CallUserFuncProps): ReactNode => {
-  const { expr, returnValName, signature } = callUserFuncItem;
+  const { signature } = callUserFuncItem;
   return (
     <AnimatePresence>
       <div>
