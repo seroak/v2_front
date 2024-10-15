@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import styles from "./CallUserFuncBox.module.css";
 import { CallUserFuncItem } from "@/pages/Visualization/types/codeFlow/callUserFuncItem";
 import cx from "classnames";
@@ -20,13 +20,9 @@ const CallUserFuncBox = ({ callUserFuncItem, children }: CallUserFuncProps): Rea
           </div>
         </div>
       </div>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.9 }}
-      >
+      <div>
         <img className={styles["func-arrow"]} src="/image/img_func_arrow.svg" alt="방향이미지" />
-      </motion.div>
+      </div>
       <div className={styles["func-box"]}>
         <div className={styles["func-box-content"]}>
           <div className={styles["func-box-content-text"]}>{signature}</div>
