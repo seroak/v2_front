@@ -1,15 +1,15 @@
 import { ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import styles from "./FunctionBox.module.css";
-
+import styles from "./CallUserFuncBox.module.css";
+import { CallUserFuncItem } from "@/pages/Visualization/types/codeFlow/callUserFuncItem";
 import cx from "classnames";
-type Props = {
-  isLight: boolean;
-  expr: string;
-  returnValName: string;
-};
+interface CallUserFuncProps {
+  callUserFuncItem: CallUserFuncItem;
+  children?: ReactNode;
+}
 
-const FunctionBox = ({ isLight, expr }: Props): ReactNode => {
+const CallUserFuncBox = ({ callUserFuncItem, children }: CallUserFuncProps): ReactNode => {
+  const { expr, returnValName, signature } = callUserFuncItem;
   return (
     <AnimatePresence>
       <div>
@@ -29,11 +29,14 @@ const FunctionBox = ({ isLight, expr }: Props): ReactNode => {
       </motion.div>
       <div className={styles["func-box"]}>
         <div className={styles["func-box-content"]}>
-          <div className={styles["func-box-content-text"]}>isEven(22)</div>
+          <div className={styles["func-box-content-text"]}>{signature}</div>
+        </div>
+        <div className={styles["func-box-children"]}>
+          함수 안에 코드흐름 들어갈 부분{children && <div>{children}</div>}
         </div>
       </div>
     </AnimatePresence>
   );
 };
 
-export default FunctionBox;
+export default CallUserFuncBox;

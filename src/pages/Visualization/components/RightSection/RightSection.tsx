@@ -234,7 +234,6 @@ const RightSection = () => {
               accConsoleLog += printObject.console;
             }
           }
-
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
             // 한바퀴 돌아서 안에 있는 내용을 초기화해야 하는 부분이면 여기에서 처리해준다
