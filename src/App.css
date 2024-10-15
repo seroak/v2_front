@@ -1251,7 +1251,11 @@ header .group-btn {
 .gpt-success {
   max-width: 400px;
   min-width: 300px;
-  margin: 10px 35px 17px 35px;
+  margin: 10px 40px 17px 35px;
+}
+.gpt-success .container{
+  margin-top: -2px;
+  /*margin-right: 7px;*/
 }
 .gpt-comment img {
   width: 24px;
@@ -1482,9 +1486,10 @@ header .group-btn {
   gap: 6px;
 }
 .button-left button {
-  padding: 8px 20px;
+  padding: 5px 20px;
   border-radius: 6px;
 
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   border: 1px solid transparent;
@@ -1495,7 +1500,7 @@ header .group-btn {
   background-color: #15a461;
   border-color: #15a461;
 
-  font-weight: bolder;
+  font-weight: 500;
   color: #ffffff;
 }
 .button-left .approve:hover {
