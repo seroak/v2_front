@@ -177,9 +177,6 @@ const RightSection = () => {
       }
       // 함수 생성으로 새로운 함수 콜스택이 나올 떄
       else if (preprocessedCode.type.toLowerCase() === "createCallStack".toLowerCase()) {
-        console.log("createCallStack");
-        console.log(preprocessedCode);
-        console.log(accDataStructures);
         accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName] = [];
         for (let arg of (preprocessedCode as CreateCallStackDto).args) {
           accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].push({
