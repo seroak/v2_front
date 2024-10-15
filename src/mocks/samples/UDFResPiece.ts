@@ -34,7 +34,7 @@ const UDFResPiece = [
       },
       {
         expr: "010-3042",
-        name: "phoneNumber phoneNumber",
+        name: "phoneNumber",
         type: "variable",
       },
     ],
