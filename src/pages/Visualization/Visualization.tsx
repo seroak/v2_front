@@ -7,7 +7,9 @@ import PublicHeader from "../components/PublicHeader";
 import LoggedInHeader from "../components/LoggedInHeader";
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
-
+import GptComment from "./components/LeftSection/components/GptComment";
+import GptIcon from "./components/LeftSection/components/GptIcon";
+import { fetchVisualize } from "@/services/api";
 import Split from "react-split";
 import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
 
@@ -16,6 +18,7 @@ import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
 import { useArrowStore } from "@/store/arrow";
 import { useUserStore } from "@/store/user";
+import { useGptTooltipStore } from "@/store/gptTooltip";
 // 원본 코드 타입 정의
 interface CodeContextType {
   code: string;
@@ -51,24 +54,19 @@ export default function Visualization() {
   const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
   const loggedInUserName = useUserStore((state) => state.loggedInUserName);
   const setErrorLine = useEditorStore((state) => state.setErrorLine);
+  const { focus } = useEditorStore();
+  const isGptToggle = useGptTooltipStore((state) => state.isGptToggle);
+  const gptPin = useGptTooltipStore((state) => state.gptPin);
+  const setConsole = useConsoleStore((state) => state.setConsole);
 
   const [isPlaying, setIsPlaying] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: async (code: string) => {
-      return fetch("http://localhost:8080/edupi-visualize/v1/python", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ source_code: code }),
-      });
-    },
+    mutationFn: fetchVisualize,
     async onSuccess(data) {
-      const jsonData = await data.json();
       // 타입 체크 함수
-      if (isValidTypeDtoArray(jsonData)) {
-        setPreprocessedCodes(jsonData);
+      if (isValidTypeDtoArray(data.result.code)) {
+        setPreprocessedCodes(data.result.code);
         setDisplayNone(false);
       } else {
         throw new Error("데이터 형식이 올바르지 않습니다");
@@ -77,10 +75,12 @@ export default function Visualization() {
     onError(error) {
       console.error("Submit Error:", error);
       if (error.message === "데이터 형식이 올바르지 않습니다") {
-        alert("데이터의 형식이 올바르지 않습니다.");
       } else {
-        setErrorLine({ lineNumber: 1, message: "syntax error" });
-        alert("코드 처리 중 에러가 발생했습니다.");
+        const linNumber = Number((error as any).result.error[0]);
+        const message = (error as any).result.error;
+        setErrorLine({ lineNumber: linNumber, message: message });
+
+        setConsole([message]);
       }
     },
   });
@@ -129,6 +129,8 @@ export default function Visualization() {
         {loggedInUserName === "" ? <PublicHeader /> : <LoggedInHeader />}
 
         <main className={styles.main}>
+          {focus && gptPin ? <GptIcon /> : (gptPin || isGptToggle) && <GptComment />}
+
           <div className={styles["top-btns"]}>
             <div>
               <button type="button" className={styles["playcode-btn"]}>

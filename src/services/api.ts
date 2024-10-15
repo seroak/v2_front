@@ -1,5 +1,25 @@
 import axios from "axios";
 import { User, LoginUser } from "../types/apiTypes";
+
+export const fetchVisualize = async (code: string) => {
+  try {
+    const response = await fetch("http://localhost:8080/edupi-syntax/v1/execute/visualize", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ source_code: code }),
+    });
+    if (!response.ok) {
+      throw await response.json();
+    }
+    return response.json();
+  } catch (error) {
+    console.error("An error occurred:", error);
+    throw error;
+  }
+};
+
 export const fetchUser = async (): Promise<User> => {
   const response = await fetch("http://localhost:8080/edupi-user/v1/account/login/info", {
     method: "GET",

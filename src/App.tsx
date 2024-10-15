@@ -29,12 +29,17 @@ function App() {
   const { isMswReady, setIsMswReady } = useMswReadyStore((state) => state);
 
   useEffect(() => {
-    if (import.meta.env.VITE_APP_NODE_ENV === "development") {
-      setupMSW().then(() => setIsMswReady(true));
-    } else {
-      setIsMswReady(true);
+    async function initializeMSW() {
+      if (typeof window !== "undefined") {
+        if (import.meta.env.VITE_APP_NODE_ENV === "development") {
+          await setupMSW();
+        }
+        setIsMswReady(true);
+      }
     }
-  }, []);
+
+    initializeMSW();
+  }, [setIsMswReady]);
 
   const { data } = useQuery<User>({ queryKey: ["user"], queryFn: fetchUser, enabled: isMswReady });
   const setLoggedInUserEmail = useUserStore((state) => state.setLoggedInUserEmail);

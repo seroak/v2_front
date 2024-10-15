@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse, delay } from "msw";
 import * as jose from "jose";
 import testResponseBody from "./samples/testResponseBody.json";
 
@@ -27,10 +27,37 @@ interface SignupUser {
 }
 
 export const handlers = [
-  http.post("/edupi-visualize/v1/python", () => {
-    return HttpResponse.json(testResponseBody);
-  }),
+  // //시각화 요청 성공
+  // http.post("http://localhost:8080/edupi-syntax/v1/execute/visualize", () => {
+  //   return HttpResponse.json(
+  //     {
+  //       success: false,
+  //       code: "CS-200000",
+  //       detail: "success code analysis",
+  //       result: { code: testResponseBody },
+  //     },
+  //     {
+  //       status: 200,
+  //     }
+  //   );
+  // }),
 
+  // 시각화 요청 실패
+  http.post("http://localhost:8080/edupi-syntax/v1/execute/visualize", async () => {
+    return HttpResponse.json(
+      {
+        success: false,
+        code: "CS_400001",
+        detail: "코드 문법 오류입니다",
+        result: {
+          error: "3:7: F821 undefined name 'a'",
+        },
+      },
+      {
+        status: 400,
+      }
+    );
+  }),
   http.get("/edupi-user/v1/account/login/info", async () => {
     // Get the token from the cookies
 
@@ -238,6 +265,44 @@ export const handlers = [
       code: "CM-200000",
       detail: "Success update actions in classroom",
       result: 2, // 변경된 상태 수
+    });
+  }),
+  http.post("http://localhost:8080/edupi-syntax/v1/advice/correct", async () => {
+    await delay(1000);
+    return HttpResponse.json({
+      code: "CS-200000",
+      detail: "success correct",
+      result: {
+        reason: "코드에서 반복문을 잘못 작성하여 오류가 발생했습니다.",
+        modified_codes: [
+          {
+            line: 1,
+            code: "for i in range(10):",
+          },
+          {
+            line: 2,
+            code: "   print(i)",
+          },
+          {
+            line: 4,
+            code: "   print(i)",
+          },
+          {
+            line: 5,
+            code: "   print(i)",
+          },
+        ],
+      },
+    });
+  }),
+  http.post("http://localhost:8080/edupi-syntax/v1/advice/hint", async () => {
+    return HttpResponse.json({
+      code: "CS-200000",
+      detail: "success serve hint",
+      result: {
+        line: 2,
+        hint: "a는 선언된 변수가 아닙니다. a를 초기화 해주세요",
+      },
     });
   }),
 ];
