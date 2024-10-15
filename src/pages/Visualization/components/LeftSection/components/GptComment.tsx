@@ -262,11 +262,11 @@ const GptComment = () => {
       ) : (
         <>
           <button className="instant-correction" onClick={handleCorrect}>
-            <img src="/image/icon_correction.svg" style={{ width: 15, height: 15 }} alt="즉시교정" />
+            <img src="/image/icon_correction.svg" style={{ width: 19, height: 19 ,marginBottom:2}} alt="즉시교정" />
             즉시교정
           </button>
           <button className="view-hint" onClick={handleHint}>
-            <img src="/image/icon_hint.svg" style={{ width: 15, height: 16 }} alt="힌트보기" />
+            <img src="/image/icon_hint_color.svg" style={{ width: 19, height: 19, marginBottom:5 }} alt="힌트보기" />
             힌트보기
           </button>
         </>

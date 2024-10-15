@@ -1255,7 +1255,7 @@ header .group-btn {
 .gpt-success {
   max-width: 400px;
   min-width: 300px;
-  margin: 10px 40px 17px 35px;
+  margin: 5px 40px 17px 35px;
 }
 .gpt-success .container{
   margin-top: -2px;
@@ -1498,12 +1498,12 @@ header .group-btn {
   cursor: pointer;
   border: 1px solid transparent;
   display: flex;
+  padding-top : 7px;
 }
 
 .button-left .approve {
   background-color: #15a461;
   border-color: #15a461;
-
   font-weight: 500;
   color: #ffffff;
 }
@@ -1532,10 +1532,11 @@ header .group-btn {
   overflow: hidden !important;
 }
 .instant-correction {
+  margin-top: -4px;
   padding: 8px 16px;
+  padding-top: 12px;
   border-radius: 6px;
   font-size: 14px;
-  font-weight: 500;
   cursor: pointer;
   border: 1px solid transparent;
   display: flex;
@@ -1543,14 +1544,15 @@ header .group-btn {
   width: 108px;
   height: 35px;
   gap: 6px;
-  background-color: #4caf50;
-  border-color: #4caf50;
-  font-weight: bolder;
+  background-color: #5C48FA;
+  font-weight: 500;
   color: #ffffff;
 }
 
 .view-hint {
+  margin-top: -4px;
   padding: 8px 16px;
+  padding-top: 12px;
   border-radius: 6px;
   font-size: 14px;
   width: 108px;
@@ -1560,15 +1562,16 @@ header .group-btn {
   display: flex;
   align-items: center;
   gap: 4px;
-  background-color: #ffc107;
-  border-color: #ffc107;
+  background-color: #ffffff;
+  border-color: #5C48FA;
+  border-width: 2px;
   font-weight: bolder;
-  color: #ffffff;
+  color: #5C48FA;
 }
 .gpt-icon {
   position: absolute;
   left: 16px;
-  top: 23px;
+  top: 21px;
   width: 25px;
   height: 25px;
 }

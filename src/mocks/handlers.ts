@@ -278,7 +278,7 @@ export const handlers = [
         modified_codes: [
           {
             line: 1,
-            code: "for i in range(10):for i in range(10):for i in range(10):for i in range(10):for i in range(10):for i in range(10):for i in range(10):for i in range(10):for i in range(10):for i in range(10):",
+            code: "for i in range(10):for i in range(10):",
           },
           {
             line: 2,
@@ -292,26 +292,6 @@ export const handlers = [
             line: 5,
             code: "   print(i)",
           },
-          {
-            line: 6,
-            code: "   dsddd(i)",
-          },
-          {
-            line: 6,
-            code: "   dsddd(i)",
-          },
-          {
-            line: 6,
-            code: "   dsddd(i)",
-          },
-          {
-            line: 6,
-            code: "   dsddd(i)",
-          }, {
-            line: 6,
-            code: "   dsddd(i)",
-          },
-
         ],
       },
     });
