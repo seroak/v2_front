@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useRef } from "react";
 import { CodeContext } from "@/pages/Visualization/Visualization";
 import { useTimeoutStore } from "@/store/timeout";
 import { useGptTooltipStore } from "@/store/gptTooltip";
@@ -7,6 +7,7 @@ import { useEditorStore } from "@/store/editor";
 import { useGptMutationStore } from "@/store/gptMutation";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useResetEditor } from "@/store/resetEditor";
 
 
 interface ModifiedCode {
@@ -33,6 +34,7 @@ const GptComment = () => {
   const { setTimeoutId, clearCurrentTimeout } = useTimeoutStore();
   const { setIsGptToggle, gptPin, setGptPin, gptLeft, gptTop } = useGptTooltipStore();
   const { resetEditor, errorLine } = useEditorStore();
+  const { resetTrigger, setResetTrigger } = useResetEditor();
   const {
     isGptCorrectSuccess,
     isGptHintSuccess,
@@ -112,7 +114,7 @@ const GptComment = () => {
         acc.push(cur);
         return acc;
       }, []);
-      console.log(newModifiedCode);
+
       setModifiedCode(newModifiedCode);
       setGptCorrectSuccess(true);
     },
@@ -156,12 +158,13 @@ const GptComment = () => {
         return modifiedLine ? modifiedLine.code : line;
       })
       .join("\n");
-    console.log(newCode);
+
     setCode(newCode);
     setGptPin(false);
     setIsGptToggle(false);
     resetState();
     resetEditor();
+    setResetTrigger(!resetTrigger);
   };
 
   const handleReject = () => {
