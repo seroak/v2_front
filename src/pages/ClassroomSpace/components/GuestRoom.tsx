@@ -7,7 +7,7 @@ interface ClassData {
 interface props {
   classData: ClassData;
 }
-const GusetRoom = ({ classData }: props) => {
+const GuestRoom = ({ classData }: props) => {
   return (
     <li>
       <Link to={`/classroomspace/classroom/viz/${classData.id}`}>
@@ -23,4 +23,4 @@ const GusetRoom = ({ classData }: props) => {
     </li>
   );
 };
-export default GusetRoom;
+export default GuestRoom;

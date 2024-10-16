@@ -66,7 +66,7 @@ const VisualizationClassroom = () => {
   const { isMswReady } = useMswReadyStore((state) => state);
   const params = useParams();
   const classroomId = Number(params.classroomId);
-  const getGusetStatus = async (classroomId: number) => {
+  const getGuestStatus = async (classroomId: number) => {
     try {
       const response = await fetch(
         `http://localhost:8080/edupi-lms/v1/guest/action/status?classroomId=${classroomId}`,
@@ -88,7 +88,7 @@ const VisualizationClassroom = () => {
   };
   const { data: guestStatus, refetch } = useQuery({
     queryKey: ["vizclassroom", classroomId],
-    queryFn: () => getGusetStatus(classroomId),
+    queryFn: () => getGuestStatus(classroomId),
     enabled: isMswReady,
   });
   // 새로고침시 상태 업데이트

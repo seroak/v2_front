@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import LoggedInHeader from "../components/LoggedInHeader";
 import HostRoom from "./components/HostRoom";
-import GusetRoom from "./components/GuestRoom";
+import GuestRoom from "./components/GuestRoom";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useUserStore } from "@/store/user";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -135,7 +135,7 @@ const ClassroomSpace = () => {
           </div>
           <ul className="section-data section-data04">
             {guestClassRooms.map((item) => (
-              <GusetRoom key={item.id} classData={item} />
+              <GuestRoom key={item.id} classData={item} />
             ))}
           </ul>
         </div>
