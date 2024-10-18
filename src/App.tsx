@@ -42,15 +42,15 @@ function App() {
   }, [setIsMswReady]);
 
   const { data } = useQuery<User>({ queryKey: ["user"], queryFn: getUser, enabled: isMswReady });
-  const setLoggedInUserEmail = useUserStore((state) => state.setLoggedInUserEmail);
-  const setLoggedInUserName = useUserStore((state) => state.setLoggedInUserName);
-  const setLoggedInUserRole = useUserStore((state) => state.setLoggedInUserRole);
+  const setUserEmail = useUserStore((state) => state.setUserEmail);
+  const setUserName = useUserStore((state) => state.setUserName);
+  const setUserRole = useUserStore((state) => state.setUserRole);
 
   useEffect(() => {
     if (data) {
-      setLoggedInUserEmail(data.email);
-      setLoggedInUserName(data.name);
-      setLoggedInUserRole(data.role);
+      setUserEmail(data.email);
+      setUserName(data.name);
+      setUserRole(data.role);
     }
   }, [data]);
 
