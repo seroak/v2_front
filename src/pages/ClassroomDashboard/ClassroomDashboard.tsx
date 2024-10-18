@@ -19,7 +19,7 @@ interface GroupData {
     guests: Classroom[];
   };
 }
-const ClassroomSpace = () => {
+const ClassroomDashboard = () => {
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const LoggedInUserName = useUserStore((state) => state.loggedInUserName);
   const LoggedInUserEmail = useUserStore((state) => state.loggedInUserEmail);
@@ -143,4 +143,4 @@ const ClassroomSpace = () => {
     </div>
   );
 };
-export default ClassroomSpace;
+export default ClassroomDashboard;
