@@ -146,18 +146,19 @@ const RightSection = () => {
       }
       // enduserFunc 타입이 들어왔을 때 코드흐름과 변수 부분 함수를 지우고 return value를 나타나게 한다
       if (preprocessedCode.type.toLowerCase() === "endUserFunc".toLowerCase()) {
-        let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, (preprocessedCode as EndUserFuncDto).delFuncId);
-        usedId = usedId.filter((id) => id !== (preprocessedCode as EndUserFuncDto).delFuncId);
-        accCodeFlow = { objects: deletedCodeFlow };
         const delName = (preprocessedCode as EndUserFuncDto).delFuncName;
         delete accDataStructures[delName]; // 함수 이름을 키로 가지는 객체를 삭제
+
         const toAddObject = createObjectToAdd(preprocessedCode as EndUserFuncDto);
+        usedId = usedId.filter((id) => id !== (preprocessedCode as EndUserFuncDto).delFuncId);
         usedId.push(toAddObject.id);
+
         // isLight를 true로 바꿔준다
         toAddObject.isLight = true;
-        let finallyCodeFlow: any;
 
-        usedId.push(toAddObject.id);
+        let finallyCodeFlow: any;
+        let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, (preprocessedCode as EndUserFuncDto).delFuncId);
+        accCodeFlow = { objects: deletedCodeFlow };
         if (toAddObject.depth > prevTrackingDepth) {
           finallyCodeFlow = insertIntoDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
         } else if (toAddObject.depth === prevTrackingDepth) {

@@ -33,10 +33,8 @@ function App() {
       if (typeof window !== "undefined") {
         if (import.meta.env.VITE_APP_NODE_ENV === "development") {
           await setupMSW();
-          setIsMswReady(true);
-        } else {
-          setIsMswReady(true);
         }
+        setIsMswReady(true);
       }
     }
 

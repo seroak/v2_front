@@ -5,6 +5,10 @@ import { useTimeoutStore } from "@/store/timeout";
 import { useGptTooltipStore } from "@/store/gptTooltip";
 import { useEditorStore } from "@/store/editor";
 import { useGptMutationStore } from "@/store/gptMutation";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useResetEditor } from "@/store/resetEditor";
+
 
 interface ModifiedCode {
   line: number;
@@ -30,6 +34,7 @@ const GptComment = () => {
   const { setTimeoutId, clearCurrentTimeout } = useTimeoutStore();
   const { setIsGptToggle, gptPin, setGptPin, gptLeft, gptTop } = useGptTooltipStore();
   const { resetEditor, errorLine } = useEditorStore();
+  const { resetTrigger, setResetTrigger } = useResetEditor();
   const {
     isGptCorrectSuccess,
     isGptHintSuccess,
@@ -158,6 +163,7 @@ const GptComment = () => {
     setIsGptToggle(false);
     resetState();
     resetEditor();
+    setResetTrigger(!resetTrigger);
   };
 
   const handleReject = () => {
@@ -199,27 +205,32 @@ const GptComment = () => {
         <div className="gpt-success">
           <img
             className="gpt-icon"
-            style={{ width: "30px", height: "30px" }}
             src="/image/icon_gpt2.svg"
             alt="즉시교정"
           />
-          {reason}
 
-          <br />
-          <div className="code-container">
+          <div className="container">
+            {reason}
+            <br/>
+            <div className="code-container">
             <pre className="highlighted-code">
               {modifiedCode.map((code, index) =>
-                code.code === "" ? (
-                  <div key={index} className="ellipsis-container">
-                    <div className="line ellipsis">
-                      <span style={{ color: "black" }}>⋮</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div key={index} dangerouslySetInnerHTML={{ __html: highlightSyntax(code.code) }} />
-                )
+                  code.code === "" ? (
+                      <div key={index} className="ellipsis-container">
+                        <div className="line ellipsis">
+                          <span style={{color: "gray"}}>...</span>
+                        </div>
+                      </div>
+                  ) : (
+                      <SyntaxHighlighter language={"python"} style={oneLight}>
+                        {code.code}
+                      </SyntaxHighlighter>
+
+                      // <div key={index} dangerouslySetInnerHTML={{__html: highlightSyntax(code.code)}}/>
+                  )
               )}
             </pre>
+            </div>
           </div>
           <div className="button-left">
             <button className="approve" onClick={handleApprove}>
@@ -231,16 +242,15 @@ const GptComment = () => {
           </div>
         </div>
       ) : isGptHintSuccess ? (
-        <div className="gpt-hint">
-          <div className="gpt-success">
-            <img
-              className="gpt-icon"
-              style={{ width: "30px", height: "30px" }}
-              src="/image/icon_gpt2.svg"
-              alt="즉시교정"
-            />
-            {hint}
-            <div className="button-left">
+          <div className="gpt-hint">
+            <div className="gpt-success">
+              <img
+                  className="gpt-icon"
+                  src="/image/icon_gpt2.svg"
+                  alt="즉시교정"
+              />
+              {hint}
+              <div className="button-left">
               <button className="approve" onClick={handleCloseHint}>
                 확인
               </button>
@@ -254,11 +264,11 @@ const GptComment = () => {
       ) : (
         <>
           <button className="instant-correction" onClick={handleCorrect}>
-            <img src="/image/icon_correction.svg" style={{ width: 15, height: 15 }} alt="즉시교정" />
+            <img src="/image/icon_correction.svg" style={{ width: 19, height: 19 ,marginBottom:2}} alt="즉시교정" />
             즉시교정
           </button>
           <button className="view-hint" onClick={handleHint}>
-            <img src="/image/icon_hint.svg" style={{ width: 15, height: 16 }} alt="힌트보기" />
+            <img src="/image/icon_hint_color.svg" style={{ width: 19, height: 19, marginBottom:5 }} alt="힌트보기" />
             힌트보기
           </button>
         </>
