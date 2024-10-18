@@ -1,4 +1,5 @@
 import styles from "./DefFunctionDataStructure.module.css";
+import cx from "classnames";
 import { DataStructureFunctionItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureFunctionItem";
 
 type Props = {
@@ -16,7 +17,7 @@ const DefFunctionDataStructure = ({ functionItem }: Props) => {
         </div>
         <div className={styles["right-container"]}>
           <span className={styles["func"]}>func</span>
-          <div className={styles["func-data"]}>
+          <div className={cx(styles["func-data"], isLight && styles.highlight)}>
             <span>{expr}</span>
           </div>
         </div>
