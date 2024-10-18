@@ -80,6 +80,18 @@ const UDFResPiece = [
     delFuncName: "isEven",
     delFuncId: 1,
   },
+  {
+    variables: [
+      {
+        id: 5,
+        expr: "True",
+        name: "result",
+        type: "variable",
+      },
+    ],
+    callStackName: "main",
+    type: "assign",
+  },
 ];
 
 export default UDFResPiece;

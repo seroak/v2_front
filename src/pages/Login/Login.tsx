@@ -2,14 +2,14 @@ import { useState, FormEvent, ChangeEvent, Fragment } from "react";
 import PublicHeader from "../components/PublicHeader";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { fetchUser, login } from "@/services/api";
+import { getUser, login } from "@/services/api";
 
 const Login = () => {
   const [userId, setUserId] = useState<string>("");
   const [userPassword, setUserPassword] = useState<string>("");
 
   const navigate = useNavigate();
-  const { refetch } = useQuery({ queryKey: ["user"], queryFn: fetchUser });
+  const { refetch } = useQuery({ queryKey: ["user"], queryFn: getUser });
   const mutation = useMutation({
     mutationFn: async ({ userId, userPassword }: { userId: string; userPassword: string }) => {
       const req = { email: userId, password: userPassword };
