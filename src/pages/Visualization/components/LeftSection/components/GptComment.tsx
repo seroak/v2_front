@@ -40,7 +40,6 @@ const GptComment = () => {
     isGptHintSuccess,
     reason,
     hint,
-    hintLine,
     modifiedCode,
     setGptCorrectSuccess,
     setGptHintSuccess,
