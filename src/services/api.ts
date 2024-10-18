@@ -20,7 +20,7 @@ export const fetchVisualize = async (code: string) => {
   }
 };
 
-export const fetchUser = async (): Promise<User> => {
+export const getUser = async (): Promise<User> => {
   const response = await fetch("http://localhost:8080/edupi-user/v1/account/login/info", {
     method: "GET",
     credentials: "include",

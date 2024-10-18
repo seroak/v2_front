@@ -17,7 +17,7 @@ import { useMswReadyStore } from "@/store/mswReady";
 import "./App.css";
 
 import { setupMSW } from "./mocks/setup";
-import { fetchUser } from "@/services/api";
+import { getUser } from "@/services/api";
 
 interface User {
   email: string;
@@ -43,7 +43,7 @@ function App() {
     initializeMSW();
   }, [setIsMswReady]);
 
-  const { data } = useQuery<User>({ queryKey: ["user"], queryFn: fetchUser, enabled: isMswReady });
+  const { data } = useQuery<User>({ queryKey: ["user"], queryFn: getUser, enabled: isMswReady });
   const setLoggedInUserEmail = useUserStore((state) => state.setLoggedInUserEmail);
   const setLoggedInUserName = useUserStore((state) => state.setLoggedInUserName);
   const setLoggedInUserRole = useUserStore((state) => state.setLoggedInUserRole);
