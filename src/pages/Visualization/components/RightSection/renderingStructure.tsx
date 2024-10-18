@@ -8,7 +8,7 @@ import ListWrapper from "./components/ListWrapper/ListWrapper";
 import DefFunctionDataStructure from "./components/DefFunctionDataStructure/DefFunctionDataStructure";
 
 //type
-import { DataStructureVarItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureVarsItem";
+import { DataStructureVarsItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureVarsItem";
 import { DataStructureListItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureListItem";
 import { WarperDataStructureItem } from "../../types/dataStructuresItem/warperDataStructureItem";
 import { DataStructureFunctionItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureFunctionItem";
@@ -17,7 +17,7 @@ import { useArrowStore } from "@/store/arrow";
 
 interface Props {
   children?: ReactNode;
-  structure: DataStructureListItem | DataStructureVarItem;
+  structure: DataStructureListItem | DataStructureVarsItem;
 
   height: number;
   width: number;
@@ -35,7 +35,7 @@ const StructureItem = ({ children, structure, height, width }: Props) => {
       setTop(rect.top);
       setRight(rect.right);
     }
-  }, [structure, height, width]);
+  }, [structure, ref, height, width]);
 
   return (
     <div ref={ref} style={{ width: "fit-content" }}>
@@ -59,7 +59,7 @@ export const renderingStructure = (
               {structures[key].map((structure, index) => {
                 switch (structure.type) {
                   case "variable": {
-                    const variableItem = structure as DataStructureVarItem;
+                    const variableItem = structure as DataStructureVarsItem;
                     return (
                       <AnimatePresence key={variableItem.name + key} mode="wait">
                         <motion.ul
