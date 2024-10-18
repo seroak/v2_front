@@ -176,9 +176,9 @@ const RightSection = () => {
         const callStackName = (preprocessedCode as VariablesDto).callStackName;
         // 오른쪽에 변수로 함수를 넣을 때
         if ((preprocessedCode as VariablesDto).variables[0].type.toLowerCase() === "function".toLowerCase()) {
-          const { id, expr, name, type } = (preprocessedCode as VariablesDto).variables[0];
-
+          const { id, expr, name, type, code } = (preprocessedCode as VariablesDto).variables[0];
           accDataStructures[callStackName].push({ id, expr, name, type });
+          arrowTexts.push(code);
         } else {
           (preprocessedCode as VariablesDto).variables.forEach((variable: Variables) => {
             highlightLine.push(variable.id);
@@ -214,6 +214,7 @@ const RightSection = () => {
             type: arg.type,
           });
         }
+        arrowTexts.push((preprocessedCode as CreateCallStackDto).code);
       }
       // 코드 시각화 부분이 들어왔을 때
       else {
@@ -256,6 +257,7 @@ const RightSection = () => {
         //그밖의 타입
         else {
           // 그밖의 타입에서 화살표에 넣을 코드를 넣는다
+
           arrowTexts.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).code);
 
           highlightLine.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id);
@@ -263,7 +265,6 @@ const RightSection = () => {
           const toAddObject = createObjectToAdd(
             preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
           );
-
           // print 타입일 때 console창의 로그를 만드는 부분
           if ((toAddObject as PrintItem).type === "print") {
             const printObject = toAddObject as PrintItem;
@@ -297,6 +298,7 @@ const RightSection = () => {
 
           activate = updateActivate(activate, toAddObject);
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
+
           accCodeFlow = { objects: finallyCodeFlow };
           if (toAddObject.type !== "variable" && toAddObject.type !== "list") {
             prevTrackingDepth = (
@@ -308,28 +310,44 @@ const RightSection = () => {
         }
       }
       // 불을 켜줘야하는 자료구조의의 name을 담는 배열
-      let toLightStructures: any;
-      if ((preprocessedCode as VariablesDto).variables === undefined) {
-        toLightStructures = [];
-      } else {
-        toLightStructures = (preprocessedCode as VariablesDto).variables?.map((element) => {
-          return element.name;
+      let toLightStructures: any = {};
+      if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
+        (preprocessedCode as VariablesDto).variables?.forEach((element) => {
+          const callStackName = (preprocessedCode as VariablesDto).callStackName;
+          // ToLightStructures에 키가 없으면 초기화
+          if (!toLightStructures[callStackName]) {
+            toLightStructures[callStackName] = [];
+          }
+
+          toLightStructures[callStackName].push(element.name);
+        });
+      }
+
+      if (preprocessedCode.type.toLowerCase() === "createCallStack".toLowerCase()) {
+        (preprocessedCode as CreateCallStackDto).args?.forEach((element) => {
+          const callStackName = (preprocessedCode as CreateCallStackDto).callStackName;
+          // ToLightStructures에 키가 없으면 초기화
+          if (!toLightStructures[callStackName]) {
+            toLightStructures[callStackName] = [];
+          }
+
+          toLightStructures[callStackName].push(element.name);
         });
       }
 
       accDataStructures = Object.keys(accDataStructures).reduce((acc, key) => {
         acc[key] = accDataStructures[key].map((structure) => ({
           ...structure,
-          isLight: toLightStructures?.includes(structure.name), // toLightStructures에 자료구조 이름이 있으면 isLight를 true로 설정
+          isLight: toLightStructures[key]?.includes(structure.name) ?? false,
         }));
         return acc;
       }, {} as WarperDataStructureItem);
 
       // 자료구조리스트에서 얕은 복사 문제가 생겨서 깊은 복사를 해준다
       const deepCloneStructures = _.cloneDeep(accDataStructures);
-
       accDataStructuresList.push(deepCloneStructures);
-      accCodeFlowList.push(accCodeFlow);
+      const deepClodeCodeFlow = _.cloneDeep(accCodeFlow);
+      accCodeFlowList.push(deepClodeCodeFlow);
       accConsoleLogList.push(accConsoleLog);
     }
 
@@ -345,6 +363,7 @@ const RightSection = () => {
   return (
     <div id="split-2" ref={rightSectionRef}>
       <p className="view-section-title">시각화</p>
+      <Arrow code={arrowTextList[stepIdx]} />
       <Split
         sizes={[70, 30]}
         minSize={100}
@@ -368,7 +387,6 @@ const RightSection = () => {
           </div>
         </div>
         <div id="split-2-2" className="view-section2-2" ref={rightSection2Ref}>
-          <Arrow code={arrowTextList[stepIdx]} />
           <div className="view-data">
             <p className="data-name">변수</p>
 
