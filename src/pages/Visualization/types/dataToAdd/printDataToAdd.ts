@@ -4,5 +4,6 @@ export interface PrintDataToAdd {
   expr: string;
   highlights: number[];
   console: string | null;
+  code: string;
   type: string;
 }
