@@ -8,13 +8,18 @@ const DefFunctionDataStructure = ({ functionItem }: Props) => {
   const { expr, isLight } = functionItem;
 
   return (
-    <div>
-      <span>def</span>
-      <span style={{ margin: "10px" }}>func</span>
-      <div className={cx(styles["func-data"], isLight && styles.highlight)}>
-        <span>{expr}</span>
+      <div className={styles["container"]}>
+          <div className={styles["left-container"]}>
+              <span className={styles["def"]}>def</span>
+              <img src="/image/img_function_arrow.svg"/>
+          </div>
+          <div className={styles["right-container"]}>
+              <span className={styles["func"]}>func</span>
+              <div className={styles["func-data"]}>
+                  <span>{expr}</span>
+              </div>
+          </div>
       </div>
-    </div>
   );
 };
 
