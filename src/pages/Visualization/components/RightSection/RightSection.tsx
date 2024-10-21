@@ -342,7 +342,8 @@ const RightSection = () => {
         }));
         return acc;
       }, {} as WarperDataStructureItem);
-
+      const unLightaccCodeFlow = unLightCodeFlow(accCodeFlow.objects);
+      accCodeFlow = { objects: unLightaccCodeFlow };
       // 자료구조리스트에서 얕은 복사 문제가 생겨서 깊은 복사를 해준다
       const deepCloneStructures = _.cloneDeep(accDataStructures);
       accDataStructuresList.push(deepCloneStructures);
