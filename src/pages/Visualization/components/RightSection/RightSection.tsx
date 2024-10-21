@@ -27,7 +27,7 @@ import { addCodeFlow } from "./services/addCodeFlow";
 import { insertIntoDepth } from "./services/insertIntoDepth";
 import { insertEqualToDepth } from "./services/insertEqualToDepth";
 import { updateCodeFlow } from "./services/updateCodeFlow";
-import { turnLight } from "./services/turnLight";
+import { LightCodeFlow } from "./services/LightCodeFlow";
 import { createObjectToAdd } from "./services/createObjectToAdd";
 import { updateDataStructure } from "./services/updateDataStructure";
 import { updateActivate } from "./services/updateActivate";
@@ -297,7 +297,7 @@ const RightSection = () => {
           }
 
           activate = updateActivate(activate, toAddObject);
-          const finallyCodeFlow = turnLight(changedCodeFlows, activate);
+          const finallyCodeFlow = LightCodeFlow(changedCodeFlows, activate);
 
           accCodeFlow = { objects: finallyCodeFlow };
           if (toAddObject.type !== "variable" && toAddObject.type !== "list") {
