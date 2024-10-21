@@ -333,6 +333,9 @@ const RightSection = () => {
 
           toLightStructures[callStackName].push(element.name);
         });
+        // 함수 생성시 콜스택이 변수 시각화에 나타나고 코드흐름은 하이라이트를 끄기 위해 사용
+        const unLightaccCodeFlow = unLightCodeFlow(accCodeFlow.objects);
+        accCodeFlow = { objects: unLightaccCodeFlow };
       }
 
       accDataStructures = Object.keys(accDataStructures).reduce((acc, key) => {
@@ -342,8 +345,7 @@ const RightSection = () => {
         }));
         return acc;
       }, {} as WarperDataStructureItem);
-      const unLightaccCodeFlow = unLightCodeFlow(accCodeFlow.objects);
-      accCodeFlow = { objects: unLightaccCodeFlow };
+
       // 자료구조리스트에서 얕은 복사 문제가 생겨서 깊은 복사를 해준다
       const deepCloneStructures = _.cloneDeep(accDataStructures);
       accDataStructuresList.push(deepCloneStructures);
