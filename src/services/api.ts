@@ -1,9 +1,11 @@
 import axios from "axios";
-import { User, LoginUser } from "../types/apiTypes";
+import { LoginUser, User } from "../types/apiTypes";
+
+const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
 export const fetchVisualize = async (code: string) => {
   try {
-    const response = await fetch("http://localhost:8080/edupi-syntax/v1/execute/visualize", {
+    const response = await fetch(`${BASE_URL}/edupi-syntax/v1/execute/visualize`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +23,7 @@ export const fetchVisualize = async (code: string) => {
 };
 
 export const getUser = async (): Promise<User> => {
-  const response = await fetch("http://localhost:8080/edupi-user/v1/account/login/info", {
+  const response = await fetch(`${BASE_URL}/edupi-user/v1/account/login/info`, {
     method: "GET",
     credentials: "include",
     headers: {
@@ -35,14 +37,14 @@ export const getUser = async (): Promise<User> => {
   return data;
 };
 export const login = (req: LoginUser) =>
-  axios.post("http://localhost:8080/edupi-user/v1/account/login", req, {
+  axios.post(`${BASE_URL}/edupi-user/v1/account/login`, req, {
     headers: { "Content-Type": "application/json" },
     withCredentials: true,
   });
 
 export const getHostGuestData = async (classroomId: number) => {
   try {
-    const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom?classroomId=${classroomId}`, {
+    const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom?classroomId=${classroomId}`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -60,7 +62,7 @@ export const getHostGuestData = async (classroomId: number) => {
 };
 
 export const createClass = async (createClassName: string) => {
-  const response = await fetch("http://localhost:8080/edupi-lms/v1/classroom", {
+  const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -78,7 +80,7 @@ export const createClass = async (createClassName: string) => {
 export const getClassGuestData = async (classroomId: number) => {
   try {
     const response = await fetch(
-      `http://localhost:8080/edupi-lms/v1/classroom/account/progress?classroomId=${classroomId}`,
+      `${BASE_URL}/edupi-lms/v1/classroom/account/progress?classroomId=${classroomId}`,
       {
         method: "GET",
         credentials: "include",
@@ -99,7 +101,7 @@ export const getClassGuestData = async (classroomId: number) => {
 
 export const getClassTotalActionInfo = async (classroomId: number) => {
   try {
-    const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/info?classroomId=${classroomId}`, {
+    const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom/info?classroomId=${classroomId}`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -130,7 +132,7 @@ export const getClassTotalActionInfo = async (classroomId: number) => {
 };
 export const fetchDeleteClassroom = async (classroomId: number) => {
   try {
-    const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom?classroomId=${classroomId}`, {
+    const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom?classroomId=${classroomId}`, {
       method: "DELETE",
       credentials: "include",
     });
@@ -146,7 +148,7 @@ export const fetchDeleteClassroom = async (classroomId: number) => {
 };
 
 export const fetchClassOver = async (classroomId: number) => {
-  const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/action/init`, {
+  const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom/action/init`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -163,7 +165,7 @@ export const fetchClassOver = async (classroomId: number) => {
 
 export const fetchGuestActionRequest = async (req: any) => {
   try {
-    const response = await fetch("http://localhost:8080/edupi-lms/v1/progress/send", {
+    const response = await fetch(`${BASE_URL}/edupi-lms/v1/progress/send`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -190,7 +192,7 @@ export const fetchGuestActionRequest = async (req: any) => {
 export const fetchEmissionGuest = async (classroomAccountId: number) => {
   try {
     const response = await fetch(
-      `http://localhost:8080/edupi-lms/v1/classroom/account?classroomAccountId=${classroomAccountId}`,
+      `${BASE_URL}/edupi-lms/v1/classroom/account?classroomAccountId=${classroomAccountId}`,
       {
         method: "DELETE",
         credentials: "include",
@@ -209,7 +211,7 @@ export const fetchEmissionGuest = async (classroomAccountId: number) => {
 
 export const fetchLogout = async () => {
   try {
-    const response = await fetch("http://localhost:8080/edupi-user/v1/account/logout", {
+    const response = await fetch(`${BASE_URL}/edupi-user/v1/account/logout`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
