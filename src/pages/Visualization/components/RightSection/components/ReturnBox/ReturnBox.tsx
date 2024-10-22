@@ -5,7 +5,6 @@ interface Props {
   returnItem: ReturnItem;
 }
 function ReturnBox({ returnItem }: Props) {
-  console.log(returnItem);
   const { returnValue, isLight } = returnItem;
   return (
     <div>
