@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, useRef, act } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { PreprocessedCodesContext } from "../../Visualization";
 import Split from "react-split";
 import _ from "lodash";
@@ -132,7 +132,7 @@ const RightSection = () => {
       objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
     };
     let accDataStructures: WarperDataStructureItem = {
-      main: { data: [], isActivate: false },
+      main: { data: [], isLight: false },
     };
 
     const accCodeFlowList: State[] = [];
@@ -145,6 +145,16 @@ const RightSection = () => {
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
       }
+
+      accDataStructures = Object.entries(accDataStructures).reduce((acc, [key, value]) => {
+        acc[key] = {
+          data: value.data.map((structure) => ({
+            ...structure,
+          })),
+          isLight: false,
+        };
+        return acc;
+      }, {} as WarperDataStructureItem);
       // enduserFunc 타입이 들어왔을 때 코드흐름과 변수 부분 함수를 지우고 return value를 나타나게 한다
       if (preprocessedCode.type.toLowerCase() === "endUserFunc".toLowerCase()) {
         const delName = (preprocessedCode as EndUserFuncDto).delFuncName;
@@ -172,6 +182,7 @@ const RightSection = () => {
 
         prevTrackingId = toAddObject.id;
         prevTrackingDepth = toAddObject.depth;
+        arrowTexts.push((preprocessedCode as EndUserFuncDto).code);
       }
       // 자료구조 시각화 부분이 들어왔을 때
       else if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
@@ -209,7 +220,7 @@ const RightSection = () => {
       }
       // 함수 생성으로 새로운 함수 콜스택이 나올 떄
       else if (preprocessedCode.type.toLowerCase() === "createCallStack".toLowerCase()) {
-        accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName] = { data: [], isActivate: false };
+        accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName] = { data: [], isLight: false };
         for (let arg of (preprocessedCode as CreateCallStackDto).args) {
           accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
             expr: arg.expr,
@@ -219,9 +230,9 @@ const RightSection = () => {
         }
         arrowTexts.push((preprocessedCode as CreateCallStackDto).code);
 
-        accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].isActivate = true;
-        console.log(accDataStructures);
+        accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].isLight = true;
       }
+
       // 코드 시각화 부분이 들어왔을 때
       else {
         // ifelseDefine 타입
@@ -238,6 +249,7 @@ const RightSection = () => {
             // ifelse 타입의 객체에 depth를 추가해주는 부분
             const ifElseItem = Object.assign(condition, {
               depth: (preprocessedCode as IfElseDto).depth,
+              code: (preprocessedCode as IfElseDto).code,
             });
             // ifelse 타입의 객체를 만들어주는 함수
             const toAddObject = createObjectToAdd(ifElseItem);
@@ -314,6 +326,7 @@ const RightSection = () => {
           }
         }
       }
+
       // 불을 켜줘야하는 자료구조의의 name을 담는 배열
       let toLightStructures: any = {};
       if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
@@ -327,7 +340,7 @@ const RightSection = () => {
           toLightStructures[callStackName].push(element.name);
         });
       }
-      let toLightCallstack: any = {};
+
       if (preprocessedCode.type.toLowerCase() === "createCallStack".toLowerCase()) {
         (preprocessedCode as CreateCallStackDto).args?.forEach((element) => {
           const callStackName = (preprocessedCode as CreateCallStackDto).callStackName;
@@ -341,7 +354,7 @@ const RightSection = () => {
         const unLightaccCodeFlow = unLightCodeFlow(accCodeFlow.objects);
         accCodeFlow = { objects: unLightaccCodeFlow };
       }
-      console.log(accDataStructures);
+
       const updatedAccDataStructures: WarperDataStructureItem = Object.entries(accDataStructures).reduce(
         (acc, [key, value]) => {
           acc[key] = {
@@ -349,20 +362,21 @@ const RightSection = () => {
               ...structure,
               isLight: toLightStructures[key]?.includes(structure.name) ?? false,
             })),
+            isLight: value.isLight,
           };
           return acc;
         },
         {} as WarperDataStructureItem
       );
-      console.log(updatedAccDataStructures);
+
       // 자료구조리스트에서 얕은 복사 문제가 생겨서 깊은 복사를 해준다
       const deepCloneStructures = _.cloneDeep(updatedAccDataStructures);
-      console.log(deepCloneStructures);
+
       accDataStructuresList.push(deepCloneStructures);
+
       const deepClodeCodeFlow = _.cloneDeep(accCodeFlow);
       accCodeFlowList.push(deepClodeCodeFlow);
       accConsoleLogList.push(accConsoleLog);
-      console.log("accDataStructuresList", accDataStructuresList);
     }
 
     setCodeFlowList(accCodeFlowList);

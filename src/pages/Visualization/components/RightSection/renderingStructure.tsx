@@ -10,7 +10,7 @@ import DefFunctionDataStructure from "./components/DefFunctionDataStructure/DefF
 //type
 import { DataStructureVarsItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureVarsItem";
 import { DataStructureListItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureListItem";
-import { WarperDataStructureItem } from "../../types/dataStructuresItem/warperDataStructureItem";
+import { WarperDataStructureItem, StructureValue } from "../../types/dataStructuresItem/warperDataStructureItem";
 import { DataStructureFunctionItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureFunctionItem";
 //zustand
 import { useArrowStore } from "@/store/arrow";
@@ -24,7 +24,7 @@ interface Props {
 }
 interface CallstackProps {
   children?: ReactNode;
-  structure: WarperDataStructureItem;
+  structure: StructureValue;
 
   height: number;
   width: number;
@@ -54,9 +54,9 @@ const CallstackItem = ({ children, structure, height, width }: CallstackProps) =
   const ref = useRef<HTMLDivElement>(null);
   const setTop = useArrowStore((state) => state.setTop);
   const setRight = useArrowStore((state) => state.setRight);
-  console.log(structure);
+
   useEffect(() => {
-    if (ref.current && structure.isActivate) {
+    if (ref.current && structure.isLight) {
       const rect = ref.current.getBoundingClientRect();
 
       setTop(rect.top);
@@ -79,13 +79,12 @@ export const renderingStructure = (
   return (
     <>
       {Object.keys(structures).map((key, index) => {
-        console.log(structures);
         return (
           <div key={index}>
-            <CallstackItem structure={structures} height={height} width={width}>
+            <CallstackItem structure={structures[key]} height={height} width={width}>
               <div className="call-stack-box">
                 <span className="call-stack-name">{key}</span>
-                {structures[key].map((structure, index) => {
+                {structures[key].data.map((structure) => {
                   switch (structure.type) {
                     case "variable": {
                       const variableItem = structure as DataStructureVarsItem;
