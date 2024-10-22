@@ -5,7 +5,7 @@ interface Props {
   returnItem: ReturnItem;
 }
 function ReturnBox({ returnItem }: Props) {
-  const { returnName, returnValue } = returnItem;
+  const { returnValue } = returnItem;
   return (
     <div>
       <span>Return</span>

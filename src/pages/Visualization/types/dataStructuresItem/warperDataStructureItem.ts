@@ -4,8 +4,8 @@ import { DataStructureVarsItem } from "./dataStructureVarsItem";
 type ArrayItem = DataStructureVarsItem;
 
 // 각 키에 대한 값의 타입 정의
-interface StructureValue {
-  isActivate?: boolean;
+export interface StructureValue {
+  isLight?: boolean;
   data: ArrayItem[];
 }
 
