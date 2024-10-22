@@ -21,6 +21,7 @@ import { AllDataStructureItem } from "@/pages/Visualization/types/dataStructures
 import { WarperDataStructureItem } from "@/pages/Visualization/types/dataStructuresItem/warperDataStructureItem";
 import { CreateCallStackDto } from "@/pages/Visualization/types/dto/createCallStackDto";
 import { EndUserFuncDto } from "@/pages/Visualization/types/dto/endUserFuncDto";
+import { usedNameObjectType } from "../../types/dataStructuresItem/usedNameObjectType";
 
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
@@ -127,7 +128,7 @@ const RightSection = () => {
     let prevTrackingDepth: number = 0;
     let activate: ActivateItem[] = [];
     let usedId: number[] = [];
-    const usedName: string[] = [];
+    const usedName: usedNameObjectType = { main: [] };
     let accCodeFlow: State = {
       objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
     };
@@ -160,7 +161,7 @@ const RightSection = () => {
       if (preprocessedCode.type.toLowerCase() === "endUserFunc".toLowerCase()) {
         const delName = (preprocessedCode as EndUserFuncDto).delFuncName;
         delete accDataStructures[delName]; // 함수 이름을 키로 가지는 객체를 삭제
-
+        delete usedName[delName];
         const toAddObject = createObjectToAdd(preprocessedCode as EndUserFuncDto);
 
         // isLight를 true로 바꿔준다
@@ -195,9 +196,8 @@ const RightSection = () => {
             highlightLine.push(variable.id);
             // 자료구조 시각화에서 화살표에 넣을 코드를 넣는다
             arrowTexts.push(variable.code);
-
             // 이미 한번 자료구조 시각화에 표현된 name인 경우
-            if (usedName.includes(variable.name!)) {
+            if (usedName[callStackName].includes(variable.name!)) {
               const targetName = variable.name!;
 
               accDataStructures = updateDataStructure(targetName, accDataStructures, variable, callStackName);
@@ -205,7 +205,7 @@ const RightSection = () => {
             // 처음 시각화해주는 자료구조인 경우
             else {
               accDataStructures[callStackName].data.push(variable);
-              usedName.push(variable.name!);
+              usedName[callStackName].push(variable.name!);
             }
 
             // 코드 흐름 시각화에서 표현된 자료구조 시각화 객체를 삭제하는 부분
@@ -228,6 +228,7 @@ const RightSection = () => {
         arrowTexts.push((preprocessedCode as CreateCallStackDto).code);
 
         accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].isLight = true;
+        usedName[(preprocessedCode as CreateCallStackDto).callStackName] = [];
       }
 
       // 코드 시각화 부분이 들어왔을 때
