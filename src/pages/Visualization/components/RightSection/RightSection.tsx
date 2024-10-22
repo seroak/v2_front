@@ -156,19 +156,18 @@ const RightSection = () => {
         return acc;
       }, {} as WarperDataStructureItem);
       // enduserFunc 타입이 들어왔을 때 코드흐름과 변수 부분 함수를 지우고 return value를 나타나게 한다
+      // 나타나고 바로 사라지는건 traking id와 depth를 사용하지 않는다
       if (preprocessedCode.type.toLowerCase() === "endUserFunc".toLowerCase()) {
         const delName = (preprocessedCode as EndUserFuncDto).delFuncName;
         delete accDataStructures[delName]; // 함수 이름을 키로 가지는 객체를 삭제
 
         const toAddObject = createObjectToAdd(preprocessedCode as EndUserFuncDto);
-        usedId = usedId.filter((id) => id !== (preprocessedCode as EndUserFuncDto).delFuncId);
-        usedId.push(toAddObject.id);
 
         // isLight를 true로 바꿔준다
         toAddObject.isLight = true;
 
         let finallyCodeFlow: any;
-        let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, (preprocessedCode as EndUserFuncDto).delFuncId);
+        let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, (preprocessedCode as EndUserFuncDto).id);
         accCodeFlow = { objects: deletedCodeFlow };
         if (toAddObject.depth > prevTrackingDepth) {
           finallyCodeFlow = insertIntoDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
@@ -179,12 +178,10 @@ const RightSection = () => {
         }
 
         accCodeFlow = { objects: finallyCodeFlow };
-
-        prevTrackingId = toAddObject.id;
-        prevTrackingDepth = toAddObject.depth;
         arrowTexts.push((preprocessedCode as EndUserFuncDto).code);
       }
       // 자료구조 시각화 부분이 들어왔을 때
+      // 나타나고 바로 사라지는건 traking id와 depth를 사용하지 않는다ㄴ
       else if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
         const callStackName = (preprocessedCode as VariablesDto).callStackName;
         // 오른쪽에 변수로 함수를 넣을 때
@@ -268,6 +265,7 @@ const RightSection = () => {
             }
 
             accCodeFlow = { objects: finallyCodeFlow };
+
             prevTrackingId = toAddObject.id;
             prevTrackingDepth = toAddObject.depth;
           }
@@ -282,6 +280,7 @@ const RightSection = () => {
           const toAddObject = createObjectToAdd(
             preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
           );
+          console.log(toAddObject);
           // print 타입일 때 console창의 로그를 만드는 부분
           if ((toAddObject as PrintItem).type === "print") {
             const printObject = toAddObject as PrintItem;
@@ -289,6 +288,7 @@ const RightSection = () => {
               accConsoleLog += printObject.console;
             }
           }
+          console.log(toAddObject);
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
             // 한바퀴 돌아서 안에 있는 내용을 초기화해야 하는 부분이면 여기에서 처리해준다
@@ -303,6 +303,8 @@ const RightSection = () => {
           }
           // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
           else {
+            console.log(toAddObject);
+            console.log(prevTrackingDepth);
             usedId.push(toAddObject.id);
             if (toAddObject.depth > prevTrackingDepth) {
               changedCodeFlows = insertIntoDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
@@ -316,7 +318,7 @@ const RightSection = () => {
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
 
           accCodeFlow = { objects: finallyCodeFlow };
-
+          console.log(accCodeFlow);
           if (toAddObject.type !== "variable" && toAddObject.type !== "list") {
             prevTrackingDepth = (
               preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto | WhileDto
@@ -375,6 +377,7 @@ const RightSection = () => {
       accDataStructuresList.push(deepCloneStructures);
 
       const deepClodeCodeFlow = _.cloneDeep(accCodeFlow);
+      console.log(deepClodeCodeFlow);
       accCodeFlowList.push(deepClodeCodeFlow);
       accConsoleLogList.push(accConsoleLog);
     }
