@@ -280,7 +280,7 @@ const RightSection = () => {
           const toAddObject = createObjectToAdd(
             preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
           );
-          console.log(toAddObject);
+
           // print 타입일 때 console창의 로그를 만드는 부분
           if ((toAddObject as PrintItem).type === "print") {
             const printObject = toAddObject as PrintItem;
@@ -288,7 +288,6 @@ const RightSection = () => {
               accConsoleLog += printObject.console;
             }
           }
-          console.log(toAddObject);
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
             // 한바퀴 돌아서 안에 있는 내용을 초기화해야 하는 부분이면 여기에서 처리해준다
@@ -303,8 +302,6 @@ const RightSection = () => {
           }
           // 처음 codeFlow list에 들어가서 더해야하는 입력일 때
           else {
-            console.log(toAddObject);
-            console.log(prevTrackingDepth);
             usedId.push(toAddObject.id);
             if (toAddObject.depth > prevTrackingDepth) {
               changedCodeFlows = insertIntoDepth(accCodeFlow.objects, toAddObject, prevTrackingId);
@@ -318,7 +315,6 @@ const RightSection = () => {
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
 
           accCodeFlow = { objects: finallyCodeFlow };
-          console.log(accCodeFlow);
           if (toAddObject.type !== "variable" && toAddObject.type !== "list") {
             prevTrackingDepth = (
               preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto | WhileDto
@@ -377,7 +373,6 @@ const RightSection = () => {
       accDataStructuresList.push(deepCloneStructures);
 
       const deepClodeCodeFlow = _.cloneDeep(accCodeFlow);
-      console.log(deepClodeCodeFlow);
       accCodeFlowList.push(deepClodeCodeFlow);
       accConsoleLogList.push(accConsoleLog);
     }
