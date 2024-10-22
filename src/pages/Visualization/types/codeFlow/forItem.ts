@@ -1,4 +1,3 @@
-import { AllObjectItem } from "./allObjectItem";
 export interface ForItem {
   id: number;
   start: string;
