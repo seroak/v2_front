@@ -35,7 +35,7 @@ export const handlers = [
         success: false,
         code: "CS-200000",
         detail: "success code analysis",
-        result: { code: UDFResPiece },
+        result: { code: testResponseBody },
       },
       {
         status: 200,
