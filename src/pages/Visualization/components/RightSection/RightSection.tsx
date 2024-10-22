@@ -7,7 +7,7 @@ import ResizeObserver from "resize-observer-polyfill";
 import Arrow from "./components/Arrow/Arrow";
 
 // 타입 정의
-import { AllObjectItem } from "@/pages/Visualization/types/codeFlow/allObjectItem";
+
 import { ActivateItem } from "@/pages/Visualization/types/activateItem";
 import { VariablesDto, Variables } from "@/pages/Visualization/types/dto/variablesDto";
 import { ForDto } from "@/pages/Visualization/types/dto/forDto";
@@ -49,7 +49,7 @@ import { useRightSectionStore } from "@/store/arrow";
 import { useEditorStore } from "@/store/editor";
 
 interface State {
-  objects: AllObjectItem[];
+  objects: any[];
 }
 
 const RightSection = () => {
@@ -141,7 +141,7 @@ const RightSection = () => {
     let accConsoleLog: string = "";
     const arrowTexts: string[] = [];
     for (let preprocessedCode of preprocessedCodes) {
-      let changedCodeFlows: AllObjectItem[] = [];
+      let changedCodeFlows: any[] = [];
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
       }
