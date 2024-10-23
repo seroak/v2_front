@@ -166,7 +166,6 @@ const RightSection = () => {
 
         // isLight를 true로 바꿔준다
         toAddObject.isLight = true;
-
         let finallyCodeFlow: any;
         let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, (preprocessedCode as EndUserFuncDto).id);
         accCodeFlow = { objects: deletedCodeFlow };
@@ -201,6 +200,7 @@ const RightSection = () => {
               const targetName = variable.name!;
 
               accDataStructures = updateDataStructure(targetName, accDataStructures, variable, callStackName);
+              console.log(accDataStructures);
             }
             // 처음 시각화해주는 자료구조인 경우
             else {
