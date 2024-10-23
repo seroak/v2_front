@@ -20,8 +20,7 @@ export const LightCodeFlow = (
         isLight: false,
         child: LightCodeFlow(codeFlow.child, Activate),
       };
-    } else {
-      return { ...codeFlow, isLight: false };
     }
+    return { ...codeFlow, isLight: false };
   });
 };
