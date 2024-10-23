@@ -1,5 +1,3 @@
-import { AllObjectItem } from "./allObjectItem";
-
 export interface WhileItem {
   id: number;
   type: string;

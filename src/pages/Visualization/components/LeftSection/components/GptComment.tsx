@@ -5,10 +5,9 @@ import { useTimeoutStore } from "@/store/timeout";
 import { useGptTooltipStore } from "@/store/gptTooltip";
 import { useEditorStore } from "@/store/editor";
 import { useGptMutationStore } from "@/store/gptMutation";
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useResetEditor } from "@/store/resetEditor";
-
 
 interface ModifiedCode {
   line: number;
@@ -59,13 +58,7 @@ const GptComment = () => {
 
   const { code, setCode } = context;
   // 간단한 구문 강조 함수
-  const highlightSyntax = (code: string) => {
-    return code
-      .replace(/(\/\/.*)/g, '<span style="color: #888;">$1</span>')
-      .replace(/('.*?'|".*?")/g, '<span style="color: #a11;">$1</span>')
-      .replace(/\b(function|const|let|var|return|if|else|for|while)\b/g, '<span style="color: #11a;">$1</span>')
-      .replace(/\b(true|false|null|undefined)\b/g, '<span style="color: #a1a;">$1</span>');
-  };
+
   const handleMouseOver = () => {
     clearCurrentTimeout();
     setIsGptToggle(true);
@@ -140,7 +133,7 @@ const GptComment = () => {
     mutationFn: () => fetchGptHint(code, errorLine?.lineNumber || 1),
     onSuccess(data) {
       setHint(data.result.hint);
-      setHintLine(data.result.line);
+      setHintLine(String(data.result.line));
       setGptHintSuccess(true);
     },
     onError(error) {
@@ -203,33 +196,29 @@ const GptComment = () => {
     >
       {isGptCorrectSuccess ? (
         <div className="gpt-success">
-          <img
-            className="gpt-icon"
-            src="/image/icon_gpt2.svg"
-            alt="즉시교정"
-          />
+          <img className="gpt-icon" src="/image/icon_gpt2.svg" alt="즉시교정" />
 
           <div className="container">
             {reason}
-            <br/>
+            <br />
             <div className="code-container">
-            <pre className="highlighted-code">
-              {modifiedCode.map((code, index) =>
+              <pre className="highlighted-code">
+                {modifiedCode.map((code, index) =>
                   code.code === "" ? (
-                      <div key={index} className="ellipsis-container">
-                        <div className="line ellipsis">
-                          <span style={{color: "gray"}}>...</span>
-                        </div>
+                    <div key={index} className="ellipsis-container">
+                      <div className="line ellipsis">
+                        <span style={{ color: "gray" }}>...</span>
                       </div>
+                    </div>
                   ) : (
-                      <SyntaxHighlighter language={"python"} style={oneLight}>
-                        {code.code}
-                      </SyntaxHighlighter>
+                    <SyntaxHighlighter language={"python"} style={oneLight}>
+                      {code.code}
+                    </SyntaxHighlighter>
 
-                      // <div key={index} dangerouslySetInnerHTML={{__html: highlightSyntax(code.code)}}/>
+                    // <div key={index} dangerouslySetInnerHTML={{__html: highlightSyntax(code.code)}}/>
                   )
-              )}
-            </pre>
+                )}
+              </pre>
             </div>
           </div>
           <div className="button-left">
@@ -242,15 +231,11 @@ const GptComment = () => {
           </div>
         </div>
       ) : isGptHintSuccess ? (
-          <div className="gpt-hint">
-            <div className="gpt-success">
-              <img
-                  className="gpt-icon"
-                  src="/image/icon_gpt2.svg"
-                  alt="즉시교정"
-              />
-              {hint}
-              <div className="button-left">
+        <div className="gpt-hint">
+          <div className="gpt-success">
+            <img className="gpt-icon" src="/image/icon_gpt2.svg" alt="즉시교정" />
+            {hint}
+            <div className="button-left">
               <button className="approve" onClick={handleCloseHint}>
                 확인
               </button>
@@ -264,11 +249,11 @@ const GptComment = () => {
       ) : (
         <>
           <button className="instant-correction" onClick={handleCorrect}>
-            <img src="/image/icon_correction.svg" style={{ width: 19, height: 19 ,marginBottom:2}} alt="즉시교정" />
+            <img src="/image/icon_correction.svg" style={{ width: 19, height: 19, marginBottom: 2 }} alt="즉시교정" />
             즉시교정
           </button>
           <button className="view-hint" onClick={handleHint}>
-            <img src="/image/icon_hint_color.svg" style={{ width: 19, height: 19, marginBottom:5 }} alt="힌트보기" />
+            <img src="/image/icon_hint_color.svg" style={{ width: 19, height: 19, marginBottom: 5 }} alt="힌트보기" />
             힌트보기
           </button>
         </>

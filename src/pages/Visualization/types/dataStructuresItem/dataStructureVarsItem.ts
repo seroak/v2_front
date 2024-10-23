@@ -4,5 +4,6 @@ export interface DataStructureVarsItem {
   expr: string;
   code?: string;
   type: string;
+  isActivate?: boolean;
   isLight?: boolean;
 }
