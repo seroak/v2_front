@@ -11,7 +11,7 @@ import GptIcon from "./components/LeftSection/components/GptIcon";
 import GptComment from "./components/LeftSection/components/GptComment";
 import Split from "react-split";
 import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
-import { fetchGuestActionRequest, fetchVisualize } from "@/services/api";
+import { fetchGuestActionRequest, fetchVisualize, getGuestStatus } from "@/services/api";
 //zustand store
 import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
@@ -66,26 +66,7 @@ const VisualizationClassroom = () => {
   const { isMswReady } = useMswReadyStore((state) => state);
   const params = useParams();
   const classroomId = Number(params.classroomId);
-  const getGuestStatus = async (classroomId: number) => {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/edupi-lms/v1/guest/action/status?classroomId=${classroomId}`,
-        {
-          method: "GET",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("An error occurred:", error);
-      throw error;
-    }
-  };
+
   const { data: guestStatus, refetch } = useQuery({
     queryKey: ["vizclassroom", classroomId],
     queryFn: () => getGuestStatus(classroomId),

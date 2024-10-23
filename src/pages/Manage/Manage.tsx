@@ -4,7 +4,7 @@ import { useMswReadyStore } from "@/store/mswReady";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
-import { getClassGuestData, fetchDeleteClassroom, getClassTotalActionInfo } from "@/services/api";
+import { getClassGuestData, fetchDeleteClassroom, getClassTotalActionInfo, inviteClassroom } from "@/services/api";
 interface GuestType {
   id: number;
   email: string;
@@ -28,10 +28,7 @@ interface GetClassTotalActionInfoType {
     totalInfo: TotalInfoType;
   };
 }
-interface props {
-  classroomId: number;
-  guestEmail: string;
-}
+
 const Modify = () => {
   const params = useParams();
   const classroomId = Number(params.classroomId);
@@ -39,29 +36,7 @@ const Modify = () => {
   const [guestEmail, setGuestEmail] = useState<string | undefined>();
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const navigate = useNavigate();
-  const inviteClassroom = async ({ classroomId, guestEmail }: props) => {
-    try {
-      const response = await fetch(`http://localhost:8080/edupi-lms/v1/classroom/account`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          classroomId: classroomId,
-          email: guestEmail,
-          role: 2,
-        }),
-      });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("An error occurred:", error);
-      throw error;
-    }
-  };
   const { data: classroomData, refetch: classroomDataRefetch } = useQuery<GetClassTotalActionInfoType>({
     queryKey: ["ClassTotalActionInfo", classroomId],
     queryFn: () => getClassTotalActionInfo(classroomId),
@@ -76,14 +51,7 @@ const Modify = () => {
   const changeGuestEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setGuestEmail(e.target.value);
   };
-  const submitInviteGuest = () => {
-    if (guestEmail) {
-      mutation.mutate({ classroomId, guestEmail });
-    } else {
-      console.error("클래스 이름을 입력하세요");
-    }
-  };
-  const mutation = useMutation({
+  const inviteClassroomMutation = useMutation({
     mutationFn: inviteClassroom,
     async onSuccess() {
       getClassroomRefetch();
@@ -93,6 +61,13 @@ const Modify = () => {
       console.error("클래스룸 초대 에러", error);
     },
   });
+  const submitInviteGuest = () => {
+    if (guestEmail) {
+      inviteClassroomMutation.mutate({ classroomId, guestEmail });
+    } else {
+      console.error("클래스 이름을 입력하세요");
+    }
+  };
 
   useEffect(() => {
     if (data) {

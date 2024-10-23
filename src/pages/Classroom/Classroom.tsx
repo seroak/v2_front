@@ -5,7 +5,7 @@ import { useMswReadyStore } from "@/store/mswReady";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { getClassGuestData, getClassTotalActionInfo, fetchClassOver } from "@/services/api";
-
+const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 interface GuestType {
   id: number;
   email: string;
@@ -119,7 +119,7 @@ const Classroom = () => {
     return { data };
   };
 
-  useSSE(`http://localhost:8080/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
+  useSSE(`${BASE_URL}/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
   return (
     <div>
       <LoggedInClassroomHeader />
