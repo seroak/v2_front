@@ -11,7 +11,7 @@ import GptIcon from "./components/LeftSection/components/GptIcon";
 import GptComment from "./components/LeftSection/components/GptComment";
 import Split from "react-split";
 import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
-import { fetchGuestActionRequest, fetchVisualize, getGuestStatus } from "@/services/api";
+import { fetchGuestActionRequest, visualize, getGuestStatus } from "@/services/api";
 //zustand store
 import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
@@ -81,7 +81,7 @@ const VisualizationClassroom = () => {
     setActionType(guestStatus?.result);
   }, [guestStatus]);
   const mutation = useMutation({
-    mutationFn: fetchVisualize,
+    mutationFn: visualize,
     async onSuccess(data) {
       const jsonData = await data.json();
       // 타입 체크 함수

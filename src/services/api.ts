@@ -10,7 +10,7 @@ import {
 
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
-export const fetchVisualize = async (code: string) => {
+export const visualize = async (code: string) => {
   try {
     const response = await fetch(`${BASE_URL}/edupi-syntax/v1/execute/visualize`, {
       method: "POST",
@@ -178,7 +178,7 @@ export const getTotalActionInfo = async (classroomId: number) => {
     throw error;
   }
 };
-export const fetchDeleteClassroom = async (classroomId: number) => {
+export const deleteClassroom = async (classroomId: number) => {
   try {
     const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom?classroomId=${classroomId}`, {
       method: "DELETE",
@@ -195,7 +195,7 @@ export const fetchDeleteClassroom = async (classroomId: number) => {
   }
 };
 
-export const fetchClassOver = async (classroomId: number) => {
+export const ClassEnd = async (classroomId: number) => {
   const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom/action/init`, {
     method: "POST",
     credentials: "include",

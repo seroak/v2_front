@@ -4,7 +4,7 @@ import { useMswReadyStore } from "@/store/mswReady";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
-import { getClassGuestData, fetchDeleteClassroom, getClassTotalActionInfo, inviteClassroom } from "@/services/api";
+import { getClassGuestData, deleteClassroom, getTotalActionInfo, inviteClassroom } from "@/services/api";
 
 interface GuestType {
   id: number;
@@ -23,7 +23,7 @@ interface ClassroomData {
     guests: GuestType[];
   };
 }
-interface GetClassTotalActionInfoType {
+interface GetTotalActionInfoType {
   result: {
     className: string;
     totalInfo: TotalInfoType;
@@ -38,7 +38,7 @@ const Modify = () => {
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const navigate = useNavigate();
 
-  const { data: classroomData, refetch: classroomDataRefetch } = useQuery<GetClassTotalActionInfoType>({
+  const { data: classroomData, refetch: classroomDataRefetch } = useQuery<GetTotalActionInfoType>({
     queryKey: ["ClassTotalActionInfo", classroomId],
     queryFn: () => getTotalActionInfo(classroomId),
     enabled: isMswReady,
@@ -77,7 +77,7 @@ const Modify = () => {
   }, [data]);
 
   const deleteClassroomMutation = useMutation({
-    mutationFn: fetchDeleteClassroom,
+    mutationFn: deleteClassroom,
     onSuccess: () => {
       alert("클래스룸이 삭제되었습니다.");
       navigate("/classroomspace");
