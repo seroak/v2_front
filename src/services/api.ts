@@ -259,7 +259,7 @@ export const emissionGuest = async (classroomAccountId: number) => {
 
 export const fetchLogout = async () => {
   try {
-    const response = await fetch(`GptHintResponse/edupi-user/v1/account/logout`, {
+    const response = await fetch(`${BASE_URL}/edupi-user/v1/account/logout`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
