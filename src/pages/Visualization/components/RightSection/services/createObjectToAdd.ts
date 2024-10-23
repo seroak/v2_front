@@ -139,7 +139,7 @@ export const createObjectToAdd = (
       return {
         ...baseObject,
         type: "variable",
-        name: (preprocessedCode as EndUserFuncDto).name,
+        name: (preprocessedCode as EndUserFuncDto).returnName,
         expr: (preprocessedCode as EndUserFuncDto).returnExpr,
       };
     default:
