@@ -9,14 +9,14 @@ interface CallUserFuncProps {
 }
 
 const CallUserFuncBox = ({ callUserFuncItem, children }: CallUserFuncProps): ReactNode => {
-  const { signature } = callUserFuncItem;
+  const { signature, isLight } = callUserFuncItem;
 
   return (
     <>
       <div>
         <div className={styles["return-val"]}>
           <span>result</span>
-          <div className={cx(styles["var-data"])}>
+          <div className={cx(styles["var-data"], isLight && styles.highlight)}>
             <div className={styles["box"]}></div>
           </div>
         </div>

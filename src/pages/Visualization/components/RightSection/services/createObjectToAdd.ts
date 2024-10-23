@@ -1,4 +1,3 @@
-import { AllObjectItem } from "@/pages/Visualization/types/codeFlow/allObjectItem";
 import { ForItem } from "@/pages/Visualization/types/codeFlow/forItem";
 import { ConditionItem } from "@/pages/Visualization/types/codeFlow/conditionItem";
 import { PrintItem } from "@/pages/Visualization/types/codeFlow/printItem";
@@ -24,10 +23,11 @@ export const createObjectToAdd = (
     | ReturnDto
     | EndUserFuncDto
 ): any => {
-  const baseObject: AllObjectItem = {
+  const baseObject: any = {
     id: preprocessedCode.id!,
     type: preprocessedCode.type,
     depth: preprocessedCode.depth!,
+    code: preprocessedCode.code!,
     isLight: false,
     child: [],
   };

@@ -1,5 +1,3 @@
-import { AllObjectItem } from "./allObjectItem";
-
 export interface ConditionItem {
   id: number;
   type: string;

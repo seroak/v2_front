@@ -6,6 +6,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { getClassGuestData, getClassTotalActionInfo, fetchClassOver } from "@/services/api";
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
+
 interface GuestType {
   id: number;
   email: string;
@@ -19,12 +20,12 @@ interface TotalInfoType {
   help: number;
 }
 
-interface ClassroomData {
+interface ClassroomDataType {
   result: {
     guests: GuestType[];
   };
 }
-interface GetClassTotalActionInfoType {
+interface TotalActionInfoType {
   result: {
     className: string;
     totalInfo: TotalInfoType;
@@ -38,14 +39,14 @@ const Classroom = () => {
   const params = useParams();
   const classroomId = Number(params.classroomId);
 
-  const { data: guestData, refetch: guestDataRefetch } = useQuery<ClassroomData>({
+  const { data: guestData, refetch: guestDataRefetch } = useQuery<ClassroomDataType>({
     queryKey: ["ClassGuestData", classroomId],
     queryFn: () => getClassGuestData(classroomId),
     enabled: isMswReady,
   });
-  const { data: classroomData, refetch: classroomDataRefetch } = useQuery<GetClassTotalActionInfoType>({
-    queryKey: ["ClassTotalActionInfo", classroomId],
-    queryFn: () => getClassTotalActionInfo(classroomId),
+  const { data: classroomData, refetch: classroomDataRefetch } = useQuery<TotalActionInfoType>({
+    queryKey: ["totalActionInfo", classroomId],
+    queryFn: () => getTotalActionInfo(classroomId),
     enabled: isMswReady,
   });
 

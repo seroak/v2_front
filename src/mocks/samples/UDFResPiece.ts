@@ -26,18 +26,7 @@ const UDFResPiece = [
   {
     // 오른쪽 변수 부분
     // isEven 콜스택 만드는 부분
-    args: [
-      {
-        expr: "22",
-        name: "name",
-        type: "variable",
-      },
-      {
-        expr: "010-3042",
-        name: "phoneNumber",
-        type: "variable",
-      },
-    ],
+    args: [],
     callStackName: "isEven",
     code: "result=isEven(name)",
     type: "createCallStack",
@@ -47,6 +36,7 @@ const UDFResPiece = [
     id: 2,
     name: "c",
     depth: 3,
+    code: "c=2",
     expr: "2",
     type: "variable",
   },
@@ -56,6 +46,7 @@ const UDFResPiece = [
         id: 2,
         expr: "2",
         name: "c",
+        code: "c=2",
         type: "variable",
       },
     ],
@@ -86,6 +77,7 @@ const UDFResPiece = [
         id: 5,
         expr: "True",
         name: "result",
+        code: "result=isEven(22)",
         type: "variable",
       },
     ],

@@ -9,6 +9,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useResetEditor } from "@/store/resetEditor";
 import { fetchGptCorrect, fetchGptHint } from "@/services/api";
+
 interface ModifiedCode {
   line: number;
   code: string;

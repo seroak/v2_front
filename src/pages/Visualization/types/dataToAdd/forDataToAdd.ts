@@ -9,5 +9,6 @@ export interface ForDataToAdd {
     step: string;
   };
   highlights: Array<string>;
+  code: string;
   type: string;
 }

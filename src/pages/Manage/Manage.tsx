@@ -5,6 +5,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
 import { getClassGuestData, fetchDeleteClassroom, getClassTotalActionInfo, inviteClassroom } from "@/services/api";
+
 interface GuestType {
   id: number;
   email: string;
@@ -39,7 +40,7 @@ const Modify = () => {
 
   const { data: classroomData, refetch: classroomDataRefetch } = useQuery<GetClassTotalActionInfoType>({
     queryKey: ["ClassTotalActionInfo", classroomId],
-    queryFn: () => getClassTotalActionInfo(classroomId),
+    queryFn: () => getTotalActionInfo(classroomId),
     enabled: isMswReady,
   });
 

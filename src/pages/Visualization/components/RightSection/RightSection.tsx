@@ -7,7 +7,7 @@ import ResizeObserver from "resize-observer-polyfill";
 import Arrow from "./components/Arrow/Arrow";
 
 // 타입 정의
-import { AllObjectItem } from "@/pages/Visualization/types/codeFlow/allObjectItem";
+
 import { ActivateItem } from "@/pages/Visualization/types/activateItem";
 import { VariablesDto, Variables } from "@/pages/Visualization/types/dto/variablesDto";
 import { ForDto } from "@/pages/Visualization/types/dto/forDto";
@@ -34,6 +34,7 @@ import { updateActivate } from "./services/updateActivate";
 import { turnOffAllNodeLight } from "./services/turnOffAllNodeLight";
 import { findTargetChild } from "./services/findTargetChild";
 import { findDeleteUsedId } from "./services/findDeleteUsedId";
+import { unLightCodeFlow } from "./services/unLightCodeFlow";
 
 //rendUtils에서 가져온 함수
 import { renderingStructure } from "./renderingStructure";
@@ -48,7 +49,7 @@ import { useRightSectionStore } from "@/store/arrow";
 import { useEditorStore } from "@/store/editor";
 
 interface State {
-  objects: AllObjectItem[];
+  objects: any[];
 }
 
 const RightSection = () => {
@@ -118,7 +119,7 @@ const RightSection = () => {
       }
     };
   }, []);
-
+  // 시각화를 할때 왼쪽 코드 에디터에서 하이라이트를 줄 라인을 담는 배열
   const highlightLine: number[] = [];
   // codeFlowList를 업데이트하는 useEffect
   useEffect(() => {
@@ -131,7 +132,7 @@ const RightSection = () => {
       objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
     };
     let accDataStructures: WarperDataStructureItem = {
-      main: [],
+      main: { data: [], isLight: false },
     };
 
     const accCodeFlowList: State[] = [];
@@ -140,10 +141,20 @@ const RightSection = () => {
     let accConsoleLog: string = "";
     const arrowTexts: string[] = [];
     for (let preprocessedCode of preprocessedCodes) {
-      let changedCodeFlows: AllObjectItem[] = [];
+      let changedCodeFlows: any[] = [];
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
       }
+
+      accDataStructures = Object.entries(accDataStructures).reduce((acc, [key, value]) => {
+        acc[key] = {
+          data: value.data.map((structure) => ({
+            ...structure,
+          })),
+          isLight: false,
+        };
+        return acc;
+      }, {} as WarperDataStructureItem);
       // enduserFunc 타입이 들어왔을 때 코드흐름과 변수 부분 함수를 지우고 return value를 나타나게 한다
       if (preprocessedCode.type.toLowerCase() === "endUserFunc".toLowerCase()) {
         const delName = (preprocessedCode as EndUserFuncDto).delFuncName;
@@ -168,17 +179,20 @@ const RightSection = () => {
         }
 
         accCodeFlow = { objects: finallyCodeFlow };
+
         prevTrackingId = toAddObject.id;
         prevTrackingDepth = toAddObject.depth;
+        arrowTexts.push((preprocessedCode as EndUserFuncDto).code);
       }
       // 자료구조 시각화 부분이 들어왔을 때
       else if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
         const callStackName = (preprocessedCode as VariablesDto).callStackName;
         // 오른쪽에 변수로 함수를 넣을 때
         if ((preprocessedCode as VariablesDto).variables[0].type.toLowerCase() === "function".toLowerCase()) {
-          const { id, expr, name, type } = (preprocessedCode as VariablesDto).variables[0];
+          const { id, expr, name, type, code } = (preprocessedCode as VariablesDto).variables[0];
+          accDataStructures[callStackName].data.push({ id, expr, name, type });
 
-          accDataStructures[callStackName].push({ id, expr, name, type });
+          arrowTexts.push(code);
         } else {
           (preprocessedCode as VariablesDto).variables.forEach((variable: Variables) => {
             highlightLine.push(variable.id);
@@ -193,7 +207,7 @@ const RightSection = () => {
             }
             // 처음 시각화해주는 자료구조인 경우
             else {
-              accDataStructures[callStackName].push(variable);
+              accDataStructures[callStackName].data.push(variable);
               usedName.push(variable.name!);
             }
 
@@ -206,15 +220,19 @@ const RightSection = () => {
       }
       // 함수 생성으로 새로운 함수 콜스택이 나올 떄
       else if (preprocessedCode.type.toLowerCase() === "createCallStack".toLowerCase()) {
-        accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName] = [];
+        accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName] = { data: [], isLight: false };
         for (let arg of (preprocessedCode as CreateCallStackDto).args) {
-          accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].push({
+          accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
             expr: arg.expr,
             name: arg.name,
             type: arg.type,
           });
         }
+        arrowTexts.push((preprocessedCode as CreateCallStackDto).code);
+
+        accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].isLight = true;
       }
+
       // 코드 시각화 부분이 들어왔을 때
       else {
         // ifelseDefine 타입
@@ -231,6 +249,7 @@ const RightSection = () => {
             // ifelse 타입의 객체에 depth를 추가해주는 부분
             const ifElseItem = Object.assign(condition, {
               depth: (preprocessedCode as IfElseDto).depth,
+              code: (preprocessedCode as IfElseDto).code,
             });
             // ifelse 타입의 객체를 만들어주는 함수
             const toAddObject = createObjectToAdd(ifElseItem);
@@ -256,14 +275,13 @@ const RightSection = () => {
         //그밖의 타입
         else {
           // 그밖의 타입에서 화살표에 넣을 코드를 넣는다
-          arrowTexts.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).code);
 
+          arrowTexts.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).code);
           highlightLine.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id);
 
           const toAddObject = createObjectToAdd(
             preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
           );
-
           // print 타입일 때 console창의 로그를 만드는 부분
           if ((toAddObject as PrintItem).type === "print") {
             const printObject = toAddObject as PrintItem;
@@ -294,10 +312,11 @@ const RightSection = () => {
               changedCodeFlows = addCodeFlow(accCodeFlow.objects, toAddObject);
             }
           }
-
           activate = updateActivate(activate, toAddObject);
           const finallyCodeFlow = turnLight(changedCodeFlows, activate);
+
           accCodeFlow = { objects: finallyCodeFlow };
+
           if (toAddObject.type !== "variable" && toAddObject.type !== "list") {
             prevTrackingDepth = (
               preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto | WhileDto
@@ -307,29 +326,56 @@ const RightSection = () => {
           }
         }
       }
+
       // 불을 켜줘야하는 자료구조의의 name을 담는 배열
-      let toLightStructures: any;
-      if ((preprocessedCode as VariablesDto).variables === undefined) {
-        toLightStructures = [];
-      } else {
-        toLightStructures = (preprocessedCode as VariablesDto).variables?.map((element) => {
-          return element.name;
+      let toLightStructures: any = {};
+      if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
+        (preprocessedCode as VariablesDto).variables?.forEach((element) => {
+          const callStackName = (preprocessedCode as VariablesDto).callStackName;
+          // ToLightStructures에 키가 없으면 초기화
+          if (!toLightStructures[callStackName]) {
+            toLightStructures[callStackName] = [];
+          }
+
+          toLightStructures[callStackName].push(element.name);
         });
       }
 
-      accDataStructures = Object.keys(accDataStructures).reduce((acc, key) => {
-        acc[key] = accDataStructures[key].map((structure) => ({
-          ...structure,
-          isLight: toLightStructures?.includes(structure.name), // toLightStructures에 자료구조 이름이 있으면 isLight를 true로 설정
-        }));
-        return acc;
-      }, {} as WarperDataStructureItem);
+      if (preprocessedCode.type.toLowerCase() === "createCallStack".toLowerCase()) {
+        (preprocessedCode as CreateCallStackDto).args?.forEach((element) => {
+          const callStackName = (preprocessedCode as CreateCallStackDto).callStackName;
+          // ToLightStructures에 키가 없으면 초기화
+          if (!toLightStructures[callStackName]) {
+            toLightStructures[callStackName] = [];
+          }
+          toLightStructures[callStackName].push(element.name);
+        });
+        // 함수 생성시 콜스택이 변수 시각화에 나타나고 코드흐름은 하이라이트를 끄기 위해 사용
+        const unLightaccCodeFlow = unLightCodeFlow(accCodeFlow.objects);
+        accCodeFlow = { objects: unLightaccCodeFlow };
+      }
+
+      const updatedAccDataStructures: WarperDataStructureItem = Object.entries(accDataStructures).reduce(
+        (acc, [key, value]) => {
+          acc[key] = {
+            data: value.data.map((structure) => ({
+              ...structure,
+              isLight: toLightStructures[key]?.includes(structure.name) ?? false,
+            })),
+            isLight: value.isLight,
+          };
+          return acc;
+        },
+        {} as WarperDataStructureItem
+      );
 
       // 자료구조리스트에서 얕은 복사 문제가 생겨서 깊은 복사를 해준다
-      const deepCloneStructures = _.cloneDeep(accDataStructures);
+      const deepCloneStructures = _.cloneDeep(updatedAccDataStructures);
 
       accDataStructuresList.push(deepCloneStructures);
-      accCodeFlowList.push(accCodeFlow);
+
+      const deepClodeCodeFlow = _.cloneDeep(accCodeFlow);
+      accCodeFlowList.push(deepClodeCodeFlow);
       accConsoleLogList.push(accConsoleLog);
     }
 
@@ -345,6 +391,7 @@ const RightSection = () => {
   return (
     <div id="split-2" ref={rightSectionRef}>
       <p className="view-section-title">시각화</p>
+      <Arrow code={arrowTextList[stepIdx]} />
       <Split
         sizes={[70, 30]}
         minSize={100}
@@ -368,7 +415,6 @@ const RightSection = () => {
           </div>
         </div>
         <div id="split-2-2" className="view-section2-2" ref={rightSection2Ref}>
-          <Arrow code={arrowTextList[stepIdx]} />
           <div className="view-data">
             <p className="data-name">변수</p>
 

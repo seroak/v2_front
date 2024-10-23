@@ -69,6 +69,7 @@ const UDFResponseBody = [
     id: 1,
     returnValue: "True", // 반환값이 없으면 빈문자열
     depth: 1,
+    code: "result=isEven(name)",
     type: "endUserFunc",
   },
 ];
