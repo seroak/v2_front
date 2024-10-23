@@ -8,24 +8,11 @@ import { useGptMutationStore } from "@/store/gptMutation";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useResetEditor } from "@/store/resetEditor";
+import { fetchGptCorrect, fetchGptHint } from "@/services/api";
 
 interface ModifiedCode {
   line: number;
   code: string;
-}
-
-interface GptCorrectResponse {
-  result: {
-    reason: string;
-    modified_codes: ModifiedCode[];
-  };
-}
-
-interface GptHintResponse {
-  result: {
-    hint: string;
-    line: number;
-  };
 }
 
 const GptComment = () => {
@@ -76,19 +63,6 @@ const GptComment = () => {
     }
   };
 
-  const fetchGptCorrect = async (code: string): Promise<GptCorrectResponse> => {
-    const response = await fetch("http://localhost:8080/edupi-syntax/v1/advice/correct", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ source_code: code }),
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.json();
-  };
-
   const gptCorrectMutation = useMutation({
     mutationFn: fetchGptCorrect,
     async onSuccess(data) {
@@ -112,22 +86,9 @@ const GptComment = () => {
     },
     onError(error) {
       console.error("An error occurred:", error);
-      // TODO: Add user-facing error handling
+      // TODO: 에러 헨들링 추가
     },
   });
-
-  const fetchGptHint = async (code: string, lineNumber: number): Promise<GptHintResponse> => {
-    const response = await fetch("http://localhost:8080/edupi-syntax/v1/advice/hint", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ line: lineNumber, source_code: code }),
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.json();
-  };
 
   const gptHintMutation = useMutation({
     mutationFn: () => fetchGptHint(code, errorLine?.lineNumber || 1),
@@ -138,7 +99,7 @@ const GptComment = () => {
     },
     onError(error) {
       console.error("An error occurred:", error);
-      // TODO: Add user-facing error handling
+      // TODO: 에러 헨들링 추가
     },
   });
 

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-
+const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 const AuthEmail = () => {
   const [searchParams, _] = useSearchParams();
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const AuthEmail = () => {
 
       try {
         // 쿼리 스트링 값을 fetch 요청에 포함
-        const response = await fetch(`http://localhost:8080/edupi-user/v1/account/activate`, {
+        const response = await fetch(`${BASE_URL}/edupi-user/v1/account/activate`, {
           method: "POST",
           credentials: "include",
           headers: {
