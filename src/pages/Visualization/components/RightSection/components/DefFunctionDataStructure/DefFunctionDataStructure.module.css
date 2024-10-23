@@ -5,7 +5,7 @@
   gap: 35px; /* 요소 사이에 일정한 간격 추가 */
 }
 
-.left-container{
+.left-container {
   display: flex;
   flex-direction: row;
   gap: 15px;
@@ -17,7 +17,6 @@
   font-size: 20px;
   margin-right: 10px;
 }
-
 
 .right-container {
   display: flex;
@@ -50,10 +49,13 @@
   margin-top: 2px;
 }
 
-  .func-data > span > span {
+.func-data > span > span {
   position: absolute;
   bottom: -28px;
   color: rgba(24, 24, 24, 0.3);
   left: 50%;
   transform: translateX(-50%);
+}
+.highlight {
+  background-color: #354fce !important;
 }

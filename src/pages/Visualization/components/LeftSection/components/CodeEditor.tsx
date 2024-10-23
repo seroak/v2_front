@@ -1,4 +1,4 @@
-import { useContext, Fragment, useRef, useEffect, useState } from "react";
+import { useContext, Fragment, useRef, useEffect } from "react";
 import Editor, { OnMount } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import { CodeContext } from "../../../Visualization";
