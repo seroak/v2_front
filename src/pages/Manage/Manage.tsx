@@ -12,7 +12,7 @@ interface GuestType {
   name: string;
   status: number;
 }
-interface TotalInfoType {
+interface ActionInfoType {
   ing: number;
   complete: number;
   help: number;
@@ -26,7 +26,7 @@ interface ClassroomData {
 interface GetTotalActionInfoType {
   result: {
     className: string;
-    totalInfo: TotalInfoType;
+    actionInfo: ActionInfoType;
   };
 }
 
