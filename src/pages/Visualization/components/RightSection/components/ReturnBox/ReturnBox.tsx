@@ -9,9 +9,11 @@ function ReturnBox({ returnItem }: Props) {
   return (
     <div>
       <span>Return</span>
-      <div className={cx(styles["return-data"], isLight && styles["highlight"], returnExpr == "False" && [" false"])}>
-        <span>{returnExpr}</span>
-      </div>
+      {returnExpr !== "" && (
+        <div className={cx(styles["return-data"], isLight && styles["highlight"], returnExpr == "False" && [" false"])}>
+          <span>{returnExpr}</span>
+        </div>
+      )}
     </div>
   );
 }
