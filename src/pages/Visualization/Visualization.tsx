@@ -69,6 +69,7 @@ export default function Visualization() {
       if (isValidTypeDtoArray(data.result.code)) {
         setPreprocessedCodes(data.result.code);
         setDisplayNone(false);
+        setIsPlaying(() => true);
       } else {
         console.error("데이터 형식이 올바르지 않습니다");
         throw new Error("데이터 형식이 올바르지 않습니다");
@@ -81,7 +82,7 @@ export default function Visualization() {
         const linNumber = Number((error as any).result.error[0]);
         const message = (error as any).result.error;
         setErrorLine({ lineNumber: linNumber, message: message });
-
+        setCode(() => []);
         setConsole([message]);
       }
     },
@@ -90,7 +91,6 @@ export default function Visualization() {
     event.preventDefault();
     resetConsole();
     mutation.mutate(code);
-    setIsPlaying(() => true);
   };
 
   const onPlay = () => {
