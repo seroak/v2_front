@@ -36,7 +36,8 @@ const Login = () => {
     setUserPassword(e.target.value);
   };
   const loginByGoogle = () => {
-    window.location.href = "http://localhost:3000/api/auth/google";
+    window.location.href =
+      "http://localhost:8080/edupi-user/oauth2/authorization/google?redirect_uri=http://localhost:5000/viz";
   };
   return (
     <Fragment>
