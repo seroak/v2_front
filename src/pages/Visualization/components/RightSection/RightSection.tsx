@@ -124,6 +124,7 @@ const RightSection = () => {
   const highlightLine: number[] = [];
   // codeFlowList를 업데이트하는 useEffect
   useEffect(() => {
+    if (preprocessedCodes.length === 0) return;
     let prevTrackingId: number = 0;
     let prevTrackingDepth: number = 0;
     let activate: ActivateItem[] = [];

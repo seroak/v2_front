@@ -63,6 +63,8 @@ const VisualizationClassroom = () => {
   const setErrorLine = useEditorStore((state) => state.setErrorLine);
   const [actionType, setActionType] = useState<ActionType>(ActionType.ING);
   const [isPlaying, setIsPlaying] = useState(false);
+  const setConsole = useConsoleStore((state) => state.setConsole);
+
   const { isMswReady } = useMswReadyStore((state) => state);
   const params = useParams();
   const classroomId = Number(params.classroomId);
@@ -99,15 +101,19 @@ const VisualizationClassroom = () => {
   useEffect(() => {
     setActionType(guestStatus?.result);
   }, [guestStatus]);
+
   const mutation = useMutation({
     mutationFn: fetchVisualize,
     async onSuccess(data) {
-      const jsonData = await data.json();
       // 타입 체크 함수
-      if (isValidTypeDtoArray(jsonData)) {
-        setPreprocessedCodes(jsonData);
+
+      if (isValidTypeDtoArray(data.result.code)) {
+        resetConsole();
+        setPreprocessedCodes(data.result.code);
         setDisplayNone(false);
+        setIsPlaying(() => true);
       } else {
+        console.error("데이터 형식이 올바르지 않습니다");
         throw new Error("데이터 형식이 올바르지 않습니다");
       }
     },
@@ -115,15 +121,17 @@ const VisualizationClassroom = () => {
       console.error("Submit Error:", error);
       if (error.message === "데이터 형식이 올바르지 않습니다") {
       } else {
-        setErrorLine({ lineNumber: 1, message: "syntax error" });
+        const linNumber = Number((error as any).result.error[0]);
+        const message = (error as any).result.error;
+        setErrorLine({ lineNumber: linNumber, message: message });
+        setConsole([message]);
+        setPreprocessedCodes([]);
       }
     },
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    resetConsole();
     mutation.mutate(code);
-    setIsPlaying(() => true);
   };
 
   const onPlay = () => {
