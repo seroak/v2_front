@@ -77,11 +77,11 @@ const Login = () => {
                 로그인
               </button>
               <img className="mt24 mb24" src="/image/img_or.png" alt="" />
-              <button className="sns-btn kakao mb8" type="submit">
+              <button className="sns-btn kakao mb8">
                 <img src="/image/icon_kakao.svg" alt="" />
                 <p>카카오로 로그인</p>
               </button>
-              <button className="sns-btn goggle" type="submit" onClick={loginByGoogle}>
+              <button className="sns-btn goggle" onClick={loginByGoogle}>
                 <img src="/image/icon_goggle.svg" alt="" />
                 <p>구글로 로그인</p>
               </button>
