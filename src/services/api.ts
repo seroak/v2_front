@@ -3,7 +3,7 @@ import { User, LoginUser } from "../types/apiTypes";
 
 export const fetchVisualize = async (code: string) => {
   try {
-    const response = await fetch("http://localhost:8080/edupi-syntax/v1/execute/visualize", {
+    const response = await fetch("http://localhost:8080/edupi-assist/v1/execute/visualize", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -30,7 +30,7 @@ interface SignupUser {
 
 export const handlers = [
   // //시각화 요청 성공
-  http.post("http://localhost:8080/edupi-syntax/v1/execute/visualize", () => {
+  http.post("http://localhost:8080/edupi-assist/v1/execute/visualize", () => {
     return HttpResponse.json(
       {
         success: false,
