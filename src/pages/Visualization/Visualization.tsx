@@ -67,6 +67,7 @@ export default function Visualization() {
       // 타입 체크 함수
 
       if (isValidTypeDtoArray(data.result.code)) {
+        resetConsole();
         setPreprocessedCodes(data.result.code);
         setDisplayNone(false);
         setIsPlaying(() => true);
@@ -90,7 +91,7 @@ export default function Visualization() {
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    resetConsole();
+
     mutation.mutate(code);
   };
 
