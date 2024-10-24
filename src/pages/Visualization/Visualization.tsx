@@ -82,7 +82,8 @@ export default function Visualization() {
         const linNumber = Number((error as any).result.error[0]);
         const message = (error as any).result.error;
         setErrorLine({ lineNumber: linNumber, message: message });
-        setCode(() => []);
+        setPreprocessedCodes(() => []);
+
         setConsole([message]);
       }
     },
