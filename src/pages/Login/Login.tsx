@@ -35,6 +35,9 @@ const Login = () => {
   const handleUserPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserPassword(e.target.value);
   };
+  const loginByGoogle = () => {
+    window.location.href = "http://localhost:3000/api/auth/google";
+  };
   return (
     <Fragment>
       <div className={"bg-gray"}>
@@ -77,7 +80,7 @@ const Login = () => {
                 <img src="/image/icon_kakao.svg" alt="" />
                 <p>카카오로 로그인</p>
               </button>
-              <button className="sns-btn goggle" type="submit">
+              <button className="sns-btn goggle" type="submit" onClick={loginByGoogle}>
                 <img src="/image/icon_goggle.svg" alt="" />
                 <p>구글로 로그인</p>
               </button>
