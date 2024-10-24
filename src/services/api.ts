@@ -12,7 +12,7 @@ const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
 export const visualize = async (code: string) => {
   try {
-    const response = await fetch(`${BASE_URL}/edupi-syntax/v1/execute/visualize`, {
+    const response = await fetch(`${BASE_URL}/edupi-assist/v1/execute/visualize`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
