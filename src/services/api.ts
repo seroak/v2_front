@@ -274,26 +274,6 @@ export const logout = async () => {
   }
 };
 
-export const oauthUnlink = async () => {
-  try {
-    const response = await fetch(
-      `${BASE_URL}/edupi-user/oauth2/authorization/google?redirect_uri=http://localhost:5000/viz&mode=unlink`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
 export const fetchGptCorrect = async (code: string): Promise<GptCorrectResponse> => {
   const response = await fetch(`${BASE_URL}/edupi-syntax/v1/advice/correct`, {
     method: "POST",

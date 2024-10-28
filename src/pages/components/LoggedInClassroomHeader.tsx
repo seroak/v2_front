@@ -1,20 +1,19 @@
+import { logout } from "@/services/api";
 import styles from "./LoggedInHeader.module.css";
 import { useUserStore } from "@/store/user";
-import { logout, oauthUnlink } from "@/services/api";
+
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
-const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
+
 const LoggedInClassroomHeader = () => {
   const params = useParams();
   const resetUser = useUserStore((state) => state.resetUser);
   const userName = useUserStore((state) => state.userName);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const handlelogout = async () => {
     try {
       logout();
-      // oauthUnlink();
       resetUser();
-      window.location.href = `${BASE_URL}/edupi-user/oauth2/authorization/google?redirect_uri=http://localhost:5000/viz&mode=unlink`;
-      // navigate("/");
+      navigate("/");
     } catch {
       console.error("로그아웃 에러");
     }
