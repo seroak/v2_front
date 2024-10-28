@@ -1,14 +1,15 @@
 import styles from "./LoggedInHeader.module.css";
 import { useUserStore } from "@/store/user";
-import { fetchLogout } from "@/services/api";
+import { logout, oauthUnlink } from "@/services/api";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 const LoggedInHeader = () => {
   const userName = useUserStore((state) => state.userName);
   const resetUser = useUserStore((state) => state.resetUser);
   const navigate = useNavigate();
-  const logout = async () => {
+  const handleLogout = async () => {
     try {
-      fetchLogout();
+      logout();
+      oauthUnlink();
       resetUser();
       navigate("/");
     } catch {
@@ -22,7 +23,7 @@ const LoggedInHeader = () => {
           <img src="/image/img_logo.png" alt="로고" />
         </Link>
         {/* <!-- 활성화 할 a태그에 on_active 클래스 추가 --> */}
-        <NavLink to="/classroomspace" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+        <NavLink to="/classroomdashboard" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
           클래스룸
         </NavLink>
 
@@ -33,7 +34,7 @@ const LoggedInHeader = () => {
 
       <div>
         {userName === "" ? null : <span style={{ marginRight: "10px" }}>{userName}님</span>}
-        <span onClick={logout} className={styles["logout"]}>
+        <span onClick={handleLogout} className={styles["logout"]}>
           <span>로그아웃</span>
         </span>
       </div>
