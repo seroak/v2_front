@@ -24,7 +24,7 @@ export const visualize = async (code: string) => {
     }
     return response.json();
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
@@ -68,7 +68,7 @@ export const getHostGuestData = async (classroomId: number) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
@@ -91,7 +91,7 @@ export const inviteClassroom = async ({ classroomId, guestEmail }: inviteClassro
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
@@ -108,7 +108,7 @@ export const getGuestStatus = async (classroomId: number) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
@@ -142,7 +142,7 @@ export const getClassGuestData = async (classroomId: number) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
@@ -174,7 +174,7 @@ export const getTotalActionInfo = async (classroomId: number) => {
     data.result.totalInfo = { ing, complete, help };
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
@@ -190,7 +190,7 @@ export const deleteClassroom = async (classroomId: number) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
@@ -232,7 +232,7 @@ export const fetchGuestActionRequest = async (req: any) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
@@ -252,12 +252,12 @@ export const emissionGuest = async (classroomAccountId: number) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
 
-export const fetchLogout = async () => {
+export const logout = async () => {
   try {
     const response = await fetch(`${BASE_URL}/edupi-user/v1/account/logout`, {
       method: "GET",
@@ -267,10 +267,29 @@ export const fetchLogout = async () => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-
     return;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
+    throw error;
+  }
+};
+
+export const oauthUnlink = async () => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/edupi-user/oauth2/authorization/google?redirect_uri=http://localhost:5000/viz&mode=unlink`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return;
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 };

@@ -1248,7 +1248,7 @@ header .group-btn {
   z-index: 9999;
   background-color: #fff;
 }
-.gpt-hint{
+.gpt-hint {
   margin-right: -15px;
 }
 
@@ -1257,7 +1257,7 @@ header .group-btn {
   min-width: 300px;
   margin: 5px 40px 17px 35px;
 }
-.gpt-success .container{
+.gpt-success .container {
   margin-top: -2px;
   /*margin-right: 7px;*/
 }
@@ -1498,7 +1498,7 @@ header .group-btn {
   cursor: pointer;
   border: 1px solid transparent;
   display: flex;
-  padding-top : 7px;
+  padding-top: 7px;
 }
 
 .button-left .approve {
@@ -1519,12 +1519,11 @@ header .group-btn {
 }
 .highlighted-code {
   font-family: monospace;
-  background-color: #FAFAFA;
+  background-color: #fafafa;
 
   border-radius: 5px;
   padding-top: 15px;
   width: 100%;
-
 }
 .highlighted-code pre {
   margin: -5px 20px !important;
@@ -1544,7 +1543,7 @@ header .group-btn {
   width: 108px;
   height: 35px;
   gap: 6px;
-  background-color: #5C48FA;
+  background-color: #5c48fa;
   font-weight: 500;
   color: #ffffff;
 }
@@ -1563,10 +1562,10 @@ header .group-btn {
   align-items: center;
   gap: 4px;
   background-color: #ffffff;
-  border-color: #5C48FA;
+  border-color: #5c48fa;
   border-width: 2px;
   font-weight: bolder;
-  color: #5C48FA;
+  color: #5c48fa;
 }
 .gpt-icon {
   position: absolute;
@@ -1602,16 +1601,50 @@ gpt-icon-small {
   font-weight: 600;
 }
 
-.var-container{
+.var-container {
   display: flex;
   margin-left: 0px;
   align-items: center;
   gap: 40px;
 }
 
-.var-container .name{
+.var-container .name {
   font-weight: 600;
   font-size: 20px;
   width: 150px;
   text-align: right;
+}
+
+@font-face {
+  font-family: "GmarketSans";
+  font-weight: 300;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansLight.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansLight.eot?#iefix") format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansLight.woff2") format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansLight.woff") format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansLight.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "GmarketSans";
+  font-weight: 500;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansMedium.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansMedium.eot?#iefix") format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansMedium.woff2") format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansMedium.woff") format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansMedium.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "GmarketSans";
+  font-weight: 700;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansBold.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansBold.eot?#iefix") format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansBold.woff2") format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansBold.woff") format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansBold.ttf") format("truetype");
+  font-display: swap;
 }
