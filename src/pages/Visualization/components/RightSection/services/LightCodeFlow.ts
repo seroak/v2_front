@@ -9,16 +9,15 @@ export const turnLight = (
       return {
         ...codeFlow,
         isLight: true,
-        child: turnLight(codeFlow.child, Activate),
+        child: LightCodeFlow(codeFlow.child, Activate),
       };
     } else if (codeFlow.child && codeFlow.child.length > 0) {
       return {
         ...codeFlow,
         isLight: false,
-        child: turnLight(codeFlow.child, Activate),
+        child: LightCodeFlow(codeFlow.child, Activate),
       };
-    } else {
-      return { ...codeFlow, isLight: false };
     }
+    return { ...codeFlow, isLight: false };
   });
 };

@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { fetchEmissionGuest } from "@/services/api";
+import { emissionGuest } from "@/services/api";
 interface GuestType {
   id: number;
   name: string;
@@ -14,7 +14,7 @@ interface props {
 const Guest = ({ guest, getClassroomRefetch }: props) => {
   const useEmissoionGuestMutation = () => {
     return useMutation({
-      mutationFn: fetchEmissionGuest,
+      mutationFn: emissionGuest,
       onSuccess: () => {
         alert("방출되었습니다.");
         getClassroomRefetch();

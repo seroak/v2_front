@@ -10,8 +10,7 @@ export const insertIntoDepth = (codeFlows: any[], toAddObject: any, prevTracking
         ...codeFlow,
         child: insertIntoDepth(codeFlow.child, toAddObject, prevTrackingId),
       };
-    } else {
-      return codeFlow;
     }
+    return codeFlow;
   });
 };

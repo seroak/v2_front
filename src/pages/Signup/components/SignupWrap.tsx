@@ -4,8 +4,9 @@ import TermsOfServiceModal from "./TermsOfServiceModal";
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { TrySignupContext } from "../Signup";
+import { signup } from "@/services/api";
 import cx from "classnames";
-import axios from "axios";
+
 interface FormData {
   username: string;
   email: string;
@@ -153,10 +154,7 @@ const SignupWrap = () => {
         name: formData.username,
         phoneNumber: formData.phoneNumber,
       };
-      return axios.post("http://localhost:8080/edupi-user/v1/account/signup", req, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
+      return signup(req);
     },
     onSuccess() {
       setTrySignup(true);

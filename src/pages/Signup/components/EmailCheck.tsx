@@ -20,7 +20,7 @@ const EmailChek = () => {
           <br />
           에듀파이의 서비스를 마음껏 이용하실 수 있어요.
         </p>
-        <a className="check-Button" type="button" data-button="true" href="http://localhost:5000/login">
+        <a className="check-Button" type="button" data-button="true" href="login">
           <div className="check-Button-inner">
             <span className="check-Button-label">로그인 페이지로 가기</span>
           </div>
