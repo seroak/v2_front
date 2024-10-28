@@ -5,13 +5,15 @@ interface Props {
   returnItem: ReturnItem;
 }
 function ReturnBox({ returnItem }: Props) {
-  const { returnValue, isLight } = returnItem;
+  const { returnExpr, isLight } = returnItem;
   return (
     <div>
       <span>Return</span>
-      <div className={cx(styles["return-data"], isLight && styles["highlight"])}>
-        <span>{returnValue}</span>
-      </div>
+      {returnExpr !== "" && (
+        <div className={cx(styles["return-data"], isLight && styles["highlight"], returnExpr == "False" && [" false"])}>
+          <span>{returnExpr}</span>
+        </div>
+      )}
     </div>
   );
 }

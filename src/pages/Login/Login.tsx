@@ -3,7 +3,7 @@ import PublicHeader from "../components/PublicHeader";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { getUser, login } from "@/services/api";
-
+const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 const Login = () => {
   const [userId, setUserId] = useState<string>("");
   const [userPassword, setUserPassword] = useState<string>("");
@@ -36,8 +36,7 @@ const Login = () => {
     setUserPassword(e.target.value);
   };
   const loginByGoogle = () => {
-    window.location.href =
-      "http://localhost:8080/edupi-user/oauth2/authorization/google?redirect_uri=http://localhost:5000/viz";
+    window.location.href = `http://${BASE_URL}:8080/edupi-user/oauth2/authorization/google?redirect_uri=http://localhost:5000/viz`;
   };
   return (
     <Fragment>
