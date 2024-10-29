@@ -11,7 +11,7 @@ import { CodeFlowListDto } from "@/pages/Visualization/types/dto/codeFlowListDto
 import { CallUserFuncDto } from "@/pages/Visualization/types/dto/callUserFuncDto";
 import { ReturnDto } from "@/pages/Visualization/types/dto/returnDto";
 import { EndUserFuncDto } from "@/pages/Visualization/types/dto/endUserFuncDto";
-
+import { AppendDto } from "@/pages/Visualization/types/dto/appendDto";
 // 스택에 넣을 객체를 생성하는 함수
 export const createObjectToAdd = (
   preprocessedCode:
@@ -142,6 +142,7 @@ export const createObjectToAdd = (
         name: (preprocessedCode as EndUserFuncDto).returnName,
         expr: (preprocessedCode as EndUserFuncDto).returnExpr,
       };
+
     default:
       throw new Error(`Unsupported type: ${type}`);
   }

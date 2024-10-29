@@ -10,6 +10,7 @@ import { CreateCallStackDto, isCreateCallStackDto } from "./createCallStackDto";
 import { EndUserFuncDto, isEndUserFuncDto } from "./endUserFuncDto";
 import { CreateFuncDto, isCreateFuncDto } from "./createFuncDto";
 import { ReturnDto, isReturnDto } from "./returnDto";
+import { AppendDto, isAppendDto } from "./appendDto";
 export type ValidTypeDto =
   | ForDto
   | PrintDto
@@ -22,7 +23,8 @@ export type ValidTypeDto =
   | CreateFuncDto
   | CreateCallStackDto
   | EndUserFuncDto
-  | ReturnDto;
+  | ReturnDto
+  | AppendDto;
 
 export const isValidTypeDto = (item: any): item is ValidTypeDto => {
   return (
@@ -37,7 +39,8 @@ export const isValidTypeDto = (item: any): item is ValidTypeDto => {
     isCreateFuncDto(item) ||
     isCreateCallStackDto(item) ||
     isEndUserFuncDto(item) ||
-    isReturnDto(item)
+    isReturnDto(item) ||
+    isAppendDto(item)
   );
 };
 

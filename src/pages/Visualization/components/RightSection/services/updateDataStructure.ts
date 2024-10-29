@@ -1,4 +1,4 @@
-import { WarperDataStructureItem } from "@/pages/Visualization/types/dataStructuresItem/warperDataStructureItem";
+import { WarperDataStructureItem } from "@/pages/Visualization/types/dataStructuresItem/wrapperDataStructureItem";
 import { VariableDto } from "@/pages/Visualization/types/dto/variableDto";
 export const updateDataStructure = (
   targetName: string,

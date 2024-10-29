@@ -6,4 +6,5 @@ export interface DataStructureVarsItem {
   type: string;
   isActivate?: boolean;
   isLight?: boolean;
+  highlightIdx?: number[];
 }
