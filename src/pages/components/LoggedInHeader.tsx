@@ -1,15 +1,18 @@
 import styles from "./LoggedInHeader.module.css";
 import { useUserStore } from "@/store/user";
-import { logout } from "@/services/api";
+import { fetchLogout, getUser } from "@/services/api";
+import { useQuery } from "@tanstack/react-query";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { User } from "@/App";
 const LoggedInHeader = () => {
-  const userName = useUserStore((state) => state.userName);
-  const resetUser = useUserStore((state) => state.resetUser);
+  // const userName = useUserStore((state) => state.userName);
+  // const resetUser = useUserStore((state) => state.resetUser);
+  const userData = useQuery<User>({ queryKey: ["user"], queryFn: getUser, staleTime: 1000 * 60 });
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
-      logout();
-      resetUser();
+      fetchLogout();
+      // resetUser();
       navigate("/");
     } catch {
       console.error("로그아웃 에러");
@@ -32,8 +35,12 @@ const LoggedInHeader = () => {
       </div>
 
       <div>
-        {userName === "" ? null : <span style={{ marginRight: "10px" }}>{userName}님</span>}
-        <span onClick={handleLogout} className={styles["logout"]}>
+        {!userData.data?.name ? (
+          <span>{userData.isFetching ? "로딩중" : ""}</span>
+        ) : (
+          <span style={{ marginRight: "10px" }}>{userData.data.name}님</span>
+        )}
+        <span onClick={logout} className={styles["logout"]}>
           <span>로그아웃</span>
         </span>
       </div>
