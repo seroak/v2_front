@@ -18,11 +18,11 @@ import { PrintItem } from "@/pages/Visualization/types/codeFlow/printItem";
 
 import { WhileDto } from "@/pages/Visualization/types/dto/whileDto";
 import { AllDataStructureItem } from "@/pages/Visualization/types/dataStructuresItem/allDataStructureItem";
-import { WarperDataStructureItem } from "@/pages/Visualization/types/dataStructuresItem/warperDataStructureItem";
+import { WrapperDataStructureItem } from "@/pages/Visualization/types/dataStructuresItem/wrapperDataStructureItem";
 import { CreateCallStackDto } from "@/pages/Visualization/types/dto/createCallStackDto";
 import { EndUserFuncDto } from "@/pages/Visualization/types/dto/endUserFuncDto";
 import { usedNameObjectType } from "../../types/dataStructuresItem/usedNameObjectType";
-
+import { DataStructureVarsItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureVarsItem";
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
 import { insertIntoDepth } from "./services/insertIntoDepth";
@@ -47,6 +47,7 @@ import { deleteCodeFlow } from "./services/deleteCodeFlow";
 import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useRightSectionStore } from "@/store/arrow";
 import { useEditorStore } from "@/store/editor";
+import { AppendDto } from "../../types/dto/appendDto";
 
 interface State {
   objects: any[];
@@ -132,7 +133,7 @@ const RightSection = () => {
     let accCodeFlow: State = {
       objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
     };
-    let accDataStructures: WarperDataStructureItem = {
+    let accDataStructures: WrapperDataStructureItem = {
       main: { data: [], isLight: false },
     };
 
@@ -155,7 +156,7 @@ const RightSection = () => {
           isLight: false,
         };
         return acc;
-      }, {} as WarperDataStructureItem);
+      }, {} as WrapperDataStructureItem);
       // enduserFunc 타입이 들어왔을 때 코드흐름과 변수 부분 함수를 지우고 return value를 나타나게 한다
       // 나타나고 바로 사라지는건 traking id와 depth를 사용하지 않는다
       if (preprocessedCode.type.toLowerCase() === "endUserFunc".toLowerCase()) {
@@ -180,14 +181,35 @@ const RightSection = () => {
         accCodeFlow = { objects: finallyCodeFlow };
         arrowTexts.push((preprocessedCode as EndUserFuncDto).code);
       }
+      // append 타입이 들어왔을 떄 변수흐름의 변화는 따로 처리
+      else if (preprocessedCode.type.toLowerCase() === "append".toLowerCase()) {
+        const callStackName = (preprocessedCode as AppendDto).callStackName;
+        const variable = (preprocessedCode as AppendDto).variable;
+        if (variable.type.toLowerCase() === "variable") {
+          accDataStructures[callStackName].data.map((data: DataStructureVarsItem) => {
+            if (data.name === variable.name) {
+              data.expr = data.expr.slice(0, -1) + ", " + variable.expr + "]";
+              data.highlightIdx = [data.expr.length - 1];
+            }
+          });
+          arrowTexts.push(variable.code);
+        }
+        console.log(accDataStructures[callStackName].data);
+        // 코드 흐름 시각화에서 표현된 자료구조 시각화 객체를 삭제하는 부분
+        let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, variable.id!);
+        usedId = usedId.filter((id) => id !== variable.id);
+        accCodeFlow = { objects: deletedCodeFlow };
+      }
       // 자료구조 시각화 부분이 들어왔을 때
-      // 나타나고 바로 사라지는건 traking id와 depth를 사용하지 않는다ㄴ
-      else if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
+      // 나타나고 바로 사라지는건 traking id와 depth를 사용하지 않는다
+      else if (preprocessedCode.type.toLowerCase() == "assign".toLowerCase()) {
         const callStackName = (preprocessedCode as VariablesDto).callStackName;
         // 오른쪽에 변수로 함수를 넣을 때
         if ((preprocessedCode as VariablesDto).variables[0].type.toLowerCase() === "function".toLowerCase()) {
           const { id, expr, name, type, code } = (preprocessedCode as VariablesDto).variables[0];
-          accDataStructures[callStackName].data.push({ id, expr, name, type });
+          const highlightIdx = new Array(expr.length).fill(0).map((_, idx) => idx + 1);
+
+          accDataStructures[callStackName].data.push({ id, expr, name, type, highlightIdx });
 
           arrowTexts.push(code);
         } else {
@@ -200,7 +222,6 @@ const RightSection = () => {
               const targetName = variable.name!;
 
               accDataStructures = updateDataStructure(targetName, accDataStructures, variable, callStackName);
-              console.log(accDataStructures);
             }
             // 처음 시각화해주는 자료구조인 경우
             else {
@@ -339,7 +360,13 @@ const RightSection = () => {
           toLightStructures[callStackName].push(element.name);
         });
       }
-
+      if (preprocessedCode.type.toLowerCase() === "append".toLowerCase()) {
+        const callStackName = (preprocessedCode as AppendDto).callStackName;
+        const variable = (preprocessedCode as AppendDto).variable;
+        if (variable.type.toLowerCase() === "variable") {
+          toLightStructures[callStackName] = [variable.name];
+        }
+      }
       if (preprocessedCode.type.toLowerCase() === "createCallStack".toLowerCase()) {
         (preprocessedCode as CreateCallStackDto).args?.forEach((element) => {
           const callStackName = (preprocessedCode as CreateCallStackDto).callStackName;
@@ -354,7 +381,7 @@ const RightSection = () => {
         accCodeFlow = { objects: unLightaccCodeFlow };
       }
 
-      const updatedAccDataStructures: WarperDataStructureItem = Object.entries(accDataStructures).reduce(
+      const updatedAccDataStructures: WrapperDataStructureItem = Object.entries(accDataStructures).reduce(
         (acc, [key, value]) => {
           acc[key] = {
             data: value.data.map((structure) => ({
@@ -365,7 +392,7 @@ const RightSection = () => {
           };
           return acc;
         },
-        {} as WarperDataStructureItem
+        {} as WrapperDataStructureItem
       );
 
       // 자료구조리스트에서 얕은 복사 문제가 생겨서 깊은 복사를 해준다

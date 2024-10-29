@@ -77,8 +77,9 @@ export default function Visualization() {
       }
     },
     onError(error) {
-      console.error("Submit Error:", error);
+      console.error(error);
       if (error.message === "데이터 형식이 올바르지 않습니다") {
+        return;
       } else {
         const linNumber = Number((error as any).result.error[0]);
         const message = (error as any).result.error;

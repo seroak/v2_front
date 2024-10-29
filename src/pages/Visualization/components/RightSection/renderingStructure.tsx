@@ -10,7 +10,7 @@ import DefFunctionDataStructure from "./components/DefFunctionDataStructure/DefF
 //type
 import { DataStructureVarsItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureVarsItem";
 import { DataStructureListItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureListItem";
-import { WarperDataStructureItem, StructureValue } from "../../types/dataStructuresItem/warperDataStructureItem";
+import { WrapperDataStructureItem, StructureValue } from "../../types/dataStructuresItem/wrapperDataStructureItem";
 import { DataStructureFunctionItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureFunctionItem";
 //zustand
 import { useArrowStore } from "@/store/arrow";
@@ -72,7 +72,7 @@ const CallstackItem = ({ children, structure, height, width }: CallstackProps) =
 };
 
 export const renderingStructure = (
-  structures: WarperDataStructureItem, //변수시각화 리스트
+  structures: WrapperDataStructureItem, //변수시각화 리스트
   height: number,
   width: number
 ): ReactElement => {
