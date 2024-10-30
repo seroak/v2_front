@@ -17,7 +17,7 @@ import { useArrowStore } from "@/store/arrow";
 
 interface Props {
   children?: ReactNode;
-  structure: DataStructureListItem | DataStructureVarsItem | WarperDataStructureItem;
+  structure: DataStructureListItem | DataStructureVarsItem | WrapperDataStructureItem;
 
   height: number;
   width: number;

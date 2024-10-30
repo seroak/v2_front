@@ -9,7 +9,7 @@ import Arrow from "./components/Arrow/Arrow";
 // 타입 정의
 
 import { ActivateItem } from "@/pages/Visualization/types/activateItem";
-import { VariablesDto, Variables } from "@/pages/Visualization/types/dto/variablesDto";
+import { VariablesDto, VariableExprArray } from "@/pages/Visualization/types/dto/variablesDto";
 import { ForDto } from "@/pages/Visualization/types/dto/forDto";
 import { PrintDto } from "@/pages/Visualization/types/dto/printDto";
 import { IfElseDto } from "@/pages/Visualization/types/dto/ifElseDto";
@@ -157,6 +157,7 @@ const RightSection = () => {
         };
         return acc;
       }, {} as WrapperDataStructureItem);
+
       // enduserFunc 타입이 들어왔을 때 코드흐름과 변수 부분 함수를 지우고 return value를 나타나게 한다
       // 나타나고 바로 사라지는건 traking id와 depth를 사용하지 않는다
       if (preprocessedCode.type.toLowerCase() === "endUserFunc".toLowerCase()) {
@@ -188,13 +189,12 @@ const RightSection = () => {
         if (variable.type.toLowerCase() === "variable") {
           accDataStructures[callStackName].data.map((data: DataStructureVarsItem) => {
             if (data.name === variable.name) {
-              data.expr = data.expr.slice(0, -1) + ", " + variable.expr + "]";
               data.highlightIdx = [data.expr.length - 1];
             }
           });
           arrowTexts.push(variable.code);
         }
-        console.log(accDataStructures[callStackName].data);
+
         // 코드 흐름 시각화에서 표현된 자료구조 시각화 객체를 삭제하는 부분
         let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, variable.id!);
         usedId = usedId.filter((id) => id !== variable.id);
@@ -213,7 +213,17 @@ const RightSection = () => {
 
           arrowTexts.push(code);
         } else {
-          (preprocessedCode as VariablesDto).variables.forEach((variable: Variables) => {
+          (preprocessedCode as VariablesDto).variables.forEach((variable) => {
+            if (variable.type.toLowerCase() === "variable") {
+              if (typeof variable.expr === "string") {
+                (variable as VariableExprArray).expr = variable.expr.split(",");
+              }
+            } else if (variable.type.toLowerCase() === "list") {
+              if (typeof variable.expr === "string") {
+                (variable as VariableExprArray).expr = variable.expr.slice(1, -1).split(",");
+              }
+            }
+
             highlightLine.push(variable.id);
             // 자료구조 시각화에서 화살표에 넣을 코드를 넣는다
             arrowTexts.push(variable.code);
@@ -221,13 +231,19 @@ const RightSection = () => {
             if (usedName[callStackName].includes(variable.name!)) {
               const targetName = variable.name!;
 
-              accDataStructures = updateDataStructure(targetName, accDataStructures, variable, callStackName);
+              accDataStructures = updateDataStructure(
+                targetName,
+                accDataStructures,
+                variable as VariableExprArray,
+                callStackName
+              );
             }
             // 처음 시각화해주는 자료구조인 경우
             else {
-              accDataStructures[callStackName].data.push(variable);
+              accDataStructures[callStackName].data.push(variable as VariableExprArray);
               usedName[callStackName].push(variable.name!);
             }
+            console.log(accDataStructures);
 
             // 코드 흐름 시각화에서 표현된 자료구조 시각화 객체를 삭제하는 부분
             let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, variable.id!);
@@ -251,7 +267,6 @@ const RightSection = () => {
         accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].isLight = true;
         usedName[(preprocessedCode as CreateCallStackDto).callStackName] = [];
       }
-
       // 코드 시각화 부분이 들어왔을 때
       else {
         // ifelseDefine 타입
