@@ -157,7 +157,6 @@ const RightSection = () => {
         };
         return acc;
       }, {} as WrapperDataStructureItem);
-
       // enduserFunc 타입이 들어왔을 때 코드흐름과 변수 부분 함수를 지우고 return value를 나타나게 한다
       // 나타나고 바로 사라지는건 traking id와 depth를 사용하지 않는다
       if (preprocessedCode.type.toLowerCase() === "endUserFunc".toLowerCase()) {
@@ -194,7 +193,6 @@ const RightSection = () => {
           });
           arrowTexts.push(variable.code);
         }
-
         // 코드 흐름 시각화에서 표현된 자료구조 시각화 객체를 삭제하는 부분
         let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, variable.id!);
         usedId = usedId.filter((id) => id !== variable.id);

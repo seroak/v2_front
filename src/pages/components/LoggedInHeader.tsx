@@ -12,6 +12,7 @@ const LoggedInHeader = () => {
   const handleLogout = async () => {
     try {
       logout();
+
       // resetUser();
       navigate("/");
     } catch {

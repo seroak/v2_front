@@ -1,13 +1,22 @@
 // Type: assign 부분
-export interface Variables {
+export interface VariableExprArray {
+  id: number;
+  expr: string[];
+  name: string;
+  idx: { start: number; end: number };
+  code: string;
+  type: string;
+}
+export interface Variable {
   id: number;
   expr: string;
   name: string;
+  idx: { start: number; end: number };
   code: string;
   type: string;
 }
 export interface VariablesDto {
-  variables: Variables[];
+  variables: Variable[] | VariableExprArray[];
   callStackName: string;
   type: string;
 }

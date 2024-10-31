@@ -5,8 +5,10 @@ type Props = {
   listItem: DataStructureListItem;
 };
 function ListWrapper({ listItem }: Props) {
+  console.log(listItem);
   const { expr, isLight, name } = listItem;
   console.log("ListWrapper", listItem);
+
   return (
     <li>
       <span>{name}</span>

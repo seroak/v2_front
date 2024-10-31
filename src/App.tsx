@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Visualization from "./pages/Visualization/Visualization";
