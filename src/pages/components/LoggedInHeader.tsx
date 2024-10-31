@@ -2,6 +2,7 @@ import styles from "./LoggedInHeader.module.css";
 import { useUserStore } from "@/store/user";
 import { logout } from "@/services/api";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 const LoggedInHeader = () => {
   const userName = useUserStore((state) => state.userName);
   const resetUser = useUserStore((state) => state.resetUser);
@@ -9,11 +10,9 @@ const LoggedInHeader = () => {
   const handleLogout = async () => {
     try {
       const response = await logout();
-      console.log(response);
       if (response.isOauthUser === "true") {
-        console.log("소셜 로그아웃", response);
         resetUser();
-        window.location.href = `http://localhost:8080/edupi-user/oauth2/authorization/${response.provider}?mode=unlink&redirect_uri=http://localhost:5000`;
+        window.location.href = `${BASE_URL}/edupi-user/oauth2/authorization/${response.provider}?mode=unlink&redirect_uri=http://localhost:5000`;
       } else {
         resetUser();
         navigate("/");
