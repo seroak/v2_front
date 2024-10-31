@@ -1,4 +1,5 @@
 import { useState, FormEvent, ChangeEvent, Fragment } from "react";
+import { useLocation } from "react-router-dom";
 import PublicHeader from "../components/PublicHeader";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +10,8 @@ const Login = () => {
   const [userPassword, setUserPassword] = useState<string>("");
 
   const navigate = useNavigate();
+  const location = useLocation();
+
   const { refetch } = useQuery({ queryKey: ["user"], queryFn: getUser });
   const mutation = useMutation({
     mutationFn: async ({ userId, userPassword }: { userId: string; userPassword: string }) => {
@@ -38,10 +41,13 @@ const Login = () => {
   const loginByGoogle = () => {
     window.location.href = `${BASE_URL}/edupi-user/oauth2/authorization/google?redirect_uri=http://localhost:5000`;
   };
+  const errorMessage = new URLSearchParams(location.search).get("error");
   return (
     <Fragment>
       <div className={"bg-gray"}>
         <PublicHeader />
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
+
         <div className="login-wrap">
           <img className="mb20" src="/image/img_logo2.png" alt="로고" />
           <p className="mb40">
