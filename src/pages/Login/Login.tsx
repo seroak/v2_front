@@ -1,4 +1,4 @@
-import { useState, FormEvent, ChangeEvent, Fragment } from "react";
+import { useState, FormEvent, ChangeEvent, Fragment, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import PublicHeader from "../components/PublicHeader";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -41,12 +41,19 @@ const Login = () => {
   const loginByGoogle = () => {
     window.location.href = `${BASE_URL}/edupi-user/oauth2/authorization/google?redirect_uri=http://localhost:5000`;
   };
-  const errorMessage = new URLSearchParams(location.search).get("error");
+  // 에러 파라미터 감지 및 처리
+  useEffect(() => {
+    const errorMessage = new URLSearchParams(location.search).get("error");
+    if (errorMessage) {
+      alert("이미 존재하는 회원입니다");
+      // 에러 메시지 표시 후 쿼리 파라미터 제거
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location.search, navigate]);
   return (
     <Fragment>
       <div className={"bg-gray"}>
         <PublicHeader />
-        {errorMessage && <div className="error-message">{errorMessage}</div>}
 
         <div className="login-wrap">
           <img className="mb20" src="/image/img_logo2.png" alt="로고" />
