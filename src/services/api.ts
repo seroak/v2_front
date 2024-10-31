@@ -267,6 +267,7 @@ export const logout = async () => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+    console.log(response);
     return;
   } catch (error) {
     console.error(error);
