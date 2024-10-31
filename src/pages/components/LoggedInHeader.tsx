@@ -10,7 +10,7 @@ const LoggedInHeader = () => {
     try {
       const response = await logout();
       if (response.oauthUser === "true") {
-        window.location.href = `http://localhost:8080/edupi-user/oauth2/authorization/{provider}?mode=unlink&redirect_uri=localhost:5000/`;
+        window.location.href = `http://localhost:8080/edupi-user/oauth2/authorization/${response.provider}?mode=unlink&redirect_uri=localhost:5000/`;
       } else {
         resetUser();
         navigate("/");
