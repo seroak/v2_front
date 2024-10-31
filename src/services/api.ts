@@ -8,6 +8,10 @@ import {
   GptHintResponse,
 } from "../types/apiTypes";
 
+interface LogoutResponse {
+  isOauthUser: string;
+  provider: string;
+}
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
 export const visualize = async (code: string) => {
@@ -257,7 +261,7 @@ export const emissionGuest = async (classroomAccountId: number) => {
   }
 };
 
-export const logout = async () => {
+export const logout = async (): Promise<LogoutResponse> => {
   try {
     const response = await fetch(`${BASE_URL}/edupi-user/v1/account/logout`, {
       method: "GET",
@@ -267,7 +271,8 @@ export const logout = async () => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return;
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error(error);
     throw error;
