@@ -207,7 +207,7 @@ const RightSection = () => {
       }
       // 자료구조 시각화 부분이 들어왔을 때
       // 나타나고 바로 사라지는건 traking id와 depth를 사용하지 않는다
-      else if (preprocessedCode.type.toLowerCase() == "assign".toLowerCase()) {
+      else if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
         const callStackName = (preprocessedCode as VariablesDto).callStackName;
         // 오른쪽에 변수로 함수를 넣을 때
         if ((preprocessedCode as VariablesDto).variables[0].type.toLowerCase() === "function".toLowerCase()) {
