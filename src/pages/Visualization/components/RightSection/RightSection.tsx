@@ -142,12 +142,13 @@ const RightSection = () => {
     const accConsoleLogList: string[] = [];
     let accConsoleLog: string = "";
     const arrowTexts: string[] = [];
+    console.log("hi");
     for (let preprocessedCode of preprocessedCodes) {
       let changedCodeFlows: any[] = [];
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
       }
-
+      console.log("hi");
       accDataStructures = Object.entries(accDataStructures).reduce((acc, [key, value]) => {
         acc[key] = {
           data: value.data.map((structure) => ({
