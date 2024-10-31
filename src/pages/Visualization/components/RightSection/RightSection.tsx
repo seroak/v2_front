@@ -142,13 +142,13 @@ const RightSection = () => {
     const accConsoleLogList: string[] = [];
     let accConsoleLog: string = "";
     const arrowTexts: string[] = [];
-    console.log("hi");
+
     for (let preprocessedCode of preprocessedCodes) {
       let changedCodeFlows: any[] = [];
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
       }
-      console.log("hi");
+
       accDataStructures = Object.entries(accDataStructures).reduce((acc, [key, value]) => {
         acc[key] = {
           data: value.data.map((structure) => ({
@@ -190,10 +190,16 @@ const RightSection = () => {
           accDataStructures[callStackName].data.map((data: DataStructureVarsItem) => {
             if (data.name === variable.name) {
               data.highlightIdx = [data.expr.length - 1];
+              data.expr.push(variable.expr);
+              if (data.idx) {
+                data.idx.start = data.expr.length - 1;
+                data.idx.end = data.expr.length - 1;
+              }
             }
           });
           arrowTexts.push(variable.code);
         }
+
         // 코드 흐름 시각화에서 표현된 자료구조 시각화 객체를 삭제하는 부분
         let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, variable.id!);
         usedId = usedId.filter((id) => id !== variable.id);
@@ -207,9 +213,8 @@ const RightSection = () => {
         if ((preprocessedCode as VariablesDto).variables[0].type.toLowerCase() === "function".toLowerCase()) {
           const { id, expr, name, type, code } = (preprocessedCode as VariablesDto).variables[0];
           const highlightIdx = new Array(expr.length).fill(0).map((_, idx) => idx + 1);
-
-          accDataStructures[callStackName].data.push({ id, expr, name, type, highlightIdx });
-
+          const exprArray = [expr];
+          accDataStructures[callStackName].data.push({ id, expr: exprArray as string[], name, type, highlightIdx });
           arrowTexts.push(code);
         } else {
           (preprocessedCode as VariablesDto).variables.forEach((variable) => {
@@ -242,7 +247,6 @@ const RightSection = () => {
               accDataStructures[callStackName].data.push(variable as VariableExprArray);
               usedName[callStackName].push(variable.name!);
             }
-            console.log(accDataStructures);
 
             // 코드 흐름 시각화에서 표현된 자료구조 시각화 객체를 삭제하는 부분
             let deletedCodeFlow = deleteCodeFlow(accCodeFlow.objects, variable.id!);
@@ -256,7 +260,7 @@ const RightSection = () => {
         accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName] = { data: [], isLight: false };
         for (let arg of (preprocessedCode as CreateCallStackDto).args) {
           accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
-            expr: arg.expr,
+            expr: [arg.expr],
             name: arg.name,
             type: arg.type,
           });

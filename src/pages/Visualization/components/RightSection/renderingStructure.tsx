@@ -111,7 +111,6 @@ export const renderingStructure = (
                     }
                     case "list": {
                       const listItem = structure as DataStructureListItem;
-                      console.log(listItem);
                       return (
                         <AnimatePresence key={listItem.name + key} mode="wait">
                           <motion.div
