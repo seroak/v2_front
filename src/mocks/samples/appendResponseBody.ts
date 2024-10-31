@@ -12,6 +12,10 @@ const appendResponseBody = [
         id: 2,
         expr: "[1, 2, 3, 4]",
         name: "a",
+        idx: {
+          start: 0,
+          end: 3,
+        },
         code: "a = [1,2,3,4]",
         type: "list",
       },

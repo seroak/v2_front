@@ -5,16 +5,21 @@ type Props = {
   listItem: DataStructureListItem;
 };
 function ListWrapper({ listItem }: Props) {
-  console.log(listItem);
   const { expr, isLight, name } = listItem;
-  console.log("ListWrapper", listItem);
-
   return (
     <li>
       <span>{name}</span>
       <div className={styles.wrapper}>
         {expr?.map((exprItem, index) => {
-          return <ListBlock key={index} exprItem={exprItem} isLight={isLight} index={index} />;
+          return (
+            <ListBlock
+              key={index}
+              exprItem={exprItem}
+              isLight={isLight}
+              isLightCheck={listItem.idx.start <= index && index <= listItem.idx.end}
+              index={index}
+            />
+          );
         })}
       </div>
     </li>
