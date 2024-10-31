@@ -13,7 +13,7 @@ const LoggedInHeader = () => {
       if (response.isOauthUser === "true") {
         console.log("소셜 로그아웃", response);
         resetUser();
-        window.location.href = `http://localhost:8080/edupi-user/oauth2/authorization/${response.provider}?mode=unlink&redirect_uri=localhost:5000/`;
+        window.location.href = `http://localhost:8080/edupi-user/oauth2/authorization/${response.provider}?mode=unlink&redirect_uri=localhost:5000`;
       } else {
         resetUser();
         navigate("/");
