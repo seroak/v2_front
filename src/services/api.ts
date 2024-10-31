@@ -9,7 +9,7 @@ import {
 } from "../types/apiTypes";
 
 interface LogoutResponse {
-  oauthUser: string;
+  isOauthUser: string;
   provider: string;
 }
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
