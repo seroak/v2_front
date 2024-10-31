@@ -8,9 +8,13 @@ const LoggedInHeader = () => {
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
-      logout();
-      resetUser();
-      navigate("/");
+      const response = await logout();
+      if (response.oauthUser === "true") {
+        window.location.href = `http://localhost:8080/edupi-user/oauth2/authorization/{provider}?mode=unlink&redirect_uri=localhost:5000/`;
+      } else {
+        resetUser();
+        navigate("/");
+      }
     } catch {
       console.error("로그아웃 에러");
     }
