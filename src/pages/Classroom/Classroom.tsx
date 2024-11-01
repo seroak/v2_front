@@ -4,7 +4,7 @@ import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { getClassGuestData, getClassTotalActionInfo, fetchClassOver } from "@/services/api";
+import { getClassGuestData, getTotalActionInfo, ClassEnd } from "@/services/api";
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
 interface GuestType {
@@ -14,7 +14,7 @@ interface GuestType {
   status: number;
   role: number;
 }
-interface TotalInfoType {
+interface ActionInfoType {
   ing: number;
   complete: number;
   help: number;
@@ -28,12 +28,12 @@ interface ClassroomDataType {
 interface TotalActionInfoType {
   result: {
     className: string;
-    totalInfo: TotalInfoType;
+    actionInfo: ActionInfoType;
   };
 }
 const Classroom = () => {
   const [guests, setGuests] = useState<GuestType[]>();
-  const [totalInfo, setTotalInfo] = useState<TotalInfoType>();
+  const [actionInfo, setActionInfo] = useState<ActionInfoType>();
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const navigate = useNavigate();
   const params = useParams();
@@ -58,18 +58,18 @@ const Classroom = () => {
 
   useEffect(() => {
     if (classroomData) {
-      setTotalInfo(classroomData.result.totalInfo);
+      setActionInfo(classroomData.result.actionInfo);
     }
   }, [classroomData]);
 
   const classOverMutation = useMutation({
-    mutationFn: fetchClassOver,
+    mutationFn: ClassEnd,
     onSuccess: () => {
       classroomDataRefetch();
       navigate("/classroomspace");
     },
-    onError: (error) => {
-      console.error("An error occurred:", error);
+    onError: () => {
+      alert("정상적으로 수업이 종료되지 않았습니다");
     },
   });
 
@@ -138,28 +138,28 @@ const Classroom = () => {
                 <img src="/image/progress01.svg" alt="전체" />
                 <div>
                   <p>전체</p>
-                  <p>{totalInfo && totalInfo?.ing + totalInfo?.complete + totalInfo?.help}</p>
+                  <p>{actionInfo && actionInfo?.ing + actionInfo?.complete + actionInfo?.help}</p>
                 </div>
               </li>
               <li>
                 <img src="/image/progress02.svg" alt="미제출" />
                 <div>
                   <p>제출 중</p>
-                  <p>{totalInfo?.ing}</p>
+                  <p>{actionInfo?.ing}</p>
                 </div>
               </li>
               <li>
                 <img src="/image/progress03.svg" alt="성공" />
                 <div>
                   <p>제출 완료</p>
-                  <p>{totalInfo?.complete}</p>
+                  <p>{actionInfo?.complete}</p>
                 </div>
               </li>
               <li>
                 <img src="/image/progress04.svg" alt="실패" />
                 <div>
                   <p>도움</p>
-                  <p>{totalInfo?.help}</p>
+                  <p>{actionInfo?.help}</p>
                 </div>
               </li>
             </ul>

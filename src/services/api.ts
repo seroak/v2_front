@@ -8,11 +8,15 @@ import {
   GptHintResponse,
 } from "../types/apiTypes";
 
+interface LogoutResponse {
+  isOauthUser: string;
+  provider: string;
+}
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
-export const fetchVisualize = async (code: string) => {
+export const visualize = async (code: string) => {
   try {
-    const response = await fetch(`${BASE_URL}/edupi-syntax/v1/execute/visualize`, {
+    const response = await fetch(`${BASE_URL}/edupi-assist/v1/execute/visualize`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -24,7 +28,7 @@ export const fetchVisualize = async (code: string) => {
     }
     return response.json();
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
@@ -68,7 +72,7 @@ export const getHostGuestData = async (classroomId: number) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
@@ -91,7 +95,7 @@ export const inviteClassroom = async ({ classroomId, guestEmail }: inviteClassro
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
@@ -108,7 +112,7 @@ export const getGuestStatus = async (classroomId: number) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
@@ -142,7 +146,7 @@ export const getClassGuestData = async (classroomId: number) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
@@ -174,11 +178,11 @@ export const getTotalActionInfo = async (classroomId: number) => {
     data.result.totalInfo = { ing, complete, help };
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
-export const fetchDeleteClassroom = async (classroomId: number) => {
+export const deleteClassroom = async (classroomId: number) => {
   try {
     const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom?classroomId=${classroomId}`, {
       method: "DELETE",
@@ -190,12 +194,12 @@ export const fetchDeleteClassroom = async (classroomId: number) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
 
-export const fetchClassOver = async (classroomId: number) => {
+export const ClassEnd = async (classroomId: number) => {
   const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom/action/init`, {
     method: "POST",
     credentials: "include",
@@ -232,7 +236,7 @@ export const fetchGuestActionRequest = async (req: any) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
@@ -252,12 +256,12 @@ export const emissionGuest = async (classroomAccountId: number) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };
 
-export const fetchLogout = async () => {
+export const logout = async (): Promise<LogoutResponse> => {
   try {
     const response = await fetch(`${BASE_URL}/edupi-user/v1/account/logout`, {
       method: "GET",
@@ -267,10 +271,10 @@ export const fetchLogout = async () => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-
-    return;
+    const data = await response.json();
+    return data;
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error(error);
     throw error;
   }
 };

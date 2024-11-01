@@ -1,4 +1,7 @@
 header {
+  position: fixed;
+  top: 0;
+  width: 100%;
   padding: 0 20px;
   height: 68px;
   display: flex;
@@ -6,6 +9,7 @@ header {
   justify-content: space-between;
   border-bottom: 1px solid var(--gray01);
   background-color: #fff;
+  z-index: 99;
 }
 .header-logo img {
   height: 32px;

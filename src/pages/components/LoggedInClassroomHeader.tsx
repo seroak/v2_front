@@ -1,4 +1,4 @@
-import { fetchLogout } from "@/services/api";
+import { logout } from "@/services/api";
 import styles from "./LoggedInHeader.module.css";
 import { useUserStore } from "@/store/user";
 
@@ -9,9 +9,9 @@ const LoggedInClassroomHeader = () => {
   const resetUser = useUserStore((state) => state.resetUser);
   const userName = useUserStore((state) => state.userName);
   const navigate = useNavigate();
-  const logout = async () => {
+  const handlelogout = async () => {
     try {
-      fetchLogout();
+      logout();
       resetUser();
       navigate("/");
     } catch {
@@ -42,7 +42,7 @@ const LoggedInClassroomHeader = () => {
         </NavLink>
 
         <NavLink
-          to={`/classroomspace/classroom/manage/${classroomId}`}
+          to={`/classroomdashboard/classroom/manage/${classroomId}`}
           className={({ isActive }) => (isActive ? styles["on_active"] : "")}
         >
           설정
@@ -51,7 +51,7 @@ const LoggedInClassroomHeader = () => {
 
       <div>
         <NavLink
-          to={`/classroomspace`}
+          to={`/classroomdashboard`}
           end
           className={({ isActive }) => (isActive ? styles["on_active"] : "")}
           style={{ marginRight: "10px" }}
@@ -61,7 +61,7 @@ const LoggedInClassroomHeader = () => {
           </button>
         </NavLink>
         <button
-          onClick={logout}
+          onClick={handlelogout}
           className={styles["logout"] + " nav-button"}
           style={{ marginRight: "10px", color: "gray" }}
         >

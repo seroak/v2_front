@@ -1,16 +1,29 @@
 import styles from "./LoggedInHeader.module.css";
 import { useUserStore } from "@/store/user";
-import { fetchLogout } from "@/services/api";
+import { logout, getUser } from "@/services/api";
+import { useQuery } from "@tanstack/react-query";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+
+import { User } from "@/App";
+
+const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
+
 const LoggedInHeader = () => {
-  const userName = useUserStore((state) => state.userName);
-  const resetUser = useUserStore((state) => state.resetUser);
+  // const userName = useUserStore((state) => state.userName);
+  // const resetUser = useUserStore((state) => state.resetUser);
+  const userData = useQuery<User>({ queryKey: ["user"], queryFn: getUser, staleTime: 1000 * 60 });
   const navigate = useNavigate();
-  const logout = async () => {
+  const handleLogout = async () => {
     try {
-      fetchLogout();
-      resetUser();
-      navigate("/");
+      const response = await logout();
+      if (response.isOauthUser === "true") {
+        resetUser();
+        window.location.href = `${BASE_URL}/edupi-user/oauth2/authorization/${response.provider}?mode=unlink&redirect_uri=http://localhost:5000`;
+      } else {
+        resetUser();
+        navigate("/");
+      }
+
     } catch {
       console.error("로그아웃 에러");
     }
@@ -22,7 +35,7 @@ const LoggedInHeader = () => {
           <img src="/image/img_logo.png" alt="로고" />
         </Link>
         {/* <!-- 활성화 할 a태그에 on_active 클래스 추가 --> */}
-        <NavLink to="/classroomspace" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+        <NavLink to="/classroomdashboard" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
           클래스룸
         </NavLink>
 
@@ -32,7 +45,11 @@ const LoggedInHeader = () => {
       </div>
 
       <div>
-        {userName === "" ? null : <span style={{ marginRight: "10px" }}>{userName}님</span>}
+        {!userData.data?.name ? (
+          <span>{userData.isFetching ? "로딩중" : ""}</span>
+        ) : (
+          <span style={{ marginRight: "10px" }}>{userData.data.name}님</span>
+        )}
         <span onClick={logout} className={styles["logout"]}>
           <span>로그아웃</span>
         </span>

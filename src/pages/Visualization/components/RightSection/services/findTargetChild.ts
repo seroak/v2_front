@@ -1,7 +1,5 @@
-import { AllObjectItem } from "@/pages/Visualization/types/codeFlow/allObjectItem";
-
-export const findTargetChild = (codeFlows: AllObjectItem[], toAddObject: AllObjectItem): AllObjectItem[] => {
-  let targetChild: AllObjectItem[] = [];
+export const findTargetChild = (codeFlows: any[], toAddObject: any): any[] => {
+  let targetChild: any[] = [];
 
   for (const codeFlow of codeFlows) {
     if (codeFlow.id === toAddObject.id) {

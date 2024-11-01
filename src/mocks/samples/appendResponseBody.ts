@@ -1,4 +1,4 @@
-const testResponseBody = [
+const appendResponseBody = [
   {
     id: 2,
     depth: 1,
@@ -12,11 +12,11 @@ const testResponseBody = [
         id: 2,
         expr: "[1, 2, 3, 4]",
         name: "a",
-        code: "a = [1,2,3,4]",
         idx: {
           start: 0,
           end: 3,
         },
+        code: "a = [1,2,3,4]",
         type: "list",
       },
     ],
@@ -26,27 +26,20 @@ const testResponseBody = [
   {
     id: 3,
     depth: 1,
-    expr: "9",
-
-    code: "a[0] = 9",
+    expr: "1",
+    code: "a.append(1)",
     type: "variable",
   },
   {
-    variables: [
-      {
-        id: 3,
-        expr: "9",
-        idx: {
-          start: 0,
-          end: 0,
-        },
-        name: "a",
-        code: "a[0] = 9",
-        type: "variable",
-      },
-    ],
+    variable: {
+      id: 3,
+      expr: "1",
+      name: "a",
+      code: "a.append(1)",
+      type: "variable",
+    },
     callStackName: "main",
-    type: "assign",
+    type: "append",
   },
   {
     id: 4,
@@ -60,12 +53,12 @@ const testResponseBody = [
   {
     id: 4,
     depth: 1,
-    expr: "[9, 2, 3, 4]",
-    highlights: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-    console: "[9, 2, 3, 4]\n",
+    expr: "[1, 2, 3, 4, 1]",
+    highlights: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+    console: "[1, 2, 3, 4, 1]\n",
     code: "print(a)",
     type: "print",
   },
 ];
 
-export default testResponseBody;
+export default appendResponseBody;

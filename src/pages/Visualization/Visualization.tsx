@@ -9,7 +9,7 @@ import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
 import GptComment from "./components/LeftSection/components/GptComment";
 import GptIcon from "./components/LeftSection/components/GptIcon";
-import { fetchVisualize } from "@/services/api";
+import { visualize } from "@/services/api";
 import Split from "react-split";
 import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
 
@@ -62,7 +62,7 @@ export default function Visualization() {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: fetchVisualize,
+    mutationFn: visualize,
     async onSuccess(data) {
       // 타입 체크 함수
 
@@ -77,8 +77,9 @@ export default function Visualization() {
       }
     },
     onError(error) {
-      console.error("Submit Error:", error);
+      console.error(error);
       if (error.message === "데이터 형식이 올바르지 않습니다") {
+        return;
       } else {
         const linNumber = Number((error as any).result.error[0]);
         const message = (error as any).result.error;

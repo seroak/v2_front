@@ -1,9 +1,7 @@
-import { AllObjectItem } from "@/pages/Visualization/types/codeFlow/allObjectItem";
-
 export const refreshCodeFlow = (
-  codeFlows: AllObjectItem[], //현제 코드흐름 시각화 정보를 담고 있는 리스트
-  toAddObject: AllObjectItem //수정해야하는 정보를 담고 있는 객체
-): AllObjectItem[] => {
+  codeFlows: any[], //현제 코드흐름 시각화 정보를 담고 있는 리스트
+  toAddObject: any //수정해야하는 정보를 담고 있는 객체
+): any[] => {
   // 발견하고 반복문이 바로 끝나는 것이 아니라 계속 돌면서 남아있는 객체도 반환해야한다
   return codeFlows.map((codeFlow) => {
     // 맞는 id를 발견하면 들어가서 수정한다

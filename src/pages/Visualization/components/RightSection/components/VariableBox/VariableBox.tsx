@@ -1,7 +1,7 @@
 import styles from "./VariableBox.module.css";
 import cx from "classnames";
 type Props = {
-  value: string;
+  value: string[];
   name: string;
   isLight?: boolean;
 };
