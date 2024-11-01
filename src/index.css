@@ -19,13 +19,6 @@
   overflow-wrap: break-word;
   word-break: break-word;
   tab-size: 4;
-
-  --black: #181818;
-  --white: #fff;
-  --blue: #4866ff;
-  --gray01: #dddee4;
-  --bg01: #fcfcfc;
-  --bg02: #f7f7f7;
 }
 :after,
 :before {
