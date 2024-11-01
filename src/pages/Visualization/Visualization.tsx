@@ -65,7 +65,7 @@ export default function Visualization() {
     mutationFn: visualize,
     async onSuccess(data) {
       // 타입 체크 함수
-
+      console.log(data.result.code);
       if (isValidTypeDtoArray(data.result.code)) {
         resetConsole();
         setPreprocessedCodes(data.result.code);
