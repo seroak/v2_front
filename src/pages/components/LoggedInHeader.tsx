@@ -1,5 +1,4 @@
 import styles from "./LoggedInHeader.module.css";
-import { useUserStore } from "@/store/user";
 import { logout, getUser } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { Link, NavLink, useNavigate } from "react-router-dom";
