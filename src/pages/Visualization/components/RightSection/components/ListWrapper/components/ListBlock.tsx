@@ -4,12 +4,13 @@ import cx from "classnames";
 type Props = {
   exprItem: string;
   isLight?: boolean;
+  isLightCheck: boolean;
   index: number;
 };
-export const ListBlock = ({ exprItem, isLight, index }: Props) => {
+export const ListBlock = ({ exprItem, isLight, isLightCheck, index }: Props) => {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <div className={cx(styles["var-data"], isLight && styles.highlight)}>
+      <div className={cx(styles["var-data"], isLight && isLightCheck && styles.highlight)}>
         <span className={styles.text}>{exprItem}</span>
       </div>
       <span className={styles.index}>{index}</span>

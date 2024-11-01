@@ -6,14 +6,20 @@ type Props = {
 };
 function ListWrapper({ listItem }: Props) {
   const { expr, isLight, name } = listItem;
-  const exprArray = expr?.slice(1, -1).split(",");
-
   return (
     <li>
       <span>{name}</span>
       <div className={styles.wrapper}>
-        {exprArray?.map((exprItem, index) => {
-          return <ListBlock key={index} exprItem={exprItem} isLight={isLight} index={index} />;
+        {expr?.map((exprItem, index) => {
+          return (
+            <ListBlock
+              key={index}
+              exprItem={exprItem}
+              isLight={isLight}
+              isLightCheck={listItem.idx.start <= index && index <= listItem.idx.end}
+              index={index}
+            />
+          );
         })}
       </div>
     </li>

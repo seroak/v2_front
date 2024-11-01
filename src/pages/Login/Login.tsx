@@ -10,9 +10,9 @@ const Login = () => {
   const [userPassword, setUserPassword] = useState<string>("");
 
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const { refetch } = useQuery({ queryKey: ["user"], queryFn: getUser });
+  const { refetch } = useQuery({ queryKey: ["user"], queryFn: getUser, staleTime: 1000 * 60 });
+
   const mutation = useMutation({
     mutationFn: async ({ userId, userPassword }: { userId: string; userPassword: string }) => {
       const req = { email: userId, password: userPassword };

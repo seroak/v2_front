@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Visualization from "./pages/Visualization/Visualization";
@@ -19,7 +19,7 @@ import "./App.css";
 import { setupMSW } from "./mocks/setup";
 import { getUser } from "@/services/api";
 
-interface User {
+export interface User {
   email: string;
   name: string;
   role: string;
@@ -41,7 +41,7 @@ function App() {
     initializeMSW();
   }, [setIsMswReady]);
 
-  const { data } = useQuery<User>({ queryKey: ["user"], queryFn: getUser, enabled: isMswReady });
+  const { data } = useQuery<User>({ queryKey: ["user"], queryFn: getUser, enabled: isMswReady, staleTime: 1000 * 60 });
   const setUserEmail = useUserStore((state) => state.setUserEmail);
   const setUserName = useUserStore((state) => state.setUserName);
   const setUserRole = useUserStore((state) => state.setUserRole);
