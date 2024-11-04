@@ -24,7 +24,7 @@ import { CreateCallStackDto } from "@/pages/Visualization/types/dto/createCallSt
 import { EndUserFuncDto } from "@/pages/Visualization/types/dto/endUserFuncDto";
 import { usedNameObjectType } from "../../types/dataStructuresItem/usedNameObjectType";
 import { DataStructureVarsItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureVarsItem";
-import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
+import { isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
 import { insertIntoDepth } from "./services/insertIntoDepth";
