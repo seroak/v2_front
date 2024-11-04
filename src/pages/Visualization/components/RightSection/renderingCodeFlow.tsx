@@ -129,7 +129,7 @@ export const renderingCodeFlow = (codeFlows: any[], width: number, height: numbe
             const listItem = codeFlow as CodeFlowListItem;
             return (
               <div key={listItem.id} style={{ width: "fit-content" }}>
-                <CodeFlowListWrapper codeFlowListItem={listItem} />
+                <CodeFlowListWrapper codeFlowListItem={listItem} width={width} height={height} />
               </div>
             );
           case "while":
