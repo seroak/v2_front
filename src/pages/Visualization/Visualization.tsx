@@ -1,4 +1,4 @@
-import { createContext, useState, Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import styles from "./Visualization.module.css";
 import "./gutter.css";
 import PublicHeader from "../components/PublicHeader";

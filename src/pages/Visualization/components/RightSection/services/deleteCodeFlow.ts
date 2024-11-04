@@ -1,6 +1,4 @@
-import { AllObjectItem } from "@/pages/Visualization/types/codeFlow/allObjectItem";
-
-export const deleteCodeFlow = (codeFlows: AllObjectItem[], toDeleteId: number): AllObjectItem[] => {
+export const deleteCodeFlow = (codeFlows: any[], toDeleteId: number): any[] => {
   return codeFlows
     .map((codeFlow) => {
       if (codeFlow.id === toDeleteId) {
@@ -12,5 +10,5 @@ export const deleteCodeFlow = (codeFlows: AllObjectItem[], toDeleteId: number): 
       }
       return newCodeFlow;
     })
-    .filter((codeFlow): codeFlow is AllObjectItem => codeFlow !== false);
+    .filter((codeFlow): codeFlow is any => codeFlow !== false);
 };
