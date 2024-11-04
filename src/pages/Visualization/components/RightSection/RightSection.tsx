@@ -452,10 +452,11 @@ const RightSection = () => {
         <div id="split-2-1" className="view-section2-1">
           <div className="view-data" style={{ height: "100%" }}>
             <p className="data-name">코드흐름</p>
-
-            {codeFlowList?.length > 0 &&
-              stepIdx >= 0 &&
-              renderingCodeFlow(codeFlowList[stepIdx].objects[0].child, width, height)}
+            <div style={{ width: "600px" }}>
+              {codeFlowList?.length > 0 &&
+                stepIdx >= 0 &&
+                renderingCodeFlow(codeFlowList[stepIdx].objects[0].child, width, height)}
+            </div>
           </div>
         </div>
         <div id="split-2-2" className="view-section2-2" ref={rightSection2Ref}>
