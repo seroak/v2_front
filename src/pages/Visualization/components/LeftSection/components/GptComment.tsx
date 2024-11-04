@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useContext, useRef } from "react";
-import { CodeContext } from "@/pages/Visualization/Visualization";
+import { CodeContext } from "@/pages/Visualization/context/CodeContext";
 import { useTimeoutStore } from "@/store/timeout";
 import { useGptTooltipStore } from "@/store/gptTooltip";
 import { useEditorStore } from "@/store/editor";

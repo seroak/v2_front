@@ -10,31 +10,12 @@ import GptIcon from "./components/LeftSection/components/GptIcon";
 
 import Split from "react-split";
 import { ValidTypeDto } from "@/pages/Visualization/types/dto/ValidTypeDto";
-
+import { CodeContext } from "./context/CodeContext";
+import { PreprocessedCodesContext } from "./context/PreProcessedCodesContext";
 //zustand store
 import { useEditorStore } from "@/store/editor";
 import { useUserStore } from "@/store/user";
 import { useGptTooltipStore } from "@/store/gptTooltip";
-// 원본 코드 타입 정의
-interface CodeContextType {
-  code: string;
-  setCode: Dispatch<SetStateAction<string>>;
-}
-// 전처리한 코드 타입 정의
-interface PreprocessedCodeContextType {
-  preprocessedCodes: ValidTypeDto[];
-  setPreprocessedCodes: Dispatch<SetStateAction<ValidTypeDto[]>>;
-}
-// Create contexts
-export const CodeContext = createContext<CodeContextType>({
-  code: "",
-  setCode: () => {},
-});
-
-export const PreprocessedCodesContext = createContext<PreprocessedCodeContextType>({
-  preprocessedCodes: [],
-  setPreprocessedCodes: () => {},
-});
 
 export default function Visualization() {
   const [code, setCode] = useState<any>(

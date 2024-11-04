@@ -1,6 +1,6 @@
 import styles from "../LeftSection.module.css";
 import { useEffect, useRef, useState, useContext } from "react";
-import { CodeContext } from "@/pages/Visualization/Visualization";
+import { CodeContext } from "@/pages/Visualization/context/CodeContext";
 const Dropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("옵션을 선택해주세요.");
