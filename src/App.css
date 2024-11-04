@@ -1591,8 +1591,8 @@ gpt-icon-small {
   flex-direction: column;
   gap: 16px;
   padding: 16px;
+  min-width: 500px;
   min-height: 120px;
-  width: 500px;
   background-color: #f9fafb;
   border: 1px solid var(--gray01, #dddee4);
   border-radius: 0 0 8px 8px;
