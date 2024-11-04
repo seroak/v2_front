@@ -14,8 +14,8 @@ const DefFunctionDataStructure = ({ functionItem }: Props) => {
         <p>def</p>
         <div>
           <span>func</span>
-          <div className={cx("var-data", isLight && styles.highlight)}>
-            <span>{expr}</span>
+          <div className={cx("var-data")}>
+            <span className={cx(isLight && styles.highlight)}>{expr}</span>
           </div>
         </div>
       </li>
