@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import styles from "./CallUserFuncBox.module.css";
 import { CallUserFuncItem } from "@/pages/Visualization/types/codeFlow/callUserFuncItem";
 import cx from "classnames";
+
 interface CallUserFuncProps {
   callUserFuncItem: CallUserFuncItem;
   children?: ReactNode;
@@ -15,25 +16,22 @@ const CallUserFuncBox = ({ callUserFuncItem, children }: CallUserFuncProps): Rea
     <>
       {assignName == "" ? null : (
         <>
-          <div>
-            <div className={styles["return-val"]}>
+          <div className={styles["func-val"]}>
+            <div>
               <span>{assignName}</span>
-              <div className={cx(styles["var-data"], isLight && styles.highlight)}>
-                <div className={styles["box"]}></div>
-              </div>
+              <p className={cx(styles["var-data"], isLight && styles.highlight)}>
+              </p>
             </div>
-          </div>
-          <div>
-            <img className={styles["func-arrow"]} src="/image/img_func_arrow.svg" alt="방향이미지" />
           </div>
         </>
       )}
-
-      <div className={styles["func-box"]}>
-        <div className={styles["func-box-content"]}>
-          <div className={styles["func-box-content-text"]}>{signature}</div>
+      <div className={cx("code-flow", "code-flow-func")}>
+        <div className={"code-flow-title-wrap"}>
+          <div className={"func-title"}>
+            <span>{signature}</span>
+          </div>
         </div>
-        <div className={styles["func-box-children"]}>{children && <div>{children}</div>}</div>
+        <div className={"func-box-children"}>{children && <div>{children}</div>}</div>
       </div>
     </>
   );
