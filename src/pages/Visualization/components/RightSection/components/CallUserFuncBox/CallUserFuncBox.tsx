@@ -19,16 +19,15 @@ const CallUserFuncBox = ({ callUserFuncItem, children }: CallUserFuncProps): Rea
           <div className={styles["func-val"]}>
             <div>
               <span>{assignName}</span>
-              <p className={cx(styles["var-data"], isLight && styles.highlight)}>
-              </p>
+              <p className={cx(styles["var-data"], isLight && styles.highlight)}></p>
             </div>
           </div>
         </>
       )}
-      <div className={cx("code-flow", "code-flow-func")}>
+      <div className={cx("code-flow", "code-flow-func", isLight && "highlight-border")}>
         <div className={"code-flow-title-wrap"}>
           <div className={"func-title"}>
-            <span>{signature}</span>
+            <span className={cx(isLight && "highlight-border")}>{signature}</span>
           </div>
         </div>
         <div className={"func-box-children"}>{children && <div>{children}</div>}</div>
