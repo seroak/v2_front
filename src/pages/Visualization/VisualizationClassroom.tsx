@@ -12,6 +12,8 @@ import GptComment from "./components/LeftSection/components/GptComment";
 import Split from "react-split";
 import { ValidTypeDto } from "@/pages/Visualization/types/dto/ValidTypeDto";
 import { fetchGuestActionRequest, getGuestStatus } from "@/services/api";
+import { CodeContext } from "./context/CodeContext";
+import { PreprocessedCodesContext } from "./context/PreProcessedCodesContext";
 //zustand store
 
 import { useEditorStore } from "@/store/editor";
