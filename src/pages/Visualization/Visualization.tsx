@@ -1,6 +1,4 @@
-import { createContext, useState, Dispatch, SetStateAction, useCallback, useEffect, useRef } from "react";
-
-import { useMutation } from "@tanstack/react-query";
+import { createContext, useState, Dispatch, SetStateAction } from "react";
 import styles from "./Visualization.module.css";
 import "./gutter.css";
 import PublicHeader from "../components/PublicHeader";
@@ -9,14 +7,12 @@ import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
 import GptComment from "./components/LeftSection/components/GptComment";
 import GptIcon from "./components/LeftSection/components/GptIcon";
-import { visualize } from "@/services/api";
+
 import Split from "react-split";
-import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
+import { ValidTypeDto } from "@/pages/Visualization/types/dto/ValidTypeDto";
 
 //zustand store
-import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
-import { useArrowStore } from "@/store/arrow";
 import { useUserStore } from "@/store/user";
 import { useGptTooltipStore } from "@/store/gptTooltip";
 // 원본 코드 타입 정의
