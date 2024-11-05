@@ -37,6 +37,9 @@ const Login = () => {
   const handleUserPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserPassword(e.target.value);
   };
+  const loginByNaver = () => {
+    window.location.href = `${BASE_URL}/edupi-user/oauth2/authorization/naver?redirect_uri=http://localhost:5000`;
+  };
   const loginByGoogle = () => {
     window.location.href = `${BASE_URL}/edupi-user/oauth2/authorization/google?redirect_uri=http://localhost:5000`;
   };
@@ -88,7 +91,7 @@ const Login = () => {
                 로그인
               </button>
               <img className="mt24 mb24" src="/image/img_or.png" alt="" />
-              <button className="sns-btn naver mb8" type="button">
+              <button className="sns-btn naver mb8" type="button" onClick={loginByNaver}>
                 <img src="/image/icon_naver.png" alt="네이버" style={{ width: "30px", height: "30px" }} />
                 <p style={{ color: "white", position: "relative", left: "-14px" }}>네이버로 로그인</p>
               </button>
