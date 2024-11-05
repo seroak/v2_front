@@ -150,7 +150,7 @@ input[type="checkbox"] {
 .s__checkbox input + label {
   height: 24px;
   display: block;
-  background: url(/image/icon_checkbox_off.svg) no-repeat;
+  background: url(public/image/icon_checkbox_off.svg) no-repeat;
   background-size: contain;
   cursor: pointer;
   font-size: 16px;
@@ -158,15 +158,15 @@ input[type="checkbox"] {
   border-radius: 4px;
 }
 .s__checkbox input:disabled + label {
-  background: url(/image/icon_checkbox_off_disabled.svg) no-repeat;
+  background: url(public/image/icon_checkbox_off_disabled.svg) no-repeat;
   background-size: contain;
 }
 .s__checkbox input:checked + label {
-  background: url(/image/icon_checkbox_on.svg) no-repeat;
+  background: url(public/image/icon_checkbox_on.svg) no-repeat;
   background-size: contain;
 }
 .s__checkbox input:checked:disabled + label {
-  background: url(/image/icon_checkbox_on_disabled.svg) no-repeat;
+  background: url(public/image/icon_checkbox_on_disabled.svg) no-repeat;
   background-size: contain;
 }
 .guide-section {
@@ -276,7 +276,6 @@ var-list {
   display: inline-block;
   position: relative;
   margin-top: 40px;
-  margin-left: 20px;
 }
 .code-flow + .code-flow {
   margin-top: 60px !important;
@@ -527,7 +526,7 @@ var-list {
 .popup__header__close {
   width: 24px;
   height: 24px;
-  background: url(/image/icon_close.svg) no-repeat center/contain;
+  background: url(public/image/icon_close.svg) no-repeat center/contain;
   position: absolute;
   top: 24px;
   right: 24px;
@@ -739,7 +738,7 @@ var-list {
   background-color: #ebf4ff;
 }
 .progress-success:before {
-  background: url(/image/progress03.svg);
+  background: url(public/image/progress03.svg);
 }
 .progress-success p {
   color: #308dff;
@@ -748,7 +747,7 @@ var-list {
   background-color: #ffedeb;
 }
 .progress-fail:before {
-  background: url(/image/progress04.svg);
+  background: url(public/image/progress04.svg);
 }
 
 .progress-fail p {
@@ -759,7 +758,7 @@ var-list {
   background-color: #f3f3f3;
 }
 .progress-not:before {
-  background: url(/image/progress02.svg);
+  background: url(public/image/progress02.svg);
 }
 
 .progress-not p {
@@ -1618,6 +1617,64 @@ gpt-icon-small {
   text-align: right;
 }
 
+
+.func-title {
+  border-radius: 8px 8px 0px 0px;
+  background-color: #f9f9f9;
+  width: calc(100% + 2px);
+  transform: translateX(-1px);
+}
+.func-title span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px 8px 0px 0px;
+  border: 1px solid var(--gray01, #dddee4);
+  background: #fff;
+  padding: 10px 16px 8px 16px;
+  border-bottom: none;
+  position: relative;
+  font-weight: 600;
+  transform: translateY(1px);
+  margin: 1px;
+}
+.func-title span::before {
+  content: "";
+  display: block;
+  background-color: #fff;
+  width: 100%;
+  height: 10px;
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+}
+.func-title span::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 21px;
+  background: url(public/image/img_func.png) no-repeat;
+  background-size: 100% 100%;
+}
+
+.code-flow-func > .code-flow-title-wrap {
+  left: -0.5px;
+  top: -46px;
+  width: 100%;
+}
+.code-flow-func {
+  border-radius: 0px 8px 8px 8px;
+}
+.code-flow-func.on_active {
+  border: 1px solid var(--blue01, #4866ff);
+}
+.code-flow-func.on_active > .code-flow-title-wrap > .func-title > span {
+  border: 1px solid var(--blue01, #4866ff);
+  color: var(--blue01, #4866ff);
+}
+.code-flow-func.on_active > .code-flow-title-wrap > .func-title > span::after {
+  background: url(public/image/img_func_blue.png) no-repeat;
+
 .var-data-wrap {
   display: flex;
   flex-direction: column;
@@ -1725,4 +1782,5 @@ gpt-icon-small {
   left: 50%;
   text-wrap: nowrap;
   transform: translateX(-50%);
+
 }
