@@ -6,6 +6,7 @@ type Props = {
 };
 function ListWrapper({ listItem }: Props) {
   const { expr, isLight, name } = listItem;
+  console.log(expr);
   return (
     <li>
       <span>{name}</span>

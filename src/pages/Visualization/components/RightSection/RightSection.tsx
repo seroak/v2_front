@@ -112,7 +112,6 @@ const RightSection = () => {
     mutationFn: visualize,
     async onSuccess(data) {
       // 타입 체크 함수
-      console.log(data.result.code);
       if (isValidTypeDtoArray(data.result.code)) {
         resetConsole();
         setPreprocessedCodes(data.result.code);
@@ -318,7 +317,7 @@ const RightSection = () => {
                 (variable as VariableExprArray).expr = variable.expr.slice(1, -1).split(",");
               }
             }
-
+            console.log(variable.expr);
             highlightLine.push(variable.id);
             // 자료구조 시각화에서 화살표에 넣을 코드를 넣는다
             arrowTexts.push(variable.code);
@@ -513,7 +512,7 @@ const RightSection = () => {
       accCodeFlowList.push(deepClodeCodeFlow);
       accConsoleLogList.push(accConsoleLog);
     }
-
+    console.log(accDataStructures);
     setCodeFlowList(accCodeFlowList);
     setStructuresList(accDataStructuresList);
     setConsole(accConsoleLogList);

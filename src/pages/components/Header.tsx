@@ -1,7 +1,6 @@
-import { useState } from "react";
 import styles from "./LoggedInHeader.module.css";
 import { logout, getUser } from "@/services/api";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { User } from "@/App";
@@ -9,18 +8,11 @@ import { User } from "@/App";
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
 const LoggedInHeader = () => {
-  // const userName = useUserStore((state) => state.userName);
-  // const resetUser = useUserStore((state) => state.resetUser);
   const params = useParams();
   let isFixed = false;
   let isInClassroomDashboardUrl = false;
-  // const [isStatic, setIsStatic] = useState(false);
-  // const [isInClassroomDashboardUrl, setIsInClassroomDashboardUrl] = useState(false);
-  const {
-    data: userData,
-    isFetching,
-    refetch,
-  } = useQuery<User | null>({
+
+  const { data: userData, refetch } = useQuery<User | null>({
     queryKey: ["user"],
     queryFn: getUser,
     staleTime: 1000 * 60,
@@ -29,10 +21,6 @@ const LoggedInHeader = () => {
   });
   const navigate = useNavigate();
   const location = useLocation();
-  const queryClient = useQueryClient();
-  queryClient.setQueryDefaults(["user"], {
-    staleTime: 1000 * 60,
-  });
 
   if (location.pathname === "/") {
     isFixed = true;
