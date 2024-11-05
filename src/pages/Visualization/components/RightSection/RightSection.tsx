@@ -140,7 +140,7 @@ const RightSection = () => {
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
       } else if (error.code === "CS-400006") {
-        alert("지원하지 않는 코드가 포함되어있습니다");
+        alert("지원하지 않는 코드가 포함되어 있습니다");
       } else {
         const linNumber = Number((error as any).result.error[0]);
         const message = (error as any).result.error;
