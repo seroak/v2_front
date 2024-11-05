@@ -1,9 +1,14 @@
 import { Link } from "react-router-dom";
 import styles from "./PublicHeader.module.css";
-
+import { useLocation } from "react-router-dom";
 const PublicHeader = () => {
+  const location = useLocation();
+  let isStatic = false;
+  if (location.pathname === "/viz" || location.pathname == "/classroomdashboard/classroom/viz/*") {
+    isStatic = true;
+  }
   return (
-    <header className={styles["bg-blue"]}>
+    <header className={styles["bg-blue"]} style={{ position: isStatic ? "static" : "fixed" }}>
       <div className={styles["header-menu"]}>
         <Link className={styles["header-logo"]} to="/">
           <img src="/image/img_logo.png" alt="로고" />
