@@ -19,11 +19,11 @@ span {
 }
 .var-data > span {
   display: inline-block;
-  min-width: 10px;
+  min-width: 18px;
+  min-height: 39px;
   border-radius: 4px;
   color: #fff;
   padding: 8px 6px;
-
   position: relative;
 }
 .index {

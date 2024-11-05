@@ -1705,7 +1705,7 @@ gpt-icon-small {
   gap: 48px;
 }
 .call-stack-box li p {
-  width: 100px;
+  width: 120px;
   text-align: right;
   color: var(--black01, #181818);
   text-align: right;
