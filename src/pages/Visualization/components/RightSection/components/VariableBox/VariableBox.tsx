@@ -8,8 +8,8 @@ type Props = {
 function VariableBox({ value, name, isLight }: Props) {
   return (
     <li>
-      <div className="var-container">
-        <div className="name">{name}</div>
+      <p>{name}</p>
+      <div>
         <div className={cx(styles["var-data"], isLight && styles.highlight)}>
           <span>{value}</span>
         </div>
