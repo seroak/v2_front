@@ -1,6 +1,4 @@
-import { AllObjectItem } from "@/pages/Visualization/types/codeFlow/allObjectItem";
-
-export const findDeleteUsedId = (targetChild: AllObjectItem[]): number[] => {
+export const findDeleteUsedId = (targetChild: any[]): number[] => {
   let idsToDelete: number[] = [];
   for (const codeFlow of targetChild) {
     idsToDelete.push(codeFlow.id);

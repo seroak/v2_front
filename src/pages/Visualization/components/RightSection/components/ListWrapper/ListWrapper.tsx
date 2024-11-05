@@ -11,20 +11,18 @@ function ListWrapper({ listItem }: Props) {
   return (
     <li>
       <p>{name}</p>
-      <div>
-        <div className={styles.wrapper}>
-          {expr?.map((exprItem, index) => {
-            return (
-              <ListBlock
-                key={index}
-                exprItem={exprItem}
-                isLight={isLight}
-                isLightCheck={listItem.idx.start <= index && index <= listItem.idx.end}
-                index={index}
-              />
-            );
-          })}
-        </div>
+      <div className={styles.wrapper}>
+        {expr?.map((exprItem, index) => {
+          return (
+            <ListBlock
+              key={index}
+              exprItem={exprItem}
+              isLight={isLight}
+              isLightCheck={listItem.idx?.start <= index && index <= listItem.idx?.end}
+              index={index}
+            />
+          );
+        })}
       </div>
     </li>
   );

@@ -9,6 +9,8 @@
   margin: 0px 10px;
   border-radius: 5px;
   height: 40px;
+  min-width: 18px;
+  min-height: 39px;
 }
 
 .return-val span {

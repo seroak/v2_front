@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect, useRef, useCallback } from "react";
-import { CodeContext, PreprocessedCodesContext } from "../../Visualization";
+import { CodeContext } from "../../context/CodeContext";
+import { PreprocessedCodesContext } from "../../context/PreProcessedCodesContext";
 import Split from "react-split";
 import _ from "lodash";
 import ResizeObserver from "resize-observer-polyfill";
@@ -24,7 +25,7 @@ import { CreateCallStackDto } from "@/pages/Visualization/types/dto/createCallSt
 import { EndUserFuncDto } from "@/pages/Visualization/types/dto/endUserFuncDto";
 import { usedNameObjectType } from "../../types/dataStructuresItem/usedNameObjectType";
 import { DataStructureVarsItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureVarsItem";
-import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
+import { isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
 import { insertIntoDepth } from "./services/insertIntoDepth";
@@ -59,7 +60,20 @@ import { visualize } from "@/services/api";
 interface State {
   objects: any[];
 }
+interface ApiError {
+  code: string;
+  result: {
+    error: string[];
+  };
+  message: string;
+}
 
+// 성공 응답 타입 정의
+interface SuccessResponse {
+  result: {
+    code: any[]; // TypeDto는 별도로 정의되어 있다고 가정
+  };
+}
 const RightSection = () => {
   const [codeFlowList, setCodeFlowList] = useState<State[]>([
     {
@@ -79,7 +93,7 @@ const RightSection = () => {
   const stepIdx = useConsoleStore((state) => state.stepIdx);
   const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
   const { preprocessedCodes, setPreprocessedCodes } = preprocessedCodesContext;
-  const { code, setCode } = codeContext;
+  const { code } = codeContext;
   const [arrowTextList, setArrowTextList] = useState<string[]>([]);
 
   const [, setRightSectionSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
@@ -103,12 +117,14 @@ const RightSection = () => {
   const consoleIdx = useConsoleStore((state) => state.stepIdx);
   const incrementStepIdx = useConsoleStore((state) => state.incrementStepIdx);
   const decrementStepIdx = useConsoleStore((state) => state.decrementStepIdx);
-
-  const mutation = useMutation({
+  const [selectedValue, setSelectedValue] = useState("1x");
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedValue(event.target.value);
+  };
+  const mutation = useMutation<SuccessResponse, ApiError, Parameters<typeof visualize>[0]>({
     mutationFn: visualize,
     async onSuccess(data) {
       // 타입 체크 함수
-      console.log(data.result.code);
       if (isValidTypeDtoArray(data.result.code)) {
         resetConsole();
         setPreprocessedCodes(data.result.code);
@@ -123,6 +139,8 @@ const RightSection = () => {
       console.error(error);
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
+      } else if (error.code === "CS-400006") {
+        alert("지원하지 않는 코드가 포함되어 있습니다");
       } else {
         const linNumber = Number((error as any).result.error[0]);
         const message = (error as any).result.error;
@@ -153,7 +171,11 @@ const RightSection = () => {
   const intervalRef = useRef<number | null>(null);
   useEffect(() => {
     if (isPlaying) {
-      intervalRef.current = setInterval(onForward, 1000);
+      if (selectedValue === "1x") {
+        intervalRef.current = setInterval(onForward, 1000);
+      } else if (selectedValue === "2x") {
+        intervalRef.current = setInterval(onForward, 500);
+      }
     } else {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -310,7 +332,6 @@ const RightSection = () => {
                 (variable as VariableExprArray).expr = variable.expr.slice(1, -1).split(",");
               }
             }
-
             highlightLine.push(variable.id);
             // 자료구조 시각화에서 화살표에 넣을 코드를 넣는다
             arrowTexts.push(variable.code);
@@ -343,7 +364,7 @@ const RightSection = () => {
         accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName] = { data: [], isLight: false };
         for (let arg of (preprocessedCode as CreateCallStackDto).args) {
           accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
-            expr: [arg.expr],
+            expr: arg.expr.slice(1, -1).split(","),
             name: arg.name,
             type: arg.type,
           });
@@ -505,7 +526,6 @@ const RightSection = () => {
       accCodeFlowList.push(deepClodeCodeFlow);
       accConsoleLogList.push(accConsoleLog);
     }
-
     setCodeFlowList(accCodeFlowList);
     setStructuresList(accDataStructuresList);
     setConsole(accConsoleLogList);
@@ -528,23 +548,23 @@ const RightSection = () => {
           </form>
           <div>
             <button>
-              <img src="/image/icon_play_back.svg" alt="뒤로" />
+              <img src="/image/icon_play_back.svg" onClick={onBack} alt="뒤로" />
             </button>
             <button className="ml8">
               {isPlaying ? (
-                <img src="/image/icon_play_stop.svg" onClick={onBack} alt="일시정지" />
+                <img src="/image/icon_play_stop.svg" onClick={onPlay} alt="일시정지" />
               ) : (
                 <img src="/image/icon_play.svg" onClick={onPlay} alt="재생" />
               )}
             </button>
-            <button className="ml8">
+            <button className="ml8" onClick={onForward}>
               <img src="/image/icon_play_next.svg" alt="다음" />
             </button>
             <p className="ml14 fz14">
               ({consoleIdx}/{codeFlowLength - 1 == -1 ? 0 : codeFlowLength - 1})
             </p>
             <p className="ml24 fz14">Play Speed</p>
-            <select name="" id="" className="s__select ml14">
+            <select name="" id="" className="s__select ml14" value={selectedValue} onChange={handleChange}>
               <option value="1x">1X</option>
               <option value="2x">2X</option>
             </select>
@@ -562,7 +582,7 @@ const RightSection = () => {
         dragInterval={1}
         direction="horizontal"
         cursor="col-resize"
-        style={{ display: "flex", flexDirection: "row", height: "85vh" }}
+        style={{ display: "flex", flexDirection: "row", height: "94.5%" }}
         className="split-container"
       >
         <div id="split-2-1" className="view-section2-1">

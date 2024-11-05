@@ -9,9 +9,11 @@ import { CodeFlowListItem } from "@/pages/Visualization/types/codeFlow/codeFlowL
 import { useArrowStore } from "@/store/arrow";
 interface CodeFlowWrapperItemProps {
   codeFlowWrapperItem: CodeFlowListItem;
+  height: number;
+  width: number;
   children?: ReactNode;
 }
-const GetCodeFlowWrapperBoxLocation = ({ codeFlowWrapperItem, children }: CodeFlowWrapperItemProps) => {
+const GetCodeFlowWrapperBoxLocation = ({ codeFlowWrapperItem, height, width, children }: CodeFlowWrapperItemProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const setTop = useArrowStore((state) => state.setTop);
   const setRight = useArrowStore((state) => state.setRight);
@@ -22,7 +24,7 @@ const GetCodeFlowWrapperBoxLocation = ({ codeFlowWrapperItem, children }: CodeFl
       setTop(rect.top - 40);
       setRight(rect.right + 10);
     }
-  }, [codeFlowWrapperItem]);
+  }, [codeFlowWrapperItem, height, width]);
 
   return (
     <div className="useRef" ref={ref}>
@@ -32,14 +34,21 @@ const GetCodeFlowWrapperBoxLocation = ({ codeFlowWrapperItem, children }: CodeFl
 };
 type Props = {
   codeFlowListItem: CodeFlowListItem;
+  height: number;
+  width: number;
 };
-function CodeFlowListWrapper({ codeFlowListItem }: Props) {
+function CodeFlowListWrapper({ codeFlowListItem, height, width }: Props) {
   const { expr, isLight } = codeFlowListItem;
   const exprArray = expr?.slice(1, -1).split(",");
 
   return (
     <div className={cx("align-left", styles["fit-content"])}>
-      <GetCodeFlowWrapperBoxLocation key={codeFlowListItem.id} codeFlowWrapperItem={codeFlowListItem}>
+      <GetCodeFlowWrapperBoxLocation
+        key={codeFlowListItem.id}
+        height={height}
+        width={width}
+        codeFlowWrapperItem={codeFlowListItem}
+      >
         <div className={styles.wrapper}>
           {exprArray?.map((exprItem, index) => {
             return <CodeFlowListBlock key={index} exprItem={exprItem} isLight={isLight} index={index} />;

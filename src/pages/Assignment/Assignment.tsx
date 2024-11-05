@@ -1,4 +1,4 @@
-import LoggedInHeader from "../components/LoggedInHeader";
+import LoggedInHeader from "../components/Header";
 import AssginmentSection from "./components/AssignmentSection";
 const Assignment = () => {
   return (

@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect } from "react";
-import LoggedInClassroomHeader from "@/pages/components/LoggedInClassroomHeader";
 import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { getClassGuestData, getTotalActionInfo, ClassEnd } from "@/services/api";
+import Header from "../components/Header";
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
 interface GuestType {
@@ -123,7 +123,7 @@ const Classroom = () => {
   useSSE(`${BASE_URL}/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
   return (
     <div>
-      <LoggedInClassroomHeader />
+      <Header />
       <div className="group-wrap">
         <div className="group-left">
           <img src="/image/icon_group.svg" alt="그룹" />

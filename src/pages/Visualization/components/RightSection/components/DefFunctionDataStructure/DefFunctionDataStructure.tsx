@@ -12,7 +12,7 @@ const DefFunctionDataStructure = ({ functionItem }: Props) => {
     <div>
       <li className="right-arrow">
         <p>def</p>
-        <div>
+        <div style={{ flexDirection: "column" }}>
           <span>func</span>
           <div className={cx("var-data")}>
             <span className={cx(isLight && styles.highlight)}>{expr}</span>

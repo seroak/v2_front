@@ -1,10 +1,10 @@
 import { useState, FormEvent, ChangeEvent, Fragment, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import PublicHeader from "../components/PublicHeader";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { getUser, login } from "@/services/api";
-const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
+import Header from "@/pages/components/Header";
+const BACK_BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
+const FRONT_BASE_URL = import.meta.env.VITE_APP_FRONT_BASE_URL;
 const Login = () => {
   const [userId, setUserId] = useState<string>("");
   const [userPassword, setUserPassword] = useState<string>("");
@@ -38,8 +38,11 @@ const Login = () => {
   const handleUserPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserPassword(e.target.value);
   };
+  const loginByNaver = () => {
+    window.location.href = `${BACK_BASE_URL}/edupi-user/oauth2/authorization/naver?redirect_uri=${FRONT_BASE_URL}`;
+  };
   const loginByGoogle = () => {
-    window.location.href = `${BASE_URL}/edupi-user/oauth2/authorization/google?redirect_uri=http://localhost:5000`;
+    window.location.href = `${BACK_BASE_URL}/edupi-user/oauth2/authorization/google?redirect_uri=${FRONT_BASE_URL}`;
   };
   // 에러 파라미터 감지 및 처리
   useEffect(() => {
@@ -53,7 +56,7 @@ const Login = () => {
   return (
     <Fragment>
       <div className={"bg-gray"}>
-        <PublicHeader />
+        <Header />
 
         <div className="login-wrap">
           <img className="mb20" src="/image/img_logo2.png" alt="로고" />
@@ -89,13 +92,13 @@ const Login = () => {
                 로그인
               </button>
               <img className="mt24 mb24" src="/image/img_or.png" alt="" />
-              <button className="sns-btn kakao mb8" type="button">
-                <img src="/image/icon_kakao.svg" alt="" />
-                <p>카카오로 로그인</p>
+              <button className="sns-btn naver mb8" type="button" onClick={loginByNaver}>
+                <img src="/image/icon_naver.png" alt="네이버" style={{ width: "30px", height: "30px" }} />
+                <p style={{ color: "white", position: "relative", left: "-14px" }}>네이버로 로그인</p>
               </button>
               <button className="sns-btn goggle" type="button" onClick={loginByGoogle}>
                 <img src="/image/icon_goggle.svg" alt="" />
-                <p>구글로 로그인</p>
+                <p style={{ position: "relative", left: "-10px" }}>구글로 로그인</p>
               </button>
             </div>
           </form>

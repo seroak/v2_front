@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import LoggedInHeader from "../components/LoggedInHeader";
+import Header from "../components/Header";
 import HostRoom from "./components/HostRoom";
 import GuestRoom from "./components/GuestRoom";
 import { useMswReadyStore } from "@/store/mswReady";
@@ -53,7 +53,7 @@ const ClassroomDashboard = () => {
   };
   const mutation = useMutation({
     mutationFn: createClass,
-    async onSuccess() {
+    onSuccess() {
       refetch();
     },
     onError(error) {
@@ -62,7 +62,7 @@ const ClassroomDashboard = () => {
   });
   return (
     <div className="bg2" style={{ minWidth: "1521px" }}>
-      <LoggedInHeader />
+      <Header />
       <div className="group-copywriting">
         <div className="s__container">
           <div className="s__row">

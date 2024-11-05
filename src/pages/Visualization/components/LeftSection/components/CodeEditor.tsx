@@ -1,7 +1,7 @@
 import { useContext, Fragment, useRef, useEffect } from "react";
 import Editor, { OnMount } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
-import { CodeContext } from "../../../Visualization";
+import { CodeContext } from "@/pages/Visualization/context/CodeContext";
 // Zustand
 import { useEditorStore } from "@/store/editor";
 import { useConsoleStore } from "@/store/console";

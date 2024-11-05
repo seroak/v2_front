@@ -116,8 +116,8 @@ input:not([type="file"])::placeholder {
 .sns-btn p {
   flex: 1;
 }
-.sns-btn.kakao {
-  background-color: #fae100;
+.sns-btn.naver {
+  background-color: #04c75b;
 }
 .sns-btn.goggle {
   border: 1px solid #f2f2f2;
@@ -1705,7 +1705,7 @@ gpt-icon-small {
   gap: 48px;
 }
 .call-stack-box li p {
-  width: 100px;
+  width: 120px;
   text-align: right;
   color: var(--black01, #181818);
   text-align: right;
@@ -1717,7 +1717,6 @@ gpt-icon-small {
 }
 .call-stack-box li > div {
   display: flex;
-  flex-direction: column;
   align-items: center;
 }
 .call-stack-box li > div > span {
