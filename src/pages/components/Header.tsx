@@ -61,20 +61,25 @@ const LoggedInHeader = () => {
   return (
     <header className={styles["bg-blue"]} style={{ position: isFixed ? "fixed" : "static" }}>
       <div className={styles["header-menu"]}>
+        <Link className={styles["header-logo"]} to="/">
+          <img src="/image/img_logo.png" alt="로고" />
+        </Link>
         {!userData ? (
           <>
-            <Link className={styles["header-logo"]} to="/">
-              <img src="/image/img_logo.png" alt="로고" />
-            </Link>
-
             <Link to="/viz">시각화</Link>
           </>
         ) : !isInClassroomDashboardUrl ? (
           <>
-            <Link className={styles["header-logo"]} to="/">
-              <img src="/image/img_logo.png" alt="로고" />
-            </Link>
+            <NavLink to="/classroomdashboard" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+              클래스룸
+            </NavLink>
 
+            <NavLink to="/viz" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+              시각화
+            </NavLink>
+          </>
+        ) : (
+          <>
             {/* 활성화 할 a태그에 on_active 클래스 추가 */}
             <NavLink
               to={`/classroomdashboard/classroom/${classroomId}`}
@@ -96,20 +101,6 @@ const LoggedInHeader = () => {
               className={({ isActive }) => (isActive ? styles["on_active"] : "")}
             >
               설정
-            </NavLink>
-          </>
-        ) : (
-          <>
-            <Link className={styles["header-logo"]} to="/">
-              <img src="/image/img_logo.png" alt="로고" />
-            </Link>
-
-            <NavLink to="/classroomdashboard" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-              클래스룸
-            </NavLink>
-
-            <NavLink to="/viz" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-              시각화
             </NavLink>
           </>
         )}
