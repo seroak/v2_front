@@ -3,7 +3,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { getUser, login } from "@/services/api";
 import Header from "@/pages/components/Header";
-const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
+const BACK_BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
+const FRONT_BASE_URL = import.meta.env.VITE_APP_FRONT_BASE_URL;
 const Login = () => {
   const [userId, setUserId] = useState<string>("");
   const [userPassword, setUserPassword] = useState<string>("");
@@ -38,10 +39,10 @@ const Login = () => {
     setUserPassword(e.target.value);
   };
   const loginByNaver = () => {
-    window.location.href = `${BASE_URL}/edupi-user/oauth2/authorization/naver?redirect_uri=http://localhost:5000`;
+    window.location.href = `${BACK_BASE_URL}/edupi-user/oauth2/authorization/naver?redirect_uri=${FRONT_BASE_URL}`;
   };
   const loginByGoogle = () => {
-    window.location.href = `${BASE_URL}/edupi-user/oauth2/authorization/google?redirect_uri=http://localhost:5000`;
+    window.location.href = `${BACK_BASE_URL}/edupi-user/oauth2/authorization/google?redirect_uri=${FRONT_BASE_URL}`;
   };
   // 에러 파라미터 감지 및 처리
   useEffect(() => {
