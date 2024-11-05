@@ -116,8 +116,8 @@ input:not([type="file"])::placeholder {
 .sns-btn p {
   flex: 1;
 }
-.sns-btn.kakao {
-  background-color: #fae100;
+.sns-btn.naver {
+  background-color: #04c75b;
 }
 .sns-btn.goggle {
   border: 1px solid #f2f2f2;

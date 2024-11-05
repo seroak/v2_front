@@ -16,18 +16,52 @@ const testResponseBody = [
   {
     id: 4,
     depth: 1,
-    expr: "1",
-    code: "a = 1",
-
+    expr: "3",
+    code: "a = 3",
     type: "variable",
+  },
+  {
+    variable: {
+      id: 7,
+      expr: "10",
+      name: "even_numbers",
+      code: "even_numbers.append(num);",
+      type: "variable",
+      idx: null,
+    },
+    type: "append",
+    callStackName: "get_even_numbers",
+  },
+  {
+    id: 9,
+    depth: 2,
+    returnExpr: "even_numbers",
+    code: "return even_numbers",
+    type: "return",
+  },
+  {
+    id: 9,
+    depth: 2,
+    returnExpr: "[2, 4, 6, 8, 10]",
+    code: "return even_numbers",
+    type: "return",
+  },
+  {
+    id: 13,
+    depth: 1,
+    returnExpr: "[2, 4, 6, 8, 10]",
+    returnArgName: "even_numbers",
+    code: "even_numbers = get_even_numbers(numbers)",
+    delFuncName: "get_even_numbers",
+    type: "endUserFunc",
   },
   {
     variables: [
       {
-        id: 4,
-        expr: "1",
+        id: 1,
+        expr: "3",
         name: "a",
-        code: "a = 1",
+        code: "a = 3",
         type: "variable",
         idx: null,
       },
@@ -35,46 +69,6 @@ const testResponseBody = [
     callStackName: "main",
     type: "assign",
   },
-
-  {
-    id: 5,
-    assignName: "",
-    depth: 1,
-    signature: "s(a)",
-    code: "s(a)",
-    type: "callUserFunc",
-  },
-  {
-    args: [
-      {
-        expr: "1",
-        name: "a",
-        type: "variable",
-      },
-    ],
-    callStackName: "s",
-    code: "s(a)",
-    type: "createCallStack",
-  },
-  {
-    id: 3,
-    depth: 2,
-    expr: "1",
-    highlights: [0],
-    console: "1\n",
-    code: "print(1)",
-    type: "print",
-  },
-  {
-    id: 5,
-    depth: 1,
-    returnExpr: "",
-    returnArgName: "",
-    code: "s(a)",
-    delFuncName: "s",
-    type: "endUserFunc",
-  },
-
-
 ];
+
 export default testResponseBody;

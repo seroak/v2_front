@@ -1,4 +1,4 @@
-import PublicHeader from "../components/PublicHeader";
+import Header from "../components/Header";
 import EmailCheck from "./components/EmailCheck";
 import SignupWrap from "./components/SignupWrap";
 import { createContext, useState } from "react";
@@ -15,7 +15,7 @@ const Signup = () => {
   return (
     <div className={"bg-gray"}>
       <TrySignupContext.Provider value={{ trySignup, setTrySignup }}>
-        <PublicHeader />
+        <Header />
         {trySignup ? <EmailCheck /> : <SignupWrap />}
       </TrySignupContext.Provider>
     </div>

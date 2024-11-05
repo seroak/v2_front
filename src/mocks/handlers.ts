@@ -31,7 +31,7 @@ export const handlers = [
   http.post("http://localhost:8080/edupi-assist/v1/execute/visualize", () => {
     return HttpResponse.json(
       {
-        success: false,
+        success: true,
         code: "CS-200000",
         detail: "success code analysis",
         result: { code: testResponseBody },

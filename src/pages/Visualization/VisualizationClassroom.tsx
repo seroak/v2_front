@@ -1,23 +1,25 @@
-import { createContext, useState, Dispatch, SetStateAction, useCallback, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import styles from "./Visualization.module.css";
 import "./gutter.css";
 
-import LoggedInClassroomHeader from "../components/LoggedInClassroomHeader";
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
 import GptIcon from "./components/LeftSection/components/GptIcon";
 import GptComment from "./components/LeftSection/components/GptComment";
 import Split from "react-split";
-import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
-import { fetchGuestActionRequest, visualize, getGuestStatus } from "@/services/api";
+import { ValidTypeDto } from "@/pages/Visualization/types/dto/ValidTypeDto";
+import { fetchGuestActionRequest, getGuestStatus } from "@/services/api";
+import { CodeContext } from "./context/CodeContext";
+import { PreprocessedCodesContext } from "./context/PreProcessedCodesContext";
 //zustand store
-import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
+
 import { useEditorStore } from "@/store/editor";
-import { useArrowStore } from "@/store/arrow";
+
 import { useMswReadyStore } from "@/store/mswReady";
 import { useGptTooltipStore } from "@/store/gptTooltip";
+import Header from "../components/Header";
 
 enum ActionType {
   ING = 1,
@@ -25,25 +27,6 @@ enum ActionType {
   HELP = 3,
 }
 // 원본 코드 타입 정의
-interface CodeContextType {
-  code: string;
-  setCode: Dispatch<SetStateAction<string>>;
-}
-// 전처리한 코드 타입 정의
-interface PreprocessedCodeContextType {
-  preprocessedCodes: ValidTypeDto[];
-  setPreprocessedCodes: Dispatch<SetStateAction<ValidTypeDto[]>>;
-}
-// Create contexts
-export const CodeContext = createContext<CodeContextType>({
-  code: "",
-  setCode: () => {},
-});
-
-export const PreprocessedCodesContext = createContext<PreprocessedCodeContextType>({
-  preprocessedCodes: [],
-  setPreprocessedCodes: () => {},
-});
 
 const VisualizationClassroom = () => {
   const [code, setCode] = useState<any>(
@@ -101,7 +84,7 @@ const VisualizationClassroom = () => {
   return (
     <CodeContext.Provider value={{ code, setCode }}>
       <PreprocessedCodesContext.Provider value={{ preprocessedCodes, setPreprocessedCodes }}>
-        <LoggedInClassroomHeader />
+        <Header />
 
         <main className={styles.main}>
           {focus && gptPin ? <GptIcon /> : (gptPin || isGptToggle) && <GptComment />}

@@ -1,44 +1,21 @@
-import { createContext, useState, Dispatch, SetStateAction, useCallback, useEffect, useRef } from "react";
-
-import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import styles from "./Visualization.module.css";
 import "./gutter.css";
-import PublicHeader from "../components/PublicHeader";
-import LoggedInHeader from "../components/LoggedInHeader";
+
+import Header from "../components/Header";
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
 import GptComment from "./components/LeftSection/components/GptComment";
 import GptIcon from "./components/LeftSection/components/GptIcon";
-import { visualize } from "@/services/api";
-import Split from "react-split";
-import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
 
+import Split from "react-split";
+import { ValidTypeDto } from "@/pages/Visualization/types/dto/ValidTypeDto";
+import { CodeContext } from "./context/CodeContext";
+import { PreprocessedCodesContext } from "./context/PreProcessedCodesContext";
 //zustand store
-import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
-import { useArrowStore } from "@/store/arrow";
 import { useUserStore } from "@/store/user";
 import { useGptTooltipStore } from "@/store/gptTooltip";
-// 원본 코드 타입 정의
-interface CodeContextType {
-  code: string;
-  setCode: Dispatch<SetStateAction<string>>;
-}
-// 전처리한 코드 타입 정의
-interface PreprocessedCodeContextType {
-  preprocessedCodes: ValidTypeDto[];
-  setPreprocessedCodes: Dispatch<SetStateAction<ValidTypeDto[]>>;
-}
-// Create contexts
-export const CodeContext = createContext<CodeContextType>({
-  code: "",
-  setCode: () => {},
-});
-
-export const PreprocessedCodesContext = createContext<PreprocessedCodeContextType>({
-  preprocessedCodes: [],
-  setPreprocessedCodes: () => {},
-});
 
 export default function Visualization() {
   const [code, setCode] = useState<any>(
@@ -56,7 +33,7 @@ export default function Visualization() {
   return (
     <CodeContext.Provider value={{ code, setCode }}>
       <PreprocessedCodesContext.Provider value={{ preprocessedCodes, setPreprocessedCodes }}>
-        {userName === "" ? <PublicHeader /> : <LoggedInHeader />}
+        <Header />
 
         <main className={styles.main}>
           {focus && gptPin ? <GptIcon /> : (gptPin || isGptToggle) && <GptComment />}
