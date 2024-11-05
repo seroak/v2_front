@@ -23,6 +23,9 @@ const AuthEmail = () => {
           },
           body: JSON.stringify({ email: email }),
         });
+        if (!response.ok) {
+          throw await response.json();
+        }
         /*
          * TODO: 백앤드 코드가 변경되어 json응답이 오면아래 코드를 활성화합니다.
          */
