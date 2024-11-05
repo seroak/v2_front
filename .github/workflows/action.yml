@@ -18,7 +18,7 @@ jobs:
         run: |
           echo "VITE_APP_BACKEND_BASE_URL=${{ secrets.VITE_APP_BACKEND_BASE_URL }}" >> .env
           echo "VITE_APP_NODE_ENV=${{ secrets.VITE_APP_NODE_ENV }}" >> .env
-
+          echo "VITE_APP_FRONT_BASE_URL=${{ secrets.VITE_APP_FRONT_BASE_URL }}" >> .env
       - name: Npm Install
         run: npm install
       - name: Npm Build
