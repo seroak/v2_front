@@ -62,7 +62,7 @@
 }
 .func-val::after {
   content: "";
-  background: url(public/image/img_func_arrow.svg) no-repeat;
+  background: url(/image/img_func_arrow.svg) no-repeat;
   width: 24px;
   height: 40px;
   display: block;

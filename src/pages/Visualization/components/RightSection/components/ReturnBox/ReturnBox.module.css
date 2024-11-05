@@ -10,7 +10,7 @@
 }
 .return-data::before {
   content: "";
-  background: url(public/image/icon_return.svg) no-repeat;
+  background: url(/image/icon_return.svg) no-repeat;
   width: 75px;
   height: 29px;
   display: flex;
