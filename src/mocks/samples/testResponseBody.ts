@@ -18,6 +18,7 @@ const testResponseBody = [
     depth: 1,
     expr: "1",
     code: "a = 1",
+
     type: "variable",
   },
   {
@@ -34,6 +35,7 @@ const testResponseBody = [
     callStackName: "main",
     type: "assign",
   },
+
   {
     id: 5,
     assignName: "",
@@ -72,6 +74,7 @@ const testResponseBody = [
     delFuncName: "s",
     type: "endUserFunc",
   },
-];
 
+
+];
 export default testResponseBody;

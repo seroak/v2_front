@@ -51,19 +51,11 @@ const VisualizationClassroom = () => {
   );
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   // zustand store
-  const consoleIdx = useConsoleStore((state) => state.stepIdx);
-  const resetConsole = useConsoleStore((state) => state.resetConsole);
-  const incrementStepIdx = useConsoleStore((state) => state.incrementStepIdx);
-  const decrementStepIdx = useConsoleStore((state) => state.decrementStepIdx);
-  const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
-  const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
+
   const { focus } = useEditorStore();
   const isGptToggle = useGptTooltipStore((state) => state.isGptToggle);
   const gptPin = useGptTooltipStore((state) => state.gptPin);
-  const setErrorLine = useEditorStore((state) => state.setErrorLine);
   const [actionType, setActionType] = useState<ActionType>(ActionType.ING);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const setConsole = useConsoleStore((state) => state.setConsole);
 
   const { isMswReady } = useMswReadyStore((state) => state);
   const params = useParams();
@@ -82,70 +74,6 @@ const VisualizationClassroom = () => {
   useEffect(() => {
     setActionType(guestStatus?.result);
   }, [guestStatus]);
-
-  const mutation = useMutation({
-    mutationFn: visualize,
-    async onSuccess(data) {
-      // 타입 체크 함수
-
-      if (isValidTypeDtoArray(data.result.code)) {
-        resetConsole();
-        setPreprocessedCodes(data.result.code);
-        setDisplayNone(false);
-        setIsPlaying(() => true);
-      } else {
-        console.error("데이터 형식이 올바르지 않습니다");
-        throw new Error("데이터 형식이 올바르지 않습니다");
-      }
-    },
-    onError(error) {
-      console.error("Submit Error:", error);
-      if (error.message === "데이터 형식이 올바르지 않습니다") {
-      } else {
-        const linNumber = Number((error as any).result.error[0]);
-        const message = (error as any).result.error;
-        setErrorLine({ lineNumber: linNumber, message: message });
-        setConsole([message]);
-        setPreprocessedCodes([]);
-      }
-    },
-  });
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    mutation.mutate(code);
-  };
-
-  const onPlay = () => {
-    if (codeFlowLength === 0) return;
-    setIsPlaying((prev) => !prev);
-  };
-
-  const onForward = useCallback(() => {
-    if (consoleIdx < codeFlowLength - 1) {
-      incrementStepIdx();
-    }
-  }, [consoleIdx, codeFlowLength]);
-
-  const onBack = useCallback(() => {
-    if (consoleIdx > 0) {
-      decrementStepIdx();
-    }
-  }, [consoleIdx]);
-  const intervalRef = useRef<number | null>(null);
-  useEffect(() => {
-    if (isPlaying) {
-      intervalRef.current = setInterval(onForward, 1000);
-    } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    }
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [isPlaying, consoleIdx, codeFlowLength]);
 
   const useGuestActionMutation = () => {
     return useMutation({
@@ -177,45 +105,6 @@ const VisualizationClassroom = () => {
 
         <main className={styles.main}>
           {focus && gptPin ? <GptIcon /> : (gptPin || isGptToggle) && <GptComment />}
-          <div className={styles["top-btns"]}>
-            <div>
-              <button type="button" className={styles["playcode-btn"]}>
-                <img src="/image/icon_play_w.svg" alt="" />
-                실행코드
-              </button>
-            </div>
-            <div>
-              <form action="#" onSubmit={handleSubmit}>
-                <button type="submit" className={styles["view-btn"]} data-testid="submit-button">
-                  <img src="/image/icon_play_w.svg" alt="" />
-                  시각화
-                </button>
-              </form>
-              <div>
-                <button>
-                  <img src="/image/icon_play_back.svg" onClick={onBack} alt="뒤로" />
-                </button>
-                <button className="ml8">
-                  {isPlaying ? (
-                    <img src="/image/icon_play_stop.svg" onClick={onPlay} alt="일시정지" />
-                  ) : (
-                    <img src="/image/icon_play.svg" onClick={onPlay} alt="재생" />
-                  )}
-                </button>
-                <button className="ml8">
-                  <img src="/image/icon_play_next.svg" onClick={onForward} alt="다음" />
-                </button>
-                <p className={"ml14" + " fz14"}>
-                  ({consoleIdx}/{codeFlowLength - 1 == -1 ? 0 : codeFlowLength - 1})
-                </p>
-                <p className={"ml24" + " fz14"}>Play Speed</p>
-                <select name="" id="" className={styles.s__select + " ml14"}>
-                  <option value="1x">1X</option>
-                  <option value="2x">2X</option>
-                </select>
-              </div>
-            </div>
-          </div>
 
           <Split
             sizes={[30, 70]}

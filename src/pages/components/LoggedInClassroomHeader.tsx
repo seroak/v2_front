@@ -18,9 +18,13 @@ const LoggedInClassroomHeader = () => {
       console.error("로그아웃 에러");
     }
   };
+  let isStatic = false;
+  if (location.pathname === "/viz" || /\/classroomdashboard\/classroom\/viz\/\d+$/.test(location.pathname)) {
+    isStatic = true;
+  }
   const classroomId = params.classroomId;
   return (
-    <header className={styles["bg-blue"]}>
+    <header className={styles["bg-blue"]} style={{ position: isStatic ? "static" : "fixed" }}>
       <div className={styles["header-menu"]}>
         <Link className={styles["header-logo"]} to="/">
           <img src="/image/img_logo.png" alt="로고" />

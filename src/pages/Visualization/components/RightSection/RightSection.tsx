@@ -1,8 +1,9 @@
-import { useState, useContext, useEffect, useRef } from "react";
-import { PreprocessedCodesContext } from "../../Visualization";
+import { useState, useContext, useEffect, useRef, useCallback } from "react";
+import { CodeContext, PreprocessedCodesContext } from "../../Visualization";
 import Split from "react-split";
 import _ from "lodash";
 import ResizeObserver from "resize-observer-polyfill";
+import styles from "./RightSection.module.css";
 // components
 import Arrow from "./components/Arrow/Arrow";
 
@@ -23,6 +24,7 @@ import { CreateCallStackDto } from "@/pages/Visualization/types/dto/createCallSt
 import { EndUserFuncDto } from "@/pages/Visualization/types/dto/endUserFuncDto";
 import { usedNameObjectType } from "../../types/dataStructuresItem/usedNameObjectType";
 import { DataStructureVarsItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureVarsItem";
+import { ValidTypeDto, isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
 // services폴더에서 가져온 함수
 import { addCodeFlow } from "./services/addCodeFlow";
 import { insertIntoDepth } from "./services/insertIntoDepth";
@@ -48,6 +50,11 @@ import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useRightSectionStore } from "@/store/arrow";
 import { useEditorStore } from "@/store/editor";
 import { AppendDto } from "../../types/dto/appendDto";
+import { useMutation } from "@tanstack/react-query";
+import { useArrowStore } from "@/store/arrow";
+
+//api
+import { visualize } from "@/services/api";
 
 interface State {
   objects: any[];
@@ -60,15 +67,19 @@ const RightSection = () => {
     },
   ]);
   const [StructuresList, setStructuresList] = useState<any>([]); // 변수 데이터 시각화 리스트의 변화과정을 담아두는 리스트
-  const context = useContext(PreprocessedCodesContext); // context API로 데이터 가져오기
-  if (!context) {
-    throw new Error("CodeContext not found"); //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
+  const preprocessedCodesContext = useContext(PreprocessedCodesContext); // context API로 데이터 가져오기
+  const codeContext = useContext(CodeContext);
+  if (!preprocessedCodesContext) {
+    throw new Error("preprocessedCodesContext not found"); //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
+  }
+  if (!codeContext) {
+    throw new Error("CodeContext not found");
   }
   const setConsole = useConsoleStore((state) => state.setConsole);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
   const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
-  const { preprocessedCodes } = context;
-
+  const { preprocessedCodes, setPreprocessedCodes } = preprocessedCodesContext;
+  const { code, setCode } = codeContext;
   const [arrowTextList, setArrowTextList] = useState<string[]>([]);
 
   const [, setRightSectionSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
@@ -82,6 +93,78 @@ const RightSection = () => {
   const width = useRightSectionStore((state) => state.width);
   const height = useRightSectionStore((state) => state.height);
   const setHighlightLines = useEditorStore((state) => state.setHighlightLines);
+
+  //위에 시각화 조절 버튼 상태관리
+  const [isPlaying, setIsPlaying] = useState(false);
+  const resetConsole = useConsoleStore((state) => state.resetConsole);
+  const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
+  const setErrorLine = useEditorStore((state) => state.setErrorLine);
+  const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
+  const consoleIdx = useConsoleStore((state) => state.stepIdx);
+  const incrementStepIdx = useConsoleStore((state) => state.incrementStepIdx);
+  const decrementStepIdx = useConsoleStore((state) => state.decrementStepIdx);
+
+  const mutation = useMutation({
+    mutationFn: visualize,
+    async onSuccess(data) {
+      // 타입 체크 함수
+      console.log(data.result.code);
+      if (isValidTypeDtoArray(data.result.code)) {
+        resetConsole();
+        setPreprocessedCodes(data.result.code);
+        setDisplayNone(false);
+        setIsPlaying(() => true);
+      } else {
+        console.error("데이터 형식이 올바르지 않습니다");
+        throw new Error("데이터 형식이 올바르지 않습니다");
+      }
+    },
+    onError(error) {
+      console.error(error);
+      if (error.message === "데이터 형식이 올바르지 않습니다") {
+        return;
+      } else {
+        const linNumber = Number((error as any).result.error[0]);
+        const message = (error as any).result.error;
+        setErrorLine({ lineNumber: linNumber, message: message });
+        setConsole([message]);
+        setPreprocessedCodes([]);
+      }
+    },
+  });
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    mutation.mutate(code);
+  };
+  const onPlay = () => {
+    if (codeFlowLength === 0) return;
+    setIsPlaying((prev) => !prev);
+  };
+  const onForward = useCallback(() => {
+    if (consoleIdx < codeFlowLength - 1) {
+      incrementStepIdx();
+    }
+  }, [consoleIdx, codeFlowLength]);
+  const onBack = useCallback(() => {
+    if (consoleIdx > 0) {
+      decrementStepIdx();
+    }
+  }, [consoleIdx]);
+  const intervalRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (isPlaying) {
+      intervalRef.current = setInterval(onForward, 1000);
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    }
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isPlaying, consoleIdx, codeFlowLength]);
 
   useEffect(() => {
     if (!rightSectionRef.current) return;
@@ -434,7 +517,40 @@ const RightSection = () => {
 
   return (
     <div id="split-2" ref={rightSectionRef}>
-      <p className="view-section-title">시각화</p>
+      <div className={styles["top-bar"]}>
+        <p className={styles["view-section-title"]}>시각화</p>
+        <div className={styles["play-wrap"]}>
+          <form onSubmit={handleSubmit}>
+            <button type="submit" className={styles["view-btn"]}>
+              <img src="/image/icon_play_w.svg" alt="" />
+              시각화
+            </button>
+          </form>
+          <div>
+            <button>
+              <img src="/image/icon_play_back.svg" alt="뒤로" />
+            </button>
+            <button className="ml8">
+              {isPlaying ? (
+                <img src="/image/icon_play_stop.svg" onClick={onBack} alt="일시정지" />
+              ) : (
+                <img src="/image/icon_play.svg" onClick={onPlay} alt="재생" />
+              )}
+            </button>
+            <button className="ml8">
+              <img src="/image/icon_play_next.svg" alt="다음" />
+            </button>
+            <p className="ml14 fz14">
+              ({consoleIdx}/{codeFlowLength - 1 == -1 ? 0 : codeFlowLength - 1})
+            </p>
+            <p className="ml24 fz14">Play Speed</p>
+            <select name="" id="" className="s__select ml14">
+              <option value="1x">1X</option>
+              <option value="2x">2X</option>
+            </select>
+          </div>
+        </div>
+      </div>
       <Arrow code={arrowTextList[stepIdx]} />
       <Split
         sizes={[70, 30]}

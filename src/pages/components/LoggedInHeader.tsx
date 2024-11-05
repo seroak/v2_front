@@ -1,9 +1,8 @@
 import styles from "./LoggedInHeader.module.css";
-import { useUserStore } from "@/store/user";
 import { logout, getUser } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-
+import { useLocation } from "react-router-dom";
 import { User } from "@/App";
 
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
@@ -13,6 +12,11 @@ const LoggedInHeader = () => {
   // const resetUser = useUserStore((state) => state.resetUser);
   const userData = useQuery<User>({ queryKey: ["user"], queryFn: getUser, staleTime: 1000 * 60 });
   const navigate = useNavigate();
+  const location = useLocation();
+  let isStatic = false;
+  if (location.pathname === "/viz" || /\/classroomdashboard\/classroom\/viz\/\d+$/.test(location.pathname)) {
+    isStatic = true;
+  }
   const handleLogout = async () => {
     try {
       const response = await logout();
@@ -23,13 +27,12 @@ const LoggedInHeader = () => {
         resetUser();
         navigate("/");
       }
-
     } catch {
       console.error("로그아웃 에러");
     }
   };
   return (
-    <header className={styles["bg-blue"]}>
+    <header className={styles["bg-blue"]} style={{ position: isStatic ? "static" : "fixed" }}>
       <div className={styles["header-menu"]}>
         <Link className={styles["header-logo"]} to="/">
           <img src="/image/img_logo.png" alt="로고" />
