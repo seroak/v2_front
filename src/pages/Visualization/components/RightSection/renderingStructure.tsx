@@ -22,6 +22,7 @@ interface Props {
   height: number;
   width: number;
 }
+
 interface CallstackProps {
   children?: ReactNode;
   structure: StructureValue;
@@ -74,7 +75,7 @@ const CallstackItem = ({ children, structure, height, width }: CallstackProps) =
 export const renderingStructure = (
   structures: WrapperDataStructureItem, //변수시각화 리스트
   height: number,
-  width: number
+  width: number,
 ): ReactElement => {
   return (
     <>
@@ -82,74 +83,78 @@ export const renderingStructure = (
         return (
           <div key={index}>
             <CallstackItem structure={structures[key]} height={height} width={width}>
-              <div className="call-stack-box">
-                <span className="call-stack-name">{key}</span>
-                {structures[key].data.map((structure) => {
-                  switch (structure.type) {
-                    case "variable": {
-                      const variableItem = structure as DataStructureVarsItem;
-                      return (
-                        <AnimatePresence key={variableItem.name + key} mode="wait">
-                          <motion.ul
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="var-list"
-                            style={{ display: "inline-block" }}
-                          >
-                            <StructureItem structure={variableItem} height={height} width={width}>
-                              <VariableBox
-                                value={variableItem.expr}
-                                name={variableItem.name}
-                                isLight={variableItem.isLight}
-                              />
-                            </StructureItem>
-                          </motion.ul>
-                        </AnimatePresence>
-                      );
+              <div className="var-data-wrap">
+                <div className="var-title">
+                  <p>{key}</p>
+                </div>
+                <div className="call-stack-box">
+                  {structures[key].data.map((structure) => {
+                    switch (structure.type) {
+                      case "variable": {
+                        const variableItem = structure as DataStructureVarsItem;
+                        return (
+                          <AnimatePresence key={variableItem.name + key} mode="wait">
+                            <motion.ul
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="var-list"
+                              style={{ display: "inline-block" }}
+                            >
+                              <StructureItem structure={variableItem} height={height} width={width}>
+                                <VariableBox
+                                  value={variableItem.expr}
+                                  name={variableItem.name}
+                                  isLight={variableItem.isLight}
+                                />
+                              </StructureItem>
+                            </motion.ul>
+                          </AnimatePresence>
+                        );
+                      }
+                      case "list": {
+                        const listItem = structure as DataStructureListItem;
+                        return (
+                          <AnimatePresence key={listItem.name + key} mode="wait">
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.3 }}
+                              style={{ display: "inline-block" }}
+                            >
+                              <StructureItem structure={listItem} height={height} width={width}>
+                                <ListWrapper listItem={listItem} />
+                              </StructureItem>
+                            </motion.div>
+                          </AnimatePresence>
+                        );
+                      }
+                      case "function": {
+                        const functionItem = structure as DataStructureFunctionItem;
+                        return (
+                          <AnimatePresence key={functionItem.name + key} mode="wait">
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.3 }}
+                              style={{ display: "inline-block" }}
+                            >
+                              <StructureItem structure={functionItem} height={height} width={width}>
+                                <DefFunctionDataStructure functionItem={functionItem} />
+                              </StructureItem>
+                            </motion.div>
+                          </AnimatePresence>
+                        );
+                      }
+                      default: {
+                        return null; // 다른 타입의 경우 아무것도 렌더링하지 않음
+                      }
                     }
-                    case "list": {
-                      const listItem = structure as DataStructureListItem;
-                      return (
-                        <AnimatePresence key={listItem.name + key} mode="wait">
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            style={{ display: "inline-block" }}
-                          >
-                            <StructureItem structure={listItem} height={height} width={width}>
-                              <ListWrapper listItem={listItem} />
-                            </StructureItem>
-                          </motion.div>
-                        </AnimatePresence>
-                      );
-                    }
-                    case "function": {
-                      const functionItem = structure as DataStructureFunctionItem;
-                      return (
-                        <AnimatePresence key={functionItem.name + key} mode="wait">
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            style={{ display: "inline-block" }}
-                          >
-                            <StructureItem structure={functionItem} height={height} width={width}>
-                              <DefFunctionDataStructure functionItem={functionItem} />
-                            </StructureItem>
-                          </motion.div>
-                        </AnimatePresence>
-                      );
-                    }
-                    default: {
-                      return null; // 다른 타입의 경우 아무것도 렌더링하지 않음
-                    }
-                  }
-                })}
+                  })}
+                </div>
               </div>
             </CallstackItem>
           </div>
