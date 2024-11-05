@@ -1,6 +1,5 @@
-import PublicHeader from "../components/PublicHeader";
-import LoggedInHeader from "../components/LoggedInHeader";
-import { useUserStore } from "@/store/user";
+import Header from "../components/Header";
+
 import { Link } from "react-router-dom";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Home.module.css";
@@ -9,8 +8,6 @@ import { useEffect } from "react";
 gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
-  const userName = useUserStore((state) => state.userName);
-
   useEffect(() => {
     const sections = gsap.utils.toArray<HTMLElement>("section");
     sections.forEach((section) => {
@@ -29,7 +26,7 @@ const Home = () => {
 
   return (
     <>
-      {userName === "" ? <PublicHeader /> : <LoggedInHeader />}
+      <Header />
       <section className={styles["main01"]}>
         <div className={styles["main-bg-top"]}></div>
         <img src="/image/img_logo_w.png" alt="" />
