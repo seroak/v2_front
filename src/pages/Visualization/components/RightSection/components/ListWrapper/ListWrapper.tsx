@@ -17,7 +17,7 @@ function ListWrapper({ listItem }: Props) {
               key={index}
               exprItem={exprItem}
               isLight={isLight}
-              isLightCheck={listItem.idx.start <= index && index <= listItem.idx.end}
+              isLightCheck={listItem.idx?.start <= index && index <= listItem.idx?.end}
               index={index}
             />
           );

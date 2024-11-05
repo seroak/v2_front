@@ -350,7 +350,7 @@ const RightSection = () => {
         accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName] = { data: [], isLight: false };
         for (let arg of (preprocessedCode as CreateCallStackDto).args) {
           accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
-            expr: [arg.expr],
+            expr: arg.expr.slice(1, -1).split(","),
             name: arg.name,
             type: arg.type,
           });
