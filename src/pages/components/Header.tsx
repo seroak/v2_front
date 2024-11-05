@@ -5,8 +5,6 @@ import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { User } from "@/App";
 
-const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
-
 const LoggedInHeader = () => {
   const params = useParams();
   let isFixed = false;
@@ -31,7 +29,7 @@ const LoggedInHeader = () => {
   // 로그아웃 mutation
   const logoutMuation = useMutation({
     mutationFn: logout,
-    onSuccess: (data) => {
+    onSuccess: () => {
       // 로그아웃 시 user 쿼리 캐시를 null로 설정
       refetch();
       navigate("/");
@@ -44,20 +42,7 @@ const LoggedInHeader = () => {
     logoutMuation.mutate();
   };
   const classroomId = params.classroomId;
-  // const handleLogout = async () => {
-  //   try {
-  //     const response = await logout();
-  //     if (response.isOauthUser === "true") {
-  //       resetUser();
-  //       window.location.href = `${BASE_URL}/edupi-user/oauth2/authorization/${response.provider}?mode=unlink&redirect_uri=http://localhost:5000`;
-  //     } else {
-  //       resetUser();
-  //       navigate("/");
-  //     }
-  //   } catch {
-  //     console.error("로그아웃 에러");
-  //   }
-  // };
+
   return (
     <header className={styles["bg-blue"]} style={{ position: isFixed ? "fixed" : "static" }}>
       <div className={styles["header-menu"]}>
