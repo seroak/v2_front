@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import Visualization from "./pages/Visualization/Visualization";
 import VisualizationClassroom from "./pages/Visualization/VisualizationClassroom";
 import Signup from "./pages/Signup/Signup";
@@ -12,12 +11,10 @@ import Assginment from "./pages/Assignment/Assignment";
 import Clssroom from "./pages/Classroom/Classroom";
 import AuthEmail from "./pages/AuthEmail/AuthEmail";
 
-import { useUserStore } from "./store/user";
 import { useMswReadyStore } from "@/store/mswReady";
 import "./App.css";
 
 import { setupMSW } from "./mocks/setup";
-import { getUser } from "@/services/api";
 
 export interface User {
   email: string;
@@ -26,7 +23,7 @@ export interface User {
 }
 
 function App() {
-  const { isMswReady, setIsMswReady } = useMswReadyStore((state) => state);
+  const { setIsMswReady } = useMswReadyStore((state) => state);
 
   useEffect(() => {
     async function initializeMSW() {
@@ -40,20 +37,12 @@ function App() {
 
     initializeMSW();
   }, [setIsMswReady]);
-
-  const { data } = useQuery<User>({ queryKey: ["user"], queryFn: getUser, enabled: isMswReady, staleTime: 1000 * 60 });
-  const setUserEmail = useUserStore((state) => state.setUserEmail);
-  const setUserName = useUserStore((state) => state.setUserName);
-  const setUserRole = useUserStore((state) => state.setUserRole);
-
-  useEffect(() => {
-    if (data) {
-      setUserEmail(data.email);
-      setUserName(data.name);
-      setUserRole(data.role);
-    }
-  }, [data]);
-
+  if (import.meta.env.VITE_APP_NODE_ENV === "production") {
+    console = window.console || {};
+    console.log = function no_console() {};
+    console.warn = function no_console() {};
+    console.error = function () {};
+  }
   return (
     <Router>
       <Routes>
