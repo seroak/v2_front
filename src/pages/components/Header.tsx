@@ -34,11 +34,7 @@ const LoggedInHeader = () => {
     onSuccess: (data) => {
       // 로그아웃 시 user 쿼리 캐시를 null로 설정
       refetch();
-      if (data?.isOauthUser) {
-        window.location.href = `${BASE_URL}/edupi-user/oauth2/authorization/${data.provider}?mode=unlink&redirect_uri=http://localhost:5000`;
-      } else {
-        navigate("/");
-      }
+      navigate("/");
     },
     onError: (error) => {
       console.error(error);
