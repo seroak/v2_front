@@ -14,7 +14,6 @@ import { CodeContext } from "./context/CodeContext";
 import { PreprocessedCodesContext } from "./context/PreProcessedCodesContext";
 //zustand store
 import { useEditorStore } from "@/store/editor";
-import { useUserStore } from "@/store/user";
 import { useGptTooltipStore } from "@/store/gptTooltip";
 
 export default function Visualization() {
@@ -23,8 +22,6 @@ export default function Visualization() {
   );
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   // zustand store
-
-  const userName = useUserStore((state) => state.userName);
 
   const { focus } = useEditorStore();
   const isGptToggle = useGptTooltipStore((state) => state.isGptToggle);
