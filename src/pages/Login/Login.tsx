@@ -1,9 +1,8 @@
 import { useState, FormEvent, ChangeEvent, Fragment, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import PublicHeader from "../components/PublicHeader";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { getUser, login } from "@/services/api";
+import Header from "@/pages/components/Header";
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 const Login = () => {
   const [userId, setUserId] = useState<string>("");
@@ -53,7 +52,7 @@ const Login = () => {
   return (
     <Fragment>
       <div className={"bg-gray"}>
-        <PublicHeader />
+        <Header />
 
         <div className="login-wrap">
           <img className="mb20" src="/image/img_logo2.png" alt="로고" />
@@ -90,7 +89,7 @@ const Login = () => {
               </button>
               <img className="mt24 mb24" src="/image/img_or.png" alt="" />
               <button className="sns-btn kakao mb8" type="button">
-                <img src="/image/icon_kakao.svg" alt="" />
+                <img src="/image/icon_naver.png" alt="네이버" />
                 <p>카카오로 로그인</p>
               </button>
               <button className="sns-btn goggle" type="button" onClick={loginByGoogle}>

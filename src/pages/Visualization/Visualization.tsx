@@ -1,8 +1,8 @@
 import { useState } from "react";
 import styles from "./Visualization.module.css";
 import "./gutter.css";
-import PublicHeader from "../components/PublicHeader";
-import LoggedInHeader from "../components/LoggedInHeader";
+
+import Header from "../components/Header";
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
 import GptComment from "./components/LeftSection/components/GptComment";
@@ -33,7 +33,7 @@ export default function Visualization() {
   return (
     <CodeContext.Provider value={{ code, setCode }}>
       <PreprocessedCodesContext.Provider value={{ preprocessedCodes, setPreprocessedCodes }}>
-        {userName === "" ? <PublicHeader /> : <LoggedInHeader />}
+        <Header />
 
         <main className={styles.main}>
           {focus && gptPin ? <GptIcon /> : (gptPin || isGptToggle) && <GptComment />}

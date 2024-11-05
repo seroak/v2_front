@@ -4,7 +4,6 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import styles from "./Visualization.module.css";
 import "./gutter.css";
 
-import LoggedInClassroomHeader from "../components/LoggedInClassroomHeader";
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
 import GptIcon from "./components/LeftSection/components/GptIcon";
@@ -20,6 +19,7 @@ import { useEditorStore } from "@/store/editor";
 
 import { useMswReadyStore } from "@/store/mswReady";
 import { useGptTooltipStore } from "@/store/gptTooltip";
+import Header from "../components/Header";
 
 enum ActionType {
   ING = 1,
@@ -84,7 +84,7 @@ const VisualizationClassroom = () => {
   return (
     <CodeContext.Provider value={{ code, setCode }}>
       <PreprocessedCodesContext.Provider value={{ preprocessedCodes, setPreprocessedCodes }}>
-        <LoggedInClassroomHeader />
+        <Header />
 
         <main className={styles.main}>
           {focus && gptPin ? <GptIcon /> : (gptPin || isGptToggle) && <GptComment />}

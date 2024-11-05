@@ -1,10 +1,10 @@
-import LoggedInClassroomHeader from "@/pages/components/LoggedInClassroomHeader";
 import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
 import { getClassGuestData, deleteClassroom, getTotalActionInfo, inviteClassroom } from "@/services/api";
+import Header from "../components/Header";
 
 interface GuestType {
   id: number;
@@ -93,7 +93,7 @@ const Modify = () => {
   };
   return (
     <div className="bg">
-      <LoggedInClassroomHeader />
+      <Header />
       <div id="header02" className="bg-blue"></div>
       <div className="group-wrap">
         <div className="group-left">
