@@ -1,34 +1,34 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&display=swap");
-
+.highlight {
+  background-color: #364fce;
+}
 .return-data {
   display: flex;
   align-items: center;
-  gap: 1px;
-  background-color: #565656;
-  width: fit-content;
-  border-radius: 5px;
+  gap: 16px;
+  margin-top: 24px;
 }
-span {
-  margin-bottom: 4px;
-  display: inline-block;
+.return-data::before {
+  content: "";
+  background: url(public/image/icon_return.svg) no-repeat;
+  width: 75px;
+  height: 29px;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  justify-content: center;
 }
-.return-data > span {
+.return-data p {
   display: inline-block;
   min-width: 10px;
   border-radius: 4px;
   color: #fff;
   padding: 8px 15px;
-
   position: relative;
 }
-.return-data > span > span {
-  position: absolute;
-  bottom: -28px;
-  color: rgba(24, 24, 24, 0.3);
-  left: 50%;
-  text-wrap: nowrap;
-  transform: translateX(-50%);
+.return-data p.data-true {
+  background: var(--blue01, #4866ff);
 }
-.highlight {
-  background-color: #364fce;
+.return-data p.data-false {
+  background: #ff7173;
 }

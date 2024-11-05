@@ -1,9 +1,11 @@
 import styles from "./ListWrapper.module.css";
 import { ListBlock } from "./components/ListBlock";
 import { DataStructureListItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureListItem";
+
 type Props = {
   listItem: DataStructureListItem;
 };
+
 function ListWrapper({ listItem }: Props) {
   const { expr, isLight, name } = listItem;
   console.log(expr);

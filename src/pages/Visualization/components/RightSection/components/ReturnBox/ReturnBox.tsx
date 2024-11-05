@@ -7,11 +7,10 @@ interface Props {
 function ReturnBox({ returnItem }: Props) {
   const { returnExpr, isLight } = returnItem;
   return (
-    <div>
-      <span>Return</span>
+    <div className={cx("code-flow-data")}>
       {returnExpr !== "" && (
-        <div className={cx(styles["return-data"], isLight && styles["highlight"], returnExpr == "False" && [" false"])}>
-          <span>{returnExpr}</span>
+        <div className={cx(styles["return-data"])}>
+          <p className={cx(isLight && styles["highlight"], returnExpr == "False" && styles["data-false"])}>{returnExpr}</p>
         </div>
       )}
     </div>

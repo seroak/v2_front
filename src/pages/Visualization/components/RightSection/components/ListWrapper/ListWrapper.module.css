@@ -1,9 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&display=swap");
 .wrapper {
   display: flex;
-  align-items: center;
   width: fit-content;
-  margin: 0px 20px;
+  margin: 0 10px 0 10px;
 }
 .var-data {
   display: flex;
