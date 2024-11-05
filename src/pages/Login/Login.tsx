@@ -88,13 +88,13 @@ const Login = () => {
                 로그인
               </button>
               <img className="mt24 mb24" src="/image/img_or.png" alt="" />
-              <button className="sns-btn kakao mb8" type="button">
-                <img src="/image/icon_naver.png" alt="네이버" />
-                <p>카카오로 로그인</p>
+              <button className="sns-btn naver mb8" type="button">
+                <img src="/image/icon_naver.png" alt="네이버" style={{ width: "30px", height: "30px" }} />
+                <p style={{ color: "white", position: "relative", left: "-14px" }}>네이버로 로그인</p>
               </button>
               <button className="sns-btn goggle" type="button" onClick={loginByGoogle}>
                 <img src="/image/icon_goggle.svg" alt="" />
-                <p>구글로 로그인</p>
+                <p style={{ position: "relative", left: "-10px" }}>구글로 로그인</p>
               </button>
             </div>
           </form>
