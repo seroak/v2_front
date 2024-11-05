@@ -1617,7 +1617,6 @@ gpt-icon-small {
   text-align: right;
 }
 
-
 .func-title {
   border-radius: 8px 8px 0px 0px;
   background-color: #f9f9f9;
@@ -1674,7 +1673,7 @@ gpt-icon-small {
 }
 .code-flow-func.on_active > .code-flow-title-wrap > .func-title > span::after {
   background: url(public/image/img_func_blue.png) no-repeat;
-
+}
 .var-data-wrap {
   display: flex;
   flex-direction: column;
@@ -1782,5 +1781,4 @@ gpt-icon-small {
   left: 50%;
   text-wrap: nowrap;
   transform: translateX(-50%);
-
 }
