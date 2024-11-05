@@ -270,7 +270,7 @@ export const logout = async (): Promise<LogoutResponse | null> => {
       credentials: "include",
       headers: { "Content-Type": "application/json" },
     });
-
+    console.log(response.json());
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
