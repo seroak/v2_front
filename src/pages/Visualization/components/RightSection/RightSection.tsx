@@ -60,7 +60,20 @@ import { visualize } from "@/services/api";
 interface State {
   objects: any[];
 }
+interface ApiError {
+  code: string;
+  result: {
+    error: string[];
+  };
+  message: string;
+}
 
+// 성공 응답 타입 정의
+interface SuccessResponse {
+  result: {
+    code: any[]; // TypeDto는 별도로 정의되어 있다고 가정
+  };
+}
 const RightSection = () => {
   const [codeFlowList, setCodeFlowList] = useState<State[]>([
     {
@@ -108,7 +121,7 @@ const RightSection = () => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
   };
-  const mutation = useMutation({
+  const mutation = useMutation<SuccessResponse, ApiError, Parameters<typeof visualize>[0]>({
     mutationFn: visualize,
     async onSuccess(data) {
       // 타입 체크 함수
@@ -126,6 +139,8 @@ const RightSection = () => {
       console.error(error);
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
+      } else if (error.code === "CS-400006") {
+        alert("지원하지 않는 코드가 포함되어있습니다");
       } else {
         const linNumber = Number((error as any).result.error[0]);
         const message = (error as any).result.error;
