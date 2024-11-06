@@ -9,7 +9,7 @@ const LoggedInHeader = () => {
   const params = useParams();
   let isFixed = false;
   let isInClassroomDashboardUrl = false;
-
+  let isClassroomDashboardUrl = false;
   const { data: userData, refetch } = useQuery<User | null>({
     queryKey: ["user"],
     queryFn: getUser,
@@ -23,8 +23,11 @@ const LoggedInHeader = () => {
   if (location.pathname === "/") {
     isFixed = true;
   }
-  if (/\/classroomdashboard(\/\d+)?$/.test(location.pathname)) {
+  if (/\/classroomdashboard(\/.*)?$/.test(location.pathname)) {
     isInClassroomDashboardUrl = true;
+  }
+  if (/^\/classroomdashboard$/.test(location.pathname)) {
+    isClassroomDashboardUrl = true;
   }
   // 로그아웃 mutation
   const logoutMuation = useMutation({
@@ -66,27 +69,31 @@ const LoggedInHeader = () => {
         ) : (
           <>
             {/* 활성화 할 a태그에 on_active 클래스 추가 */}
-            <NavLink
-              to={`/classroomdashboard/classroom/${classroomId}`}
-              end
-              className={({ isActive }) => (isActive ? styles["on_active"] : "")}
-            >
-              진척도
-            </NavLink>
 
-            <NavLink
-              to={`/classroomdashboard/classroom/viz/${classroomId}`}
-              className={({ isActive }) => (isActive ? styles["on_active"] : "")}
-            >
-              시각화
-            </NavLink>
+            {!isClassroomDashboardUrl && (
+              <>
+                <NavLink
+                  to={`/classroomdashboard/classroom/${classroomId}`}
+                  end
+                  className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+                >
+                  진척도
+                </NavLink>
 
-            <NavLink
-              to={`/classroomdashboard/classroom/manage/${classroomId}`}
-              className={({ isActive }) => (isActive ? styles["on_active"] : "")}
-            >
-              설정
-            </NavLink>
+                <NavLink
+                  to={`/classroomdashboard/classroom/viz/${classroomId}`}
+                  className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+                >
+                  시각화
+                </NavLink>
+                <NavLink
+                  to={`/classroomdashboard/classroom/manage/${classroomId}`}
+                  className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+                >
+                  설정
+                </NavLink>
+              </>
+            )}
           </>
         )}
       </div>
