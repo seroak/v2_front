@@ -133,7 +133,7 @@ export const createClass = async (createClassName: string) => {
 export const getClassGuestData = async (classroomId: number) => {
   try {
     console.log("hi");
-    const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom/account/?classroomId=${classroomId}`, {
+    const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom/account?classroomId=${classroomId}`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

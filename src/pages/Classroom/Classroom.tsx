@@ -3,7 +3,7 @@ import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { getClassGuestData, getTotalActionInfo, ClassEnd } from "@/services/api";
+import { getClassGuestDataWithoutDefaultAction, getTotalActionInfo, ClassEnd } from "@/services/api";
 import Header from "../components/Header";
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
@@ -41,7 +41,7 @@ const Classroom = () => {
 
   const { data: guestData, refetch: guestDataRefetch } = useQuery<ClassroomDataType>({
     queryKey: ["ClassGuestData", classroomId],
-    queryFn: () => getClassGuestData(classroomId),
+    queryFn: () => getClassGuestDataWithoutDefaultAction(classroomId),
     enabled: isMswReady,
   });
   const { data: classroomData, refetch: classroomDataRefetch } = useQuery<TotalActionInfoType>({

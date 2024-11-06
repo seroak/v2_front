@@ -3,12 +3,7 @@ import { useMswReadyStore } from "@/store/mswReady";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
-import {
-  getClassGuestDataWithoutDefaultAction,
-  deleteClassroom,
-  getTotalActionInfo,
-  inviteClassroom,
-} from "@/services/api";
+import { getClassGuestData, deleteClassroom, getTotalActionInfo, inviteClassroom } from "@/services/api";
 import Header from "../components/Header";
 
 interface GuestType {
@@ -51,7 +46,7 @@ const Modify = () => {
 
   const { data, refetch: getClassroomRefetch } = useQuery<ClassroomData>({
     queryKey: ["classroomData", classroomId],
-    queryFn: () => getClassGuestDataWithoutDefaultAction(classroomId),
+    queryFn: () => getClassGuestData(classroomId),
     enabled: isMswReady,
   });
   const changeGuestEmail = (e: ChangeEvent<HTMLInputElement>) => {
