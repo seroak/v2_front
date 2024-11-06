@@ -65,6 +65,7 @@ const Classroom = () => {
     queryKey: ["classAccessRightData", classroomId],
     queryFn: () => getClassAccessRightData(classroomId),
     enabled: isMswReady,
+    staleTime: 1000 * 60,
   });
   useEffect(() => {
     if (isSuccess) {
