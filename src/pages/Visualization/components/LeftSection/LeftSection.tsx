@@ -55,7 +55,7 @@ const LeftSection = () => {
           <div className="flex items-center gap-4">
             <button type="button" className={styles["playcode-btn"]} onClick={handleRunCode}>
               <img src="/image/icon_play_w.svg" alt="" />
-              실행코드
+              코드실행
             </button>
             <Dropdown />
           </div>
