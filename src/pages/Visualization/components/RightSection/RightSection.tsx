@@ -142,6 +142,7 @@ const RightSection = () => {
       } else if (error.code === "CS-400006") {
         alert("지원하지 않는 코드가 포함되어 있습니다");
       } else {
+        console.log(error);
         const linNumber = Number((error as any).result.error[0]);
         const message = (error as any).result.error;
         setErrorLine({ lineNumber: linNumber, message: message });

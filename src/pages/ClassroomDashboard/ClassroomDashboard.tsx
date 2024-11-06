@@ -4,7 +4,7 @@ import HostRoom from "./components/HostRoom";
 import GuestRoom from "./components/GuestRoom";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+
 import { createClass, getHostGuestData, getUser } from "@/services/api";
 import { User } from "@/App";
 interface Classroom {
@@ -21,9 +21,6 @@ interface GroupData {
 }
 const ClassroomDashboard = () => {
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
-
-  const params = useParams();
-  const classroomId = Number(params.classroomId);
   const { data: userData } = useQuery<User | null>({
     queryKey: ["user"],
     queryFn: getUser,
@@ -32,8 +29,8 @@ const ClassroomDashboard = () => {
     placeholderData: null,
   });
   const { data, refetch } = useQuery<GroupData>({
-    queryKey: ["classroomspace", classroomId],
-    queryFn: () => getHostGuestData(classroomId),
+    queryKey: ["classroomspace"],
+    queryFn: () => getHostGuestData(),
     enabled: isMswReady,
   });
 

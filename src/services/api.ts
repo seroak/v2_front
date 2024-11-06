@@ -56,9 +56,9 @@ export const signup = (req: SignupProps) =>
     headers: { "Content-Type": "application/json" },
     withCredentials: true,
   });
-export const getHostGuestData = async (classroomId: number) => {
+export const getHostGuestData = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom?classroomId=${classroomId}`, {
+    const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -166,7 +166,23 @@ export const getClassGuestDataWithoutDefaultAction = async (classroomId: number)
     throw error;
   }
 };
-
+export const getClassAccessRightData = async (classroomId: number) => {
+  try {
+    const response = await fetch(`${BASE_URL}/edupi-lms/v1/account/role?classroomId=${classroomId}`, {
+      method: "GET",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 export const getTotalActionInfo = async (classroomId: number) => {
   try {
     const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom/info?classroomId=${classroomId}`, {

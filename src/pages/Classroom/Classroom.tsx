@@ -3,7 +3,12 @@ import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { getClassGuestDataWithoutDefaultAction, getTotalActionInfo, ClassEnd } from "@/services/api";
+import {
+  getClassGuestDataWithoutDefaultAction,
+  getTotalActionInfo,
+  ClassEnd,
+  getClassAccessRightData,
+} from "@/services/api";
 import Header from "../components/Header";
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
@@ -31,6 +36,10 @@ interface TotalActionInfoType {
     actionInfo: ActionInfoType;
   };
 }
+interface ClassAccessRightDataType {
+  isAccess: boolean;
+  isHost: boolean;
+}
 const Classroom = () => {
   const [guests, setGuests] = useState<GuestType[]>();
   const [actionInfo, setActionInfo] = useState<ActionInfoType>();
@@ -40,7 +49,7 @@ const Classroom = () => {
   const classroomId = Number(params.classroomId);
 
   const { data: guestData, refetch: guestDataRefetch } = useQuery<ClassroomDataType>({
-    queryKey: ["ClassGuestData", classroomId],
+    queryKey: ["classGuestData", classroomId],
     queryFn: () => getClassGuestDataWithoutDefaultAction(classroomId),
     enabled: isMswReady,
   });
@@ -49,6 +58,17 @@ const Classroom = () => {
     queryFn: () => getTotalActionInfo(classroomId),
     enabled: isMswReady,
   });
+
+  const { data: classAccessRightData } = useQuery<ClassAccessRightDataType>({
+    queryKey: ["classAccessRightData", classroomId],
+    queryFn: () => getClassAccessRightData(classroomId),
+    enabled: isMswReady,
+  });
+  useEffect(() => {
+    if (!classAccessRightData?.isAccess) {
+      navigate("/");
+    }
+  }, [classAccessRightData]);
 
   useEffect(() => {
     if (guestData) {
