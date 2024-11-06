@@ -573,7 +573,7 @@ const RightSection = () => {
       </div>
       <Arrow code={arrowTextList[stepIdx]} />
       <Split
-        sizes={[70, 30]}
+        sizes={[60, 40]}
         minSize={100}
         expandToMin={false}
         gutterSize={10}

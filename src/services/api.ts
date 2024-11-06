@@ -132,6 +132,26 @@ export const createClass = async (createClassName: string) => {
 
 export const getClassGuestData = async (classroomId: number) => {
   try {
+    console.log("hi");
+    const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom/account/?classroomId=${classroomId}`, {
+      method: "GET",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const getClassGuestDataWithoutDefaultAction = async (classroomId: number) => {
+  try {
+    console.log("hi");
     const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom/account/progress?classroomId=${classroomId}`, {
       method: "GET",
       credentials: "include",
