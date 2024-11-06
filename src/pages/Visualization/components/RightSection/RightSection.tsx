@@ -371,6 +371,7 @@ const RightSection = () => {
             expr: arg.expr.slice(1, -1).split(","),
             name: arg.name,
             type: arg.type,
+            idx: { start: arg.idx.start, end: arg.idx.end },
           });
         }
         arrowTexts.push((preprocessedCode as CreateCallStackDto).code);

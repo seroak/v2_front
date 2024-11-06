@@ -5,6 +5,7 @@ export interface CreateCallStackDto {
       expr: string;
       name: string;
       type: string;
+      idx: { start: number; end: number };
     }
   ];
   callStackName: string;
