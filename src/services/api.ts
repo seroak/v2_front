@@ -329,7 +329,7 @@ export const logout = async (): Promise<null> => {
 };
 
 export const fetchGptCorrect = async (code: string): Promise<GptCorrectResponse> => {
-  const response = await fetch(`${BASE_URL}/edupi-syntax/v1/advice/correct`, {
+  const response = await fetch(`${BASE_URL}/edupi-assist/v1/advice/correct`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -341,7 +341,7 @@ export const fetchGptCorrect = async (code: string): Promise<GptCorrectResponse>
   return response.json();
 };
 export const fetchGptHint = async (code: string, lineNumber: number): Promise<GptHintResponse> => {
-  const response = await fetch(`${BASE_URL}/edupi-syntax/v1/advice/hint`, {
+  const response = await fetch(`${BASE_URL}/edupi-assist/v1/advice/hint`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
