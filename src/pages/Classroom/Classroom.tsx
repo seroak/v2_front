@@ -66,7 +66,7 @@ const Classroom = () => {
     mutationFn: ClassEnd,
     onSuccess: () => {
       classroomDataRefetch();
-      navigate("/classroomspace");
+      navigate("/classroomdashboard");
     },
     onError: () => {
       alert("정상적으로 수업이 종료되지 않았습니다");

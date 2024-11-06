@@ -10,11 +10,9 @@ interface props {
 const Room = ({ classData }: props) => {
   return (
     <li>
-      <Link to={`/classroomspace/classroom/${classData.id}`}>
+      <Link to={`/classroomdashboard/classroom/${classData.id}`}>
         <div className="data04-name">
-          <p>
-            {classData.name} {classData.id}반
-          </p>
+          <p>{classData.name}</p>
           <span>인원 : {classData.totalPeople}명</span>
           <span>초대 대기 : 1명</span>
         </div>
