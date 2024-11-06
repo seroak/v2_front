@@ -3,7 +3,15 @@ import { useMswReadyStore } from "@/store/mswReady";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
-import { getClassGuestData, deleteClassroom, getTotalActionInfo, inviteClassroom } from "@/services/api";
+//zustand store
+import { useAccessRightStore } from "@/store/accessRight";
+import {
+  getClassGuestData,
+  deleteClassroom,
+  getTotalActionInfo,
+  inviteClassroom,
+  getClassAccessRightData,
+} from "@/services/api";
 import Header from "../components/Header";
 
 interface GuestType {
@@ -29,6 +37,10 @@ interface GetTotalActionInfoType {
     actionInfo: ActionInfoType;
   };
 }
+interface ClassAccessRightDataType {
+  isAccess: boolean;
+  isHost: boolean;
+}
 
 const Modify = () => {
   const params = useParams();
@@ -37,7 +49,7 @@ const Modify = () => {
   const [guestEmail, setGuestEmail] = useState<string>("");
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const navigate = useNavigate();
-
+  const setIsHost = useAccessRightStore((state) => state.setIsHost);
   const { data: classroomData, refetch: classroomDataRefetch } = useQuery<GetTotalActionInfoType>({
     queryKey: ["ClassTotalActionInfo", classroomId],
     queryFn: () => getTotalActionInfo(classroomId),
@@ -49,6 +61,20 @@ const Modify = () => {
     queryFn: () => getClassGuestData(classroomId),
     enabled: isMswReady,
   });
+  const { data: classAccessRightData, isSuccess } = useQuery<ClassAccessRightDataType>({
+    queryKey: ["classAccessRightData", classroomId],
+    queryFn: () => getClassAccessRightData(classroomId),
+    enabled: isMswReady,
+    staleTime: 1000 * 60,
+  });
+  useEffect(() => {
+    if (isSuccess) {
+      setIsHost(classAccessRightData.isHost);
+      if (!classAccessRightData?.isAccess) {
+        navigate("/");
+      }
+    }
+  }, [classAccessRightData, isSuccess]);
   const changeGuestEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setGuestEmail(e.target.value);
   };
