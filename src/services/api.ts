@@ -168,7 +168,7 @@ export const getClassGuestDataWithoutDefaultAction = async (classroomId: number)
 };
 export const getClassAccessRightData = async (classroomId: number) => {
   try {
-    const response = await fetch(`${BASE_URL}/edupi-lms/v1/account/role?classroomId=${classroomId}`, {
+    const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom/account/role?classroomId=${classroomId}`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

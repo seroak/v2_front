@@ -47,7 +47,7 @@ const Classroom = () => {
   const navigate = useNavigate();
   const params = useParams();
   const classroomId = Number(params.classroomId);
-
+  console.log(classroomId);
   const { data: guestData, refetch: guestDataRefetch } = useQuery<ClassroomDataType>({
     queryKey: ["classGuestData", classroomId],
     queryFn: () => getClassGuestDataWithoutDefaultAction(classroomId),
