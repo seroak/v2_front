@@ -1,4 +1,5 @@
 export interface CreateCallStackDto {
+  id: number;
   args: [
     {
       expr: string;

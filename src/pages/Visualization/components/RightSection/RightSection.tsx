@@ -267,6 +267,7 @@ const RightSection = () => {
       // enduserFunc 타입이 들어왔을 때 코드흐름과 변수 부분 함수를 지우고 return value를 나타나게 한다
       // 나타나고 바로 사라지는건 traking id와 depth를 사용하지 않는다
       if (preprocessedCode.type.toLowerCase() === "endUserFunc".toLowerCase()) {
+        highlightLine.push((preprocessedCode as EndUserFuncDto).id);
         const delName = (preprocessedCode as EndUserFuncDto).delFuncName;
         delete accDataStructures[delName]; // 함수 이름을 키로 가지는 객체를 삭제
         delete usedName[delName];
@@ -292,6 +293,7 @@ const RightSection = () => {
       else if (preprocessedCode.type.toLowerCase() === "append".toLowerCase()) {
         const callStackName = (preprocessedCode as AppendDto).callStackName;
         const variable = (preprocessedCode as AppendDto).variable;
+        highlightLine.push(variable.id);
         if (variable.type.toLowerCase() === "variable") {
           accDataStructures[callStackName].data.map((data: DataStructureVarsItem) => {
             if (data.name === variable.name) {
@@ -363,6 +365,7 @@ const RightSection = () => {
       // 함수 생성으로 새로운 함수 콜스택이 나올 떄
       else if (preprocessedCode.type.toLowerCase() === "createCallStack".toLowerCase()) {
         accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName] = { data: [], isLight: false };
+        highlightLine.push((preprocessedCode as CreateCallStackDto).id);
         for (let arg of (preprocessedCode as CreateCallStackDto).args) {
           accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
             expr: arg.expr.slice(1, -1).split(","),
@@ -527,6 +530,7 @@ const RightSection = () => {
       accCodeFlowList.push(deepClodeCodeFlow);
       accConsoleLogList.push(accConsoleLog);
     }
+    console.log(highlightLine);
     setCodeFlowList(accCodeFlowList);
     setStructuresList(accDataStructuresList);
     setConsole(accConsoleLogList);

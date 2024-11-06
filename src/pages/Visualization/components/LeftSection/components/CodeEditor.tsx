@@ -211,6 +211,7 @@ const CodeEditor = () => {
   };
 
   const highlightLine = (lineNumber: number) => {
+    console.log("hi");
     if (!editorRef.current) return;
 
     if (!decorationsCollectionRef.current) {
@@ -248,6 +249,9 @@ const CodeEditor = () => {
         <style>{`
           .error-line {
             background-color: rgba(255, 0, 0, 0.1);
+          }
+          .myLineHighlight {
+            background-color: #EAECFF;
           }
         `}</style>
       </div>
