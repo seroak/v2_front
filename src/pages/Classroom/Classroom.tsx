@@ -49,7 +49,7 @@ const Classroom = () => {
   const params = useParams();
   const classroomId = Number(params.classroomId);
   const setIsHost = useAccessRightStore((state) => state.setIsHost);
-  console.log(classroomId);
+
   const { data: guestData, refetch: guestDataRefetch } = useQuery<ClassroomDataType>({
     queryKey: ["classGuestData", classroomId],
     queryFn: () => getClassGuestDataWithoutDefaultAction(classroomId),

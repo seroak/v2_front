@@ -139,10 +139,9 @@ const RightSection = () => {
       console.error(error);
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
-      } else if (error.code === "CS-400006") {
+      } else if (error.code === "CS-400006" || error.code === "CA-400999") {
         alert("지원하지 않는 코드가 포함되어 있습니다");
       } else {
-        console.log(error);
         const linNumber = Number((error as any).result.error[0]);
         const message = (error as any).result.error;
         setErrorLine({ lineNumber: linNumber, message: message });
@@ -366,7 +365,6 @@ const RightSection = () => {
       else if (preprocessedCode.type.toLowerCase() === "createCallStack".toLowerCase()) {
         accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName] = { data: [], isLight: false };
         highlightLine.push((preprocessedCode as CreateCallStackDto).id);
-        console.log(preprocessedCode);
         for (let arg of (preprocessedCode as CreateCallStackDto).args) {
           accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
             expr: arg.expr.slice(1, -1).split(","),
@@ -532,7 +530,6 @@ const RightSection = () => {
       accCodeFlowList.push(deepClodeCodeFlow);
       accConsoleLogList.push(accConsoleLog);
     }
-    console.log(highlightLine);
     setCodeFlowList(accCodeFlowList);
     setStructuresList(accDataStructuresList);
     setConsole(accConsoleLogList);

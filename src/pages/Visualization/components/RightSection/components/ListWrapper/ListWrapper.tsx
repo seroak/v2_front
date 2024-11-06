@@ -8,7 +8,6 @@ type Props = {
 
 function ListWrapper({ listItem }: Props) {
   const { expr, isLight, name } = listItem;
-  console.log(listItem);
   return (
     <li>
       <p>{name}</p>

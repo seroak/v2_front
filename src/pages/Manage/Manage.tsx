@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
 //zustand store
 import { useAccessRightStore } from "@/store/accessRight";
+import { ErrorResponse } from "@/types/apiTypes";
 import {
   getClassGuestData,
   deleteClassroom,
@@ -85,6 +86,13 @@ const Modify = () => {
       classroomDataRefetch();
     },
     onError(error) {
+      const apiError = error as unknown as ErrorResponse;
+      if (apiError.code === "LM-400006") {
+        alert("이미 등록된 학생이다");
+      }
+      if (apiError.code === "LM-400005") {
+        alert("해당 하는 학생이 없습니다");
+      }
       console.error("클래스룸 초대 에러", error);
     },
   });

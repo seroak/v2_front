@@ -211,7 +211,6 @@ const CodeEditor = () => {
   };
 
   const highlightLine = (lineNumber: number) => {
-    console.log("hi");
     if (!editorRef.current) return;
 
     if (!decorationsCollectionRef.current) {

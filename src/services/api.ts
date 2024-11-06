@@ -28,7 +28,24 @@ export const visualize = async (code: string) => {
     throw error;
   }
 };
-
+export const runCode = async (code: string) => {
+  try {
+    const response = await fetch(`${BASE_URL}/edupi-assist/v1/execute/code`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ source_code: code }),
+    });
+    if (!response.ok) {
+      throw await response.json();
+    }
+    return response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 export const getUser = async (): Promise<getUserProps | null> => {
   const response = await fetch(`${BASE_URL}/edupi-user/v1/account/login/info`, {
     method: "GET",
