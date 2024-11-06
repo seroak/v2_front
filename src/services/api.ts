@@ -329,7 +329,7 @@ export const logout = async (): Promise<null> => {
 };
 
 export const fetchGptCorrect = async (code: string): Promise<GptCorrectResponse> => {
-  const response = await fetch(`${BASE_URL}/edupi-assist/v1/advice/correct`, {
+  const response = await fetch(`${BASE_URL}/edupi-assist/v1/advice/correction`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
