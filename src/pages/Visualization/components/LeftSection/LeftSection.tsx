@@ -37,10 +37,10 @@ const LeftSection = () => {
         alert("지원하지 않는 코드가 포함되어 있습니다");
       } else {
         console.log(error);
-        const linNumber = Number((error as any).result.error[0]);
-        const detail = (error as any).result.detail;
-        setErrorLine({ lineNumber: linNumber, message: detail });
-        setConsole([]);
+        const linNumber = Number((error as any).result.lineNumber);
+        const errorMessage = (error as any).result.errorMessage;
+        setErrorLine({ lineNumber: linNumber, message: errorMessage });
+        setConsole([errorMessage]);
       }
     },
   });

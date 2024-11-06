@@ -142,10 +142,10 @@ const RightSection = () => {
       } else if (error.code === "CS-400006" || error.code === "CA-400999") {
         alert("지원하지 않는 코드가 포함되어 있습니다");
       } else {
-        const linNumber = Number((error as any).result.error[0]);
-        const message = (error as any).result.error;
-        setErrorLine({ lineNumber: linNumber, message: message });
-        setConsole([message]);
+        const linNumber = Number((error as any).result.lineNumber);
+        const errorMessage = (error as any).result.errorMessage;
+        setErrorLine({ lineNumber: linNumber, message: errorMessage });
+        setConsole([errorMessage]);
         setPreprocessedCodes([]);
       }
     },
