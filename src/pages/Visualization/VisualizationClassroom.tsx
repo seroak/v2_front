@@ -99,7 +99,7 @@ const VisualizationClassroom = () => {
             dragInterval={1}
             direction="horizontal"
             cursor="col-resize"
-            style={{ display: "flex", width: "99vw", height: "89.2vh" }}
+            style={{ display: "flex", width: "99vw", height: "100%" }}
           >
             <LeftSection />
             <RightSection />
