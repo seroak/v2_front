@@ -1,21 +1,18 @@
 import styles from "./LoggedInHeader.module.css";
-import { logout, getUser, getClassAccessRightData } from "@/services/api";
+import { logout, getUser } from "@/services/api";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useMswReadyStore } from "@/store/mswReady";
+
 import { useAccessRightStore } from "@/store/accessRight";
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { User } from "@/App";
-interface ClassAccessRightDataType {
-  isAccess: boolean;
-  isHost: boolean;
-}
+
 const LoggedInHeader = () => {
   const params = useParams();
   let isFixed = false;
   let isInClassroomDashboardUrl = false;
   let isClassroomDashboardUrl = false;
-  const isMswReady = useMswReadyStore((state) => state.isMswReady);
+
   const isHost = useAccessRightStore((state) => state.isHost);
   const classroomId = Number(params.classroomId);
   const { data: userData, refetch } = useQuery<User | null>({
@@ -25,11 +22,7 @@ const LoggedInHeader = () => {
     retry: 3,
     placeholderData: null,
   });
-  const { data: classAccessRightData } = useQuery<ClassAccessRightDataType>({
-    queryKey: ["classAccessRightData", classroomId],
-    queryFn: () => getClassAccessRightData(classroomId),
-    enabled: isMswReady,
-  });
+
   const navigate = useNavigate();
   const location = useLocation();
 
