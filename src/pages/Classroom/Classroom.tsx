@@ -59,16 +59,19 @@ const Classroom = () => {
     enabled: isMswReady,
   });
 
-  const { data: classAccessRightData } = useQuery<ClassAccessRightDataType>({
+  const { data: classAccessRightData, isSuccess } = useQuery<ClassAccessRightDataType>({
     queryKey: ["classAccessRightData", classroomId],
     queryFn: () => getClassAccessRightData(classroomId),
     enabled: isMswReady,
   });
   useEffect(() => {
-    if (!classAccessRightData?.isAccess) {
-      navigate("/");
+    console.log(classAccessRightData?.isAccess);
+    if (isSuccess) {
+      if (!classAccessRightData?.isAccess) {
+        navigate("/");
+      }
     }
-  }, [classAccessRightData]);
+  }, [classAccessRightData, isSuccess]);
 
   useEffect(() => {
     if (guestData) {
