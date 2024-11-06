@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import styles from "./Visualization.module.css";
 import "./gutter.css";
@@ -10,11 +10,11 @@ import GptIcon from "./components/LeftSection/components/GptIcon";
 import GptComment from "./components/LeftSection/components/GptComment";
 import Split from "react-split";
 import { ValidTypeDto } from "@/pages/Visualization/types/dto/ValidTypeDto";
-import { fetchGuestActionRequest, getGuestStatus } from "@/services/api";
+import { fetchGuestActionRequest, getGuestStatus, getClassAccessRightData } from "@/services/api";
 import { CodeContext } from "./context/CodeContext";
 import { PreprocessedCodesContext } from "./context/PreProcessedCodesContext";
 //zustand store
-
+import { useAccessRightStore } from "@/store/accessRight";
 import { useEditorStore } from "@/store/editor";
 
 import { useMswReadyStore } from "@/store/mswReady";
@@ -26,6 +26,10 @@ enum ActionType {
   COMPLETE = 2,
   HELP = 3,
 }
+interface ClassAccessRightDataType {
+  isAccess: boolean;
+  isHost: boolean;
+}
 // 원본 코드 타입 정의
 
 const VisualizationClassroom = () => {
@@ -33,13 +37,14 @@ const VisualizationClassroom = () => {
     ["a = 3", "for i in range(a):", "   print(' ' * ((a - 1) - i), end = '')", "   print('*' * (2 * i + 1))"].join("\n")
   );
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
-  // zustand store
+  const navigate = useNavigate();
 
+  // zustand store
   const { focus } = useEditorStore();
   const isGptToggle = useGptTooltipStore((state) => state.isGptToggle);
   const gptPin = useGptTooltipStore((state) => state.gptPin);
   const [actionType, setActionType] = useState<ActionType>(ActionType.ING);
-
+  const setIsHost = useAccessRightStore((state) => state.setIsHost);
   const { isMswReady } = useMswReadyStore((state) => state);
   const params = useParams();
   const classroomId = Number(params.classroomId);
@@ -49,6 +54,21 @@ const VisualizationClassroom = () => {
     queryFn: () => getGuestStatus(classroomId),
     enabled: isMswReady,
   });
+
+  const { data: classAccessRightData, isSuccess } = useQuery<ClassAccessRightDataType>({
+    queryKey: ["classAccessRightData", classroomId],
+    queryFn: () => getClassAccessRightData(classroomId),
+    enabled: isMswReady,
+  });
+  useEffect(() => {
+    if (isSuccess) {
+      setIsHost(classAccessRightData.isHost);
+      if (!classAccessRightData?.isAccess) {
+        navigate("/");
+      }
+    }
+  }, [classAccessRightData, isSuccess]);
+
   // 새로고침시 상태 업데이트
   useEffect(() => {
     refetch();

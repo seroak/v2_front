@@ -3,6 +3,7 @@ import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useAccessRightStore } from "@/store/accessRight";
 import {
   getClassGuestDataWithoutDefaultAction,
   getTotalActionInfo,
@@ -47,6 +48,7 @@ const Classroom = () => {
   const navigate = useNavigate();
   const params = useParams();
   const classroomId = Number(params.classroomId);
+  const setIsHost = useAccessRightStore((state) => state.setIsHost);
   console.log(classroomId);
   const { data: guestData, refetch: guestDataRefetch } = useQuery<ClassroomDataType>({
     queryKey: ["classGuestData", classroomId],
@@ -65,8 +67,8 @@ const Classroom = () => {
     enabled: isMswReady,
   });
   useEffect(() => {
-    console.log(classAccessRightData?.isAccess);
     if (isSuccess) {
+      setIsHost(classAccessRightData.isHost);
       if (!classAccessRightData?.isAccess) {
         navigate("/");
       }

@@ -2,6 +2,7 @@ import styles from "./LoggedInHeader.module.css";
 import { logout, getUser, getClassAccessRightData } from "@/services/api";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useMswReadyStore } from "@/store/mswReady";
+import { useAccessRightStore } from "@/store/accessRight";
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { User } from "@/App";
@@ -15,6 +16,7 @@ const LoggedInHeader = () => {
   let isInClassroomDashboardUrl = false;
   let isClassroomDashboardUrl = false;
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
+  const isHost = useAccessRightStore((state) => state.isHost);
   const classroomId = Number(params.classroomId);
   const { data: userData, refetch } = useQuery<User | null>({
     queryKey: ["user"],
@@ -82,7 +84,7 @@ const LoggedInHeader = () => {
             {!isClassroomDashboardUrl && (
               <>
                 {/* `classAccessRightData.isHost`에 따라 조건부 렌더링 */}
-                {!classAccessRightData?.isHost && (
+                {isHost && (
                   <NavLink
                     to={`/classroomdashboard/classroom/${classroomId}`}
                     end
@@ -98,7 +100,7 @@ const LoggedInHeader = () => {
                 >
                   시각화
                 </NavLink>
-                {!classAccessRightData?.isHost && (
+                {isHost && (
                   <NavLink
                     to={`/classroomdashboard/classroom/manage/${classroomId}`}
                     className={({ isActive }) => (isActive ? styles["on_active"] : "")}
