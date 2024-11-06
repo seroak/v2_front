@@ -366,6 +366,7 @@ const RightSection = () => {
       else if (preprocessedCode.type.toLowerCase() === "createCallStack".toLowerCase()) {
         accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName] = { data: [], isLight: false };
         highlightLine.push((preprocessedCode as CreateCallStackDto).id);
+        console.log(preprocessedCode);
         for (let arg of (preprocessedCode as CreateCallStackDto).args) {
           accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
             expr: arg.expr.slice(1, -1).split(","),
