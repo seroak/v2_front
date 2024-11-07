@@ -1,0 +1,115 @@
+/* 컨테이너 스타일 */
+.check-message {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg02);
+    padding: 2rem;
+}
+
+.check-message-wrapper {
+    background: white;
+    border-radius: 16px;
+    padding: 3rem;
+    padding-top: 2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    max-width: 480px;
+    width: 100%;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* 헤더 스타일 */
+.check-message-top {
+    color: #111827;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+/* 이미지 컨테이너 */
+.check-img-center {
+    margin: 2rem 0;
+}
+
+.check-img-center img {
+    width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* 메시지 텍스트 */
+.check-message-root {
+    color: #6b7280;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* 버튼 스타일 */
+.check-button {
+    display: inline-block;
+    text-decoration: none;
+    width: 100%;
+    max-width: 320px;
+    margin-top: 1rem;
+    transition: all 0.2s ease;
+}
+
+.check-button-inner {
+    background: var(--blue);
+    color: white;
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.check-button:hover .check-button-inner {
+    background: #4338ca;
+}
+
+.check-button-label {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* 마진 유틸리티 클래스 */
+.mb-20 {
+    margin-bottom: 1.25rem;
+}
+
+.mb-25 {
+    margin-bottom: 1.5625rem;
+}
+
+.mb-35 {
+    margin-bottom: 2.1875rem;
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 640px) {
+    .check-message-wrapper {
+        padding: 2rem;
+    }
+
+    .check-message-top {
+        font-size: 1.5rem;
+    }
+
+    .check-img-center img {
+        width: 120px;
+    }
+}
