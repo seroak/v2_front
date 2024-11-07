@@ -331,6 +331,10 @@ const RightSection = () => {
               if (typeof variable.expr === "string") {
                 (variable as VariableExprArray).expr = variable.expr.slice(1, -1).split(",");
               }
+            } else if(variable.type.toLowerCase() === "tuple") {
+              if (typeof variable.expr === "string") {
+                (variable as VariableExprArray).expr = variable.expr.slice(1, -1).split(",");
+              }
             }
             highlightLine.push(variable.id);
             // 자료구조 시각화에서 화살표에 넣을 코드를 넣는다
@@ -459,7 +463,7 @@ const RightSection = () => {
           const finallyCodeFlow = LightCodeFlow(changedCodeFlows, activate);
 
           accCodeFlow = { objects: finallyCodeFlow };
-          if (toAddObject.type !== "variable" && toAddObject.type !== "list") {
+          if (toAddObject.type !== "variable" && toAddObject.type !== "list" && toAddObject.type !== "tuple") {
             prevTrackingDepth = (
               preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto | WhileDto
             ).depth;

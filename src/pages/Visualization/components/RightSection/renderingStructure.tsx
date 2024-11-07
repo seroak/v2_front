@@ -5,11 +5,13 @@ import { ReactElement } from "react";
 //components
 import VariableBox from "./components/VariableBox/VariableBox";
 import ListWrapper from "./components/ListWrapper/ListWrapper";
+import TupleWrapper from "./components/TupleWrapper/TupleWrapper";
 import DefFunctionDataStructure from "./components/DefFunctionDataStructure/DefFunctionDataStructure";
 
 //type
 import { DataStructureVarsItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureVarsItem";
 import { DataStructureListItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureListItem";
+import { DataStructureTupleItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureTupleItem";
 import { WrapperDataStructureItem, StructureValue } from "../../types/dataStructuresItem/wrapperDataStructureItem";
 import { DataStructureFunctionItem } from "@/pages/Visualization/types/dataStructuresItem/dataStructureFunctionItem";
 //zustand
@@ -126,6 +128,24 @@ export const renderingStructure = (
                             >
                               <StructureItem structure={listItem} height={height} width={width}>
                                 <ListWrapper listItem={listItem} />
+                              </StructureItem>
+                            </motion.div>
+                          </AnimatePresence>
+                        );
+                      }
+                      case "tuple" : {
+                        const tupleItem = structure as DataStructureTupleItem;
+                        return (
+                          <AnimatePresence key={tupleItem.name + key} mode="wait">
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.3 }}
+                              style={{ display: "inline-block" }}
+                            >
+                              <StructureItem structure={tupleItem} height={height} width={width}>
+                                <TupleWrapper listItem={tupleItem} />
                               </StructureItem>
                             </motion.div>
                           </AnimatePresence>
