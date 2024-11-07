@@ -3,7 +3,13 @@ import Guest from "./components/Guest";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { getClassGuestData, getTotalActionInfo, ClassEnd } from "@/services/api";
+import { useAccessRightStore } from "@/store/accessRight";
+import {
+  getClassGuestDataWithoutDefaultAction,
+  getTotalActionInfo,
+  ClassEnd,
+  getClassAccessRightData,
+} from "@/services/api";
 import Header from "../components/Header";
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
@@ -31,6 +37,10 @@ interface TotalActionInfoType {
     actionInfo: ActionInfoType;
   };
 }
+interface ClassAccessRightDataType {
+  isAccess: boolean;
+  isHost: boolean;
+}
 const Classroom = () => {
   const [guests, setGuests] = useState<GuestType[]>();
   const [actionInfo, setActionInfo] = useState<ActionInfoType>();
@@ -38,10 +48,11 @@ const Classroom = () => {
   const navigate = useNavigate();
   const params = useParams();
   const classroomId = Number(params.classroomId);
+  const setIsHost = useAccessRightStore((state) => state.setIsHost);
 
   const { data: guestData, refetch: guestDataRefetch } = useQuery<ClassroomDataType>({
-    queryKey: ["ClassGuestData", classroomId],
-    queryFn: () => getClassGuestData(classroomId),
+    queryKey: ["classGuestData", classroomId],
+    queryFn: () => getClassGuestDataWithoutDefaultAction(classroomId),
     enabled: isMswReady,
   });
   const { data: classroomData, refetch: classroomDataRefetch } = useQuery<TotalActionInfoType>({
@@ -49,6 +60,21 @@ const Classroom = () => {
     queryFn: () => getTotalActionInfo(classroomId),
     enabled: isMswReady,
   });
+
+  const { data: classAccessRightData, isSuccess } = useQuery<ClassAccessRightDataType>({
+    queryKey: ["classAccessRightData", classroomId],
+    queryFn: () => getClassAccessRightData(classroomId),
+    enabled: isMswReady,
+    staleTime: 1000 * 60,
+  });
+  useEffect(() => {
+    if (isSuccess) {
+      setIsHost(classAccessRightData.isHost);
+      if (!classAccessRightData?.isAccess) {
+        navigate("/");
+      }
+    }
+  }, [classAccessRightData, isSuccess]);
 
   useEffect(() => {
     if (guestData) {
@@ -66,7 +92,7 @@ const Classroom = () => {
     mutationFn: ClassEnd,
     onSuccess: () => {
       classroomDataRefetch();
-      navigate("/classroomspace");
+      navigate("/classroomdashboard");
     },
     onError: () => {
       alert("정상적으로 수업이 종료되지 않았습니다");

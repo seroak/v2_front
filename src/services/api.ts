@@ -28,7 +28,24 @@ export const visualize = async (code: string) => {
     throw error;
   }
 };
-
+export const runCode = async (code: string) => {
+  try {
+    const response = await fetch(`${BASE_URL}/edupi-assist/v1/execute/code`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ source_code: code }),
+    });
+    if (!response.ok) {
+      throw await response.json();
+    }
+    return response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 export const getUser = async (): Promise<getUserProps | null> => {
   const response = await fetch(`${BASE_URL}/edupi-user/v1/account/login/info`, {
     method: "GET",
@@ -56,9 +73,9 @@ export const signup = (req: SignupProps) =>
     headers: { "Content-Type": "application/json" },
     withCredentials: true,
   });
-export const getHostGuestData = async (classroomId: number) => {
+export const getHostGuestData = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom?classroomId=${classroomId}`, {
+    const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -132,6 +149,24 @@ export const createClass = async (createClassName: string) => {
 
 export const getClassGuestData = async (classroomId: number) => {
   try {
+    const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom/account?classroomId=${classroomId}`, {
+      method: "GET",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const getClassGuestDataWithoutDefaultAction = async (classroomId: number) => {
+  try {
     const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom/account/progress?classroomId=${classroomId}`, {
       method: "GET",
       credentials: "include",
@@ -148,7 +183,23 @@ export const getClassGuestData = async (classroomId: number) => {
     throw error;
   }
 };
-
+export const getClassAccessRightData = async (classroomId: number) => {
+  try {
+    const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom/account/role?classroomId=${classroomId}`, {
+      method: "GET",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 export const getTotalActionInfo = async (classroomId: number) => {
   try {
     const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom/info?classroomId=${classroomId}`, {
@@ -278,7 +329,7 @@ export const logout = async (): Promise<null> => {
 };
 
 export const fetchGptCorrect = async (code: string): Promise<GptCorrectResponse> => {
-  const response = await fetch(`${BASE_URL}/edupi-syntax/v1/advice/correct`, {
+  const response = await fetch(`${BASE_URL}/edupi-assist/v1/advice/correction`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -290,7 +341,7 @@ export const fetchGptCorrect = async (code: string): Promise<GptCorrectResponse>
   return response.json();
 };
 export const fetchGptHint = async (code: string, lineNumber: number): Promise<GptHintResponse> => {
-  const response = await fetch(`${BASE_URL}/edupi-syntax/v1/advice/hint`, {
+  const response = await fetch(`${BASE_URL}/edupi-assist/v1/advice/hint`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },

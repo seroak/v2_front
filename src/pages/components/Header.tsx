@@ -1,6 +1,8 @@
 import styles from "./LoggedInHeader.module.css";
 import { logout, getUser } from "@/services/api";
 import { useQuery, useMutation } from "@tanstack/react-query";
+
+import { useAccessRightStore } from "@/store/accessRight";
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { User } from "@/App";
@@ -9,7 +11,10 @@ const LoggedInHeader = () => {
   const params = useParams();
   let isFixed = false;
   let isInClassroomDashboardUrl = false;
+  let isClassroomDashboardUrl = false;
 
+  const isHost = useAccessRightStore((state) => state.isHost);
+  const classroomId = Number(params.classroomId);
   const { data: userData, refetch } = useQuery<User | null>({
     queryKey: ["user"],
     queryFn: getUser,
@@ -17,14 +22,18 @@ const LoggedInHeader = () => {
     retry: 3,
     placeholderData: null,
   });
+
   const navigate = useNavigate();
   const location = useLocation();
 
   if (location.pathname === "/") {
     isFixed = true;
   }
-  if (/\/classroomdashboard(\/\d+)?$/.test(location.pathname)) {
+  if (/\/classroomdashboard(\/.*)?$/.test(location.pathname)) {
     isInClassroomDashboardUrl = true;
+  }
+  if (/^\/classroomdashboard$/.test(location.pathname)) {
+    isClassroomDashboardUrl = true;
   }
   // 로그아웃 mutation
   const logoutMuation = useMutation({
@@ -38,10 +47,10 @@ const LoggedInHeader = () => {
       console.error(error);
     },
   });
+
   const handleLogout = () => {
     logoutMuation.mutate();
   };
-  const classroomId = params.classroomId;
 
   return (
     <header className={styles["bg-blue"]} style={{ position: isFixed ? "fixed" : "static" }}>
@@ -65,28 +74,35 @@ const LoggedInHeader = () => {
           </>
         ) : (
           <>
-            {/* 활성화 할 a태그에 on_active 클래스 추가 */}
-            <NavLink
-              to={`/classroomdashboard/classroom/${classroomId}`}
-              end
-              className={({ isActive }) => (isActive ? styles["on_active"] : "")}
-            >
-              진척도
-            </NavLink>
+            {!isClassroomDashboardUrl && (
+              <>
+                {/* `classAccessRightData.isHost`에 따라 조건부 렌더링 */}
+                {isHost && (
+                  <NavLink
+                    to={`/classroomdashboard/classroom/${classroomId}`}
+                    end
+                    className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+                  >
+                    진척도
+                  </NavLink>
+                )}
 
-            <NavLink
-              to={`/classroomdashboard/classroom/viz/${classroomId}`}
-              className={({ isActive }) => (isActive ? styles["on_active"] : "")}
-            >
-              시각화
-            </NavLink>
-
-            <NavLink
-              to={`/classroomdashboard/classroom/manage/${classroomId}`}
-              className={({ isActive }) => (isActive ? styles["on_active"] : "")}
-            >
-              설정
-            </NavLink>
+                <NavLink
+                  to={`/classroomdashboard/classroom/viz/${classroomId}`}
+                  className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+                >
+                  시각화
+                </NavLink>
+                {isHost && (
+                  <NavLink
+                    to={`/classroomdashboard/classroom/manage/${classroomId}`}
+                    className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+                  >
+                    설정
+                  </NavLink>
+                )}
+              </>
+            )}
           </>
         )}
       </div>

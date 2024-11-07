@@ -3,10 +3,10 @@ import Header from "../components/Header";
 import HostRoom from "./components/HostRoom";
 import GuestRoom from "./components/GuestRoom";
 import { useMswReadyStore } from "@/store/mswReady";
-import { useUserStore } from "@/store/user";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
-import { createClass, getHostGuestData } from "@/services/api";
+
+import { createClass, getHostGuestData, getUser } from "@/services/api";
+import { User } from "@/App";
 interface Classroom {
   id: number;
   name: string;
@@ -21,20 +21,22 @@ interface GroupData {
 }
 const ClassroomDashboard = () => {
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
-  const userName = useUserStore((state) => state.userName);
-  const userEmail = useUserStore((state) => state.userEmail);
-  const params = useParams();
-  const classroomId = Number(params.classroomId);
-
+  const { data: userData } = useQuery<User | null>({
+    queryKey: ["user"],
+    queryFn: getUser,
+    staleTime: 1000 * 60,
+    retry: 3,
+    placeholderData: null,
+  });
   const { data, refetch } = useQuery<GroupData>({
-    queryKey: ["classroomspace", classroomId],
-    queryFn: () => getHostGuestData(classroomId),
+    queryKey: ["classroomspace"],
+    queryFn: () => getHostGuestData(),
     enabled: isMswReady,
   });
 
   const [hostClassRooms, setHostClassRooms] = useState<Classroom[]>([]);
   const [guestClassRooms, setGuestClassRooms] = useState<Classroom[]>([]);
-  const [createClassName, setCreateCalssName] = useState<string | undefined>();
+  const [createClassName, setCreateCalssName] = useState<string>("");
   useEffect(() => {
     if (data) {
       setHostClassRooms(data.result.hosts);
@@ -76,8 +78,8 @@ const ClassroomDashboard = () => {
       <div className="group-data-wrap">
         <div className="group-data-left">
           <div className="user-info">
-            <p>{userName}님</p>
-            <span>{userEmail}</span>
+            <p>{userData?.name}님</p>
+            <span>{userData?.email}</span>
             <ul className="user-group-data">
               <li>
                 <p>강의방 수</p>

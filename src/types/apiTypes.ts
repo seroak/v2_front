@@ -37,3 +37,9 @@ export interface GptHintResponse {
     line: number;
   };
 }
+
+export interface ErrorResponse {
+  code: string;
+  detail: string;
+  result: object;
+}

@@ -249,6 +249,9 @@ const CodeEditor = () => {
           .error-line {
             background-color: rgba(255, 0, 0, 0.1);
           }
+          .myLineHighlight {
+            background-color: #EAECFF;
+          }
         `}</style>
       </div>
     </Fragment>

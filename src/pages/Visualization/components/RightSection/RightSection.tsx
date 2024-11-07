@@ -139,15 +139,19 @@ const RightSection = () => {
       console.error(error);
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
-      } else if (error.code === "CS-400006") {
+      } else if (error.code === "CA-400006" || error.code === "CA-400999") {
         alert("지원하지 않는 코드가 포함되어 있습니다");
-      } else {
-        const linNumber = Number((error as any).result.error[0]);
-        const message = (error as any).result.error;
-        setErrorLine({ lineNumber: linNumber, message: message });
-        setConsole([message]);
+        return;
+      } else if (error.code === "CA-400002") {
+        const linNumber = Number((error as any).result.lineNumber);
+        const errorMessage = (error as any).result.errorMessage;
+        setErrorLine({ lineNumber: linNumber, message: errorMessage });
+        setConsole([errorMessage]);
         setPreprocessedCodes([]);
+        return;
       }
+      setConsole([]);
+      setPreprocessedCodes([]);
     },
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -249,6 +253,7 @@ const RightSection = () => {
     const arrowTexts: string[] = [];
 
     for (let preprocessedCode of preprocessedCodes) {
+      console.log(preprocessedCode);
       let changedCodeFlows: any[] = [];
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
@@ -266,6 +271,7 @@ const RightSection = () => {
       // enduserFunc 타입이 들어왔을 때 코드흐름과 변수 부분 함수를 지우고 return value를 나타나게 한다
       // 나타나고 바로 사라지는건 traking id와 depth를 사용하지 않는다
       if (preprocessedCode.type.toLowerCase() === "endUserFunc".toLowerCase()) {
+        highlightLine.push((preprocessedCode as EndUserFuncDto).id);
         const delName = (preprocessedCode as EndUserFuncDto).delFuncName;
         delete accDataStructures[delName]; // 함수 이름을 키로 가지는 객체를 삭제
         delete usedName[delName];
@@ -291,6 +297,7 @@ const RightSection = () => {
       else if (preprocessedCode.type.toLowerCase() === "append".toLowerCase()) {
         const callStackName = (preprocessedCode as AppendDto).callStackName;
         const variable = (preprocessedCode as AppendDto).variable;
+        highlightLine.push(variable.id);
         if (variable.type.toLowerCase() === "variable") {
           accDataStructures[callStackName].data.map((data: DataStructureVarsItem) => {
             if (data.name === variable.name) {
@@ -362,11 +369,13 @@ const RightSection = () => {
       // 함수 생성으로 새로운 함수 콜스택이 나올 떄
       else if (preprocessedCode.type.toLowerCase() === "createCallStack".toLowerCase()) {
         accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName] = { data: [], isLight: false };
+        highlightLine.push((preprocessedCode as CreateCallStackDto).id);
         for (let arg of (preprocessedCode as CreateCallStackDto).args) {
           accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
             expr: arg.expr.slice(1, -1).split(","),
             name: arg.name,
             type: arg.type,
+            idx: { start: arg.idx.start, end: arg.idx.end },
           });
         }
         arrowTexts.push((preprocessedCode as CreateCallStackDto).code);
@@ -573,7 +582,7 @@ const RightSection = () => {
       </div>
       <Arrow code={arrowTextList[stepIdx]} />
       <Split
-        sizes={[70, 30]}
+        sizes={[50, 50]}
         minSize={100}
         expandToMin={false}
         gutterSize={10}
