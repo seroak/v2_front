@@ -344,7 +344,7 @@ const RightSection = () => {
               if (typeof variable.expr === "string") {
                 (variable as VariableExprArray).expr = variable.expr.slice(1, -1).split(",");
               }
-            } else if(variable.type.toLowerCase() === "tuple") {
+            } else if (variable.type.toLowerCase() === "tuple") {
               if (typeof variable.expr === "string") {
                 (variable as VariableExprArray).expr = variable.expr.slice(1, -1).split(",");
               }
@@ -382,7 +382,7 @@ const RightSection = () => {
         highlightLine.push((preprocessedCode as CreateCallStackDto).id);
 
         for (let arg of (preprocessedCode as CreateCallStackDto).args) {
-          if (arg.type === "list") {
+          if (arg.type === "list" || arg.type === "tuple") {
             accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
               expr: arg.expr.slice(1, -1).split(","),
               name: arg.name,
