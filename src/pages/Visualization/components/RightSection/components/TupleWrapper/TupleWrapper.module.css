@@ -2,7 +2,7 @@
 .wrapper {
   display: flex;
   width: fit-content;
-  margin: 30px 10px 0 10px;
+  margin: 10px 10px 0 10px;
 }
 .var-data {
   display: flex;
