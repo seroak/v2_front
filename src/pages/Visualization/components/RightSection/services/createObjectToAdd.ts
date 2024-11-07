@@ -8,6 +8,7 @@ import { IfElseChangeDataToAdd } from "@/pages/Visualization/types/dataToAdd/ifE
 import { CodeFlowVariableDtoToAdd } from "@/pages/Visualization/types/dataToAdd/codeFlowVariableDataToAdd";
 import { WhileDto } from "@/pages/Visualization/types/dto/whileDto";
 import { CodeFlowListDto } from "@/pages/Visualization/types/dto/codeFlowListDto";
+import { CodeFlowTupleDto } from "@/pages/Visualization/types/dto/codeFlowTupleDto";
 import { CallUserFuncDto } from "@/pages/Visualization/types/dto/callUserFuncDto";
 import { ReturnDto } from "@/pages/Visualization/types/dto/returnDto";
 import { FlowControlDto } from "@/pages/Visualization/types/dto/flowControlDto";
@@ -120,6 +121,11 @@ export const createObjectToAdd = (
         ...baseObject,
         expr: (preprocessedCode as CodeFlowListDto).expr,
       };
+    case "tuple":
+      return{
+        ...baseObject,
+        expr: (preprocessedCode as CodeFlowTupleDto).expr,
+      }
     case "whilechangecondition":
       return {
         ...baseObject,
