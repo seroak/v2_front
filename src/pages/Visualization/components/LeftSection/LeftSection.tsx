@@ -41,6 +41,7 @@ const LeftSection = () => {
         const errorMessage = (error as any).result.errorMessage;
         setErrorLine({ lineNumber: linNumber, message: errorMessage });
         setConsole([errorMessage]);
+        return;
       }
       setConsole([]);
     },

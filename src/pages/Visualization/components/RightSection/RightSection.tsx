@@ -141,6 +141,7 @@ const RightSection = () => {
         return;
       } else if (error.code === "CA-400006" || error.code === "CA-400999") {
         alert("지원하지 않는 코드가 포함되어 있습니다");
+        return;
       } else if (error.code === "CA-400002") {
         const linNumber = Number((error as any).result.lineNumber);
         const errorMessage = (error as any).result.errorMessage;
