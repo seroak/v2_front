@@ -35,6 +35,7 @@ interface TotalActionInfoType {
   result: {
     className: string;
     actionInfo: ActionInfoType;
+    totalInfo: { ing: number; complete: number; help: number };
   };
 }
 interface ClassAccessRightDataType {
@@ -84,7 +85,7 @@ const Classroom = () => {
 
   useEffect(() => {
     if (classroomData) {
-      setActionInfo(classroomData.result.actionInfo);
+      setActionInfo(classroomData.result.totalInfo);
     }
   }, [classroomData]);
 
