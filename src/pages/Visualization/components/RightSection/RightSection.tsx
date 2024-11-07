@@ -249,6 +249,7 @@ const RightSection = () => {
     const arrowTexts: string[] = [];
 
     for (let preprocessedCode of preprocessedCodes) {
+      console.log(preprocessedCode);
       let changedCodeFlows: any[] = [];
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
