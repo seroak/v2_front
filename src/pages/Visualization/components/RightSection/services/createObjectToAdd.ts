@@ -10,6 +10,7 @@ import { WhileDto } from "@/pages/Visualization/types/dto/whileDto";
 import { CodeFlowListDto } from "@/pages/Visualization/types/dto/codeFlowListDto";
 import { CallUserFuncDto } from "@/pages/Visualization/types/dto/callUserFuncDto";
 import { ReturnDto } from "@/pages/Visualization/types/dto/returnDto";
+import { FlowControlDto } from "@/pages/Visualization/types/dto/flowControlDto";
 import { EndUserFuncDto } from "@/pages/Visualization/types/dto/endUserFuncDto";
 
 // 스택에 넣을 객체를 생성하는 함수
@@ -21,6 +22,7 @@ export const createObjectToAdd = (
     | WhileDto
     | CallUserFuncDto
     | ReturnDto
+    | FlowControlDto
     | EndUserFuncDto
 ): any => {
   const baseObject: any = {
@@ -134,6 +136,11 @@ export const createObjectToAdd = (
       return {
         ...baseObject,
         returnExpr: (preprocessedCode as ReturnDto).returnExpr,
+      };
+    case "flowcontrol":
+      return {
+        ...baseObject,
+        expr: (preprocessedCode as FlowControlDto).expr,
       };
     case "enduserfunc":
       return {
