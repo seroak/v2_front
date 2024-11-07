@@ -139,15 +139,18 @@ const RightSection = () => {
       console.error(error);
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
-      } else if (error.code === "CS-400006" || error.code === "CA-400999") {
+      } else if (error.code === "CA-400006" || error.code === "CA-400999") {
         alert("지원하지 않는 코드가 포함되어 있습니다");
-      } else {
+      } else if (error.code === "CA-400002") {
         const linNumber = Number((error as any).result.lineNumber);
         const errorMessage = (error as any).result.errorMessage;
         setErrorLine({ lineNumber: linNumber, message: errorMessage });
         setConsole([errorMessage]);
         setPreprocessedCodes([]);
+        return;
       }
+      setConsole([]);
+      setPreprocessedCodes([]);
     },
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -249,6 +252,7 @@ const RightSection = () => {
     const arrowTexts: string[] = [];
 
     for (let preprocessedCode of preprocessedCodes) {
+      console.log(preprocessedCode);
       let changedCodeFlows: any[] = [];
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
