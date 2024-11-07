@@ -1,0 +1,57 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&display=swap");
+.highlight {
+    background-color: #364fce;
+}
+.flow-control-data {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 24px;
+}
+.continue-data::before {
+    content: "";
+    background: url(/image/icon_continue.svg) no-repeat;
+    width: 100px;
+    height: 29px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    justify-content: center;
+    margin-top: 20px;
+}
+.pass-data::before {
+    content: "";
+    background: url(/image/icon_pass.svg) no-repeat;
+    width: 75px;
+    height: 29px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    justify-content: center;
+    margin-top: 20px;
+}
+.break-data::before {
+    content: "";
+    background: url(/image/icon_break.svg) no-repeat;
+    width: 75px;
+    height: 29px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    justify-content: center;
+    margin-top: 20px;
+}
+.flow-control-data p {
+    display: inline-block;
+    min-width: 10px;
+    border-radius: 4px;
+    color: #fff;
+    padding: 8px 15px;
+    position: relative;
+}
+.flow-control-data p.data-true {
+    background: var(--blue01, #4866ff);
+}
+.flow-control-data p.data-false {
+    background: #ff7173;
+}
