@@ -300,7 +300,13 @@ const RightSection = () => {
           accDataStructures[callStackName].data.map((data: DataStructureVarsItem) => {
             if (data.name === variable.name) {
               data.highlightIdx = [data.expr.length - 1];
-              data.expr.push(variable.expr);
+              if (data.expr[0] === "") {
+                data.expr.shift();
+                data.expr.push(variable.expr);
+              } else {
+                data.expr.push(variable.expr);
+              }
+
               if (data.idx) {
                 data.idx.start = data.expr.length - 1;
                 data.idx.end = data.expr.length - 1;
@@ -322,6 +328,7 @@ const RightSection = () => {
         // 오른쪽에 변수로 함수를 넣을 때
         if ((preprocessedCode as VariablesDto).variables[0].type.toLowerCase() === "function".toLowerCase()) {
           const { id, expr, name, type, code } = (preprocessedCode as VariablesDto).variables[0];
+          highlightLine.push(id);
           const highlightIdx = new Array(expr.length).fill(0).map((_, idx) => idx + 1);
           const exprArray = [expr];
           accDataStructures[callStackName].data.push({ id, expr: exprArray as string[], name, type, highlightIdx });
