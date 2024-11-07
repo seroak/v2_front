@@ -8,9 +8,11 @@ import ElseBox from "./components/ElseBox/ElseBox";
 import ElifBox from "./components/ElifBox/ElifBox";
 import CodeFlowVariableBox from "./components/CodeFlowVariableBox/CodeFlowVariableBox";
 import CodeFlowListWrapper from "./components/CodeFlowListWrapper/CodeFlowListWrapper";
+import CodeFlowTupleWrapper from "./components/CodeFlowTupleWrapper/CodeFlowTupleWrapper";
 import WhileBox from "./components/WhileBox/WhileBox";
 import CallUserFuncBox from "./components/CallUserFuncBox/CallUserFuncBox";
 import ReturnBox from "./components/ReturnBox/ReturnBox";
+import FlowControlBox from "./components/FlowControlBox/FlowControlBox";
 // type import
 import { ElseItem } from "@/pages/Visualization/types/codeFlow/elseItem";
 import { ForItem } from "@/pages/Visualization/types/codeFlow/forItem";
@@ -18,11 +20,13 @@ import { PrintItem } from "@/pages/Visualization/types/codeFlow/printItem";
 import { ConditionItem } from "@/pages/Visualization/types/codeFlow/conditionItem";
 import { CodeFlowVariableItem } from "@/pages/Visualization/types/codeFlow/codeFlowVariableItem";
 import { CodeFlowListItem } from "@/pages/Visualization/types/codeFlow/codeFlowListItem";
+import { CodeFlowTupleItem } from "@/pages/Visualization/types/codeFlow/codeFlowTupleItem";
 import { WhileItem } from "@/pages/Visualization/types/codeFlow/whileItem";
 import { CallUserFuncItem } from "@/pages/Visualization/types/codeFlow/callUserFuncItem";
 import { ReturnItem } from "@/pages/Visualization/types/codeFlow/returnItem";
 //zustand
 import { useArrowStore } from "@/store/arrow";
+import { FlowControlItem } from "@/pages/Visualization/types/codeFlow/flowControlItem.ts";
 
 interface Props {
   codeFlow: any;
@@ -132,6 +136,13 @@ export const renderingCodeFlow = (codeFlows: any[], width: number, height: numbe
                 <CodeFlowListWrapper codeFlowListItem={listItem} width={width} height={height} />
               </div>
             );
+          case "tuple":
+            const tupleItem = codeFlow as CodeFlowTupleItem;
+            return (
+              <div key={tupleItem.id} style={{ width: "fit-content" }}>
+                <CodeFlowTupleWrapper codeFlowTupleItem={tupleItem} width={width} height={height} />
+              </div>
+            )
           case "while":
             const whileItem = codeFlow as WhileItem;
             return (
@@ -163,6 +174,16 @@ export const renderingCodeFlow = (codeFlows: any[], width: number, height: numbe
                 </CodeFlowItem>
               </div>
             );
+          case "flowcontrol":
+            const FlowControlItem = codeFlow as FlowControlItem;
+            return (
+              <div key={FlowControlItem.id}>
+                <CodeFlowItem key={index} codeFlow={codeFlow} width={width} height={height}>
+                  <FlowControlBox key={index} flowControlItem={FlowControlItem} />
+                </CodeFlowItem>
+              </div>
+            );
+
           default:
             throw new Error(`${codeFlow.type} is unexpected type`);
         }
