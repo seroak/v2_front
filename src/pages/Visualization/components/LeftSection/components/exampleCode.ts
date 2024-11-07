@@ -20,13 +20,21 @@ export const basic_codes = [
     ],
 
     ["사칙 연산", "a = 10\n" +
-                "b = 3\n\n" +
+                "b = 3\n" +
+                "\n" +
+                "# 연산\n" +
                 "print(a + b)\n" +
                 "print(a - b) \n" +
                 "print(a * b) \n" +
                 "print(a / b) \n" +
                 "print(a % b) \n" +
-                "print(a // b) \n"
+                "print(a // b) \n" +
+                "\n" +
+                "# 16진수, 8진수\n" +
+                "c = 0o177\n" +
+                "d = 0xABC\n" +
+                "print(c) \n" +
+                "print(d) "
     ],
     ["문자열 연산","text = \"Hello, Edupi!\"\n" +
                 "\n" +
@@ -102,11 +110,10 @@ export const function_codes =[
 
     [
         "구구단", "# 2단부터 9단까지 구구단 출력\n" +
-                "for i in range(2, 10)\n" +
-                "    for j in range(1, 10):\n" +
-                "        print(f\"{i} x {j} = {i * j}\")\n" +
-                "    print()"
-
+                "for i in range(2, 10):\n" +
+                "   for j in range(1, 10):\n" +
+                "      print(f\"{i} x {j} = {i * j}\")\n" +
+                "   print()"
     ]
     ,
     [
@@ -129,11 +136,11 @@ export const function_codes =[
     [
         "최대값 찾기", "# 리스트에서 최대값을 찾는 함수\n" +
                     "def find_max(numbers):\n" +
-                    "    max_num = numbers[0]\n" +
-                    "    for num in numbers:\n" +
-                    "        if num > max_num:\n" +
-                    "            max_num = num\n" +
-                    "    return max_num\n" +
+                    "   max_num = numbers[0]\n" +
+                    "   for num in numbers:\n" +
+                    "      if num > max_num:\n" +
+                    "         max_num = num\n" +
+                    "   return max_num\n" +
                     "\n" +
                     "# 함수 호출\n" +
                     "numbers = [3, 5, 7, 2, 8]\n" +
@@ -142,10 +149,10 @@ export const function_codes =[
     ],
     [
         "사각형의 면적과 둘레", "def calculate_area(width, height):\n" +
-                            "    return width * height\n" +
+                            "   return width * height\n" +
                             "\n" +
                             "def calculate_perimeter(width, height):\n" +
-                            "    return 2 * (width + height)\n" +
+                            "   return 2 * (width + height)\n" +
                             "\n" +
                             "width = 5\n" +
                             "height = 3\n" +
@@ -173,9 +180,9 @@ export const function_codes =[
                             "\n" +
                             "# 두 점 사이의 거리를 계산하는 함수\n" +
                             "def calculate_distance(x1, y1, x2, y2):\n" +
-                            "    dx = delta_x(x1, x2)\n" +
-                            "    dy = delta_y(y1, y2)\n" +
-                            "    return (dx**2 + dy**2)**0.5\n" +
+                            "   dx = delta_x(x1, x2)\n" +
+                            "   dy = delta_y(y1, y2)\n" +
+                            "   return (dx**2 + dy**2)**0.5\n" +
                             "\n" +
                             "# 사용 예제\n" +
                             "x1 = 1\n" +

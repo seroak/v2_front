@@ -4,7 +4,7 @@ import { CodeContext } from "@/pages/Visualization/context/CodeContext";
 import {basic_codes, control_codes, function_codes} from "./exampleCode.ts"
 const Dropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("옵션을 선택해주세요.");
+  const [selectedOption, setSelectedOption] = useState("코드를 선택해주세요.");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const codeContext = useContext(CodeContext);
   if (!codeContext) {
@@ -40,7 +40,7 @@ const Dropdown = () => {
     <div className={styles["select-box"]} ref={dropdownRef}>
       <div
         className={`${styles["default-option"]} ${
-          selectedOption !== "옵션을 선택해주세요." ? styles["is_selected"] : ""
+          selectedOption !== "코드를 선택해주세요." ? styles["is_selected"] : ""
         }`}
         onClick={toggleDropdown}
       >
