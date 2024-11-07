@@ -5,7 +5,6 @@ import styles from "./LeftSection.module.css";
 import CodeEditor from "./components/CodeEditor";
 import Console from "./components/Console";
 import Split from "react-split";
-import { isValidTypeDtoArray } from "@/pages/Visualization/types/dto/ValidTypeDto";
 import { runCode } from "@/services/api";
 import { useMutation } from "@tanstack/react-query";
 import Dropdown from "./components/Dropdown";
@@ -33,15 +32,17 @@ const LeftSection = () => {
       console.error(error);
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
-      } else if ((error as any).code === "CS-400006" || (error as any).code === "CA-400999") {
+      } else if ((error as any).code === "CA-400006" || (error as any).code === "CA-400999") {
         alert("지원하지 않는 코드가 포함되어 있습니다");
-      } else {
-        console.log(error);
+        return;
+      } else if ((error as any).code === "CA-400002") {
+        // 잘못된 문법 에러처리
         const linNumber = Number((error as any).result.lineNumber);
         const errorMessage = (error as any).result.errorMessage;
         setErrorLine({ lineNumber: linNumber, message: errorMessage });
         setConsole([errorMessage]);
       }
+      setConsole([]);
     },
   });
   const handleRunCode = () => {
