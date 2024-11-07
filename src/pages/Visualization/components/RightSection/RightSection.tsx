@@ -252,7 +252,6 @@ const RightSection = () => {
     const arrowTexts: string[] = [];
 
     for (let preprocessedCode of preprocessedCodes) {
-      console.log(preprocessedCode);
       let changedCodeFlows: any[] = [];
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
@@ -369,13 +368,23 @@ const RightSection = () => {
       else if (preprocessedCode.type.toLowerCase() === "createCallStack".toLowerCase()) {
         accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName] = { data: [], isLight: false };
         highlightLine.push((preprocessedCode as CreateCallStackDto).id);
+
         for (let arg of (preprocessedCode as CreateCallStackDto).args) {
-          accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
-            expr: arg.expr.slice(1, -1).split(","),
-            name: arg.name,
-            type: arg.type,
-            idx: { start: arg.idx.start, end: arg.idx.end },
-          });
+          if (arg.type === "list") {
+            accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
+              expr: arg.expr.slice(1, -1).split(","),
+              name: arg.name,
+              type: arg.type,
+              idx: { start: arg.idx.start, end: arg.idx.end },
+            });
+          } else if (arg.type === "variable") {
+            accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
+              expr: arg.expr.split(","),
+              name: arg.name,
+              type: arg.type,
+              idx: { start: arg.idx.start, end: arg.idx.end },
+            });
+          }
         }
         arrowTexts.push((preprocessedCode as CreateCallStackDto).code);
 

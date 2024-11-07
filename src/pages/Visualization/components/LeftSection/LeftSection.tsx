@@ -24,7 +24,6 @@ const LeftSection = () => {
   const mutation = useMutation({
     mutationFn: runCode,
     async onSuccess(data) {
-      console.log(data.result.output);
       // 타입 체크 함수
       setConsole([data.result.output]);
     },
