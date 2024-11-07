@@ -2,7 +2,7 @@
 .wrapper {
   display: flex;
   width: fit-content;
-  margin: 0 10px 0 10px;
+  margin-top: 20px;
 }
 .var-data {
   display: flex;
@@ -14,6 +14,7 @@
   border-radius: 5px;
   min-width: 18px;
   min-height: 39px;
+  margin-bottom: 5px;
 }
 span {
   margin-bottom: 4px;
@@ -31,6 +32,7 @@ span {
 .index {
   color: rgba(24, 24, 24, 0.3);
   text-align: center;
+  font-size: 0.8rem;
 }
 .highlight {
   background-color: #364fce;

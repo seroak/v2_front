@@ -253,7 +253,6 @@ const RightSection = () => {
     const arrowTexts: string[] = [];
 
     for (let preprocessedCode of preprocessedCodes) {
-      console.log(preprocessedCode);
       let changedCodeFlows: any[] = [];
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
@@ -302,7 +301,13 @@ const RightSection = () => {
           accDataStructures[callStackName].data.map((data: DataStructureVarsItem) => {
             if (data.name === variable.name) {
               data.highlightIdx = [data.expr.length - 1];
-              data.expr.push(variable.expr);
+              if (data.expr[0] === "") {
+                data.expr.shift();
+                data.expr.push(variable.expr);
+              } else {
+                data.expr.push(variable.expr);
+              }
+
               if (data.idx) {
                 data.idx.start = data.expr.length - 1;
                 data.idx.end = data.expr.length - 1;
@@ -324,6 +329,7 @@ const RightSection = () => {
         // 오른쪽에 변수로 함수를 넣을 때
         if ((preprocessedCode as VariablesDto).variables[0].type.toLowerCase() === "function".toLowerCase()) {
           const { id, expr, name, type, code } = (preprocessedCode as VariablesDto).variables[0];
+          highlightLine.push(id);
           const highlightIdx = new Array(expr.length).fill(0).map((_, idx) => idx + 1);
           const exprArray = [expr];
           accDataStructures[callStackName].data.push({ id, expr: exprArray as string[], name, type, highlightIdx });
@@ -338,7 +344,7 @@ const RightSection = () => {
               if (typeof variable.expr === "string") {
                 (variable as VariableExprArray).expr = variable.expr.slice(1, -1).split(",");
               }
-            } else if(variable.type.toLowerCase() === "tuple") {
+            } else if (variable.type.toLowerCase() === "tuple") {
               if (typeof variable.expr === "string") {
                 (variable as VariableExprArray).expr = variable.expr.slice(1, -1).split(",");
               }
@@ -374,13 +380,23 @@ const RightSection = () => {
       else if (preprocessedCode.type.toLowerCase() === "createCallStack".toLowerCase()) {
         accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName] = { data: [], isLight: false };
         highlightLine.push((preprocessedCode as CreateCallStackDto).id);
+
         for (let arg of (preprocessedCode as CreateCallStackDto).args) {
-          accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
-            expr: arg.expr.slice(1, -1).split(","),
-            name: arg.name,
-            type: arg.type,
-            idx: { start: arg.idx.start, end: arg.idx.end },
-          });
+          if (arg.type === "list" || arg.type === "tuple") {
+            accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
+              expr: arg.expr.slice(1, -1).split(","),
+              name: arg.name,
+              type: arg.type,
+              idx: { start: arg.idx.start, end: arg.idx.end },
+            });
+          } else if (arg.type === "variable") {
+            accDataStructures[(preprocessedCode as CreateCallStackDto).callStackName].data.push({
+              expr: arg.expr.split(","),
+              name: arg.name,
+              type: arg.type,
+              idx: { start: arg.idx.start, end: arg.idx.end },
+            });
+          }
         }
         arrowTexts.push((preprocessedCode as CreateCallStackDto).code);
 
