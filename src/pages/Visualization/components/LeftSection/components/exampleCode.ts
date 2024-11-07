@@ -54,7 +54,7 @@ export const basic_codes = [
 
 export const control_codes=[
     ["if문", "# 숫자가 양수, 음수 또는 0인지 판별\n" +
-                "num = int(input(\"Enter a number: \"))\n" +
+                "num = 281\n" +
                 "\n" +
                 "if num > 0:\n" +
                 "    print(\"The number is positive.\")\n" +
@@ -192,30 +192,7 @@ export const function_codes =[
                             "\n" +
                             "distance = calculate_distance(x1, y1, x2, y2)\n" +
                             "print(f\"Distance: {distance}\")  # 출력: Distance: 5.0"
-    ],
-    // ["소수 구하기", "# 소수인지 확인하는 함수\n" +
-    //                 "def is_prime(number):\n" +
-    //                 "    if number <= 1:\n" +
-    //                 "        return False\n" +
-    //                 "    for i in range(2, number):\n" +
-    //                 "        if number % i == 0:\n" +
-    //                 "            return False\n" +
-    //                 "    return True\n" +
-    //                 "\n" +
-    //                 "# 특정 숫자 이하의 모든 소수를 찾는 함수\n" +
-    //                 "def list_primes(limit):\n" +
-    //                 "    primes = []\n" +
-    //                 "    for num in range(2, limit + 1):\n" +
-    //                 "        result = is_prime(num)\n" +
-    //                 "        if result:\n" +
-    //                 "            primes.append(num)\n" +
-    //                 "    return primes\n" +
-    //                 "\n" +
-    //                 "# 사용 예제\n" +
-    //                 "limit = 10\n" +
-    //                 "prime_numbers = list_primes(limit)\n" +
-    //                 "print(f\"Primes up to {limit}: {prime_numbers}\")\n"
-    // ]
+    ]
 
 ]
 
