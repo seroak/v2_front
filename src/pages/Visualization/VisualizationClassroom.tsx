@@ -43,23 +43,23 @@ const VisualizationClassroom = () => {
   const { focus } = useEditorStore();
   const isGptToggle = useGptTooltipStore((state) => state.isGptToggle);
   const gptPin = useGptTooltipStore((state) => state.gptPin);
-  const [actionType, setActionType] = useState<ActionType>(ActionType.ING);
+
   const setIsHost = useAccessRightStore((state) => state.setIsHost);
   const { isMswReady } = useMswReadyStore((state) => state);
   const params = useParams();
   const classroomId = Number(params.classroomId);
 
-  const { data: guestStatus, refetch } = useQuery({
-    queryKey: ["vizclassroom", classroomId],
-    queryFn: () => getGuestStatus(classroomId),
-    enabled: isMswReady,
-  });
-
   const { data: classAccessRightData, isSuccess } = useQuery<ClassAccessRightDataType>({
     queryKey: ["classAccessRightData", classroomId],
     queryFn: () => getClassAccessRightData(classroomId),
     enabled: isMswReady,
-    staleTime: 1000 * 60,
+    staleTime: 1000 * 60 * 60,
+  });
+  const { data: guestStatus, refetch } = useQuery({
+    queryKey: ["vizclassroom", classroomId],
+    queryFn: () => getGuestStatus(classroomId),
+    enabled: isMswReady && !classAccessRightData?.isHost,
+    staleTime: 1000 * 60 * 60,
   });
   useEffect(() => {
     if (isSuccess) {
@@ -70,19 +70,14 @@ const VisualizationClassroom = () => {
     }
   }, [classAccessRightData, isSuccess]);
 
-  // 새로고침시 상태 업데이트
-  useEffect(() => {
-    refetch();
-  });
   // guestStatus의 상태가 바뀔 때마다 actionType 업데이트
-  useEffect(() => {
-    setActionType(guestStatus?.result);
-  }, [guestStatus]);
 
   const useGuestActionMutation = () => {
     return useMutation({
       mutationFn: fetchGuestActionRequest,
-      onSuccess: () => {},
+      onSuccess: () => {
+        refetch();
+      },
       onError: (error) => {
         console.error("Submit Error:", error);
       },
@@ -91,15 +86,12 @@ const VisualizationClassroom = () => {
   const guestActionMutation = useGuestActionMutation();
 
   const handelIngRequest = () => {
-    setActionType(ActionType.ING);
     guestActionMutation.mutate({ classroomId: classroomId, action: 1 });
   };
   const handleHelpRequest = () => {
-    setActionType(ActionType.HELP);
     guestActionMutation.mutate({ classroomId: classroomId, action: 2 });
   };
   const handleCompleteRequest = () => {
-    setActionType(ActionType.COMPLETE);
     guestActionMutation.mutate({ classroomId: classroomId, action: 3 });
   };
   return (
@@ -126,7 +118,7 @@ const VisualizationClassroom = () => {
             <RightSection />
           </Split>
           <div className="floating-buttons">
-            {actionType === ActionType.HELP && (
+            {guestStatus?.result === ActionType.HELP && (
               <button className="btn btn-cancel" onClick={handelIngRequest}>
                 <img
                   src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6L6 18'%3E%3C/path%3E%3Cpath d='M6 6l12 12'%3E%3C/path%3E%3C/svg%3E"
@@ -135,7 +127,7 @@ const VisualizationClassroom = () => {
                 취소
               </button>
             )}
-            {actionType === ActionType.ING && (
+            {guestStatus?.result === ActionType.ING && (
               <button className="btn btn-help" onClick={handleHelpRequest}>
                 <img
                   src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'%3E%3C/circle%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3'%3E%3C/path%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'%3E%3C/line%3E%3C/svg%3E"
@@ -144,7 +136,7 @@ const VisualizationClassroom = () => {
                 도움 요청
               </button>
             )}
-            {actionType === ActionType.ING && (
+            {guestStatus?.result === ActionType.ING && (
               <button className="btn btn-complete" onClick={handleCompleteRequest}>
                 <img
                   src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'%3E%3C/path%3E%3Cpolyline points='22 4 12 14.01 9 11.01'%3E%3C/polyline%3E%3C/svg%3E"
@@ -153,7 +145,7 @@ const VisualizationClassroom = () => {
                 완료
               </button>
             )}
-            {actionType === ActionType.COMPLETE && (
+            {guestStatus?.result === ActionType.COMPLETE && (
               <button className="btn btn-cancel" onClick={handelIngRequest}>
                 <img
                   src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6L6 18'%3E%3C/path%3E%3Cpath d='M6 6l12 12'%3E%3C/path%3E%3C/svg%3E"

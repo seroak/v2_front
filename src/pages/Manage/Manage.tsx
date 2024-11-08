@@ -93,7 +93,6 @@ const Modify = () => {
       if (apiError.code === "LM-400005") {
         alert("해당 하는 학생이 없습니다.");
       }
-      console.error("클래스룸 초대 에러", error);
     },
   });
   const submitInviteGuest = () => {
@@ -159,11 +158,17 @@ const Modify = () => {
               </div>
             </div>
           </div>
-          <ul className="section-data section-data03">
-            {guests?.map((guest) => (
-              <Guest key={guest.id} guest={guest} getClassroomRefetch={getClassroomRefetch} />
-            ))}
-          </ul>
+          {guests && guests.length > 0 ? (
+            <ul className="section-data section-data03">
+              {guests.map((guest) => (
+                <Guest key={guest.id} guest={guest} getClassroomRefetch={getClassroomRefetch} />
+              ))}
+            </ul>
+          ) : (
+            <div className="section-empty-progress">
+              <img src="/image/img_empty_guest.png" alt="empty guests" />
+            </div>
+          )}
           <div className="right-btns">
             <button className="red" onClick={handleDeleteClassroom}>
               <img src="/image/icon_delete.svg" alt="그룹삭제" />
