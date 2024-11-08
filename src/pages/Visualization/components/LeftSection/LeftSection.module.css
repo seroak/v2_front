@@ -27,6 +27,9 @@
   flex-direction: row;
   border-radius: 4px;
 }
+.playcode-btn-loading {
+  filter: brightness(0.9);
+}
 .select-box {
   position: relative;
   width: 193px;

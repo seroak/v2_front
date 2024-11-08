@@ -89,6 +89,8 @@ const RightSection = () => {
   if (!codeContext) {
     throw new Error("CodeContext not found");
   }
+  const [isLoading, setIsLoading] = useState(false);
+
   const setConsole = useConsoleStore((state) => state.setConsole);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
   const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
@@ -124,6 +126,7 @@ const RightSection = () => {
   const mutation = useMutation<SuccessResponse, ApiError, Parameters<typeof visualize>[0]>({
     mutationFn: visualize,
     async onSuccess(data) {
+      setIsLoading(false)
       // 타입 체크 함수
       if (isValidTypeDtoArray(data.result.code)) {
         resetConsole();
@@ -137,6 +140,7 @@ const RightSection = () => {
     },
     onError(error) {
       console.error(error);
+      setIsLoading(false)
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
       } else if (error.code === "CA-400006" || error.code === "CA-400999") {
@@ -149,12 +153,16 @@ const RightSection = () => {
         setConsole([errorMessage]);
         setPreprocessedCodes([]);
         return;
+      } else if(error.code == 'CA-400007'){
+        alert("코드가 너무 많습니다.");
+        return;
       }
       setConsole([]);
       setPreprocessedCodes([]);
     },
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    setIsLoading(true)
     event.preventDefault();
     mutation.mutate(code);
   };
@@ -570,7 +578,10 @@ const RightSection = () => {
         <p className={styles["view-section-title"]}>시각화</p>
         <div className={styles["play-wrap"]}>
           <form onSubmit={handleSubmit}>
-            <button type="submit" className={styles["view-btn"]}>
+            <button type="submit"
+                    className={`${styles["view-btn"]} ${isLoading ? styles["view-btn-loading"] : ""}`}
+                    disabled={isLoading} // 로딩 중에는 버튼 비활성화
+            >
               <img src="/image/icon_play_w.svg" alt="" />
               시각화
             </button>

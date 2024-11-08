@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import {useContext, useState} from "react";
 import { CodeContext } from "../../context/CodeContext";
 import { Fragment } from "react/jsx-runtime";
 import styles from "./LeftSection.module.css";
@@ -17,6 +17,8 @@ const LeftSection = () => {
   const setErrorLine = useEditorStore((state) => state.setErrorLine);
   const setConsole = useConsoleStore((state) => state.setConsole);
   const codeContext = useContext(CodeContext);
+  const [isLoading, setIsLoading] = useState(false);
+
   if (!codeContext) {
     throw new Error("CodeContext not found");
   }
@@ -26,9 +28,12 @@ const LeftSection = () => {
     async onSuccess(data) {
       // 타입 체크 함수
       setConsole([data.result.output]);
+      setIsLoading(false);
     },
     onError(error) {
       console.error(error);
+      setIsLoading(false);
+
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
       } else if ((error as any).code === "CA-400006" || (error as any).code === "CA-400999") {
@@ -42,11 +47,17 @@ const LeftSection = () => {
         setConsole([errorMessage]);
         return;
       }
+      else if((error as any).code == 'CA-400007'){
+        alert("코드가 너무 많습니다.");
+        return;
+      }
       setConsole([]);
     },
   });
   const handleRunCode = () => {
+    setIsLoading(true); // 로딩 상태로 변경
     mutation.mutate(code);
+
   };
   return (
     <Fragment>
@@ -54,21 +65,26 @@ const LeftSection = () => {
         <div className={styles["top-bar"]}>
           <p className={styles["view-section-title"]}>코드작성</p>
           <div className="flex items-center gap-4">
-            <button type="button" className={styles["playcode-btn"]} onClick={handleRunCode}>
-              <img src="/image/icon_play_w.svg" alt="" />
+            <button
+                type="button"
+                className={`${styles["playcode-btn"]} ${isLoading ? styles["playcode-btn-loading"] : ""}`}
+                onClick={handleRunCode}
+                disabled={isLoading} // 로딩 중에는 버튼 비활성화
+            >
+              <img src="/image/icon_play_w.svg" alt=""/>
               코드실행
             </button>
-            <Dropdown />
+            <Dropdown/>
           </div>
         </div>
 
         <Split
-          sizes={[70, 30]}
-          minSize={100}
-          expandToMin={false}
-          gutterSize={10}
-          gutterAlign="center"
-          snapOffset={30}
+            sizes={[70, 30]}
+            minSize={100}
+            expandToMin={false}
+            gutterSize={10}
+            gutterAlign="center"
+            snapOffset={30}
           dragInterval={1}
           direction="vertical"
           cursor="row-resize"

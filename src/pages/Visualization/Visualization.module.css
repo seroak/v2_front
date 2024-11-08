@@ -37,6 +37,9 @@
   flex-direction: row;
   border-radius: 4px;
 }
+.playcode-btn-loading {
+  background-color: #2626ff; /* 로딩 상태일 때 색상 */
+}
 .view-btn {
   background-color: #45b99d;
   color: var(--white);
@@ -48,6 +51,9 @@
   gap: 4px;
   flex-direction: row;
   border-radius: 4px;
+}
+.view-btn-loading {
+  filter: brightness(0.9);
 }
 .top-btns {
   display: flex;
