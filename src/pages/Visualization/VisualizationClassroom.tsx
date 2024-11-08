@@ -70,10 +70,6 @@ const VisualizationClassroom = () => {
     }
   }, [classAccessRightData, isSuccess]);
 
-  // 새로고침시 상태 업데이트
-  useEffect(() => {
-    refetch();
-  });
   // guestStatus의 상태가 바뀔 때마다 actionType 업데이트
   useEffect(() => {
     setActionType(guestStatus?.result);
@@ -82,7 +78,9 @@ const VisualizationClassroom = () => {
   const useGuestActionMutation = () => {
     return useMutation({
       mutationFn: fetchGuestActionRequest,
-      onSuccess: () => {},
+      onSuccess: () => {
+        refetch();
+      },
       onError: (error) => {
         console.error("Submit Error:", error);
       },
