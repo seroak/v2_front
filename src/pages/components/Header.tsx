@@ -10,8 +10,7 @@ import { User } from "@/App";
 const LoggedInHeader = () => {
   const params = useParams();
   let isFixed = false;
-  let isInClassroomDashboardUrl = false;
-  let isClassroomDashboardUrl = false;
+  let isInClassroomDashboarclassroomdUrl = false;
 
   const isHost = useAccessRightStore((state) => state.isHost);
   const classroomId = Number(params.classroomId);
@@ -29,12 +28,10 @@ const LoggedInHeader = () => {
   if (location.pathname === "/") {
     isFixed = true;
   }
-  if (/\/classroomdashboard(\/.*)?$/.test(location.pathname)) {
-    isInClassroomDashboardUrl = true;
+  if (/\/classroomdashboard\/classroom(\/.*)?$/.test(location.pathname)) {
+    isInClassroomDashboarclassroomdUrl = true;
   }
-  if (/^\/classroomdashboard$/.test(location.pathname)) {
-    isClassroomDashboardUrl = true;
-  }
+
   // 로그아웃 mutation
   const logoutMuation = useMutation({
     mutationFn: logout,
@@ -62,21 +59,17 @@ const LoggedInHeader = () => {
           <>
             <Link to="/viz">시각화</Link>
           </>
-        ) : !isInClassroomDashboardUrl ? (
-          <>
-            <NavLink to="/classroomdashboard" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-              클래스룸
-            </NavLink>
-
-            <NavLink to="/viz" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-              시각화
-            </NavLink>
-          </>
         ) : (
           <>
-            {!isClassroomDashboardUrl && (
+            {isInClassroomDashboarclassroomdUrl ? (
               <>
-                {/* `classAccessRightData.isHost`에 따라 조건부 렌더링 */}
+                <NavLink
+                  to="/classroomdashboard"
+                  end
+                  className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+                >
+                  클래스룸
+                </NavLink>
                 {isHost && (
                   <NavLink
                     to={`/classroomdashboard/classroom/${classroomId}`}
@@ -101,6 +94,16 @@ const LoggedInHeader = () => {
                     설정
                   </NavLink>
                 )}
+              </>
+            ) : (
+              <>
+                <NavLink to="/classroomdashboard" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+                  클래스룸
+                </NavLink>
+
+                <NavLink to="/viz" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+                  시각화
+                </NavLink>
               </>
             )}
           </>

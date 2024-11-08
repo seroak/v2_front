@@ -7,6 +7,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 
 import { createClass, getHostGuestData, getUser } from "@/services/api";
 import { User } from "@/App";
+import { ErrorResponse } from "@/types/apiTypes";
 interface Classroom {
   id: number;
   name: string;
@@ -49,8 +50,6 @@ const ClassroomDashboard = () => {
   const submitCreateClassName = () => {
     if (createClassName) {
       mutation.mutate(createClassName);
-    } else {
-      console.error("클래스 이름을 입력하세요");
     }
   };
   const mutation = useMutation({
@@ -59,7 +58,13 @@ const ClassroomDashboard = () => {
       refetch();
     },
     onError(error) {
-      console.error("클래스 생성 에러", error);
+      const apiError = error as unknown as ErrorResponse;
+      if (apiError.code === "LM-400001") {
+        alert("클래스룸은 최소 두 글자 이상부터 생성할 수 있습니다.");
+      }
+      if (apiError.code === "LM-400003") {
+        alert("이미 존재하는 클래스룸입니다.");
+      }
     },
   });
   return (

@@ -31,7 +31,7 @@ const Guest = ({ guest, getClassroomRefetch }: props) => {
     emissionGuestMutation.mutate(id);
   };
   return (
-    <li>
+    <li style={{ minWidth: "300px" }}>
       <div className="data03-name">
         <p>{guest.name}</p>
         <span>{guest.email}</span>

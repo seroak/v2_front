@@ -20,6 +20,12 @@ enum CheckType {
   Red = "red",
   Green = "green",
 }
+interface CheckboxState {
+  all: boolean;
+  terms: boolean;
+  privacy: boolean;
+  marketing: boolean;
+}
 
 const SignupWrap = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -28,6 +34,13 @@ const SignupWrap = () => {
     phoneNumber: "",
     password: "",
     confirmPassword: "",
+  });
+  // 체크박스 상태 관리를 위한 새로운 state
+  const [checkboxes, setCheckboxes] = useState<CheckboxState>({
+    all: false,
+    terms: false,
+    privacy: false,
+    marketing: false,
   });
   const emailRef = useRef<HTMLInputElement>(null);
   const phoneNumberRef = useRef<HTMLInputElement>(null);
@@ -42,6 +55,7 @@ const SignupWrap = () => {
   const [isValidPhoneNumber, setValidPhoneNumber] = useState<CheckType>(CheckType.Gray); // 전화번호가 유효한지 체크하는 state
   const [isValidConfirmPassword, setValidConfirmPassword] = useState<CheckType>(CheckType.Gray); // 비밀번호가 일치하는지 체크하는 state
   const [isTermsOfServiceModalOpen, setIsTermsOfServiceModalOpen] = useState<boolean>(false);
+  const [isConsentInformationModalOpen, setIsConsentInformationModalOpen] = useState<boolean>(false);
   const context = useContext(TrySignupContext);
   if (!context) {
     throw new Error("TrySignupContext must be used within a TrySignupProvider");
@@ -51,7 +65,6 @@ const SignupWrap = () => {
   const openTermsOfServiceModal = (): void => setIsTermsOfServiceModalOpen(true);
   const closeTermsOfServiceModal = (): void => setIsTermsOfServiceModalOpen(false);
 
-  const [isConsentInformationModalOpen, setIsConsentInformationModalOpen] = useState<boolean>(false);
   const openConsentInformationModal = (): void => setIsConsentInformationModalOpen(true);
   const closeConsentInformationModal = (): void => setIsConsentInformationModalOpen(false);
 
@@ -60,6 +73,31 @@ const SignupWrap = () => {
     const trimmedValue = value.replace(/\s/g, "");
 
     setFormData((prevData) => ({ ...prevData, [name]: trimmedValue }));
+  };
+  // 체크박스 핸들러 추가
+  const handleAllCheck = () => {
+    setCheckboxes((prevCheckboxes) => ({
+      all: !prevCheckboxes.all, // 이전 상태의 반대로 설정
+      terms: !prevCheckboxes.terms,
+      privacy: !prevCheckboxes.privacy,
+      marketing: !prevCheckboxes.marketing,
+    }));
+  };
+
+  const handleSingleCheck = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    const newCheckboxes = {
+      ...checkboxes,
+      [name]: checked,
+    };
+
+    // 개별 체크박스들이 모두 선택되었는지 확인
+    const allChecked = newCheckboxes.terms && newCheckboxes.privacy && newCheckboxes.marketing;
+
+    setCheckboxes({
+      ...newCheckboxes,
+      all: allChecked,
+    });
   };
 
   const phoneNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -339,7 +377,7 @@ const SignupWrap = () => {
                     "text-red": moreOrLess === CheckType.Red,
                   })}
                 >
-                  8자 이상 32자 이하 입력 (공백 제외)
+                  8자 이상 20자 이하 입력 (공백 제외)
                 </p>
               </div>
 
@@ -387,11 +425,24 @@ const SignupWrap = () => {
             )}
             <div className="s__checkbox-wrap mt10">
               <div className="s__checkbox">
-                <input type="checkbox" className="s__checkbox-total" id="ch01_all" />
+                <input
+                  type="checkbox"
+                  className="s__checkbox-total"
+                  id="ch01_all"
+                  checked={checkboxes.all}
+                  onChange={handleAllCheck}
+                />
                 <label htmlFor="ch01_all">모두 동의합니다.</label>
               </div>
               <div className="s__checkbox">
-                <input type="checkbox" className="s__checkbox-ck" id="ch01_01" />
+                <input
+                  type="checkbox"
+                  className="s__checkbox-ck"
+                  id="ch01_01"
+                  name="terms"
+                  checked={checkboxes.terms}
+                  onChange={handleSingleCheck}
+                />
                 <label htmlFor="ch01_01">
                   [필수]
                   <button className="openPopup" onClick={openTermsOfServiceModal} type="button">
@@ -400,7 +451,14 @@ const SignupWrap = () => {
                 </label>
               </div>
               <div className="s__checkbox mt12">
-                <input type="checkbox" className="s__checkbox-ck" id="ch01_02" />
+                <input
+                  type="checkbox"
+                  className="s__checkbox-ck"
+                  id="ch01_02"
+                  name="privacy"
+                  checked={checkboxes.privacy}
+                  onChange={handleSingleCheck}
+                />
                 <label htmlFor="ch01_02">
                   [필수]
                   <button className="openPopup" onClick={openConsentInformationModal} type="button">
@@ -409,7 +467,14 @@ const SignupWrap = () => {
                 </label>
               </div>
               <div className="s__checkbox mt12">
-                <input type="checkbox" className="s__checkbox-ck" id="ch01_03" />
+                <input
+                  type="checkbox"
+                  className="s__checkbox-ck"
+                  id="ch01_03"
+                  name="marketing"
+                  checked={checkboxes.marketing}
+                  onChange={handleSingleCheck}
+                />
                 <label htmlFor="ch01_03">[선택] 광고 전송 및 권유에 관한 선택지 동의</label>
               </div>
             </div>
