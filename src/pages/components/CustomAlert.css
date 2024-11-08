@@ -1,0 +1,76 @@
+/* Alert 오버레이 */
+.alert-overlay {
+    position: fixed;
+    inset: 0; /* top: 0; right: 0; bottom: 0; left: 0; 와 동일 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Alert 컨테이너 */
+.alert-container {
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    width: 20rem; /* 320px */
+    padding: 1.5rem; /* 24px */
+}
+
+/* Alert 내용 wrapper */
+.alert-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem; /* 16px */
+}
+
+/* 로고 이미지를 위한 wrapper */
+.icon-wrapper {
+    background-color: #000000;
+    border-radius: 9999px;
+    padding: 0.75rem;
+    width: 48px;  /* 로고 크기에 맞게 조절 */
+    height: 48px;  /* 로고 크기에 맞게 조절 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 로고 이미지 스타일 */
+.logo-image {
+    width: 24px;  /* 로고 크기에 맞게 조절 */
+    height: 24px;  /* 로고 크기에 맞게 조절 */
+    object-fit: contain;  /* 이미지 비율 유지 */
+}
+
+/* 메시지 텍스트 */
+.message {
+    text-align: center;
+    color: #1f2937; /* gray-800 */
+    font-size: 0.875rem; /* 14px */
+    margin: 0;
+}
+
+/* OK 버튼 */
+.ok-button {
+    width: 100%;
+    background-color: #3b82f6; /* blue-500 */
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+/* OK 버튼 호버 효과 */
+.ok-button:hover {
+    background-color: #2563eb; /* blue-600 */
+}
+
+/* 트랜지션 효과 */
+.alert-container {
+    transform: scale(1);
+    transition: transform 0.2s ease-in-out;
+}

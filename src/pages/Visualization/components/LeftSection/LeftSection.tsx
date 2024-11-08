@@ -10,6 +10,8 @@ import { useMutation } from "@tanstack/react-query";
 import Dropdown from "./components/Dropdown";
 import { useConsoleStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
+import {useCustomAlert} from "@/pages/components/CustomAlert.tsx";
+
 
 // 성공 응답 타입 정의
 
@@ -32,7 +34,7 @@ const LeftSection = () => {
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
       } else if ((error as any).code === "CA-400006" || (error as any).code === "CA-400999") {
-        alert("지원하지 않는 코드가 포함되어 있습니다");
+        openAlert("지원하지 않는 코드가 포함되어 있습니다");
         return;
       } else if ((error as any).code === "CA-400002") {
         // 잘못된 문법 에러처리
@@ -50,6 +52,7 @@ const LeftSection = () => {
   };
   return (
     <Fragment>
+      <useCustomAlert/>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div className={styles["top-bar"]}>
           <p className={styles["view-section-title"]}>코드작성</p>

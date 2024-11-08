@@ -7,6 +7,7 @@ import ResizeObserver from "resize-observer-polyfill";
 import styles from "./RightSection.module.css";
 // components
 import Arrow from "./components/Arrow/Arrow";
+// import  {useCustomAlert} from "@/pages/components/CustomAlert.tsx";
 
 // 타입 정의
 
@@ -56,6 +57,7 @@ import { useArrowStore } from "@/store/arrow";
 
 //api
 import { visualize } from "@/services/api";
+import {useCustomAlert} from "@/pages/components/CustomAlert.tsx";
 
 interface State {
   objects: any[];
@@ -67,6 +69,7 @@ interface ApiError {
   };
   message: string;
 }
+
 
 // 성공 응답 타입 정의
 interface SuccessResponse {
@@ -140,8 +143,8 @@ const RightSection = () => {
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
       } else if (error.code === "CA-400006" || error.code === "CA-400999") {
-        alert("지원하지 않는 코드가 포함되어 있습니다");
-        return;
+        alert("지원하지 않는 코드가 포함되어 있습니다.")
+        return
       } else if (error.code === "CA-400002") {
         const linNumber = Number((error as any).result.lineNumber);
         const errorMessage = (error as any).result.errorMessage;
