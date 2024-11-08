@@ -49,17 +49,17 @@ const VisualizationClassroom = () => {
   const params = useParams();
   const classroomId = Number(params.classroomId);
 
-  const { data: guestStatus, refetch } = useQuery({
-    queryKey: ["vizclassroom", classroomId],
-    queryFn: () => getGuestStatus(classroomId),
-    enabled: isMswReady,
-  });
-
   const { data: classAccessRightData, isSuccess } = useQuery<ClassAccessRightDataType>({
     queryKey: ["classAccessRightData", classroomId],
     queryFn: () => getClassAccessRightData(classroomId),
     enabled: isMswReady,
-    staleTime: 1000 * 60,
+    staleTime: 1000 * 60 * 60,
+  });
+  const { data: guestStatus, refetch } = useQuery({
+    queryKey: ["vizclassroom", classroomId],
+    queryFn: () => getGuestStatus(classroomId),
+    enabled: isMswReady && !classAccessRightData?.isHost,
+    staleTime: 1000 * 60 * 60,
   });
   useEffect(() => {
     if (isSuccess) {

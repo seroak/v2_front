@@ -47,20 +47,26 @@ export const runCode = async (code: string) => {
   }
 };
 export const getUser = async (): Promise<getUserProps | null> => {
-  const response = await fetch(`${BASE_URL}/edupi-user/v1/account/login/info`, {
-    method: "GET",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  if (!response.ok) {
-    //TODO: 모든 에러가 나는 상황을 null로 처리 바로 로그인이 풀리는 상황으로 만든다
+  try {
+    const response = await fetch(`${BASE_URL}/edupi-user/v1/account/login/info`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      console.error("Fetch error:", response.status, response.statusText);
+      return null;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Network or fetch error:", error);
     return null;
   }
-
-  const data = await response.json();
-  return data;
 };
 export const login = (req: LoginProps) =>
   axios.post(`${BASE_URL}/edupi-user/v1/account/login`, req, {
