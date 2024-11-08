@@ -7,6 +7,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 
 import { createClass, getHostGuestData, getUser } from "@/services/api";
 import { User } from "@/App";
+import { ErrorResponse } from "@/types/apiTypes";
 interface Classroom {
   id: number;
   name: string;
@@ -59,6 +60,13 @@ const ClassroomDashboard = () => {
       refetch();
     },
     onError(error) {
+      const apiError = error as unknown as ErrorResponse;
+      if (apiError.code === "LM-400009") {
+        alert("한글자 클래스룸은 생성 불가능합니다.");
+      }
+      if (apiError.code === "LM400003") {
+        alert("이미 동일한 이름이 있는 클래스룸이 있습니다.");
+      }
       console.error("클래스 생성 에러", error);
     },
   });
