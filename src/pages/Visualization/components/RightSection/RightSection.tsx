@@ -91,7 +91,7 @@ const RightSection = () => {
   }
   const setConsole = useConsoleStore((state) => state.setConsole);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
-  const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
+
   const { preprocessedCodes, setPreprocessedCodes } = preprocessedCodesContext;
   const { code } = codeContext;
   const [arrowTextList, setArrowTextList] = useState<string[]>([]);
@@ -113,6 +113,7 @@ const RightSection = () => {
   const resetConsole = useConsoleStore((state) => state.resetConsole);
   const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
   const setErrorLine = useEditorStore((state) => state.setErrorLine);
+  const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
   const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
   const consoleIdx = useConsoleStore((state) => state.stepIdx);
   const incrementStepIdx = useConsoleStore((state) => state.incrementStepIdx);
@@ -233,7 +234,6 @@ const RightSection = () => {
   const highlightLine: number[] = [];
   // codeFlowList를 업데이트하는 useEffect
   useEffect(() => {
-    if (preprocessedCodes.length === 0) return;
     let prevTrackingId: number = 0;
     let prevTrackingDepth: number = 0;
     let activate: ActivateItem[] = [];
@@ -251,6 +251,15 @@ const RightSection = () => {
     const accConsoleLogList: string[] = [];
     let accConsoleLog: string = "";
     const arrowTexts: string[] = [];
+    if (preprocessedCodes.length === 0) {
+      setCodeFlowList([]);
+      setStructuresList([]);
+      setCodeFlowLength(0);
+      setArrowTextList([]);
+      setHighlightLines([]);
+      setDisplayNone(true);
+      return;
+    }
 
     for (let preprocessedCode of preprocessedCodes) {
       let changedCodeFlows: any[] = [];

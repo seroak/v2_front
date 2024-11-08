@@ -8,14 +8,22 @@ import Split from "react-split";
 import { runCode } from "@/services/api";
 import { useMutation } from "@tanstack/react-query";
 import Dropdown from "./components/Dropdown";
-import { useConsoleStore } from "@/store/console";
+import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
-
+import { PreprocessedCodesContext } from "../../context/PreProcessedCodesContext";
 // 성공 응답 타입 정의
 
 const LeftSection = () => {
+  const preprocessedCodesContext = useContext(PreprocessedCodesContext); // context API로 데이터 가져오기
+
+  if (!preprocessedCodesContext) {
+    throw new Error("preprocessedCodesContext not found"); //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
+  }
   const setErrorLine = useEditorStore((state) => state.setErrorLine);
   const setConsole = useConsoleStore((state) => state.setConsole);
+  const setStepIdx = useConsoleStore((state) => state.setStepIdx);
+  const { setPreprocessedCodes } = preprocessedCodesContext;
+  const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
   const codeContext = useContext(CodeContext);
   if (!codeContext) {
     throw new Error("CodeContext not found");
@@ -24,7 +32,9 @@ const LeftSection = () => {
   const mutation = useMutation({
     mutationFn: runCode,
     async onSuccess(data) {
-      // 타입 체크 함수
+      setPreprocessedCodes([]);
+      setCodeFlowLength(0);
+      setStepIdx(0);
       setConsole([data.result.output]);
     },
     onError(error) {
