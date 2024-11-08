@@ -377,7 +377,7 @@ const SignupWrap = () => {
                     "text-red": moreOrLess === CheckType.Red,
                   })}
                 >
-                  8자 이상 32자 이하 입력 (공백 제외)
+                  8자 이상 20자 이하 입력 (공백 제외)
                 </p>
               </div>
 

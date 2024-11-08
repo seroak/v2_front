@@ -50,8 +50,6 @@ const ClassroomDashboard = () => {
   const submitCreateClassName = () => {
     if (createClassName) {
       mutation.mutate(createClassName);
-    } else {
-      console.error("클래스 이름을 입력하세요");
     }
   };
   const mutation = useMutation({
@@ -62,10 +60,10 @@ const ClassroomDashboard = () => {
     onError(error) {
       const apiError = error as unknown as ErrorResponse;
       if (apiError.code === "LM-400001") {
-        alert("한 글자 클래스룸은 생성 불가능합니다.");
+        alert("클래스룸은 최소 두 글자 이상부터 생성할 수 있습니다.");
       }
       if (apiError.code === "LM-400003") {
-        alert("이미 동일한 이름이 있는 클래스룸이 있습니다.");
+        alert("이미 존재하는 클래스룸입니다.");
       }
     },
   });
