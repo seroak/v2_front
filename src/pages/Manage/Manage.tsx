@@ -159,11 +159,17 @@ const Modify = () => {
               </div>
             </div>
           </div>
-          <ul className="section-data section-data03">
-            {guests?.map((guest) => (
-              <Guest key={guest.id} guest={guest} getClassroomRefetch={getClassroomRefetch} />
-            ))}
-          </ul>
+          {guests && guests.length > 0 ? (
+            <ul className="section-data section-data03">
+              {guests.map((guest) => (
+                <Guest key={guest.id} guest={guest} getClassroomRefetch={getClassroomRefetch} />
+              ))}
+            </ul>
+          ) : (
+            <div className="section-empty-progress">
+              <img src="/image/img_empty_guest.png" alt="empty guests" />
+            </div>
+          )}
           <div className="right-btns">
             <button className="red" onClick={handleDeleteClassroom}>
               <img src="/image/icon_delete.svg" alt="그룹삭제" />

@@ -734,6 +734,11 @@ var-list {
   text-align: center;
   margin-right: 16px;
 }
+.section-empty-progress {
+  display: flex;
+  justify-content: center;
+  margin: 150px 0 150px 0;
+}
 .progress-success {
   background-color: #ebf4ff;
 }

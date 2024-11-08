@@ -11,6 +11,7 @@ import {
   getClassAccessRightData,
 } from "@/services/api";
 import Header from "../components/Header";
+
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
 interface GuestType {
@@ -20,6 +21,7 @@ interface GuestType {
   status: number;
   role: number;
 }
+
 interface ActionInfoType {
   ing: number;
   complete: number;
@@ -31,6 +33,7 @@ interface ClassroomDataType {
     guests: GuestType[];
   };
 }
+
 interface TotalActionInfoType {
   result: {
     className: string;
@@ -38,10 +41,12 @@ interface TotalActionInfoType {
     totalInfo: { ing: number; complete: number; help: number };
   };
 }
+
 interface ClassAccessRightDataType {
   isAccess: boolean;
   isHost: boolean;
 }
+
 const Classroom = () => {
   const [guests, setGuests] = useState<GuestType[]>();
   const [actionInfo, setActionInfo] = useState<ActionInfoType>();
@@ -129,7 +134,7 @@ const Classroom = () => {
         classroomDataRefetch();
       });
       // connection되면
-      eventSource.addEventListener("open", function () {
+      eventSource.addEventListener("open", function() {
         console.log("서버로 연결이 됨");
       });
 
@@ -210,11 +215,17 @@ const Classroom = () => {
               </select>
             </div>
           </div>
-          <ul className="section-data section-data01">
-            {guests?.map((guest) => (
-              <Guest key={guest.id} guest={guest} />
-            ))}
-          </ul>
+          {guests && guests.length > 0 ? (
+            <ul className="section-data section-data01">
+              {guests.map((guest) => (
+                <Guest key={guest.id} guest={guest} />
+              ))}
+            </ul>
+          ) : (
+            <div className="section-empty-progress">
+              <img src="/image/img_empty_progress.png" alt="empty guests" />
+            </div>
+          )}
         </div>
       </div>
     </div>
