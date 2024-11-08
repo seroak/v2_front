@@ -111,7 +111,7 @@ export const inviteClassroom = async ({ classroomId, guestEmail }: inviteClassro
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw await response.json();
     }
     const data = await response.json();
     return data;
@@ -138,19 +138,24 @@ export const getGuestStatus = async (classroomId: number) => {
   }
 };
 export const createClass = async (createClassName: string) => {
-  const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom`, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: createClassName }),
-  });
-  if (!response.ok) {
-    // response.ok가 false이면 (상태 코드가 200-299 범위 밖이면) 에러를 throw합니다.
-    const errorData = await response.json().catch(() => null);
-    throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
-  }
+  try {
+    const response = await fetch(`${BASE_URL}/edupi-lms/v1/classroom`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: createClassName }),
+    });
+    if (!response.ok) {
+      // response.ok가 false이면 (상태 코드가 200-299 범위 밖이면) 에러를 throw합니다.
 
-  return response.json();
+      throw await response.json();
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
 };
 
 export const getClassGuestData = async (classroomId: number) => {
