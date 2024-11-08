@@ -48,7 +48,7 @@ const LeftSection = () => {
         return;
       }
       else if((error as any).code == 'CA-400007'){
-        alert("코드가 너무 많습니다.");
+        alert("코드의 실행 횟수가 너무 많습니다.");
         return;
       }
       setConsole([]);
