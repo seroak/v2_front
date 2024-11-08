@@ -67,7 +67,6 @@ const ClassroomDashboard = () => {
       if (apiError.code === "LM-400003") {
         alert("이미 동일한 이름이 있는 클래스룸이 있습니다.");
       }
-      console.error("클래스 생성 에러", error);
     },
   });
   return (

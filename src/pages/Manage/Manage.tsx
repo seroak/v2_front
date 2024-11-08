@@ -93,7 +93,6 @@ const Modify = () => {
       if (apiError.code === "LM-400005") {
         alert("해당 하는 학생이 없습니다.");
       }
-      console.error("클래스룸 초대 에러", error);
     },
   });
   const submitInviteGuest = () => {

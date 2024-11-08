@@ -154,7 +154,7 @@ export const createClass = async (createClassName: string) => {
     return response.json();
   } catch (error) {
     console.error(error);
-    return error;
+    throw error;
   }
 };
 
