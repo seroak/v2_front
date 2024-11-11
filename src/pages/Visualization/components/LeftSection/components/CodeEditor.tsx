@@ -42,6 +42,10 @@ const CodeEditor = () => {
     if (editorRef.current) {
       highlightLine(highlightLines[stepIdx]);
     }
+    // 코드 실행 버튼 눌렀을때 highlightLines를 []로 초기화 그래서 코드에디터 쪽 0으로 초기화
+    if (highlightLines.length === 0) {
+      resetHighlightLine(0);
+    }
   }, [stepIdx, highlightLines]);
 
   useEffect(() => {
@@ -224,6 +228,20 @@ const CodeEditor = () => {
           isWholeLine: true,
           className: "myLineHighlight",
         },
+      },
+    ]);
+  };
+  const resetHighlightLine = (lineNumber: number) => {
+    if (!editorRef.current) return;
+
+    if (!decorationsCollectionRef.current) {
+      decorationsCollectionRef.current = editorRef.current.createDecorationsCollection();
+    }
+
+    decorationsCollectionRef.current.set([
+      {
+        range: new monaco.Range(lineNumber, 1, lineNumber, 1),
+        options: {},
       },
     ]);
   };
