@@ -614,8 +614,10 @@ const RightSection = () => {
             </p>
             <p className="ml24 fz14">Play Speed</p>
             <select name="" id="" className="s__select ml14" value={selectedValue} onChange={handleChange}>
+              <option value="0.5x">0.5X</option>
               <option value="1x">1X</option>
               <option value="2x">2X</option>
+              <option value="3x">3X</option>
             </select>
           </div>
         </div>

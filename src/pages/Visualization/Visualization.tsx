@@ -18,7 +18,13 @@ import { useGptTooltipStore } from "@/store/gptTooltip";
 
 export default function Visualization() {
   const [code, setCode] = useState<any>(
-    ["a = 3", "for i in range(a):", "   print(' ' * ((a - 1) - i), end = '')", "   print('*' * (2 * i + 1))"].join("\n")
+    ["\"\"\" Enter your python code \"\"\"\n" +
+    "\n" +
+    "# example\n" +
+    "for i in range(2, 10):\n" +
+    "   for j in range(1, 10):\n" +
+    "      print(f\"{i} x {j} = {i * j}\")\n" +
+    "   print()\n"].join("\n")
   );
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   // zustand store
