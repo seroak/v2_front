@@ -1634,6 +1634,9 @@ gpt-icon-small {
   width: calc(100% + 2px);
   transform: translateX(-1px);
 }
+.highlight-func-title{
+  background-color: #f5f5fc !important;
+}
 .func-title span {
   display: inline-flex;
   align-items: center;
