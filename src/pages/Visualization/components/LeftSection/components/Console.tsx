@@ -15,13 +15,13 @@ const Console = () => {
   return (
     <div className={styles["view-section1-2"]}>
       <p className={styles["view-section-title"]}>Console</p>
+      <textarea
+        className={styles["input-area"]}
+        value={inputData}
+        onChange={(e) => handleConsoleTextChange(e)}
+        placeholder="input을 입력해주세요."
+      />
       <div className={styles["view-data"]}>
-        <textarea
-          className={styles["input-area"]}
-          value={inputData}
-          onChange={(e) => handleConsoleTextChange(e)}
-          placeholder="Enter text here..."
-        />
         <div className={styles.consoleText}>{consoleText[stepIdx]}</div>
       </div>
     </div>

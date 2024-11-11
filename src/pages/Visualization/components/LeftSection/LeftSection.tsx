@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { CodeContext } from "../../context/CodeContext";
 import { Fragment } from "react/jsx-runtime";
 import styles from "./LeftSection.module.css";
@@ -25,7 +25,7 @@ const LeftSection = () => {
   const { setPreprocessedCodes } = preprocessedCodesContext;
   const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
   const setHighlightLines = useEditorStore((state) => state.setHighlightLines);
-  const { resetInputData } = useConsoleStore();
+
   const { inputData } = useConsoleStore();
   const codeContext = useContext(CodeContext);
 
@@ -66,7 +66,6 @@ const LeftSection = () => {
     },
   });
   const handleRunCode = () => {
-    resetInputData();
     mutation.mutate({ code, inputData });
   };
   return (

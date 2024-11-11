@@ -92,7 +92,6 @@ const RightSection = () => {
   }
 
   const setConsole = useConsoleStore((state) => state.setConsole);
-  const { resetInputData } = useConsoleStore();
   const stepIdx = useConsoleStore((state) => state.stepIdx);
   const { inputData } = useConsoleStore();
   const { preprocessedCodes, setPreprocessedCodes } = preprocessedCodesContext;
@@ -165,7 +164,6 @@ const RightSection = () => {
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    resetInputData();
     mutation.mutate({ code, inputData });
   };
   const onPlay = () => {
