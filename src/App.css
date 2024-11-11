@@ -737,7 +737,7 @@ var-list {
 .section-empty-progress {
   display: flex;
   justify-content: center;
-  margin: 150px 0 150px 0;
+  margin: 100px 0 100px 0;
 }
 .progress-success {
   background-color: #ebf4ff;
@@ -1102,6 +1102,51 @@ header .group-btn {
 .group-right {
   padding: 40px 0 0 36px;
 }
+.section-empty-search-classrooom {
+  display: flex;
+  justify-content: center;
+  margin: 50px 435px 50px 435px;
+}
+@media screen and (max-width: 1740px) {
+  .section-empty-search-classrooom {
+    margin: 50px 300px 50px 300px;
+  }
+}
+@media screen and (max-width: 1440px) {
+  .section-empty-search-classrooom {
+    margin: 50px 150px 50px 150px;
+  }
+}
+.section-empty-classroom {
+  display: flex;
+  justify-content: center;
+  margin: 50px 300px 50px 300px;
+}
+@media screen and (max-width: 1740px) {
+  .section-empty-classroom {
+    margin: 50px 150px 50px 150px;
+  }
+}
+@media screen and (max-width: 1440px) {
+  .section-empty-classroom {
+    margin: 50px 0 50px 0;
+  }
+}
+.section-empty-guest {
+  display: flex;
+  justify-content: center;
+  margin: 50px 300px 50px 300px;
+}
+@media screen and (max-width: 1740px) {
+  .section-empty-guest {
+    margin: 50px 150px 50px 150px;
+  }
+}
+@media screen and (max-width: 1440px) {
+  .section-empty-guest {
+    margin: 50px 0 50px 0;
+  }
+}
 .section-data04 {
   grid-template-columns: 1fr 1fr 1fr;
 }
@@ -1110,7 +1155,6 @@ header .group-btn {
     grid-template-columns: 1fr 1fr;
   }
 }
-
 .section-data04 li a {
   border-radius: 8px;
   overflow: hidden;
