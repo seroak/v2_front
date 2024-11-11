@@ -1151,6 +1151,12 @@ header .group-btn {
 
   text-align: left;
 }
+.true {
+  background-color: #10D190 !important;
+}
+.border-true {
+  border: 1px solid #10D190 !important;
+}
 .false {
   background-color: #ff0000 !important;
 }
