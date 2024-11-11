@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 interface ConsoleState {
-  console: string[];
+  consoleList: string[];
   stepIdx: number;
   inputData: string;
   setConsole: (console: string[]) => void;
@@ -10,6 +10,7 @@ interface ConsoleState {
   incrementStepIdx: () => void;
   decrementStepIdx: () => void;
   resetConsole: () => void;
+  resetInputData: () => void;
 }
 interface CodeFlowLengthState {
   codeFlowLength: number;
@@ -17,15 +18,16 @@ interface CodeFlowLengthState {
 }
 
 export const useConsoleStore = create<ConsoleState>((set) => ({
-  console: [],
+  consoleList: [],
   stepIdx: 0,
   inputData: "",
-  setConsole: (console) => set({ console }),
+  setConsole: (consoleList) => set({ consoleList }),
   setStepIdx: (stepIdx) => set({ stepIdx }),
   setInputData: (inputData) => set({ inputData }),
   incrementStepIdx: () => set((state) => ({ stepIdx: state.stepIdx + 1 })),
   decrementStepIdx: () => set((state) => ({ stepIdx: state.stepIdx - 1 })),
-  resetConsole: () => set({ console: [], stepIdx: 0 }),
+  resetConsole: () => set({ consoleList: [], stepIdx: 0 }),
+  resetInputData: () => set({ inputData: "" }),
 }));
 
 export const useCodeFlowLengthStore = create<CodeFlowLengthState>((set) => ({
