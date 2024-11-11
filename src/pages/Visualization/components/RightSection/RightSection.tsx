@@ -56,6 +56,7 @@ import { useArrowStore } from "@/store/arrow";
 
 //api
 import { visualize } from "@/services/api";
+import { CodeFlowVariableItem } from "../../types/codeFlow/codeFlowVariableItem";
 
 interface State {
   objects: any[];
@@ -468,7 +469,7 @@ const RightSection = () => {
           const toAddObject = createObjectToAdd(
             preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
           );
-
+          console.log(toAddObject);
           // print 타입일 때 console창의 로그를 만드는 부분
           if ((toAddObject as PrintItem).type === "print") {
             const printObject = toAddObject as PrintItem;
@@ -482,6 +483,13 @@ const RightSection = () => {
               accConsoleLog += inputObject.console;
             }
           }
+          if ((toAddObject as CodeFlowVariableItem).type === "variable") {
+            const variableObject = toAddObject as CodeFlowVariableItem;
+            if (variableObject.console !== null) {
+              accConsoleLog += variableObject.console;
+            }
+          }
+          console.log(prevTrackingDepth);
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
             // 한바퀴 돌아서 안에 있는 내용을 초기화해야 하는 부분이면 여기에서 처리해준다
@@ -509,7 +517,12 @@ const RightSection = () => {
           const finallyCodeFlow = LightCodeFlow(changedCodeFlows, activate);
 
           accCodeFlow = { objects: finallyCodeFlow };
-          if (toAddObject.type !== "variable" && toAddObject.type !== "list" && toAddObject.type !== "tuple") {
+          if (
+            toAddObject.type !== "variable" &&
+            toAddObject.type !== "list" &&
+            toAddObject.type !== "tuple" &&
+            toAddObject.type !== "input"
+          ) {
             prevTrackingDepth = (
               preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto | WhileDto
             ).depth;
