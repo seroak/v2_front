@@ -25,6 +25,7 @@ const LeftSection = () => {
   const { setPreprocessedCodes } = preprocessedCodesContext;
   const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
   const setHighlightLines = useEditorStore((state) => state.setHighlightLines);
+  const { resetInputData } = useConsoleStore();
   const { inputData } = useConsoleStore();
   const codeContext = useContext(CodeContext);
 
@@ -50,7 +51,6 @@ const LeftSection = () => {
         alert("지원하지 않는 코드가 포함되어 있습니다");
         return;
       } else if ((error as any).code === "CA-400002") {
-        console.log("틀림");
         // 잘못된 문법 에러처리
         const linNumber = Number((error as any).result.lineNumber);
         const errorMessage = (error as any).result.errorMessage;
@@ -66,6 +66,7 @@ const LeftSection = () => {
     },
   });
   const handleRunCode = () => {
+    resetInputData();
     mutation.mutate({ code, inputData });
   };
   return (

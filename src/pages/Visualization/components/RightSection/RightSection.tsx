@@ -17,7 +17,7 @@ import { PrintDto } from "@/pages/Visualization/types/dto/printDto";
 import { IfElseDto } from "@/pages/Visualization/types/dto/ifElseDto";
 import { CodeFlowVariableDto } from "@/pages/Visualization/types/dto/codeFlowVariableDto";
 import { PrintItem } from "@/pages/Visualization/types/codeFlow/printItem";
-
+import { InputItem } from "@/pages/Visualization/types/codeFlow/inputItem";
 import { WhileDto } from "@/pages/Visualization/types/dto/whileDto";
 import { AllDataStructureItem } from "@/pages/Visualization/types/dataStructuresItem/allDataStructureItem";
 import { WrapperDataStructureItem } from "@/pages/Visualization/types/dataStructuresItem/wrapperDataStructureItem";
@@ -91,6 +91,7 @@ const RightSection = () => {
   }
 
   const setConsole = useConsoleStore((state) => state.setConsole);
+  const { resetInputData } = useConsoleStore();
   const stepIdx = useConsoleStore((state) => state.stepIdx);
   const { inputData } = useConsoleStore();
   const { preprocessedCodes, setPreprocessedCodes } = preprocessedCodesContext;
@@ -163,6 +164,7 @@ const RightSection = () => {
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    resetInputData();
     mutation.mutate({ code, inputData });
   };
   const onPlay = () => {
@@ -271,7 +273,6 @@ const RightSection = () => {
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
       }
-
       accDataStructures = Object.entries(accDataStructures).reduce((acc, [key, value]) => {
         acc[key] = {
           data: value.data.map((structure) => ({
@@ -473,6 +474,12 @@ const RightSection = () => {
             const printObject = toAddObject as PrintItem;
             if (printObject.console !== null) {
               accConsoleLog += printObject.console;
+            }
+          }
+          if ((toAddObject as InputItem).type === "input") {
+            const inputObject = toAddObject as InputItem;
+            if (inputObject.console !== null) {
+              accConsoleLog += inputObject.console;
             }
           }
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
