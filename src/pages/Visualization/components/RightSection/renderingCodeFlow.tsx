@@ -13,6 +13,7 @@ import WhileBox from "./components/WhileBox/WhileBox";
 import CallUserFuncBox from "./components/CallUserFuncBox/CallUserFuncBox";
 import ReturnBox from "./components/ReturnBox/ReturnBox";
 import FlowControlBox from "./components/FlowControlBox/FlowControlBox";
+import InputBox from "./components/InputBox/InputBox";
 // type import
 import { ElseItem } from "@/pages/Visualization/types/codeFlow/elseItem";
 import { ForItem } from "@/pages/Visualization/types/codeFlow/forItem";
@@ -24,6 +25,7 @@ import { CodeFlowTupleItem } from "@/pages/Visualization/types/codeFlow/codeFlow
 import { WhileItem } from "@/pages/Visualization/types/codeFlow/whileItem";
 import { CallUserFuncItem } from "@/pages/Visualization/types/codeFlow/callUserFuncItem";
 import { ReturnItem } from "@/pages/Visualization/types/codeFlow/returnItem";
+import { InputItem } from "@/pages/Visualization/types/codeFlow/inputItem";
 //zustand
 import { useArrowStore } from "@/store/arrow";
 import { FlowControlItem } from "@/pages/Visualization/types/codeFlow/flowControlItem.ts";
@@ -182,6 +184,15 @@ export const renderingCodeFlow = (codeFlows: any[], width: number, height: numbe
               <div key={FlowControlItem.id}>
                 <CodeFlowItem key={index} codeFlow={codeFlow} width={width} height={height} up={0} right={0}>
                   <FlowControlBox key={index} flowControlItem={FlowControlItem} />
+                </CodeFlowItem>
+              </div>
+            );
+          case "input":
+            const inputItem = codeFlow as InputItem;
+            return (
+              <div key={inputItem.id}>
+                <CodeFlowItem key={index} codeFlow={codeFlow} width={width} height={height} up={0} right={0}>
+                  <InputBox key={inputItem.id} InputItem={inputItem} />
                 </CodeFlowItem>
               </div>
             );

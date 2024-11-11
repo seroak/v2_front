@@ -2,7 +2,7 @@ import { useConsoleStore } from "@/store/console";
 import styles from "./Console.module.css";
 
 const Console = () => {
-  const consoleText = useConsoleStore((state) => state.console);
+  const consoleText = useConsoleStore((state) => state.consoleList);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
   const { inputData, setInputData } = useConsoleStore();
   const handleConsoleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
