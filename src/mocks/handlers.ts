@@ -167,11 +167,41 @@ export const handlers = [
               role: "HOST",
               totalPeople: 1,
             },
+            {
+              id: 7,
+              name: "classroom3",
+              role: "HOST",
+              totalPeople: 1,
+            },
+            {
+              id: 8,
+              name: "classroom3",
+              role: "HOST",
+              totalPeople: 1,
+            },
           ],
           guests: [
             {
               id: 1,
               name: "classroom1",
+              role: "GUEST",
+              totalPeople: 1,
+            },
+            {
+              id: 2,
+              name: "classroom4",
+              role: "GUEST",
+              totalPeople: 1,
+            },
+            {
+              id: 3,
+              name: "classroom4",
+              role: "GUEST",
+              totalPeople: 1,
+            },
+            {
+              id: 4,
+              name: "classroom4",
               role: "GUEST",
               totalPeople: 1,
             },

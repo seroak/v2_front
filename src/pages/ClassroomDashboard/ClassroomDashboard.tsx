@@ -8,6 +8,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { createClass, getHostGuestData, getUser } from "@/services/api";
 import { User } from "@/App";
 import { ErrorResponse } from "@/types/apiTypes";
+
 interface Classroom {
   id: number;
   name: string;
@@ -20,6 +21,7 @@ interface GroupData {
     guests: Classroom[];
   };
 }
+
 const ClassroomDashboard = () => {
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
   const { data: userData } = useQuery<User | null>({
@@ -38,6 +40,9 @@ const ClassroomDashboard = () => {
   const [hostClassRooms, setHostClassRooms] = useState<Classroom[]>([]);
   const [guestClassRooms, setGuestClassRooms] = useState<Classroom[]>([]);
   const [createClassName, setCreateClassName] = useState<string>("");
+  const [searchHostTerm, setHostSearchTerm] = useState<string>("");
+  const [searchGuestTerm, setGuestSearchTerm] = useState<string>("");
+
   useEffect(() => {
     if (data) {
       setHostClassRooms(data.result.hosts);
@@ -67,6 +72,16 @@ const ClassroomDashboard = () => {
       }
     },
   });
+
+  // 검색어에 따른 필터링 적용
+  const filteredHostClassRooms = hostClassRooms.filter((room) =>
+    room.name.toLowerCase().includes(searchHostTerm.toLowerCase()),
+  );
+
+  const filteredGuestClassRooms = guestClassRooms.filter((room) =>
+    room.name.toLowerCase().includes(searchGuestTerm.toLowerCase()),
+  );
+
   return (
     <div className="bg2" style={{ minWidth: "1521px" }}>
       <Header />
@@ -115,23 +130,35 @@ const ClassroomDashboard = () => {
             </div>
             <div className="title-right">
               <div className="search-wrap">
-                <input type="text" placeholder="클래스룸 검색" />
+                <input
+                  type="text"
+                  placeholder="클래스룸 검색"
+                  value={searchHostTerm}
+                  onChange={(e) => setHostSearchTerm(e.target.value)} // 검색어 업데이트
+                />
                 <button>
                   <img src="/image/icon_search.svg" alt="검색" />
                 </button>
               </div>
             </div>
           </div>
-          {hostClassRooms && hostClassRooms.length > 0 ? (
+          {filteredHostClassRooms && filteredHostClassRooms.length > 0 ? (
             <ul className="section-data section-data04">
-              {hostClassRooms.map((item) => (
+              {filteredHostClassRooms.map((item) => (
                 <HostRoom key={item.id} classData={item} />
               ))}
             </ul>
           ) : (
-            <div className="section-empty-classrooom">
-              <img src="/image/img_none_host_classroom.png" alt="empty host classroom" />
-            </div>
+            searchHostTerm !== "" ?
+              (
+                <div className="section-empty-search-classrooom">
+                <img src="/image/img_empty_search_class.png" alt="empty host classroom" />
+              </div>
+              ) : (
+                <div className="section-empty-classroom">
+                <img src="/image/img_none_host_classroom.png" alt="empty search host classroom" />
+              </div>
+              )
           )}
           <div className="section-title">
             <div className="title-left">
@@ -139,23 +166,35 @@ const ClassroomDashboard = () => {
             </div>
             <div className="title-right">
               <div className="search-wrap">
-                <input type="text" placeholder="클래스룸 검색" />
+                <input
+                  type="text"
+                  placeholder="클래스룸 검색"
+                  value={searchGuestTerm}
+                  onChange={(e) => setGuestSearchTerm(e.target.value)} // 검색어 업데이트
+                />
                 <button>
                   <img src="/image/icon_search.svg" alt="검색" />
                 </button>
               </div>
             </div>
           </div>
-          {guestClassRooms && guestClassRooms.length > 0 ? (
+          {filteredGuestClassRooms && filteredGuestClassRooms.length > 0 ? (
             <ul className="section-data section-data04">
-              {guestClassRooms.map((item) => (
+              {filteredGuestClassRooms.map((item) => (
                 <GuestRoom key={item.id} classData={item} />
               ))}
             </ul>
           ) : (
-            <div className="section-empty-classrooom">
-              <img src="/image/img_none_guest_classroom.png" alt="empty host classroom" />
-            </div>
+            searchHostTerm !== "" ?
+              (
+                <div className="section-empty-search-classrooom">
+                  <img src="/image/img_empty_search_class.png" alt="empty host classroom" />
+                </div>
+              ) : (
+                <div className="section-empty-classroom">
+                  <img src="/image/img_none_host_classroom.png" alt="empty search host classroom" />
+                </div>
+              )
           )}
         </div>
       </div>
