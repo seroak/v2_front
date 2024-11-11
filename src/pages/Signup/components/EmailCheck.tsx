@@ -16,7 +16,7 @@ const EmailChek = () => {
           에듀파이의 서비스를 마음껏 이용하실 수 있어요.
         </p>
 
-        <a className="check-button" href="/">
+        <a className="check-button" href="/login">
           <div className="check-button-inner">
             <span className="check-button-label">에듀파이 이용하러 가기</span>
           </div>
