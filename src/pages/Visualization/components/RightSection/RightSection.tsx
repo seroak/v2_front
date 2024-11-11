@@ -152,8 +152,7 @@ const RightSection = () => {
         setConsole([errorMessage]);
         setPreprocessedCodes([]);
         return;
-
-      } else if(error.code == 'CA-400007'){
+      } else if (error.code == "CA-400007") {
         alert("코드의 실행 횟수가 너무 많습니다.");
 
         return;
@@ -187,17 +186,21 @@ const RightSection = () => {
         intervalRef.current = setInterval(onForward, 1000);
       } else if (selectedValue === "2x") {
         intervalRef.current = setInterval(onForward, 500);
+      } else if (selectedValue === "3x") {
+        intervalRef.current = setInterval(onForward, 300);
+      } else if (selectedValue === "0.5x") {
+        intervalRef.current = setInterval(onForward, 2000);
+      } else {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
       }
-    } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      return () => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+      };
     }
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
   }, [isPlaying, consoleIdx, codeFlowLength]);
 
   useEffect(() => {
