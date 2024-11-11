@@ -592,7 +592,6 @@ const RightSection = () => {
     setConsole(accConsoleLogList);
     setCodeFlowLength(accCodeFlowList.length);
     setArrowTextList(arrowTexts);
-
     setHighlightLines(highlightLine);
   }, [preprocessedCodes]);
 

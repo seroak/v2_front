@@ -6,7 +6,7 @@ interface Props {
 }
 function InputBox({ InputItem }: Props) {
   return (
-    <div className={cx("code-flow-data")}>
+    <div className={cx("code-flow-data", styles["input"])}>
       <p className={styles["input-text"]}>{InputItem.expr}</p>
     </div>
   );

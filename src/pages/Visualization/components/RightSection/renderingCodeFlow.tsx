@@ -191,7 +191,7 @@ export const renderingCodeFlow = (codeFlows: any[], width: number, height: numbe
             const inputItem = codeFlow as InputItem;
             return (
               <div key={inputItem.id}>
-                <CodeFlowItem key={index} codeFlow={codeFlow} width={width} height={height} up={0} right={0}>
+                <CodeFlowItem key={index} codeFlow={codeFlow} width={width} height={height} up={-35} right={0}>
                   <InputBox key={inputItem.id} InputItem={inputItem} />
                 </CodeFlowItem>
               </div>
