@@ -146,14 +146,14 @@ const RightSection = () => {
         alert("지원하지 않는 코드가 포함되어 있습니다");
         return;
       } else if (error.code === "CA-400002") {
+        console.log("틀림");
         const linNumber = Number((error as any).result.lineNumber);
         const errorMessage = (error as any).result.errorMessage;
         setErrorLine({ lineNumber: linNumber, message: errorMessage });
         setConsole([errorMessage]);
         setPreprocessedCodes([]);
         return;
-
-      } else if(error.code == 'CA-400007'){
+      } else if (error.code == "CA-400007") {
         alert("코드의 실행 횟수가 너무 많습니다.");
 
         return;
@@ -263,7 +263,6 @@ const RightSection = () => {
       setStructuresList([]);
       setCodeFlowLength(0);
       setArrowTextList([]);
-      setHighlightLines([]);
       setDisplayNone(true);
       return;
     }
