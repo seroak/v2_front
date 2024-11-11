@@ -25,7 +25,7 @@ const LeftSection = () => {
   const { setPreprocessedCodes } = preprocessedCodesContext;
   const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
   const setHighlightLines = useEditorStore((state) => state.setHighlightLines);
-  const highlightLines = useEditorStore((state) => state.highlightLines);
+  const { inputData } = useConsoleStore();
   const codeContext = useContext(CodeContext);
 
   if (!codeContext) {
@@ -40,7 +40,6 @@ const LeftSection = () => {
       setStepIdx(0);
       setConsole([data.result.output]);
       setHighlightLines([]);
-      console.log(highlightLines);
     },
     onError(error) {
       console.error(error);
@@ -67,7 +66,7 @@ const LeftSection = () => {
     },
   });
   const handleRunCode = () => {
-    mutation.mutate(code);
+    mutation.mutate({ code, inputData });
   };
   return (
     <Fragment>

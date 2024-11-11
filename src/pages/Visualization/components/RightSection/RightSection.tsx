@@ -92,7 +92,7 @@ const RightSection = () => {
 
   const setConsole = useConsoleStore((state) => state.setConsole);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
-
+  const { inputData } = useConsoleStore();
   const { preprocessedCodes, setPreprocessedCodes } = preprocessedCodesContext;
   const { code } = codeContext;
   const [arrowTextList, setArrowTextList] = useState<string[]>([]);
@@ -146,7 +146,6 @@ const RightSection = () => {
         alert("지원하지 않는 코드가 포함되어 있습니다");
         return;
       } else if (error.code === "CA-400002") {
-        console.log("틀림");
         const linNumber = Number((error as any).result.lineNumber);
         const errorMessage = (error as any).result.errorMessage;
         setErrorLine({ lineNumber: linNumber, message: errorMessage });
@@ -164,7 +163,7 @@ const RightSection = () => {
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutation.mutate(code);
+    mutation.mutate({ code, inputData });
   };
   const onPlay = () => {
     if (codeFlowLength === 0) return;
