@@ -37,7 +37,7 @@ const ClassroomDashboard = () => {
 
   const [hostClassRooms, setHostClassRooms] = useState<Classroom[]>([]);
   const [guestClassRooms, setGuestClassRooms] = useState<Classroom[]>([]);
-  const [createClassName, setCreateCalssName] = useState<string>("");
+  const [createClassName, setCreateClassName] = useState<string>("");
   useEffect(() => {
     if (data) {
       setHostClassRooms(data.result.hosts);
@@ -45,7 +45,7 @@ const ClassroomDashboard = () => {
     }
   }, [data]);
   const changeCreateClassName = (e: ChangeEvent<HTMLInputElement>) => {
-    setCreateCalssName(e.target.value);
+    setCreateClassName(e.target.value);
   };
   const submitCreateClassName = () => {
     if (createClassName) {
@@ -78,7 +78,7 @@ const ClassroomDashboard = () => {
             <span>혼자보다 함께할 때 더 많이, 더 빨리 배울 수 있습니다.</span>
           </div>
         </div>
-        <img src="/image/img_copywriting.png" alt="그룹이미지" />
+        <img src="/image/img_copywriting.png" alt="클래스룸 이미지" />
       </div>
       <div className="group-data-wrap">
         <div className="group-data-left">
@@ -95,12 +95,12 @@ const ClassroomDashboard = () => {
                 <p>{guestClassRooms.length}</p>
               </li>
             </ul>
-            <label htmlFor="addgroup">그룹 생성</label>
+            <label htmlFor="addgroup">클래스룸 생성</label>
             <div>
               <input
                 type="text"
                 id="addgroup"
-                placeholder="그룹 이름"
+                placeholder="클래스룸 이름"
                 value={createClassName}
                 onChange={changeCreateClassName} // 입력값 변경시 상태 업데이트
               />
@@ -115,36 +115,48 @@ const ClassroomDashboard = () => {
             </div>
             <div className="title-right">
               <div className="search-wrap">
-                <input type="text" placeholder="그룹 검색" />
+                <input type="text" placeholder="클래스룸 검색" />
                 <button>
                   <img src="/image/icon_search.svg" alt="검색" />
                 </button>
               </div>
             </div>
           </div>
-          <ul className="section-data section-data04">
-            {hostClassRooms.map((item) => (
-              <HostRoom key={item.id} classData={item} />
-            ))}
-          </ul>
+          {hostClassRooms && hostClassRooms.length > 0 ? (
+            <ul className="section-data section-data04">
+              {hostClassRooms.map((item) => (
+                <HostRoom key={item.id} classData={item} />
+              ))}
+            </ul>
+          ) : (
+            <div className="section-empty-classrooom">
+              <img src="/image/img_none_host_classroom.png" alt="empty host classroom" />
+            </div>
+          )}
           <div className="section-title">
             <div className="title-left">
               <h3>학습방</h3>
             </div>
             <div className="title-right">
               <div className="search-wrap">
-                <input type="text" placeholder="그룹 검색" />
+                <input type="text" placeholder="클래스룸 검색" />
                 <button>
                   <img src="/image/icon_search.svg" alt="검색" />
                 </button>
               </div>
             </div>
           </div>
-          <ul className="section-data section-data04">
-            {guestClassRooms.map((item) => (
-              <GuestRoom key={item.id} classData={item} />
-            ))}
-          </ul>
+          {guestClassRooms && guestClassRooms.length > 0 ? (
+            <ul className="section-data section-data04">
+              {guestClassRooms.map((item) => (
+                <GuestRoom key={item.id} classData={item} />
+              ))}
+            </ul>
+          ) : (
+            <div className="section-empty-classrooom">
+              <img src="/image/img_none_guest_classroom.png" alt="empty host classroom" />
+            </div>
+          )}
         </div>
       </div>
     </div>
