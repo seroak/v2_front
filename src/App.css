@@ -104,6 +104,7 @@ input:not([type="file"])::placeholder {
 .blue-btn:disabled {
   background-color: #e2e2e2;
   color: #a1a1a1;
+  pointer-events: none; /* Disables hover and click events */
 }
 .sns-btn {
   height: 50px;
