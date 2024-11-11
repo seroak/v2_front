@@ -120,6 +120,7 @@ export const createObjectToAdd = (
     case "variable":
       return {
         ...baseObject,
+        console: (preprocessedCode as CodeFlowVariableDtoToAdd)?.console,
         expr: (preprocessedCode as CodeFlowVariableDtoToAdd).expr,
       };
     case "list":
