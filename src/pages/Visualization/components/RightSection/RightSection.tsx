@@ -187,17 +187,21 @@ const RightSection = () => {
         intervalRef.current = setInterval(onForward, 1000);
       } else if (selectedValue === "2x") {
         intervalRef.current = setInterval(onForward, 500);
+      } else if (selectedValue === "3x") {
+        intervalRef.current = setInterval(onForward, 300);
+      } else if (selectedValue === "0.5x") {
+        intervalRef.current = setInterval(onForward, 2000);
+      } else {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
       }
-    } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      return () => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+      };
     }
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
   }, [isPlaying, consoleIdx, codeFlowLength]);
 
   useEffect(() => {
@@ -629,8 +633,10 @@ const RightSection = () => {
             </p>
             <p className="ml24 fz14">Play Speed</p>
             <select name="" id="" className="s__select ml14" value={selectedValue} onChange={handleChange}>
+              <option value="0.5x">0.5X</option>
               <option value="1x">1X</option>
               <option value="2x">2X</option>
+              <option value="3x">3X</option>
             </select>
           </div>
         </div>

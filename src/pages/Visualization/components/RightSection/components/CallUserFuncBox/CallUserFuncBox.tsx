@@ -26,7 +26,7 @@ const CallUserFuncBox = ({ callUserFuncItem, children }: CallUserFuncProps): Rea
       )}
       <div className={cx("code-flow", "code-flow-func", isLight && "highlight-border")}>
         <div className={"code-flow-title-wrap"}>
-          <div className={"func-title"}>
+          <div className={cx("func-title", isLight && "highlight-func-title")}>
             <span className={cx(isLight && "highlight-border")}>{signature}</span>
           </div>
         </div>

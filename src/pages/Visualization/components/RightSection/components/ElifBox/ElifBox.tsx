@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import styles from "./ElifBox.module.css";
 import cx from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { ConditionItem } from "@/pages/Visualization/types/codeFlow/conditionItem";
@@ -18,7 +17,10 @@ function ElifBox({ children, isLight, elifItem }: Props) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className={cx("code-flow", isLight && "highlight-border")}
+        className={cx("code-flow",
+            isLight && "highlight-border",
+            isLight && elifItem.expr === "False" && "border-false",
+            isLight && elifItem.expr === "True" && "border-true")}
       >
         <motion.div
           layout
@@ -33,7 +35,12 @@ function ElifBox({ children, isLight, elifItem }: Props) {
           </motion.div>
           <div className="code-flow-var">
             <div>
-              <span className={cx(isLight && "highlight-number", isLight && elifItem.expr === "False" && styles.false)}>
+              <span className={cx(
+                  isLight && "highlight-number",
+                  isLight && elifItem.expr === "True" && "true",
+                  isLight && elifItem.expr === "False" && "false"
+                )}
+              >
                 {elifItem.expr?.split("").map((char, index) => (
                   <span key={index} style={{ all: "unset" }}>
                     {char}

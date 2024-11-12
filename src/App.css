@@ -1196,6 +1196,12 @@ header .group-btn {
 
   text-align: left;
 }
+.true {
+  background-color: #10D190 !important;
+}
+.border-true {
+  border: 1px solid #10D190 !important;
+}
 .false {
   background-color: #ff0000 !important;
 }
@@ -1672,6 +1678,9 @@ gpt-icon-small {
   background-color: #f9f9f9;
   width: calc(100% + 2px);
   transform: translateX(-1px);
+}
+.highlight-func-title{
+  background-color: #f5f5fc !important;
 }
 .func-title span {
   display: inline-flex;
