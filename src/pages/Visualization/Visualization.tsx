@@ -18,8 +18,7 @@ import { useGptTooltipStore } from "@/store/gptTooltip";
 
 export default function Visualization() {
   const [code, setCode] = useState<any>(
-    ["\"\"\" Enter your python code \"\"\"\n" +
-    "\n" +
+    [
     "# example\n" +
     "for i in range(2, 10):\n" +
     "   for j in range(1, 10):\n" +
