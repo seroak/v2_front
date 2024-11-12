@@ -110,23 +110,32 @@ const LoggedInHeader = () => {
         )}
       </div>
 
-      <div>
+      <div className="login-header">
+        <a
+            href="https://forms.gle/fufPJjH4Gfmavtqw5"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+          <button className="feedback-btn">
+            피드백 남기기
+          </button>
+        </a>
         {!userData ? (
-          <div>
-            <Link to="/login" className={styles["login-btn"]}>
-              로그인
-            </Link>
-            <Link to="/signup" className={styles["join-btn"]}>
-              회원가입
-            </Link>
-          </div>
+            <div>
+              <Link to="/login" className={styles["login-btn"]}>
+                로그인
+              </Link>
+              <Link to="/signup" className={styles["join-btn"]}>
+                회원가입
+              </Link>
+            </div>
         ) : (
-          <>
-            <span style={{ marginRight: "10px" }}>{userData.name}님</span>
-            <span onClick={handleLogout} className={styles["logout"]}>
+            <>
+              <span style={{marginRight: "10px"}}>{userData.name}님</span>
+              <span onClick={handleLogout} className={styles["logout"]}>
               <span>로그아웃</span>
             </span>
-          </>
+            </>
         )}
       </div>
     </header>
