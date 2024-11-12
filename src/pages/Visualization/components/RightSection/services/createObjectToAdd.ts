@@ -13,7 +13,7 @@ import { CallUserFuncDto } from "@/pages/Visualization/types/dto/callUserFuncDto
 import { ReturnDto } from "@/pages/Visualization/types/dto/returnDto";
 import { FlowControlDto } from "@/pages/Visualization/types/dto/flowControlDto";
 import { EndUserFuncDto } from "@/pages/Visualization/types/dto/endUserFuncDto";
-
+import { InputDto } from "@/pages/Visualization/types/dto/inputDto";
 // 스택에 넣을 객체를 생성하는 함수
 export const createObjectToAdd = (
   preprocessedCode:
@@ -103,7 +103,13 @@ export const createObjectToAdd = (
         highlights: [],
         expr: (preprocessedCode as IfElseDataToAdd).expr,
       };
-
+    case "input":
+      return {
+        ...(baseObject as InputDto),
+        highlights: [],
+        expr: (preprocessedCode as InputDto).expr,
+        console: (preprocessedCode as InputDto).console,
+      };
     case "ifelsechange":
       return {
         ...baseObject,
@@ -114,6 +120,7 @@ export const createObjectToAdd = (
     case "variable":
       return {
         ...baseObject,
+        console: (preprocessedCode as CodeFlowVariableDtoToAdd)?.console,
         expr: (preprocessedCode as CodeFlowVariableDtoToAdd).expr,
       };
     case "list":
@@ -122,10 +129,10 @@ export const createObjectToAdd = (
         expr: (preprocessedCode as CodeFlowListDto).expr,
       };
     case "tuple":
-      return{
+      return {
         ...baseObject,
         expr: (preprocessedCode as CodeFlowTupleDto).expr,
-      }
+      };
     case "whilechangecondition":
       return {
         ...baseObject,

@@ -23,6 +23,8 @@ interface Props {
 
   height: number;
   width: number;
+  top: number;
+  right: number;
 }
 
 interface CallstackProps {
@@ -33,7 +35,7 @@ interface CallstackProps {
   width: number;
 }
 
-const StructureItem = ({ children, structure, height, width }: Props) => {
+const StructureItem = ({ children, structure, height, width, top, right }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const setTop = useArrowStore((state) => state.setTop);
   const setRight = useArrowStore((state) => state.setRight);
@@ -42,8 +44,8 @@ const StructureItem = ({ children, structure, height, width }: Props) => {
     if (ref.current && structure.isLight) {
       const rect = ref.current.getBoundingClientRect();
 
-      setTop(rect.top);
-      setRight(rect.right);
+      setTop(rect.top + top);
+      setRight(rect.right + right);
     }
   }, [structure, ref, height, width]);
 
@@ -77,7 +79,7 @@ const CallstackItem = ({ children, structure, height, width }: CallstackProps) =
 export const renderingStructure = (
   structures: WrapperDataStructureItem, //변수시각화 리스트
   height: number,
-  width: number,
+  width: number
 ): ReactElement => {
   return (
     <>
@@ -104,7 +106,7 @@ export const renderingStructure = (
                               className="var-list"
                               style={{ display: "inline-block" }}
                             >
-                              <StructureItem structure={variableItem} height={height} width={width}>
+                              <StructureItem structure={variableItem} height={height} width={width} top={-30} right={0}>
                                 <VariableBox
                                   value={variableItem.expr}
                                   name={variableItem.name}
@@ -126,14 +128,14 @@ export const renderingStructure = (
                               transition={{ duration: 0.3 }}
                               style={{ display: "inline-block" }}
                             >
-                              <StructureItem structure={listItem} height={height} width={width}>
+                              <StructureItem structure={listItem} height={height} width={width} top={0} right={0}>
                                 <ListWrapper listItem={listItem} />
                               </StructureItem>
                             </motion.div>
                           </AnimatePresence>
                         );
                       }
-                      case "tuple" : {
+                      case "tuple": {
                         const tupleItem = structure as DataStructureTupleItem;
                         return (
                           <AnimatePresence key={tupleItem.name + key} mode="wait">
@@ -144,7 +146,7 @@ export const renderingStructure = (
                               transition={{ duration: 0.3 }}
                               style={{ display: "inline-block" }}
                             >
-                              <StructureItem structure={tupleItem} height={height} width={width}>
+                              <StructureItem structure={tupleItem} height={height} width={width} top={0} right={0}>
                                 <TupleWrapper listItem={tupleItem} />
                               </StructureItem>
                             </motion.div>
@@ -162,7 +164,7 @@ export const renderingStructure = (
                               transition={{ duration: 0.3 }}
                               style={{ display: "inline-block" }}
                             >
-                              <StructureItem structure={functionItem} height={height} width={width}>
+                              <StructureItem structure={functionItem} height={height} width={width} top={0} right={0}>
                                 <DefFunctionDataStructure functionItem={functionItem} />
                               </StructureItem>
                             </motion.div>

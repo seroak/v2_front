@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { CodeContext } from "../../context/CodeContext";
 import { Fragment } from "react/jsx-runtime";
 import styles from "./LeftSection.module.css";
@@ -25,7 +25,8 @@ const LeftSection = () => {
   const { setPreprocessedCodes } = preprocessedCodesContext;
   const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
   const setHighlightLines = useEditorStore((state) => state.setHighlightLines);
-  const highlightLines = useEditorStore((state) => state.highlightLines);
+
+  const { inputData } = useConsoleStore();
   const codeContext = useContext(CodeContext);
 
   if (!codeContext) {
@@ -40,7 +41,6 @@ const LeftSection = () => {
       setStepIdx(0);
       setConsole([data.result.output]);
       setHighlightLines([]);
-      console.log(highlightLines);
     },
     onError(error) {
       console.error(error);
@@ -51,7 +51,6 @@ const LeftSection = () => {
         alert("지원하지 않는 코드가 포함되어 있습니다");
         return;
       } else if ((error as any).code === "CA-400002") {
-        console.log("틀림");
         // 잘못된 문법 에러처리
         const linNumber = Number((error as any).result.lineNumber);
         const errorMessage = (error as any).result.errorMessage;
@@ -67,7 +66,7 @@ const LeftSection = () => {
     },
   });
   const handleRunCode = () => {
-    mutation.mutate(code);
+    mutation.mutate({ code, inputData });
   };
   return (
     <Fragment>
@@ -89,7 +88,7 @@ const LeftSection = () => {
         </div>
 
         <Split
-          sizes={[70, 30]}
+          sizes={[60, 40]}
           minSize={100}
           expandToMin={false}
           gutterSize={10}

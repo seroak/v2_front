@@ -1,27 +1,18 @@
-const testResponseBody = [
+const appendResponseBody = [
   {
     id: 2,
     depth: 1,
-    expr: "input()",
-    console: ">> ",
-    code: "a = input()",
-    type: "input",
-  },
-  {
-    id: 2,
-    depth: 1,
-    expr: "song",
-    console: "song\n",
-    code: "a = input()",
+    expr: "'song'",
+    code: 'a = "song"',
     type: "variable",
   },
   {
     variables: [
       {
         id: 2,
-        expr: "song",
+        expr: "'song'",
         name: "a",
-        code: "a = input()",
+        code: 'a = "song"',
         type: "variable",
         idx: {
           start: 0,
@@ -52,4 +43,4 @@ const testResponseBody = [
   },
 ];
 
-export default testResponseBody;
+export default appendResponseBody;
