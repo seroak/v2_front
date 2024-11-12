@@ -104,6 +104,7 @@ input:not([type="file"])::placeholder {
 .blue-btn:disabled {
   background-color: #e2e2e2;
   color: #a1a1a1;
+  pointer-events: none; /* Disables hover and click events */
 }
 .sns-btn {
   height: 50px;
@@ -737,7 +738,7 @@ var-list {
 .section-empty-progress {
   display: flex;
   justify-content: center;
-  margin: 150px 0 150px 0;
+  margin: 100px 0 100px 0;
 }
 .progress-success {
   background-color: #ebf4ff;
@@ -1102,6 +1103,51 @@ header .group-btn {
 .group-right {
   padding: 40px 0 0 36px;
 }
+.section-empty-search-classrooom {
+  display: flex;
+  justify-content: center;
+  margin: 50px 435px 50px 435px;
+}
+@media screen and (max-width: 1740px) {
+  .section-empty-search-classrooom {
+    margin: 50px 300px 50px 300px;
+  }
+}
+@media screen and (max-width: 1440px) {
+  .section-empty-search-classrooom {
+    margin: 50px 150px 50px 150px;
+  }
+}
+.section-empty-classroom {
+  display: flex;
+  justify-content: center;
+  margin: 50px 300px 50px 300px;
+}
+@media screen and (max-width: 1740px) {
+  .section-empty-classroom {
+    margin: 50px 150px 50px 150px;
+  }
+}
+@media screen and (max-width: 1440px) {
+  .section-empty-classroom {
+    margin: 50px 0 50px 0;
+  }
+}
+.section-empty-guest {
+  display: flex;
+  justify-content: center;
+  margin: 50px 300px 50px 300px;
+}
+@media screen and (max-width: 1740px) {
+  .section-empty-guest {
+    margin: 50px 150px 50px 150px;
+  }
+}
+@media screen and (max-width: 1440px) {
+  .section-empty-guest {
+    margin: 50px 0 50px 0;
+  }
+}
 .section-data04 {
   grid-template-columns: 1fr 1fr 1fr;
 }
@@ -1110,7 +1156,6 @@ header .group-btn {
     grid-template-columns: 1fr 1fr;
   }
 }
-
 .section-data04 li a {
   border-radius: 8px;
   overflow: hidden;
@@ -1150,6 +1195,12 @@ header .group-btn {
   box-sizing: border-box;
 
   text-align: left;
+}
+.true {
+  background-color: #10D190 !important;
+}
+.border-true {
+  border: 1px solid #10D190 !important;
 }
 .false {
   background-color: #ff0000 !important;
@@ -1628,6 +1679,9 @@ gpt-icon-small {
   width: calc(100% + 2px);
   transform: translateX(-1px);
 }
+.highlight-func-title{
+  background-color: #f5f5fc !important;
+}
 .func-title span {
   display: inline-flex;
   align-items: center;
@@ -1785,4 +1839,32 @@ gpt-icon-small {
   left: 50%;
   text-wrap: nowrap;
   transform: translateX(-50%);
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.feedback-btn {
+  padding: 8px 16px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #666;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-right: 20px;
+}
+
+.feedback-btn:hover {
+  background-color: #f5f5f5;
+}
+.login-header{
+  align-items: center;
+  display: flex;
+  flex-direction:  row;
+  padding: 8px 16px;
 }

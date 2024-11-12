@@ -1,6 +1,6 @@
 import { useState, FormEvent, ChangeEvent, Fragment, useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getUser, login } from "@/services/api";
 import Header from "@/pages/components/Header";
 const BACK_BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
@@ -62,9 +62,9 @@ const Login = () => {
           <img className="mb20" src="/image/img_logo2.png" alt="로고" />
           <p className="mb40">
             아직 회원이 아니신가요?
-            <a className="color-blue" href="">
+            <Link className="color-blue" to="/signup">
               회원가입
-            </a>
+            </Link>
           </p>
           <form onSubmit={handleSubmit}>
             <div className="login-box">

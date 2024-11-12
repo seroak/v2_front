@@ -68,6 +68,8 @@ const Modify = () => {
     enabled: isMswReady,
     staleTime: 1000 * 60,
   });
+  const [searchGuestTerm, setGuestSearchTerm] = useState<string>("");
+
   useEffect(() => {
     if (isSuccess) {
       setIsHost(classAccessRightData.isHost);
@@ -124,6 +126,12 @@ const Modify = () => {
   const handleDeleteClassroom = () => {
     deleteClassroomMutation.mutate(classroomId);
   };
+
+  // 검색어에 따른 필터링 적용
+  const filterGuests = guests?.filter((guest) =>
+      guest.name.toLowerCase().includes(searchGuestTerm.toLowerCase()),
+  );
+
   return (
     <div className="bg">
       <Header />
@@ -151,23 +159,35 @@ const Modify = () => {
             </div>
             <div className="title-right">
               <div className="search-wrap">
-                <input type="text" placeholder=" 학생 검색" />
+                <input
+                  type="text"
+                  placeholder="학생 검색"
+                  value={searchGuestTerm}
+                  onChange={(e) => setGuestSearchTerm(e.target.value)} // 검색어 업데이트
+                />
                 <button>
                   <img src="/image/icon_search.svg" alt="검색" />
                 </button>
               </div>
             </div>
           </div>
-          {guests && guests.length > 0 ? (
+          {filterGuests && filterGuests.length > 0 ? (
             <ul className="section-data section-data03">
-              {guests.map((guest) => (
+              {filterGuests.map((guest) => (
                 <Guest key={guest.id} guest={guest} getClassroomRefetch={getClassroomRefetch} />
               ))}
             </ul>
           ) : (
-            <div className="section-empty-progress">
-              <img src="/image/img_empty_guest.png" alt="empty guests" />
-            </div>
+            searchGuestTerm !== "" ?
+              (
+                <div className="section-empty-progress">
+                  <img src="/image/img_empty_search_guest.png" alt="empty guests" />
+                </div>
+              ) : (
+                <div className="section-empty-classroom">
+                  <img src="/image/img_empty_guest.png" alt="empty search host classroom" />
+                </div>
+              )
           )}
           <div className="right-btns">
             <button className="red" onClick={handleDeleteClassroom}>

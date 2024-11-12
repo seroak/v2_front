@@ -1,4 +1,4 @@
-import {useContext, useState} from "react";
+import { useContext } from "react";
 import { CodeContext } from "../../context/CodeContext";
 import { Fragment } from "react/jsx-runtime";
 import styles from "./LeftSection.module.css";
@@ -24,8 +24,10 @@ const LeftSection = () => {
   const setStepIdx = useConsoleStore((state) => state.setStepIdx);
   const { setPreprocessedCodes } = preprocessedCodesContext;
   const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
+  const setHighlightLines = useEditorStore((state) => state.setHighlightLines);
+
+  const { inputData } = useConsoleStore();
   const codeContext = useContext(CodeContext);
-  const [isLoading, setIsLoading] = useState(false);
 
   if (!codeContext) {
     throw new Error("CodeContext not found");
@@ -38,11 +40,10 @@ const LeftSection = () => {
       setCodeFlowLength(0);
       setStepIdx(0);
       setConsole([data.result.output]);
-      setIsLoading(false);
+      setHighlightLines([]);
     },
     onError(error) {
       console.error(error);
-      setIsLoading(false);
 
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
@@ -55,9 +56,9 @@ const LeftSection = () => {
         const errorMessage = (error as any).result.errorMessage;
         setErrorLine({ lineNumber: linNumber, message: errorMessage });
         setConsole([errorMessage]);
+        setPreprocessedCodes([]);
         return;
-      }
-      else if((error as any).code == 'CA-400007'){
+      } else if ((error as any).code == "CA-400007") {
         alert("코드의 실행 횟수가 너무 많습니다.");
         return;
       }
@@ -65,9 +66,7 @@ const LeftSection = () => {
     },
   });
   const handleRunCode = () => {
-    setIsLoading(true); // 로딩 상태로 변경
-    mutation.mutate(code);
-
+    mutation.mutate({ code, inputData });
   };
   return (
     <Fragment>
@@ -76,25 +75,25 @@ const LeftSection = () => {
           <p className={styles["view-section-title"]}>코드작성</p>
           <div className="flex items-center gap-4">
             <button
-                type="button"
-                className={`${styles["playcode-btn"]} ${isLoading ? styles["playcode-btn-loading"] : ""}`}
-                onClick={handleRunCode}
-                disabled={isLoading} // 로딩 중에는 버튼 비활성화
+              type="button"
+              className={`${styles["playcode-btn"]} ${mutation.isPending ? styles["playcode-btn-loading"] : ""}`}
+              onClick={handleRunCode}
+              disabled={mutation.isPending} // 로딩 중에는 버튼 비활성화
             >
-              <img src="/image/icon_play_w.svg" alt=""/>
+              <img src="/image/icon_play_w.svg" alt="" />
               코드실행
             </button>
-            <Dropdown/>
+            <Dropdown />
           </div>
         </div>
 
         <Split
-            sizes={[70, 30]}
-            minSize={100}
-            expandToMin={false}
-            gutterSize={10}
-            gutterAlign="center"
-            snapOffset={30}
+          sizes={[60, 40]}
+          minSize={100}
+          expandToMin={false}
+          gutterSize={10}
+          gutterAlign="center"
+          snapOffset={30}
           dragInterval={1}
           direction="vertical"
           cursor="row-resize"

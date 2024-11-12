@@ -29,6 +29,11 @@ span {
   align-items: center;
   justify-content: center;
 }
+.align-center > span {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: normal;
+}
 .highlight {
   background-color: #364fce;
 }

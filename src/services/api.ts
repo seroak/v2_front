@@ -7,17 +7,20 @@ import {
   GptCorrectResponse,
   GptHintResponse,
 } from "../types/apiTypes";
-
+interface codeInputProps {
+  code: string;
+  inputData: string;
+}
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
-export const visualize = async (code: string) => {
+export const visualize = async ({ code, inputData }: codeInputProps) => {
   try {
     const response = await fetch(`${BASE_URL}/edupi-assist/v1/execute/visualize`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ source_code: code }),
+      body: JSON.stringify({ source_code: code, input: inputData }),
     });
     if (!response.ok) {
       throw await response.json();
@@ -28,14 +31,14 @@ export const visualize = async (code: string) => {
     throw error;
   }
 };
-export const runCode = async (code: string) => {
+export const runCode = async ({ code, inputData }: codeInputProps) => {
   try {
     const response = await fetch(`${BASE_URL}/edupi-assist/v1/execute/code`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ source_code: code }),
+      body: JSON.stringify({ source_code: code, input: inputData }),
     });
     if (!response.ok) {
       throw await response.json();

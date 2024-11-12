@@ -16,7 +16,10 @@ function ElseBox({ children, isLight, elseItem }: Props) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className={cx("code-flow", isLight && "highlight-border")}
+        className={cx("code-flow",
+            isLight && "highlight-border",
+            isLight && elseItem.expr === "False" && "border-false",
+            isLight && elseItem.expr === "True" && "border-true")}
       >
         <motion.div
           layout
@@ -33,7 +36,7 @@ function ElseBox({ children, isLight, elseItem }: Props) {
           <div className="code-flow-var">
             <div>
               {elseItem.expr === "True" ? (
-                <motion.span layout className={cx(isLight && "highlight-number")}>
+                <motion.span layout className={cx(isLight && "true")}>
                   True
                 </motion.span>
               ) : null}

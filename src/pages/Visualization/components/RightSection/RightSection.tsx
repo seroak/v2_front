@@ -17,7 +17,7 @@ import { PrintDto } from "@/pages/Visualization/types/dto/printDto";
 import { IfElseDto } from "@/pages/Visualization/types/dto/ifElseDto";
 import { CodeFlowVariableDto } from "@/pages/Visualization/types/dto/codeFlowVariableDto";
 import { PrintItem } from "@/pages/Visualization/types/codeFlow/printItem";
-
+import { InputItem } from "@/pages/Visualization/types/codeFlow/inputItem";
 import { WhileDto } from "@/pages/Visualization/types/dto/whileDto";
 import { AllDataStructureItem } from "@/pages/Visualization/types/dataStructuresItem/allDataStructureItem";
 import { WrapperDataStructureItem } from "@/pages/Visualization/types/dataStructuresItem/wrapperDataStructureItem";
@@ -56,6 +56,7 @@ import { useArrowStore } from "@/store/arrow";
 
 //api
 import { visualize } from "@/services/api";
+import { CodeFlowVariableItem } from "../../types/codeFlow/codeFlowVariableItem";
 
 interface State {
   objects: any[];
@@ -92,7 +93,7 @@ const RightSection = () => {
 
   const setConsole = useConsoleStore((state) => state.setConsole);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
-
+  const { inputData } = useConsoleStore();
   const { preprocessedCodes, setPreprocessedCodes } = preprocessedCodesContext;
   const { code } = codeContext;
   const [arrowTextList, setArrowTextList] = useState<string[]>([]);
@@ -152,8 +153,7 @@ const RightSection = () => {
         setConsole([errorMessage]);
         setPreprocessedCodes([]);
         return;
-
-      } else if(error.code == 'CA-400007'){
+      } else if (error.code == "CA-400007") {
         alert("코드의 실행 횟수가 너무 많습니다.");
 
         return;
@@ -164,7 +164,7 @@ const RightSection = () => {
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutation.mutate(code);
+    mutation.mutate({ code, inputData });
   };
   const onPlay = () => {
     if (codeFlowLength === 0) return;
@@ -187,17 +187,21 @@ const RightSection = () => {
         intervalRef.current = setInterval(onForward, 1000);
       } else if (selectedValue === "2x") {
         intervalRef.current = setInterval(onForward, 500);
+      } else if (selectedValue === "3x") {
+        intervalRef.current = setInterval(onForward, 300);
+      } else if (selectedValue === "0.5x") {
+        intervalRef.current = setInterval(onForward, 2000);
+      } else {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
       }
-    } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      return () => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+      };
     }
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
   }, [isPlaying, consoleIdx, codeFlowLength]);
 
   useEffect(() => {
@@ -263,7 +267,6 @@ const RightSection = () => {
       setStructuresList([]);
       setCodeFlowLength(0);
       setArrowTextList([]);
-      setHighlightLines([]);
       setDisplayNone(true);
       return;
     }
@@ -273,7 +276,6 @@ const RightSection = () => {
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
       }
-
       accDataStructures = Object.entries(accDataStructures).reduce((acc, [key, value]) => {
         acc[key] = {
           data: value.data.map((structure) => ({
@@ -477,6 +479,19 @@ const RightSection = () => {
               accConsoleLog += printObject.console;
             }
           }
+          if ((toAddObject as InputItem).type === "input") {
+            const inputObject = toAddObject as InputItem;
+            if (inputObject.console !== null) {
+              accConsoleLog += inputObject.console;
+            }
+          }
+          if ((toAddObject as CodeFlowVariableItem).type === "variable") {
+            const variableObject = toAddObject as CodeFlowVariableItem;
+            if (variableObject.console !== null) {
+              accConsoleLog += variableObject.console;
+            }
+          }
+
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
             // 한바퀴 돌아서 안에 있는 내용을 초기화해야 하는 부분이면 여기에서 처리해준다
@@ -504,7 +519,12 @@ const RightSection = () => {
           const finallyCodeFlow = LightCodeFlow(changedCodeFlows, activate);
 
           accCodeFlow = { objects: finallyCodeFlow };
-          if (toAddObject.type !== "variable" && toAddObject.type !== "list" && toAddObject.type !== "tuple") {
+          if (
+            toAddObject.type !== "variable" &&
+            toAddObject.type !== "list" &&
+            toAddObject.type !== "tuple" &&
+            toAddObject.type !== "input"
+          ) {
             prevTrackingDepth = (
               preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto | WhileDto
             ).depth;
@@ -576,7 +596,6 @@ const RightSection = () => {
     setConsole(accConsoleLogList);
     setCodeFlowLength(accCodeFlowList.length);
     setArrowTextList(arrowTexts);
-
     setHighlightLines(highlightLine);
   }, [preprocessedCodes]);
 
@@ -614,8 +633,10 @@ const RightSection = () => {
             </p>
             <p className="ml24 fz14">Play Speed</p>
             <select name="" id="" className="s__select ml14" value={selectedValue} onChange={handleChange}>
+              <option value="0.5x">0.5X</option>
               <option value="1x">1X</option>
               <option value="2x">2X</option>
+              <option value="3x">3X</option>
             </select>
           </div>
         </div>
