@@ -272,6 +272,7 @@ const RightSection = () => {
     }
 
     for (let preprocessedCode of preprocessedCodes) {
+      console.log(preprocessedCode);
       let changedCodeFlows: any[] = [];
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
@@ -487,7 +488,7 @@ const RightSection = () => {
           }
           if ((toAddObject as CodeFlowVariableItem).type === "variable") {
             const variableObject = toAddObject as CodeFlowVariableItem;
-            if (variableObject.console !== null) {
+            if (variableObject.console !== undefined) {
               accConsoleLog += variableObject.console;
             }
           }
