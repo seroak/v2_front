@@ -29,14 +29,12 @@ export const useCustomAlert = (): UseCustomAlertReturn => {
     return (
       <div className={styles["alert-overlay"]}>
         <div className={styles["alert-container"]}>
-          <div className="alert-content">
-            <div className="icon-wrapper">
-              <img src="/image/img_logo2.png" alt="logo" className="logo-image" />
+          <div className={styles["alert-content"]}>
+            <div className={styles["icon-wrapper"]}>
+              <img src="/image/img_logo2.png" alt="logo" className={styles["logo-image"]} />
             </div>
-
             <p className="message">{alertMessage}</p>
-
-            <button onClick={closeAlert} className="ok-button">
+            <button onClick={closeAlert} className={styles["ok-button"]}>
               OK
             </button>
           </div>
