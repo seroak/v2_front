@@ -1398,6 +1398,9 @@ header .group-btn {
 .btn-cancel:active {
   background-color: #dc2626;
 }
+.btn-manual {
+  background-color: #9a9a9a;
+}
 .btn img {
   width: 24px;
   height: 24px;
