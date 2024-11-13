@@ -1,4 +1,4 @@
-import { useState, useRef, ChangeEvent, FormEvent, useContext } from "react";
+import { useState, useRef, ChangeEvent, FormEvent, useContext, useEffect } from "react";
 import ConsentInformationModal from "./ConsentInformationModal";
 import TermsOfServiceModal from "./TermsOfServiceModal";
 import { useMutation } from "@tanstack/react-query";
@@ -20,6 +20,12 @@ enum CheckType {
   Red = "red",
   Green = "green",
 }
+interface CheckboxState {
+  all: boolean;
+  terms: boolean;
+  privacy: boolean;
+  marketing: boolean;
+}
 
 const SignupWrap = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -28,6 +34,13 @@ const SignupWrap = () => {
     phoneNumber: "",
     password: "",
     confirmPassword: "",
+  });
+  // 체크박스 상태 관리를 위한 새로운 state
+  const [checkboxes, setCheckboxes] = useState<CheckboxState>({
+    all: false,
+    terms: false,
+    privacy: false,
+    marketing: false,
   });
   const emailRef = useRef<HTMLInputElement>(null);
   const phoneNumberRef = useRef<HTMLInputElement>(null);
@@ -38,10 +51,13 @@ const SignupWrap = () => {
   const [consecutiveChar, setConsecutiveChar] = useState<CheckType>(CheckType.Gray); //연속 3자 이상 동일한 문자/숫자 제외
   const [isViewHidden, setIsViewHidden] = useState<boolean>(true);
   const [isViewHiddenConfirm, setIsViewHiddenConfirm] = useState<boolean>(true);
+  const [isValidName, setValidName] = useState<CheckType>(CheckType.Gray); // 이메일이 유효한지 체크하는 state
   const [isValidEmail, setValidEmail] = useState<CheckType>(CheckType.Gray); // 이메일이 유효한지 체크하는 state
   const [isValidPhoneNumber, setValidPhoneNumber] = useState<CheckType>(CheckType.Gray); // 전화번호가 유효한지 체크하는 state
   const [isValidConfirmPassword, setValidConfirmPassword] = useState<CheckType>(CheckType.Gray); // 비밀번호가 일치하는지 체크하는 state
   const [isTermsOfServiceModalOpen, setIsTermsOfServiceModalOpen] = useState<boolean>(false);
+  const [isConsentInformationModalOpen, setIsConsentInformationModalOpen] = useState<boolean>(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
   const context = useContext(TrySignupContext);
   if (!context) {
     throw new Error("TrySignupContext must be used within a TrySignupProvider");
@@ -51,15 +67,44 @@ const SignupWrap = () => {
   const openTermsOfServiceModal = (): void => setIsTermsOfServiceModalOpen(true);
   const closeTermsOfServiceModal = (): void => setIsTermsOfServiceModalOpen(false);
 
-  const [isConsentInformationModalOpen, setIsConsentInformationModalOpen] = useState<boolean>(false);
   const openConsentInformationModal = (): void => setIsConsentInformationModalOpen(true);
   const closeConsentInformationModal = (): void => setIsConsentInformationModalOpen(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const trimmedValue = value.replace(/\s/g, "");
+    if(trimmedValue === "") {
+      setValidName(CheckType.Red);
+    }else{
+      setValidName(CheckType.Green);
+    }
 
     setFormData((prevData) => ({ ...prevData, [name]: trimmedValue }));
+  };
+  // 체크박스 핸들러 추가
+  const handleAllCheck = () => {
+    setCheckboxes((prevCheckboxes) => ({
+      all: !prevCheckboxes.all, // 이전 상태의 반대로 설정
+      terms: !prevCheckboxes.terms,
+      privacy: !prevCheckboxes.privacy,
+      marketing: !prevCheckboxes.marketing,
+    }));
+  };
+
+  const handleSingleCheck = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    const newCheckboxes = {
+      ...checkboxes,
+      [name]: checked,
+    };
+
+    // 개별 체크박스들이 모두 선택되었는지 확인
+    const allChecked = newCheckboxes.terms && newCheckboxes.privacy && newCheckboxes.marketing;
+
+    setCheckboxes({
+      ...newCheckboxes,
+      all: allChecked,
+    });
   };
 
   const phoneNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -161,12 +206,21 @@ const SignupWrap = () => {
     },
     onError(error) {
       console.error("회원가입 에러", error);
+      const apiError = error as any;
+      if (apiError.response.data.code == "AC-400003"){
+        alert("중복 이메일입니다.")
+        return;
+      }
       alert("회원가입 중 오류가 발생했습니다.");
     },
   });
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if(isValidName === CheckType.Red || isValidPhoneNumber === CheckType.Gray) {
+      emailRef.current?.focus();
+      setValidName(CheckType.Red);
+    }
     if (isValidEmail === CheckType.Red || isValidEmail === CheckType.Gray) {
       emailRef.current?.focus();
       setValidEmail(CheckType.Red);
@@ -193,6 +247,7 @@ const SignupWrap = () => {
       return;
     }
     if (
+      isValidName === CheckType.Green &&
       isValidEmail === CheckType.Green &&
       isValidPhoneNumber === CheckType.Green &&
       isValidConfirmPassword &&
@@ -226,6 +281,28 @@ const SignupWrap = () => {
     }
     return "/image/icon_eye_off.svg";
   };
+  useEffect(() => {
+    // 버튼 비활성화 상태를 결정하는 로직
+    const canSubmit =
+      isValidName === CheckType.Green &&
+      isValidEmail === CheckType.Green &&
+      isValidPhoneNumber === CheckType.Green &&
+      isValidConfirmPassword === CheckType.Green &&
+      containsTwoTypes === CheckType.Green &&
+      checkboxes.terms && // 필수 체크박스
+      checkboxes.privacy; // 필수 체크박스
+
+    setIsButtonDisabled(!canSubmit);
+  }, [
+    isValidName,
+    isValidEmail,
+    isValidPhoneNumber,
+    isValidConfirmPassword,
+    containsTwoTypes,
+    checkboxes.terms,
+    checkboxes.privacy,
+  ]);
+
   return (
     <>
       <TermsOfServiceModal isOpen={isTermsOfServiceModalOpen} onClose={closeTermsOfServiceModal} />
@@ -249,6 +326,14 @@ const SignupWrap = () => {
               onChange={handleChange}
               placeholder="이름"
             />
+            {isValidName == CheckType.Red && (
+              <div className="guide-section">
+                <div className="guide">
+                  <img src="image/icon_x_red.svg" alt="체크" />
+                  <p className="text-red">이름은 필수입력 사항입니다.</p>
+                </div>
+              </div>
+            )}
 
             <input
               className={cx({
@@ -339,7 +424,7 @@ const SignupWrap = () => {
                     "text-red": moreOrLess === CheckType.Red,
                   })}
                 >
-                  8자 이상 32자 이하 입력 (공백 제외)
+                  8자 이상 20자 이하 입력 (공백 제외)
                 </p>
               </div>
 
@@ -387,11 +472,24 @@ const SignupWrap = () => {
             )}
             <div className="s__checkbox-wrap mt10">
               <div className="s__checkbox">
-                <input type="checkbox" className="s__checkbox-total" id="ch01_all" />
+                <input
+                  type="checkbox"
+                  className="s__checkbox-total"
+                  id="ch01_all"
+                  checked={checkboxes.all}
+                  onChange={handleAllCheck}
+                />
                 <label htmlFor="ch01_all">모두 동의합니다.</label>
               </div>
               <div className="s__checkbox">
-                <input type="checkbox" className="s__checkbox-ck" id="ch01_01" />
+                <input
+                  type="checkbox"
+                  className="s__checkbox-ck"
+                  id="ch01_01"
+                  name="terms"
+                  checked={checkboxes.terms}
+                  onChange={handleSingleCheck}
+                />
                 <label htmlFor="ch01_01">
                   [필수]
                   <button className="openPopup" onClick={openTermsOfServiceModal} type="button">
@@ -400,7 +498,14 @@ const SignupWrap = () => {
                 </label>
               </div>
               <div className="s__checkbox mt12">
-                <input type="checkbox" className="s__checkbox-ck" id="ch01_02" />
+                <input
+                  type="checkbox"
+                  className="s__checkbox-ck"
+                  id="ch01_02"
+                  name="privacy"
+                  checked={checkboxes.privacy}
+                  onChange={handleSingleCheck}
+                />
                 <label htmlFor="ch01_02">
                   [필수]
                   <button className="openPopup" onClick={openConsentInformationModal} type="button">
@@ -409,11 +514,18 @@ const SignupWrap = () => {
                 </label>
               </div>
               <div className="s__checkbox mt12">
-                <input type="checkbox" className="s__checkbox-ck" id="ch01_03" />
+                <input
+                  type="checkbox"
+                  className="s__checkbox-ck"
+                  id="ch01_03"
+                  name="marketing"
+                  checked={checkboxes.marketing}
+                  onChange={handleSingleCheck}
+                />
                 <label htmlFor="ch01_03">[선택] 광고 전송 및 권유에 관한 선택지 동의</label>
               </div>
             </div>
-            <button className="blue-btn mt40" type="submit">
+            <button className="blue-btn mt40" type="submit" disabled={isButtonDisabled}>
               회원가입
             </button>
           </div>

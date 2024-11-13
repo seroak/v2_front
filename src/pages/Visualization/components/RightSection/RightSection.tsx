@@ -7,7 +7,11 @@ import ResizeObserver from "resize-observer-polyfill";
 import styles from "./RightSection.module.css";
 // components
 import Arrow from "./components/Arrow/Arrow";
-// import  {useCustomAlert} from "@/pages/components/CustomAlert.tsx";
+// import  {
+
+
+
+} from "@/pages/components/CustomAlert.tsx";
 
 // 타입 정의
 
@@ -18,7 +22,7 @@ import { PrintDto } from "@/pages/Visualization/types/dto/printDto";
 import { IfElseDto } from "@/pages/Visualization/types/dto/ifElseDto";
 import { CodeFlowVariableDto } from "@/pages/Visualization/types/dto/codeFlowVariableDto";
 import { PrintItem } from "@/pages/Visualization/types/codeFlow/printItem";
-
+import { InputItem } from "@/pages/Visualization/types/codeFlow/inputItem";
 import { WhileDto } from "@/pages/Visualization/types/dto/whileDto";
 import { AllDataStructureItem } from "@/pages/Visualization/types/dataStructuresItem/allDataStructureItem";
 import { WrapperDataStructureItem } from "@/pages/Visualization/types/dataStructuresItem/wrapperDataStructureItem";
@@ -57,7 +61,8 @@ import { useArrowStore } from "@/store/arrow";
 
 //api
 import { visualize } from "@/services/api";
-import {useCustomAlert} from "@/pages/components/CustomAlert.tsx";
+import { CodeFlowVariableItem } from "../../types/codeFlow/codeFlowVariableItem";
+
 
 interface State {
   objects: any[];
@@ -92,9 +97,10 @@ const RightSection = () => {
   if (!codeContext) {
     throw new Error("CodeContext not found");
   }
+
   const setConsole = useConsoleStore((state) => state.setConsole);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
-  const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
+  const { inputData } = useConsoleStore();
   const { preprocessedCodes, setPreprocessedCodes } = preprocessedCodesContext;
   const { code } = codeContext;
   const [arrowTextList, setArrowTextList] = useState<string[]>([]);
@@ -116,6 +122,7 @@ const RightSection = () => {
   const resetConsole = useConsoleStore((state) => state.resetConsole);
   const setDisplayNone = useArrowStore((state) => state.setDisplayNone);
   const setErrorLine = useEditorStore((state) => state.setErrorLine);
+  const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
   const codeFlowLength = useCodeFlowLengthStore((state) => state.codeFlowLength);
   const consoleIdx = useConsoleStore((state) => state.stepIdx);
   const incrementStepIdx = useConsoleStore((state) => state.incrementStepIdx);
@@ -140,6 +147,7 @@ const RightSection = () => {
     },
     onError(error) {
       console.error(error);
+
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
       } else if (error.code === "CA-400006" || error.code === "CA-400999") {
@@ -152,6 +160,10 @@ const RightSection = () => {
         setConsole([errorMessage]);
         setPreprocessedCodes([]);
         return;
+      } else if (error.code == "CA-400007") {
+        alert("코드의 실행 횟수가 너무 많습니다.");
+
+        return;
       }
       setConsole([]);
       setPreprocessedCodes([]);
@@ -159,7 +171,7 @@ const RightSection = () => {
   });
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutation.mutate(code);
+    mutation.mutate({ code, inputData });
   };
   const onPlay = () => {
     if (codeFlowLength === 0) return;
@@ -182,17 +194,21 @@ const RightSection = () => {
         intervalRef.current = setInterval(onForward, 1000);
       } else if (selectedValue === "2x") {
         intervalRef.current = setInterval(onForward, 500);
+      } else if (selectedValue === "3x") {
+        intervalRef.current = setInterval(onForward, 300);
+      } else if (selectedValue === "0.5x") {
+        intervalRef.current = setInterval(onForward, 2000);
+      } else {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
       }
-    } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      return () => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+      };
     }
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
   }, [isPlaying, consoleIdx, codeFlowLength]);
 
   useEffect(() => {
@@ -236,7 +252,6 @@ const RightSection = () => {
   const highlightLine: number[] = [];
   // codeFlowList를 업데이트하는 useEffect
   useEffect(() => {
-    if (preprocessedCodes.length === 0) return;
     let prevTrackingId: number = 0;
     let prevTrackingDepth: number = 0;
     let activate: ActivateItem[] = [];
@@ -254,13 +269,21 @@ const RightSection = () => {
     const accConsoleLogList: string[] = [];
     let accConsoleLog: string = "";
     const arrowTexts: string[] = [];
+    if (preprocessedCodes.length === 0) {
+      setCodeFlowList([]);
+      setStructuresList([]);
+      setCodeFlowLength(0);
+      setArrowTextList([]);
+      setDisplayNone(true);
+      return;
+    }
 
     for (let preprocessedCode of preprocessedCodes) {
+      console.log(preprocessedCode);
       let changedCodeFlows: any[] = [];
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
       }
-
       accDataStructures = Object.entries(accDataStructures).reduce((acc, [key, value]) => {
         acc[key] = {
           data: value.data.map((structure) => ({
@@ -464,6 +487,19 @@ const RightSection = () => {
               accConsoleLog += printObject.console;
             }
           }
+          if ((toAddObject as InputItem).type === "input") {
+            const inputObject = toAddObject as InputItem;
+            if (inputObject.console !== null) {
+              accConsoleLog += inputObject.console;
+            }
+          }
+          if ((toAddObject as CodeFlowVariableItem).type === "variable") {
+            const variableObject = toAddObject as CodeFlowVariableItem;
+            if (variableObject.console !== undefined) {
+              accConsoleLog += variableObject.console;
+            }
+          }
+
           // 한번 codeFlow list에 들어가서 수정하는 입력일 때
           if (usedId.includes(toAddObject.id!)) {
             // 한바퀴 돌아서 안에 있는 내용을 초기화해야 하는 부분이면 여기에서 처리해준다
@@ -491,7 +527,12 @@ const RightSection = () => {
           const finallyCodeFlow = LightCodeFlow(changedCodeFlows, activate);
 
           accCodeFlow = { objects: finallyCodeFlow };
-          if (toAddObject.type !== "variable" && toAddObject.type !== "list" && toAddObject.type !== "tuple") {
+          if (
+            toAddObject.type !== "variable" &&
+            toAddObject.type !== "list" &&
+            toAddObject.type !== "tuple" &&
+            toAddObject.type !== "input"
+          ) {
             prevTrackingDepth = (
               preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto | WhileDto
             ).depth;
@@ -563,7 +604,6 @@ const RightSection = () => {
     setConsole(accConsoleLogList);
     setCodeFlowLength(accCodeFlowList.length);
     setArrowTextList(arrowTexts);
-
     setHighlightLines(highlightLine);
   }, [preprocessedCodes]);
 
@@ -573,7 +613,11 @@ const RightSection = () => {
         <p className={styles["view-section-title"]}>시각화</p>
         <div className={styles["play-wrap"]}>
           <form onSubmit={handleSubmit}>
-            <button type="submit" className={styles["view-btn"]}>
+            <button
+              type="submit"
+              className={`${styles["view-btn"]} ${mutation.isPending ? styles["view-btn-loading"] : ""}`}
+              disabled={mutation.isPending} // 로딩 중에는 버튼 비활성화
+            >
               <img src="/image/icon_play_w.svg" alt="" />
               시각화
             </button>
@@ -597,8 +641,10 @@ const RightSection = () => {
             </p>
             <p className="ml24 fz14">Play Speed</p>
             <select name="" id="" className="s__select ml14" value={selectedValue} onChange={handleChange}>
+              <option value="0.5x">0.5X</option>
               <option value="1x">1X</option>
               <option value="2x">2X</option>
+              <option value="3x">3X</option>
             </select>
           </div>
         </div>

@@ -7,13 +7,12 @@ import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
 import Manage from "./pages/Manage/Manage";
 import ClassroomDashboard from "./pages/ClassroomDashboard/ClassroomDashboard";
-import Assginment from "./pages/Assignment/Assignment";
-import Clssroom from "./pages/Classroom/Classroom";
+import Assignment from "./pages/Assignment/Assignment";
+import Classroom from "./pages/Classroom/Classroom";
 import AuthEmail from "./pages/AuthEmail/AuthEmail";
 
 import { useMswReadyStore } from "@/store/mswReady";
 import "./App.css";
-
 import { setupMSW } from "./mocks/setup";
 
 export interface User {
@@ -37,12 +36,24 @@ function App() {
 
     initializeMSW();
   }, [setIsMswReady]);
+
   if (import.meta.env.VITE_APP_NODE_ENV === "production") {
-    console = window.console || {};
-    console.log = function no_console() {};
-    console.warn = function no_console() {};
-    console.error = function () {};
+    // Disable all console methods
+    console = {
+      ...console,
+      log: () => {},
+      warn: () => {},
+      error: () => {},
+      info: () => {},
+      debug: () => {},
+      trace: () => {},
+    };
+
+    // Suppress any uncaught errors in production
+    window.onerror = () => true;
+    window.onunhandledrejection = () => true;
   }
+
   return (
     <Router>
       <Routes>
@@ -53,9 +64,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/classroomdashboard/classroom/manage/:classroomId" element={<Manage />} />
         <Route path="/classroomdashboard" element={<ClassroomDashboard />} />
-        <Route path="/assignment" element={<Assginment />} />
+        <Route path="/assignment" element={<Assignment />} />
         <Route path="/auth/email" element={<AuthEmail />} />
-        <Route path="/classroomdashboard/classroom/:classroomId" element={<Clssroom />} />
+        <Route path="/classroomdashboard/classroom/:classroomId" element={<Classroom />} />
       </Routes>
     </Router>
   );

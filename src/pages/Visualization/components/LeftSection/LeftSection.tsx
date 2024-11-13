@@ -8,16 +8,32 @@ import Split from "react-split";
 import { runCode } from "@/services/api";
 import { useMutation } from "@tanstack/react-query";
 import Dropdown from "./components/Dropdown";
-import { useConsoleStore } from "@/store/console";
+import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
+
 import { useCustomAlert } from "@/pages/components/CustomAlert.tsx";
+
+
+import { PreprocessedCodesContext } from "../../context/PreProcessedCodesContext";
 
 // 성공 응답 타입 정의
 
 const LeftSection = () => {
+  const preprocessedCodesContext = useContext(PreprocessedCodesContext); // context API로 데이터 가져오기
+
+  if (!preprocessedCodesContext) {
+    throw new Error("preprocessedCodesContext not found"); //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
+  }
   const setErrorLine = useEditorStore((state) => state.setErrorLine);
   const setConsole = useConsoleStore((state) => state.setConsole);
+  const setStepIdx = useConsoleStore((state) => state.setStepIdx);
+  const { setPreprocessedCodes } = preprocessedCodesContext;
+  const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
+  const setHighlightLines = useEditorStore((state) => state.setHighlightLines);
+
+  const { inputData } = useConsoleStore();
   const codeContext = useContext(CodeContext);
+
   if (!codeContext) {
     throw new Error("CodeContext not found");
   }
@@ -26,11 +42,15 @@ const LeftSection = () => {
   const mutation = useMutation({
     mutationFn: runCode,
     async onSuccess(data) {
-      // 타입 체크 함수
+      setPreprocessedCodes([]);
+      setCodeFlowLength(0);
+      setStepIdx(0);
       setConsole([data.result.output]);
+      setHighlightLines([]);
     },
     onError(error) {
       console.error(error);
+
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
       } else if ((error as any).code === "CA-400006" || (error as any).code === "CA-400999") {
@@ -41,13 +61,17 @@ const LeftSection = () => {
         const errorMessage = (error as any).result.errorMessage;
         setErrorLine({ lineNumber: linNumber, message: errorMessage });
         setConsole([errorMessage]);
+        setPreprocessedCodes([]);
+        return;
+      } else if ((error as any).code == "CA-400007") {
+        alert("코드의 실행 횟수가 너무 많습니다.");
         return;
       }
       setConsole([]);
     },
   });
   const handleRunCode = () => {
-    mutation.mutate(code);
+    mutation.mutate({ code, inputData });
   };
 
   return (
@@ -57,7 +81,12 @@ const LeftSection = () => {
         <div className={styles["top-bar"]}>
           <p className={styles["view-section-title"]}>코드작성</p>
           <div className="flex items-center gap-4">
-            <button type="button" className={styles["playcode-btn"]} onClick={handleRunCode}>
+            <button
+              type="button"
+              className={`${styles["playcode-btn"]} ${mutation.isPending ? styles["playcode-btn-loading"] : ""}`}
+              onClick={handleRunCode}
+              disabled={mutation.isPending} // 로딩 중에는 버튼 비활성화
+            >
               <img src="/image/icon_play_w.svg" alt="" />
               코드실행
             </button>
@@ -66,7 +95,7 @@ const LeftSection = () => {
         </div>
 
         <Split
-          sizes={[70, 30]}
+          sizes={[60, 40]}
           minSize={100}
           expandToMin={false}
           gutterSize={10}
@@ -75,7 +104,7 @@ const LeftSection = () => {
           dragInterval={1}
           direction="vertical"
           cursor="row-resize"
-          style={{ display: "flex", flexDirection: "column", height: "94.5%" }}
+          style={{ display: "flex", flexDirection: "column", height: "94%" }}
           className={styles.splitContainer}
         >
           <CodeEditor />

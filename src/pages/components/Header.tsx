@@ -10,8 +10,7 @@ import { User } from "@/App";
 const LoggedInHeader = () => {
   const params = useParams();
   let isFixed = false;
-  let isInClassroomDashboardUrl = false;
-  let isClassroomDashboardUrl = false;
+  let isInClassroomDashboarclassroomdUrl = false;
 
   const isHost = useAccessRightStore((state) => state.isHost);
   const classroomId = Number(params.classroomId);
@@ -29,12 +28,10 @@ const LoggedInHeader = () => {
   if (location.pathname === "/") {
     isFixed = true;
   }
-  if (/\/classroomdashboard(\/.*)?$/.test(location.pathname)) {
-    isInClassroomDashboardUrl = true;
+  if (/\/classroomdashboard\/classroom(\/.*)?$/.test(location.pathname)) {
+    isInClassroomDashboarclassroomdUrl = true;
   }
-  if (/^\/classroomdashboard$/.test(location.pathname)) {
-    isClassroomDashboardUrl = true;
-  }
+
   // 로그아웃 mutation
   const logoutMuation = useMutation({
     mutationFn: logout,
@@ -62,21 +59,17 @@ const LoggedInHeader = () => {
           <>
             <Link to="/viz">시각화</Link>
           </>
-        ) : !isInClassroomDashboardUrl ? (
-          <>
-            <NavLink to="/classroomdashboard" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-              클래스룸
-            </NavLink>
-
-            <NavLink to="/viz" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-              시각화
-            </NavLink>
-          </>
         ) : (
           <>
-            {!isClassroomDashboardUrl && (
+            {isInClassroomDashboarclassroomdUrl ? (
               <>
-                {/* `classAccessRightData.isHost`에 따라 조건부 렌더링 */}
+                <NavLink
+                  to="/classroomdashboard"
+                  end
+                  className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+                >
+                  클래스룸
+                </NavLink>
                 {isHost && (
                   <NavLink
                     to={`/classroomdashboard/classroom/${classroomId}`}
@@ -102,28 +95,48 @@ const LoggedInHeader = () => {
                   </NavLink>
                 )}
               </>
+            ) : (
+              <>
+                <NavLink to="/classroomdashboard" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+                  클래스룸
+                </NavLink>
+
+                <NavLink to="/viz" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
+                  시각화
+                </NavLink>
+              </>
             )}
           </>
         )}
       </div>
 
-      <div>
+      <div className="login-header">
+        <a
+            href="https://forms.gle/fufPJjH4Gfmavtqw5"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+          <button className="feedback-btn">
+            피드백 남기기
+          </button>
+        </a>
         {!userData ? (
-          <div>
-            <Link to="/login" className={styles["login-btn"]}>
-              로그인
-            </Link>
-            <Link to="/signup" className={styles["join-btn"]}>
-              회원가입
-            </Link>
-          </div>
+            <div>
+              <Link to="/login" className={styles["login-btn"]}>
+                로그인
+              </Link>
+              <Link to="/signup" className={styles["join-btn"]}>
+                회원가입
+              </Link>
+            </div>
         ) : (
+
           <>
             <span style={{ marginRight: "10px" }}>{userData.name}님</span>
             <span onClick={handleLogout} className={styles["logout"]}>
               로그아웃
             </span>
-          </>
+            </>
         )}
       </div>
     </header>
