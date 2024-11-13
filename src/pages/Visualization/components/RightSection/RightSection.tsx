@@ -653,7 +653,7 @@ const RightSection = () => {
         dragInterval={1}
         direction="horizontal"
         cursor="col-resize"
-        style={{ display: "flex", flexDirection: "row", height: "94.5%" }}
+        style={{ display: "flex", flexDirection: "row", height: "96%" }}
         className="split-container"
       >
         <div id="split-2-1" className="view-section2-1">

@@ -70,7 +70,7 @@ const LeftSection = () => {
   };
   return (
     <Fragment>
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         <div className={styles["top-bar"]}>
           <p className={styles["view-section-title"]}>코드작성</p>
           <div className="flex items-center gap-4">
@@ -89,16 +89,16 @@ const LeftSection = () => {
 
         <Split
           sizes={[60, 40]}
-          minSize={100}
-          expandToMin={false}
-          gutterSize={10}
+          gutterSize={30}
           gutterAlign="center"
-          snapOffset={30}
           dragInterval={1}
           direction="vertical"
           cursor="row-resize"
-          style={{ display: "flex", flexDirection: "column", height: "94%" }}
-          className={styles.splitContainer}
+          style={{
+            height: "calc(100% - 58px)", // top-bar 높이를 뺀 나머지 공간
+            display: "flex",
+            flexDirection: "column",
+          }}
         >
           <CodeEditor />
           <Console />
