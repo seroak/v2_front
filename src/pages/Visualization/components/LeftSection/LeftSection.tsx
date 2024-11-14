@@ -71,6 +71,7 @@ const LeftSection = () => {
     },
   });
   const handleRunCode = () => {
+    openAlert('클릭했습니다')
     mutation.mutate({ code, inputData });
   };
 

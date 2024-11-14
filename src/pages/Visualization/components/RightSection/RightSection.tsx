@@ -7,11 +7,7 @@ import ResizeObserver from "resize-observer-polyfill";
 import styles from "./RightSection.module.css";
 // components
 import Arrow from "./components/Arrow/Arrow";
-// import  {
 
-
-
-} from "@/pages/components/CustomAlert.tsx";
 
 // 타입 정의
 
