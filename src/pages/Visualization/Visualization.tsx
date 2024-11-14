@@ -40,23 +40,24 @@ export default function Visualization() {
 
         <main className={styles.main}>
           {focus && gptPin ? <GptIcon /> : (gptPin || isGptToggle) && <GptComment />}
-          <div style={{ height: "100%" }}>
-            <Split
-              sizes={[30, 70]}
-              minSize={100}
-              expandToMin={false}
-              gutterSize={10}
-              gutterAlign="center"
-              snapOffset={30}
-              dragInterval={1}
-              direction="horizontal"
-              cursor="col-resize"
-              style={{ display: "flex", width: "98vw", height: "100%" }}
-            >
-              <LeftSection />
-              <RightSection />
-            </Split>
-          </div>
+
+
+          <Split
+            sizes={[30, 70]}
+            minSize={100}
+            expandToMin={false}
+            gutterSize={10}
+            gutterAlign="center"
+            snapOffset={30}
+            dragInterval={1}
+            direction="horizontal"
+            cursor="col-resize"
+            style={{ display: "flex", width: "100%", height: "100%" }}
+          >
+            <LeftSection />
+            <RightSection />
+          </Split>
+
         </main>
       </PreprocessedCodesContext.Provider>
     </CodeContext.Provider>
