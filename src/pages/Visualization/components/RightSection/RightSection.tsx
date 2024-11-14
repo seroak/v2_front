@@ -2,7 +2,7 @@ import { useState, useContext, useEffect, useRef, useCallback } from "react";
 import { CodeContext } from "../../context/CodeContext";
 import { PreprocessedCodesContext } from "../../context/PreProcessedCodesContext";
 import Split from "react-split";
-import _, { set } from "lodash";
+import _ from "lodash";
 import ResizeObserver from "resize-observer-polyfill";
 import styles from "./RightSection.module.css";
 // components
