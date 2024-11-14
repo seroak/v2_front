@@ -2,7 +2,7 @@ import { useState, useContext, useEffect, useRef, useCallback } from "react";
 import { CodeContext } from "../../context/CodeContext";
 import { PreprocessedCodesContext } from "../../context/PreProcessedCodesContext";
 import Split from "react-split";
-import _ from "lodash";
+import _, { set } from "lodash";
 import ResizeObserver from "resize-observer-polyfill";
 import styles from "./RightSection.module.css";
 // components
@@ -99,7 +99,8 @@ const RightSection = () => {
   const [arrowTextList, setArrowTextList] = useState<string[]>([]);
 
   const [, setRightSectionSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
-
+  const [codeFlowScrollTop, setCodeFlowScrollTop] = useState<number>(0);
+  const [structuresScrollTop, setStructuresScrollTop] = useState<number>(0);
   const rightSectionRef = useRef<HTMLDivElement | null>(null);
   const rightSection2Ref = useRef<HTMLDivElement | null>(null);
 
@@ -241,6 +242,17 @@ const RightSection = () => {
       }
     };
   }, []);
+
+  const handleScrollCodeFlow = (e: React.UIEvent<HTMLDivElement>) => {
+    const element = e.target as HTMLDivElement;
+    const scrollTop = element.scrollTop;
+    setCodeFlowScrollTop(scrollTop);
+  };
+  const handleScrollStructures = (e: React.UIEvent<HTMLDivElement>) => {
+    const element = e.target as HTMLDivElement;
+    const scrollTop = element.scrollTop;
+    setStructuresScrollTop(scrollTop);
+  };
   // 시각화를 할때 왼쪽 코드 에디터에서 하이라이트를 줄 라인을 담는 배열
   const highlightLine: number[] = [];
   // codeFlowList를 업데이트하는 useEffect
@@ -652,25 +664,27 @@ const RightSection = () => {
         dragInterval={1}
         direction="horizontal"
         cursor="col-resize"
-        style={{ display: "flex", flexDirection: "row", flex: 1 }}
+        style={{ display: "flex", flexDirection: "row", height: "100%", flex: 1, overflow: "hidden" }}
         className="split-container"
       >
         <div id="split-2-1" className="view-section2-1">
-          <div className="view-data" style={{ height: "100%" }}>
+          <div className="view-data" onScroll={handleScrollCodeFlow}>
             <p className="data-name">코드흐름</p>
-            <div style={{ width: "600px" }}>
+            <div style={{ width: "600px", display: "flex", flexDirection: "column", flex: 1 }}>
               {codeFlowList?.length > 0 &&
                 stepIdx >= 0 &&
-                renderingCodeFlow(codeFlowList[stepIdx].objects[0].child, width, height)}
+                renderingCodeFlow(codeFlowList[stepIdx].objects[0].child, width, height, codeFlowScrollTop)}
             </div>
           </div>
         </div>
         <div id="split-2-2" className="view-section2-2" ref={rightSection2Ref}>
-          <div className="view-data">
+          <div className="view-data" onScroll={handleScrollStructures}>
             <p className="data-name">변수</p>
 
             <ul className="var-list">
-              {StructuresList?.length > 0 && stepIdx >= 0 && renderingStructure(StructuresList[stepIdx], width, height)}
+              {StructuresList?.length > 0 &&
+                stepIdx >= 0 &&
+                renderingStructure(StructuresList[stepIdx], width, height, structuresScrollTop)}
             </ul>
           </div>
         </div>
