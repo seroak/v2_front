@@ -665,6 +665,7 @@ const RightSection = () => {
         direction="horizontal"
         cursor="col-resize"
         style={{ display: "flex", flexDirection: "row", height: "100%", flex: 1, overflow: "hidden" }}
+
         className="split-container"
       >
         <div id="split-2-1" className="view-section2-1">

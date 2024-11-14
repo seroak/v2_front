@@ -19,6 +19,7 @@ const Console = () => {
   return (
     <div className={styles["console-wrapper"]}>
       <div className={styles["view-section1-2"]}>
+
         <p className={styles["view-section-title"]}>Console</p>
         <textarea
           className={styles["input-area"]}
