@@ -4,7 +4,7 @@ interface ConsoleState {
   consoleList: string[];
   stepIdx: number;
   inputData: string;
-  setConsole: (console: string[]) => void;
+  setConsoleList: (console: string[]) => void;
   setStepIdx: (stepIdx: number) => void;
   setInputData: (inputData: string) => void;
   incrementStepIdx: () => void;
@@ -21,7 +21,7 @@ export const useConsoleStore = create<ConsoleState>((set) => ({
   consoleList: [],
   stepIdx: 0,
   inputData: "",
-  setConsole: (consoleList) => set({ consoleList }),
+  setConsoleList: (consoleList) => set({ consoleList }),
   setStepIdx: (stepIdx) => set({ stepIdx }),
   setInputData: (inputData) => set({ inputData }),
   incrementStepIdx: () => set((state) => ({ stepIdx: state.stepIdx + 1 })),
