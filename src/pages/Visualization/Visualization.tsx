@@ -20,11 +20,12 @@ import { Link } from "react-router-dom";
 export default function Visualization() {
   const [code, setCode] = useState<any>(
     [
-    "# example\n" +
-    "for i in range(2, 10):\n" +
-    "   for j in range(1, 10):\n" +
-    "      print(f\"{i} x {j} = {i * j}\")\n" +
-    "   print()\n"].join("\n")
+      "# example\n" +
+        "for i in range(2, 10):\n" +
+        "   for j in range(1, 10):\n" +
+        '      print(f"{i} x {j} = {i * j}")\n' +
+        "   print()\n",
+    ].join("\n")
   );
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   // zustand store
@@ -41,6 +42,7 @@ export default function Visualization() {
         <main className={styles.main}>
           {focus && gptPin ? <GptIcon /> : (gptPin || isGptToggle) && <GptComment />}
 
+
           <Split
             sizes={[30, 70]}
             minSize={100}
@@ -51,7 +53,7 @@ export default function Visualization() {
             dragInterval={1}
             direction="horizontal"
             cursor="col-resize"
-            style={{ display: "flex", width: "99vw", height: "100%" }}
+            style={{ display: "flex", width: "100%", height: "100%" }}
           >
             <LeftSection />
             <RightSection />
@@ -67,6 +69,7 @@ export default function Visualization() {
               사용법
             </Link>
           </div>
+
         </main>
       </PreprocessedCodesContext.Provider>
     </CodeContext.Provider>

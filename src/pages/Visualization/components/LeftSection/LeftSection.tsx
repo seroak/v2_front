@@ -20,7 +20,7 @@ const LeftSection = () => {
     throw new Error("preprocessedCodesContext not found"); //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
   }
   const setErrorLine = useEditorStore((state) => state.setErrorLine);
-  const setConsole = useConsoleStore((state) => state.setConsole);
+  const setConsoleList = useConsoleStore((state) => state.setConsoleList);
   const setStepIdx = useConsoleStore((state) => state.setStepIdx);
   const { setPreprocessedCodes } = preprocessedCodesContext;
   const setCodeFlowLength = useCodeFlowLengthStore((state) => state.setCodeFlowLength);
@@ -39,7 +39,7 @@ const LeftSection = () => {
       setPreprocessedCodes([]);
       setCodeFlowLength(0);
       setStepIdx(0);
-      setConsole([data.result.output]);
+      setConsoleList([data.result.output]);
       setHighlightLines([]);
     },
     onError(error) {
@@ -55,14 +55,14 @@ const LeftSection = () => {
         const linNumber = Number((error as any).result.lineNumber);
         const errorMessage = (error as any).result.errorMessage;
         setErrorLine({ lineNumber: linNumber, message: errorMessage });
-        setConsole([errorMessage]);
+        setConsoleList([errorMessage]);
         setPreprocessedCodes([]);
         return;
       } else if ((error as any).code == "CA-400007") {
         alert("코드의 실행 횟수가 너무 많습니다.");
         return;
       }
-      setConsole([]);
+      setConsoleList([]);
     },
   });
   const handleRunCode = () => {
@@ -70,7 +70,7 @@ const LeftSection = () => {
   };
   return (
     <Fragment>
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         <div className={styles["top-bar"]}>
           <p className={styles["view-section-title"]}>코드작성</p>
           <div className="flex items-center gap-4">
@@ -89,16 +89,14 @@ const LeftSection = () => {
 
         <Split
           sizes={[60, 40]}
-          minSize={100}
-          expandToMin={false}
-          gutterSize={10}
+          gutterSize={30}
           gutterAlign="center"
-          snapOffset={30}
           dragInterval={1}
           direction="vertical"
           cursor="row-resize"
-          style={{ display: "flex", flexDirection: "column", height: "94%" }}
+          style={{ display: "flex", flexDirection: "column", height: "94%", flex: 1, overflow: "hidden" }}
           className={styles.splitContainer}
+
         >
           <CodeEditor />
           <Console />
