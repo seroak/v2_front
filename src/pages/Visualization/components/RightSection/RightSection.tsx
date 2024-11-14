@@ -600,7 +600,7 @@ const RightSection = () => {
   }, [preprocessedCodes]);
 
   return (
-    <div id="split-2" ref={rightSectionRef} style={{ display: "flex", flexDirection: "column" }}>
+    <div id="split-2" ref={rightSectionRef} style={{ display: "flex", flexDirection: "column", flex: "1" }}>
       <div className={styles["top-bar"]}>
         <p className={styles["view-section-title"]}>시각화</p>
         <div className={styles["play-wrap"]}>
