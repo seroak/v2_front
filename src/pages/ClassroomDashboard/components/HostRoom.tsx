@@ -8,13 +8,13 @@ interface props {
   classData: ClassData;
 }
 const Room = ({ classData }: props) => {
+  console.log(classData);
   return (
     <li>
       <Link to={`/classroomdashboard/classroom/${classData.id}`}>
         <div className="data04-name">
           <p>{classData.name}</p>
           <span>인원 : {classData.totalPeople}명</span>
-          <span>초대 대기 : 1명</span>
         </div>
         <img src="/image/icon_right_arrow2.svg" alt="" />
       </Link>
