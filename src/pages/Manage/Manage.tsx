@@ -115,7 +115,7 @@ const Modify = () => {
     mutationFn: deleteClassroom,
     onSuccess: () => {
       alert("클래스룸이 삭제되었습니다.");
-      navigate("/classroomspace");
+      navigate("/classdashboard");
     },
     onError: (error) => {
       console.error("An error occurred:", error);
@@ -128,9 +128,7 @@ const Modify = () => {
   };
 
   // 검색어에 따른 필터링 적용
-  const filterGuests = guests?.filter((guest) =>
-      guest.name.toLowerCase().includes(searchGuestTerm.toLowerCase()),
-  );
+  const filterGuests = guests?.filter((guest) => guest.name.toLowerCase().includes(searchGuestTerm.toLowerCase()));
 
   return (
     <div className="bg">
@@ -177,17 +175,14 @@ const Modify = () => {
                 <Guest key={guest.id} guest={guest} getClassroomRefetch={getClassroomRefetch} />
               ))}
             </ul>
+          ) : searchGuestTerm !== "" ? (
+            <div className="section-empty-progress">
+              <img src="/image/img_empty_search_guest.png" alt="empty guests" />
+            </div>
           ) : (
-            searchGuestTerm !== "" ?
-              (
-                <div className="section-empty-progress">
-                  <img src="/image/img_empty_search_guest.png" alt="empty guests" />
-                </div>
-              ) : (
-                <div className="section-empty-classroom">
-                  <img src="/image/img_empty_guest.png" alt="empty search host classroom" />
-                </div>
-              )
+            <div className="section-empty-classroom">
+              <img src="/image/img_empty_guest.png" alt="empty search host classroom" />
+            </div>
           )}
           <div className="right-btns">
             <button className="red" onClick={handleDeleteClassroom}>

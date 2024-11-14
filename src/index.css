@@ -33,6 +33,9 @@ body {
   margin: 0; /* 기본 마진 제거 */
   background-color: #f9fafb;
   height: 100%;
+
+  padding: 0;
+  width: 100%;
 }
 #root {
   height: 100%;

@@ -41,6 +41,7 @@ export default function Visualization() {
         <main className={styles.main}>
           {focus && gptPin ? <GptIcon /> : (gptPin || isGptToggle) && <GptComment />}
 
+
           <Split
             sizes={[30, 70]}
             minSize={100}
@@ -56,6 +57,7 @@ export default function Visualization() {
             <LeftSection />
             <RightSection />
           </Split>
+
         </main>
       </PreprocessedCodesContext.Provider>
     </CodeContext.Provider>
