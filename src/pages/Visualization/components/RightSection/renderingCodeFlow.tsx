@@ -37,8 +37,9 @@ interface Props {
   height: number;
   up: number;
   right: number;
+  codeFlowScrollTop: number;
 }
-const CodeFlowItem = ({ codeFlow, width, height, up, right, children }: Props) => {
+const CodeFlowItem = ({ codeFlow, width, height, up, right, children, codeFlowScrollTop }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const setTop = useArrowStore((state) => state.setTop);
   const setRight = useArrowStore((state) => state.setRight);
@@ -48,7 +49,7 @@ const CodeFlowItem = ({ codeFlow, width, height, up, right, children }: Props) =
       setTop(rect.top + up);
       setRight(rect.right + right);
     }
-  }, [codeFlow, ref, width, height]);
+  }, [codeFlow, ref, width, height, codeFlowScrollTop]);
 
   return (
     <div style={{ width: "fit-content" }} ref={ref}>
@@ -57,7 +58,12 @@ const CodeFlowItem = ({ codeFlow, width, height, up, right, children }: Props) =
   );
 };
 
-export const renderingCodeFlow = (codeFlows: any[], width: number, height: number): ReactElement => {
+export const renderingCodeFlow = (
+  codeFlows: any[],
+  width: number,
+  height: number,
+  codeFlowScrollTop: number
+): ReactElement => {
   return (
     <>
       {codeFlows.map((codeFlow, index) => {
@@ -66,9 +72,17 @@ export const renderingCodeFlow = (codeFlows: any[], width: number, height: numbe
           case "print": {
             const printItem = codeFlow as PrintItem;
             return (
-              <CodeFlowItem key={printItem.id} codeFlow={codeFlow} width={width} height={height} up={0} right={0}>
+              <CodeFlowItem
+                key={printItem.id}
+                codeFlow={codeFlow}
+                width={width}
+                height={height}
+                up={0}
+                right={0}
+                codeFlowScrollTop={codeFlowScrollTop}
+              >
                 <PrintBox key={printItem.id} printItem={printItem} />
-                {renderingCodeFlow(codeFlow.child, width, height)}
+                {renderingCodeFlow(codeFlow.child, width, height, codeFlowScrollTop)}
               </CodeFlowItem>
             );
           }
@@ -77,7 +91,7 @@ export const renderingCodeFlow = (codeFlows: any[], width: number, height: numbe
             return (
               <div key={forItem.id}>
                 <ForBox key={forItem.id} forItem={forItem} width={width} height={height}>
-                  {renderingCodeFlow(codeFlow.child, width, height)}
+                  {renderingCodeFlow(codeFlow.child, width, height, codeFlowScrollTop)}
                 </ForBox>
               </div>
             );
@@ -87,9 +101,17 @@ export const renderingCodeFlow = (codeFlows: any[], width: number, height: numbe
             return (
               <AnimatePresence key={ifItem.id} mode="wait">
                 <motion.div key={ifItem.id} layout>
-                  <CodeFlowItem key={index} codeFlow={codeFlow} width={width} height={height} up={0} right={0}>
+                  <CodeFlowItem
+                    key={index}
+                    codeFlow={codeFlow}
+                    width={width}
+                    height={height}
+                    up={0}
+                    right={0}
+                    codeFlowScrollTop={codeFlowScrollTop}
+                  >
                     <IfBox isLight={codeFlow.isLight} ifItem={ifItem}>
-                      {renderingCodeFlow(codeFlow.child, width, height)}
+                      {renderingCodeFlow(codeFlow.child, width, height, codeFlowScrollTop)}
                     </IfBox>
                   </CodeFlowItem>
                 </motion.div>
@@ -100,9 +122,17 @@ export const renderingCodeFlow = (codeFlows: any[], width: number, height: numbe
             return (
               <AnimatePresence key={elifItem.id} mode="wait">
                 <motion.div key={elifItem.id} layout>
-                  <CodeFlowItem key={index} codeFlow={codeFlow} width={width} height={height} up={0} right={0}>
+                  <CodeFlowItem
+                    key={index}
+                    codeFlow={codeFlow}
+                    width={width}
+                    height={height}
+                    up={0}
+                    right={0}
+                    codeFlowScrollTop={codeFlowScrollTop}
+                  >
                     <ElifBox isLight={codeFlow.isLight} elifItem={elifItem}>
-                      {renderingCodeFlow(codeFlow.child, width, height)}
+                      {renderingCodeFlow(codeFlow.child, width, height, codeFlowScrollTop)}
                     </ElifBox>
                   </CodeFlowItem>
                 </motion.div>
@@ -113,9 +143,17 @@ export const renderingCodeFlow = (codeFlows: any[], width: number, height: numbe
             return (
               <AnimatePresence key={elseItem.id} mode="wait">
                 <motion.div key={elseItem.id} layout>
-                  <CodeFlowItem key={index} codeFlow={codeFlow} width={width} height={height} up={0} right={0}>
+                  <CodeFlowItem
+                    key={index}
+                    codeFlow={codeFlow}
+                    width={width}
+                    height={height}
+                    up={0}
+                    right={0}
+                    codeFlowScrollTop={codeFlowScrollTop}
+                  >
                     <ElseBox isLight={codeFlow.isLight} elseItem={elseItem}>
-                      {renderingCodeFlow(codeFlow.child, width, height)}
+                      {renderingCodeFlow(codeFlow.child, width, height, codeFlowScrollTop)}
                     </ElseBox>
                   </CodeFlowItem>
                 </motion.div>
@@ -151,9 +189,17 @@ export const renderingCodeFlow = (codeFlows: any[], width: number, height: numbe
             const whileItem = codeFlow as WhileItem;
             return (
               <div key={whileItem.id}>
-                <CodeFlowItem key={index} codeFlow={codeFlow} width={width} height={height} up={0} right={0}>
+                <CodeFlowItem
+                  key={index}
+                  codeFlow={codeFlow}
+                  width={width}
+                  height={height}
+                  up={0}
+                  right={0}
+                  codeFlowScrollTop={codeFlowScrollTop}
+                >
                   <WhileBox key={index} whileItem={whileItem}>
-                    {renderingCodeFlow(codeFlow.child, width, height)}
+                    {renderingCodeFlow(codeFlow.child, width, height, codeFlowScrollTop)}
                   </WhileBox>
                 </CodeFlowItem>
               </div>
@@ -162,9 +208,17 @@ export const renderingCodeFlow = (codeFlows: any[], width: number, height: numbe
             const callUserFuncItem = codeFlow as CallUserFuncItem;
             return (
               <div key={callUserFuncItem.id}>
-                <CodeFlowItem key={index} codeFlow={codeFlow} width={width} height={height} up={0} right={0}>
+                <CodeFlowItem
+                  key={index}
+                  codeFlow={codeFlow}
+                  width={width}
+                  height={height}
+                  up={0}
+                  right={0}
+                  codeFlowScrollTop={codeFlowScrollTop}
+                >
                   <CallUserFuncBox key={index} callUserFuncItem={callUserFuncItem}>
-                    {renderingCodeFlow(codeFlow.child, width, height)}
+                    {renderingCodeFlow(codeFlow.child, width, height, codeFlowScrollTop)}
                   </CallUserFuncBox>
                 </CodeFlowItem>
               </div>
@@ -173,7 +227,15 @@ export const renderingCodeFlow = (codeFlows: any[], width: number, height: numbe
             const returnItem = codeFlow as ReturnItem;
             return (
               <div key={returnItem.id}>
-                <CodeFlowItem key={index} codeFlow={codeFlow} width={width} height={height} up={-30} right={0}>
+                <CodeFlowItem
+                  key={index}
+                  codeFlow={codeFlow}
+                  width={width}
+                  height={height}
+                  up={-30}
+                  right={0}
+                  codeFlowScrollTop={codeFlowScrollTop}
+                >
                   <ReturnBox key={index} returnItem={returnItem} />
                 </CodeFlowItem>
               </div>
@@ -182,7 +244,15 @@ export const renderingCodeFlow = (codeFlows: any[], width: number, height: numbe
             const FlowControlItem = codeFlow as FlowControlItem;
             return (
               <div key={FlowControlItem.id}>
-                <CodeFlowItem key={index} codeFlow={codeFlow} width={width} height={height} up={0} right={0}>
+                <CodeFlowItem
+                  key={index}
+                  codeFlow={codeFlow}
+                  width={width}
+                  height={height}
+                  up={0}
+                  right={0}
+                  codeFlowScrollTop={codeFlowScrollTop}
+                >
                   <FlowControlBox key={index} flowControlItem={FlowControlItem} />
                 </CodeFlowItem>
               </div>
@@ -191,7 +261,15 @@ export const renderingCodeFlow = (codeFlows: any[], width: number, height: numbe
             const inputItem = codeFlow as InputItem;
             return (
               <div key={inputItem.id}>
-                <CodeFlowItem key={index} codeFlow={codeFlow} width={width} height={height} up={-35} right={0}>
+                <CodeFlowItem
+                  key={index}
+                  codeFlow={codeFlow}
+                  width={width}
+                  height={height}
+                  up={-35}
+                  right={0}
+                  codeFlowScrollTop={codeFlowScrollTop}
+                >
                   <InputBox key={inputItem.id} InputItem={inputItem} />
                 </CodeFlowItem>
               </div>

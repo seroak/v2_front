@@ -20,22 +20,22 @@ import { useArrowStore } from "@/store/arrow";
 interface Props {
   children?: ReactNode;
   structure: DataStructureListItem | DataStructureVarsItem | WrapperDataStructureItem;
-
   height: number;
   width: number;
   top: number;
   right: number;
+  structuresScrollTop: number;
 }
 
 interface CallstackProps {
   children?: ReactNode;
   structure: StructureValue;
-
   height: number;
   width: number;
+  structuresScrollTop: number;
 }
 
-const StructureItem = ({ children, structure, height, width, top, right }: Props) => {
+const StructureItem = ({ children, structure, height, width, top, right, structuresScrollTop }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const setTop = useArrowStore((state) => state.setTop);
   const setRight = useArrowStore((state) => state.setRight);
@@ -47,7 +47,7 @@ const StructureItem = ({ children, structure, height, width, top, right }: Props
       setTop(rect.top + top);
       setRight(rect.right + right);
     }
-  }, [structure, ref, height, width]);
+  }, [structure, ref, height, width, structuresScrollTop]);
 
   return (
     <div ref={ref} style={{ width: "fit-content" }}>
@@ -55,7 +55,7 @@ const StructureItem = ({ children, structure, height, width, top, right }: Props
     </div>
   );
 };
-const CallstackItem = ({ children, structure, height, width }: CallstackProps) => {
+const CallstackItem = ({ children, structure, height, width, structuresScrollTop }: CallstackProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const setTop = useArrowStore((state) => state.setTop);
   const setRight = useArrowStore((state) => state.setRight);
@@ -67,7 +67,7 @@ const CallstackItem = ({ children, structure, height, width }: CallstackProps) =
       setTop(rect.top);
       setRight(rect.right);
     }
-  }, [ref, structure, height, width]);
+  }, [ref, structure, height, width, structuresScrollTop]);
 
   return (
     <div ref={ref} style={{ width: "fit-content" }}>
@@ -79,14 +79,20 @@ const CallstackItem = ({ children, structure, height, width }: CallstackProps) =
 export const renderingStructure = (
   structures: WrapperDataStructureItem, //변수시각화 리스트
   height: number,
-  width: number
+  width: number,
+  structuresScrollTop: number
 ): ReactElement => {
   return (
     <>
       {Object.keys(structures).map((key, index) => {
         return (
           <div key={index}>
-            <CallstackItem structure={structures[key]} height={height} width={width}>
+            <CallstackItem
+              structure={structures[key]}
+              height={height}
+              width={width}
+              structuresScrollTop={structuresScrollTop}
+            >
               <div className="var-data-wrap">
                 <div className="var-title">
                   <p>{key}</p>
@@ -106,7 +112,14 @@ export const renderingStructure = (
                               className="var-list"
                               style={{ display: "inline-block" }}
                             >
-                              <StructureItem structure={variableItem} height={height} width={width} top={-30} right={0}>
+                              <StructureItem
+                                structure={variableItem}
+                                height={height}
+                                width={width}
+                                top={-30}
+                                right={0}
+                                structuresScrollTop={structuresScrollTop}
+                              >
                                 <VariableBox
                                   value={variableItem.expr}
                                   name={variableItem.name}
@@ -128,7 +141,14 @@ export const renderingStructure = (
                               transition={{ duration: 0.3 }}
                               style={{ display: "inline-block" }}
                             >
-                              <StructureItem structure={listItem} height={height} width={width} top={0} right={0}>
+                              <StructureItem
+                                structure={listItem}
+                                height={height}
+                                width={width}
+                                top={0}
+                                right={0}
+                                structuresScrollTop={structuresScrollTop}
+                              >
                                 <ListWrapper listItem={listItem} />
                               </StructureItem>
                             </motion.div>
@@ -146,7 +166,14 @@ export const renderingStructure = (
                               transition={{ duration: 0.3 }}
                               style={{ display: "inline-block" }}
                             >
-                              <StructureItem structure={tupleItem} height={height} width={width} top={0} right={0}>
+                              <StructureItem
+                                structure={tupleItem}
+                                height={height}
+                                width={width}
+                                top={0}
+                                right={0}
+                                structuresScrollTop={structuresScrollTop}
+                              >
                                 <TupleWrapper listItem={tupleItem} />
                               </StructureItem>
                             </motion.div>
@@ -164,7 +191,14 @@ export const renderingStructure = (
                               transition={{ duration: 0.3 }}
                               style={{ display: "inline-block" }}
                             >
-                              <StructureItem structure={functionItem} height={height} width={width} top={0} right={0}>
+                              <StructureItem
+                                structure={functionItem}
+                                height={height}
+                                width={width}
+                                top={0}
+                                right={0}
+                                structuresScrollTop={structuresScrollTop}
+                              >
                                 <DefFunctionDataStructure functionItem={functionItem} />
                               </StructureItem>
                             </motion.div>
