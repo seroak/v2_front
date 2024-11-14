@@ -223,6 +223,10 @@ input[type="checkbox"] {
   box-sizing: border-box; /* 패딩과 보더를 포함하여 너비 계산 */
   background-color: #fdfdfe;
   padding: 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .view-section-title {
@@ -234,6 +238,7 @@ input[type="checkbox"] {
 }
 .data-name {
   font-weight: 600;
+  width: fit-content;
   display: inline-block;
   padding: 3px 8px;
   border-radius: 4px;
@@ -246,9 +251,6 @@ input[type="checkbox"] {
   position: relative;
   height: 100%;
   overflow-y: auto;
-}
-.view-section2-2 .view-data {
-  height: 100%;
 }
 .split-contatiner {
   border-top: 1px solid var(--gray01);
@@ -498,7 +500,6 @@ var-list {
   position: relative;
   display: flex;
   flex-direction: column;
-  /* width: calc(100% - 40px); */
   width: 700px;
   max-width: 980px;
   max-height: 60%;
