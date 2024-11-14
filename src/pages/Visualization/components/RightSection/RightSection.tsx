@@ -679,8 +679,7 @@ const RightSection = () => {
         </div>
         <div id="split-2-2" className="view-section2-2" ref={rightSection2Ref}>
           <div className="view-data" onScroll={handleScrollStructures}>
-            <p className="data-name">변수</p>
-
+            <p className="data-name">콜스택</p>
             <ul className="var-list">
               {StructuresList?.length > 0 &&
                 stepIdx >= 0 &&
