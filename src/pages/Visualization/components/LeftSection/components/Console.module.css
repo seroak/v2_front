@@ -6,11 +6,23 @@
 }
 
 .consoleText {
+  display: flex;
+  flex: 1;
   color: black;
   white-space: pre-wrap;
   word-wrap: break-word;
+  overflow: auto;
 }
-
+.console-wrapper {
+  display: flex;
+  flex: 1;
+}
+.console-print {
+  display: flex;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+}
 .view-section-title {
   width: 100%;
   padding: 13px 24px;
@@ -20,14 +32,18 @@
   padding-right: 0px;
 }
 .view-section1-2 {
+  display: flex;
   background-color: white;
+  flex: 1;
+  flex-direction: column;
 }
 .view-section1-2 .view-data {
-  padding: 24px;
-
+  padding: 0px 24px 24px 24px;
   box-sizing: border-box; /* 패딩과 보더를 포함하여 너비 계산 */
 }
 .view-data {
+  display: flex;
+  flex: 1;
   background-color: white;
   position: relative;
 

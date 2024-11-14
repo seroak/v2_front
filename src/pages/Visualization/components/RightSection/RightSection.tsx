@@ -94,7 +94,7 @@ const RightSection = () => {
     throw new Error("CodeContext not found");
   }
 
-  const setConsole = useConsoleStore((state) => state.setConsole);
+  const setConsoleList = useConsoleStore((state) => state.setConsoleList);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
   const { inputData } = useConsoleStore();
   const { preprocessedCodes, setPreprocessedCodes } = preprocessedCodesContext;
@@ -153,7 +153,7 @@ const RightSection = () => {
         const linNumber = Number((error as any).result.lineNumber);
         const errorMessage = (error as any).result.errorMessage;
         setErrorLine({ lineNumber: linNumber, message: errorMessage });
-        setConsole([errorMessage]);
+        setConsoleList([errorMessage]);
         setPreprocessedCodes([]);
         return;
       } else if (error.code == "CA-400007") {
@@ -161,7 +161,7 @@ const RightSection = () => {
 
         return;
       }
-      setConsole([]);
+      setConsoleList([]);
       setPreprocessedCodes([]);
     },
   });
@@ -275,7 +275,6 @@ const RightSection = () => {
     }
 
     for (let preprocessedCode of preprocessedCodes) {
-      console.log(preprocessedCode);
       let changedCodeFlows: any[] = [];
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
@@ -597,14 +596,14 @@ const RightSection = () => {
     }
     setCodeFlowList(accCodeFlowList);
     setStructuresList(accDataStructuresList);
-    setConsole(accConsoleLogList);
+    setConsoleList(accConsoleLogList);
     setCodeFlowLength(accCodeFlowList.length);
     setArrowTextList(arrowTexts);
     setHighlightLines(highlightLine);
   }, [preprocessedCodes]);
 
   return (
-    <div id="split-2" ref={rightSectionRef}>
+    <div id="split-2" ref={rightSectionRef} style={{ display: "flex", flexDirection: "column", flex: "1" }}>
       <div className={styles["top-bar"]}>
         <p className={styles["view-section-title"]}>시각화</p>
         <div className={styles["play-wrap"]}>
@@ -656,7 +655,7 @@ const RightSection = () => {
         dragInterval={1}
         direction="horizontal"
         cursor="col-resize"
-        style={{ display: "flex", flexDirection: "row", height: "94.5%" }}
+      style={{ display: "flex", flexDirection: "row", height: "100%", flex: 1, overflow: "hidden" }}
         className="split-container"
       >
         <div id="split-2-1" className="view-section2-1">

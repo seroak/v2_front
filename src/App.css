@@ -246,7 +246,6 @@ input[type="checkbox"] {
   position: relative;
   height: 100%;
   overflow-y: auto;
-  height: calc(100% - 51px);
 }
 .view-section2-2 .view-data {
   height: 100%;
@@ -866,6 +865,11 @@ var-list {
 .section-data03 {
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
+@media screen and (max-width: 1100px) {
+  .section-data03 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
 .section-data03 li {
   border-radius: 8px;
   overflow: hidden;
@@ -1197,10 +1201,10 @@ header .group-btn {
   text-align: left;
 }
 .true {
-  background-color: #10D190 !important;
+  background-color: #10d190 !important;
 }
 .border-true {
-  border: 1px solid #10D190 !important;
+  border: 1px solid #10d190 !important;
 }
 .false {
   background-color: #ff0000 !important;
@@ -1397,6 +1401,9 @@ header .group-btn {
 
 .btn-cancel:active {
   background-color: #dc2626;
+}
+.btn-manual {
+  background-color: #9a9a9a;
 }
 .btn img {
   width: 24px;
@@ -1679,7 +1686,7 @@ gpt-icon-small {
   width: calc(100% + 2px);
   transform: translateX(-1px);
 }
-.highlight-func-title{
+.highlight-func-title {
   background-color: #f5f5fc !important;
 }
 .func-title span {
@@ -1862,9 +1869,9 @@ gpt-icon-small {
 .feedback-btn:hover {
   background-color: #f5f5f5;
 }
-.login-header{
+.login-header {
   align-items: center;
   display: flex;
-  flex-direction:  row;
+  flex-direction: row;
   padding: 8px 16px;
 }
