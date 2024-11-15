@@ -67,3 +67,19 @@
   border-radius: 4px;
   filter: brightness(0.9);
 }
+
+.playcode-btn {
+  background-color: var(--blue);
+  color: var(--white);
+  width: 112px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-direction: row;
+  border-radius: 4px;
+}
+.playcode-btn-loading {
+  filter: brightness(0.9);
+}

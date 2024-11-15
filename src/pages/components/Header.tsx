@@ -130,10 +130,11 @@ const LoggedInHeader = () => {
               </Link>
             </div>
         ) : (
-            <>
-              <span style={{marginRight: "10px"}}>{userData.name}님</span>
-              <span onClick={handleLogout} className={styles["logout"]}>
-              <span>로그아웃</span>
+
+          <>
+            <span style={{ marginRight: "10px" }}>{userData.name}님</span>
+            <span onClick={handleLogout} className={styles["logout"]}>
+              로그아웃
             </span>
             </>
         )}
