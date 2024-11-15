@@ -56,13 +56,14 @@ import { useMutation } from "@tanstack/react-query";
 import { useArrowStore } from "@/store/arrow";
 
 //api
-import { visualize } from "@/services/api";
+import { runCode, visualize } from "@/services/api";
 import { CodeFlowVariableItem } from "../../types/codeFlow/codeFlowVariableItem";
 
 
 interface State {
   objects: any[];
 }
+
 interface ApiError {
   code: string;
   result: {
@@ -78,6 +79,7 @@ interface SuccessResponse {
     code: any[]; // TypeDto는 별도로 정의되어 있다고 가정
   };
 }
+
 const RightSection = () => {
   const [codeFlowList, setCodeFlowList] = useState<State[]>([
     {
@@ -96,9 +98,9 @@ const RightSection = () => {
 
   const setConsoleList = useConsoleStore((state) => state.setConsoleList);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
+  const setStepIdx = useConsoleStore((state) => state.setStepIdx);
   const { inputData } = useConsoleStore();
   const { preprocessedCodes, setPreprocessedCodes } = preprocessedCodesContext;
-  const { code } = codeContext;
   const [arrowTextList, setArrowTextList] = useState<string[]>([]);
 
   const [, setRightSectionSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
@@ -125,10 +127,11 @@ const RightSection = () => {
   const incrementStepIdx = useConsoleStore((state) => state.incrementStepIdx);
   const decrementStepIdx = useConsoleStore((state) => state.decrementStepIdx);
   const [selectedValue, setSelectedValue] = useState("1x");
+
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
   };
-  const mutation = useMutation<SuccessResponse, ApiError, Parameters<typeof visualize>[0]>({
+  const codeVizMutation = useMutation<SuccessResponse, ApiError, Parameters<typeof visualize>[0]>({
     mutationFn: visualize,
     async onSuccess(data) {
       // 타입 체크 함수
@@ -149,7 +152,7 @@ const RightSection = () => {
         return;
       } else if (error.code === "CA-400006" || error.code === "CA-400999") {
         alert("지원하지 않는 코드가 포함되어 있습니다.")
-        return
+        return;
       } else if (error.code === "CA-400002") {
         const linNumber = Number((error as any).result.lineNumber);
         const errorMessage = (error as any).result.errorMessage;
@@ -166,9 +169,46 @@ const RightSection = () => {
       setPreprocessedCodes([]);
     },
   });
+
+  const { code } = codeContext;
+  const codeExecMutation = useMutation({
+    mutationFn: runCode,
+    async onSuccess(data) {
+      setPreprocessedCodes([]);
+      setCodeFlowLength(0);
+      setStepIdx(0);
+      setConsoleList([data.result.output]);
+      setHighlightLines([]);
+    },
+    onError(error) {
+      console.error(error);
+
+      if (error.message === "데이터 형식이 올바르지 않습니다") {
+        return;
+      } else if ((error as any).code === "CA-400006" || (error as any).code === "CA-400999") {
+        alert("지원하지 않는 코드가 포함되어 있습니다");
+        return;
+      } else if ((error as any).code === "CA-400002") {
+        // 잘못된 문법 에러처리
+        const linNumber = Number((error as any).result.lineNumber);
+        const errorMessage = (error as any).result.errorMessage;
+        setErrorLine({ lineNumber: linNumber, message: errorMessage });
+        setConsoleList([errorMessage]);
+        setPreprocessedCodes([]);
+        return;
+      } else if ((error as any).code == "CA-400007") {
+        alert("코드의 실행 횟수가 너무 많습니다.");
+        return;
+      }
+      setConsoleList([]);
+    },
+  });
+  const handleRunCode = () => {
+    codeExecMutation.mutate({ code, inputData });
+  };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutation.mutate({ code, inputData });
+    codeVizMutation.mutate({ code, inputData });
   };
   const onPlay = () => {
     if (codeFlowLength === 0) return;
@@ -355,7 +395,7 @@ const RightSection = () => {
         usedId = usedId.filter((id) => id !== variable.id);
         accCodeFlow = { objects: deletedCodeFlow };
       }
-      // 자료구조 시각화 부분이 들어왔을 때
+        // 자료구조 시각화 부분이 들어왔을 때
       // 나타나고 바로 사라지는건 traking id와 depth를 사용하지 않는다
       else if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
         const callStackName = (preprocessedCode as VariablesDto).callStackName;
@@ -393,7 +433,7 @@ const RightSection = () => {
                 targetName,
                 accDataStructures,
                 variable as VariableExprArray,
-                callStackName
+                callStackName,
               );
             }
             // 처음 시각화해주는 자료구조인 경우
@@ -484,7 +524,7 @@ const RightSection = () => {
           highlightLine.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id);
 
           const toAddObject = createObjectToAdd(
-            preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
+            preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto,
           );
 
           // print 타입일 때 console창의 로그를 만드는 부분
@@ -594,7 +634,7 @@ const RightSection = () => {
           };
           return acc;
         },
-        {} as WrapperDataStructureItem
+        {} as WrapperDataStructureItem,
       );
 
       // 자료구조리스트에서 얕은 복사 문제가 생겨서 깊은 복사를 해준다
@@ -619,11 +659,22 @@ const RightSection = () => {
       <div className={styles["top-bar"]}>
         <p className={styles["view-section-title"]}>시각화</p>
         <div className={styles["play-wrap"]}>
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              className={`${styles["playcode-btn"]} ${codeExecMutation.isPending ? styles["playcode-btn-loading"] : ""}`}
+              onClick={handleRunCode}
+              disabled={codeExecMutation.isPending} // 로딩 중에는 버튼 비활성화
+            >
+              <img src="/image/icon_play_w.svg" alt="" />
+              코드실행
+            </button>
+          </div>
           <form onSubmit={handleSubmit}>
             <button
               type="submit"
-              className={`${styles["view-btn"]} ${mutation.isPending ? styles["view-btn-loading"] : ""}`}
-              disabled={mutation.isPending} // 로딩 중에는 버튼 비활성화
+              className={`${styles["view-btn"]} ${codeVizMutation.isPending ? styles["view-btn-loading"] : ""}`}
+              disabled={codeVizMutation.isPending} // 로딩 중에는 버튼 비활성화
             >
               <img src="/image/icon_play_w.svg" alt="" />
               시각화
