@@ -11,6 +11,7 @@ import {
   getClassAccessRightData,
 } from "@/services/api";
 import Header from "../components/Header";
+import ClassroomModal from "@/pages/Classroom/components/ClassroomModal.tsx";
 
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
@@ -55,6 +56,7 @@ const Classroom = () => {
   const params = useParams();
   const classroomId = Number(params.classroomId);
   const setIsHost = useAccessRightStore((state) => state.setIsHost);
+  const [isConsentInformationModalOpen, setIsConsentInformationModalOpen] = useState<boolean>(false);
 
   const { data: guestData, refetch: guestDataRefetch } = useQuery<ClassroomDataType>({
     queryKey: ["classGuestData", classroomId],
@@ -151,9 +153,12 @@ const Classroom = () => {
   };
 
   useSSE(`${BASE_URL}/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
+  const closeConsentInformationModal = (): void => setIsConsentInformationModalOpen(false);
+
   return (
     <div>
       <Header />
+      <ClassroomModal isOpen={true} onClose={closeConsentInformationModal} userName={"송관석"} email={"kho6812@naver.com"} code={"a = 10\nprint(a)\n"}/>
       <div className="group-wrap">
         <div className="group-left">
           <img src="/image/icon_group.svg" alt="그룹" />
