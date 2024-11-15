@@ -130,7 +130,14 @@ const RightSection = () => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
   };
+  useEffect(() => {
+    return () => {
+      setStepIdx(0);
+    };
+  }, [setStepIdx, location]);
+
   const codeVizMutation = useMutation<SuccessResponse, ApiError, Parameters<typeof visualize>[0]>({
+
     mutationFn: visualize,
     async onSuccess(data) {
       // 타입 체크 함수
