@@ -15,21 +15,6 @@
   align-items: center;
   gap: 16px;
 }
-.playcode-btn {
-  background-color: var(--blue);
-  color: var(--white);
-  width: 112px;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  flex-direction: row;
-  border-radius: 4px;
-}
-.playcode-btn-loading {
-  filter: brightness(0.9);
-}
 .select-box {
   position: relative;
   width: 193px;
@@ -105,7 +90,7 @@
   background: var(--white, #fff);
 }
 .default-option button {
-  /*color: var(--gray01, #dddee4);*/  /* 디폴트값 gray 주석 해제 */
+  /*color: var(--gray01, #dddee4);*/ /* 디폴트값 gray 주석 해제 */
   text-align: center;
   font-family: Pretendard;
   font-size: 16px;

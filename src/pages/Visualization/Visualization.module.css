@@ -1,7 +1,7 @@
 .main {
   display: flex;
   flex-direction: column;
-  height: 94.5%;
+  height: 93vh;
   width: 100%;
 }
 .s__select {

@@ -8,10 +8,12 @@ function ReturnBox({ returnItem }: Props) {
   const { returnExpr, isLight } = returnItem;
   return (
     <div className={cx("code-flow-data")}>
-      {returnExpr !== "" && (
+      {returnExpr !== "" ? (
         <div className={cx(styles["return-data"])}>
           <p className={cx(isLight && styles["highlight"], returnExpr == "False" && styles["data-false"])}>{returnExpr}</p>
         </div>
+      ): (
+        <div className={cx(styles["return-data"])}></div>
       )}
     </div>
   );

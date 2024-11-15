@@ -129,14 +129,12 @@ const Classroom = () => {
         setData(newData);
         // setQueryData로 값 캐싱
         queryClient.setQueryData(["sse-data", classroomId], newData);
-        console.log("서버로 부터 데이터가 옴");
+
         guestDataRefetch();
         classroomDataRefetch();
       });
       // connection되면
-      eventSource.addEventListener("open", function() {
-        console.log("서버로 연결이 됨");
-      });
+      eventSource.addEventListener("open", function () {});
 
       return () => {
         eventSource.close();
@@ -176,7 +174,7 @@ const Classroom = () => {
               <li>
                 <img src="/image/progress02.svg" alt="미제출" />
                 <div>
-                  <p>제출 중</p>
+                  <p>미제출</p>
                   <p>{actionInfo?.ing}</p>
                 </div>
               </li>
@@ -190,7 +188,7 @@ const Classroom = () => {
               <li>
                 <img src="/image/progress04.svg" alt="실패" />
                 <div>
-                  <p>도움</p>
+                  <p>도움 요청</p>
                   <p>{actionInfo?.help}</p>
                 </div>
               </li>

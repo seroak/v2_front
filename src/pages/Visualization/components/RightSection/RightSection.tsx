@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect, useRef, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import { CodeContext } from "../../context/CodeContext";
 import { PreprocessedCodesContext } from "../../context/PreProcessedCodesContext";
 import Split from "react-split";
@@ -55,12 +56,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useArrowStore } from "@/store/arrow";
 
 //api
-import { visualize } from "@/services/api";
+import { runCode, visualize } from "@/services/api";
 import { CodeFlowVariableItem } from "../../types/codeFlow/codeFlowVariableItem";
 
 interface State {
   objects: any[];
 }
+
 interface ApiError {
   code: string;
   result: {
@@ -75,7 +77,9 @@ interface SuccessResponse {
     code: any[]; // TypeDto는 별도로 정의되어 있다고 가정
   };
 }
+
 const RightSection = () => {
+  const location = useLocation();
   const [codeFlowList, setCodeFlowList] = useState<State[]>([
     {
       objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
@@ -91,15 +95,16 @@ const RightSection = () => {
     throw new Error("CodeContext not found");
   }
 
-  const setConsole = useConsoleStore((state) => state.setConsole);
+  const setConsoleList = useConsoleStore((state) => state.setConsoleList);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
+  const setStepIdx = useConsoleStore((state) => state.setStepIdx);
   const { inputData } = useConsoleStore();
   const { preprocessedCodes, setPreprocessedCodes } = preprocessedCodesContext;
-  const { code } = codeContext;
   const [arrowTextList, setArrowTextList] = useState<string[]>([]);
 
   const [, setRightSectionSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
-
+  const [codeFlowScrollTop, setCodeFlowScrollTop] = useState<number>(0);
+  const [structuresScrollTop, setStructuresScrollTop] = useState<number>(0);
   const rightSectionRef = useRef<HTMLDivElement | null>(null);
   const rightSection2Ref = useRef<HTMLDivElement | null>(null);
 
@@ -121,10 +126,18 @@ const RightSection = () => {
   const incrementStepIdx = useConsoleStore((state) => state.incrementStepIdx);
   const decrementStepIdx = useConsoleStore((state) => state.decrementStepIdx);
   const [selectedValue, setSelectedValue] = useState("1x");
+
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
   };
-  const mutation = useMutation<SuccessResponse, ApiError, Parameters<typeof visualize>[0]>({
+  useEffect(() => {
+    return () => {
+      setStepIdx(0);
+    };
+  }, [setStepIdx, location]);
+
+  const codeVizMutation = useMutation<SuccessResponse, ApiError, Parameters<typeof visualize>[0]>({
+
     mutationFn: visualize,
     async onSuccess(data) {
       // 타입 체크 함수
@@ -144,13 +157,13 @@ const RightSection = () => {
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
       } else if (error.code === "CA-400006" || error.code === "CA-400999") {
-        alert("지원하지 않는 코드가 포함되어 있습니다");
+        alert("지원하지 않는 코드가 포함되어 있습니다.");
         return;
       } else if (error.code === "CA-400002") {
         const linNumber = Number((error as any).result.lineNumber);
         const errorMessage = (error as any).result.errorMessage;
         setErrorLine({ lineNumber: linNumber, message: errorMessage });
-        setConsole([errorMessage]);
+        setConsoleList([errorMessage]);
         setPreprocessedCodes([]);
         return;
       } else if (error.code == "CA-400007") {
@@ -158,13 +171,50 @@ const RightSection = () => {
 
         return;
       }
-      setConsole([]);
+      setConsoleList([]);
       setPreprocessedCodes([]);
     },
   });
+
+  const { code } = codeContext;
+  const codeExecMutation = useMutation({
+    mutationFn: runCode,
+    async onSuccess(data) {
+      setPreprocessedCodes([]);
+      setCodeFlowLength(0);
+      setStepIdx(0);
+      setConsoleList([data.result.output]);
+      setHighlightLines([]);
+    },
+    onError(error) {
+      console.error(error);
+
+      if (error.message === "데이터 형식이 올바르지 않습니다") {
+        return;
+      } else if ((error as any).code === "CA-400006" || (error as any).code === "CA-400999") {
+        alert("지원하지 않는 코드가 포함되어 있습니다");
+        return;
+      } else if ((error as any).code === "CA-400002") {
+        // 잘못된 문법 에러처리
+        const linNumber = Number((error as any).result.lineNumber);
+        const errorMessage = (error as any).result.errorMessage;
+        setErrorLine({ lineNumber: linNumber, message: errorMessage });
+        setConsoleList([errorMessage]);
+        setPreprocessedCodes([]);
+        return;
+      } else if ((error as any).code == "CA-400007") {
+        alert("코드의 실행 횟수가 너무 많습니다.");
+        return;
+      }
+      setConsoleList([]);
+    },
+  });
+  const handleRunCode = () => {
+    codeExecMutation.mutate({ code, inputData });
+  };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutation.mutate({ code, inputData });
+    codeVizMutation.mutate({ code, inputData });
   };
   const onPlay = () => {
     if (codeFlowLength === 0) return;
@@ -241,6 +291,17 @@ const RightSection = () => {
       }
     };
   }, []);
+
+  const handleScrollCodeFlow = (e: React.UIEvent<HTMLDivElement>) => {
+    const element = e.target as HTMLDivElement;
+    const scrollTop = element.scrollTop;
+    setCodeFlowScrollTop(scrollTop);
+  };
+  const handleScrollStructures = (e: React.UIEvent<HTMLDivElement>) => {
+    const element = e.target as HTMLDivElement;
+    const scrollTop = element.scrollTop;
+    setStructuresScrollTop(scrollTop);
+  };
   // 시각화를 할때 왼쪽 코드 에디터에서 하이라이트를 줄 라인을 담는 배열
   const highlightLine: number[] = [];
   // codeFlowList를 업데이트하는 useEffect
@@ -272,7 +333,6 @@ const RightSection = () => {
     }
 
     for (let preprocessedCode of preprocessedCodes) {
-      console.log(preprocessedCode);
       let changedCodeFlows: any[] = [];
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
@@ -594,22 +654,35 @@ const RightSection = () => {
     }
     setCodeFlowList(accCodeFlowList);
     setStructuresList(accDataStructuresList);
-    setConsole(accConsoleLogList);
+    setConsoleList(accConsoleLogList);
     setCodeFlowLength(accCodeFlowList.length);
     setArrowTextList(arrowTexts);
     setHighlightLines(highlightLine);
   }, [preprocessedCodes]);
 
   return (
-    <div id="split-2" ref={rightSectionRef}>
+    <div id="split-2" ref={rightSectionRef} style={{ display: "flex", flexDirection: "column", flex: "1" }}>
       <div className={styles["top-bar"]}>
         <p className={styles["view-section-title"]}>시각화</p>
         <div className={styles["play-wrap"]}>
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              className={`${styles["playcode-btn"]} ${
+                codeExecMutation.isPending ? styles["playcode-btn-loading"] : ""
+              }`}
+              onClick={handleRunCode}
+              disabled={codeExecMutation.isPending} // 로딩 중에는 버튼 비활성화
+            >
+              <img src="/image/icon_play_w.svg" alt="" />
+              코드실행
+            </button>
+          </div>
           <form onSubmit={handleSubmit}>
             <button
               type="submit"
-              className={`${styles["view-btn"]} ${mutation.isPending ? styles["view-btn-loading"] : ""}`}
-              disabled={mutation.isPending} // 로딩 중에는 버튼 비활성화
+              className={`${styles["view-btn"]} ${codeVizMutation.isPending ? styles["view-btn-loading"] : ""}`}
+              disabled={codeVizMutation.isPending} // 로딩 중에는 버튼 비활성화
             >
               <img src="/image/icon_play_w.svg" alt="" />
               시각화
@@ -653,25 +726,26 @@ const RightSection = () => {
         dragInterval={1}
         direction="horizontal"
         cursor="col-resize"
-        style={{ display: "flex", flexDirection: "row", height: "94.5%" }}
+        style={{ display: "flex", flexDirection: "row", height: "100%", flex: 1, overflow: "hidden" }}
         className="split-container"
       >
         <div id="split-2-1" className="view-section2-1">
-          <div className="view-data" style={{ height: "100%" }}>
+          <div className="view-data" onScroll={handleScrollCodeFlow}>
             <p className="data-name">코드흐름</p>
-            <div style={{ width: "600px" }}>
+            <div style={{ width: "600px", display: "flex", flexDirection: "column", flex: 1 }}>
               {codeFlowList?.length > 0 &&
                 stepIdx >= 0 &&
-                renderingCodeFlow(codeFlowList[stepIdx].objects[0].child, width, height)}
+                renderingCodeFlow(codeFlowList[stepIdx].objects[0].child, width, height, codeFlowScrollTop)}
             </div>
           </div>
         </div>
         <div id="split-2-2" className="view-section2-2" ref={rightSection2Ref}>
-          <div className="view-data">
-            <p className="data-name">변수</p>
-
+          <div className="view-data" onScroll={handleScrollStructures}>
+            <p className="data-name">콜스택</p>
             <ul className="var-list">
-              {StructuresList?.length > 0 && stepIdx >= 0 && renderingStructure(StructuresList[stepIdx], width, height)}
+              {StructuresList?.length > 0 &&
+                stepIdx >= 0 &&
+                renderingStructure(StructuresList[stepIdx], width, height, structuresScrollTop)}
             </ul>
           </div>
         </div>
