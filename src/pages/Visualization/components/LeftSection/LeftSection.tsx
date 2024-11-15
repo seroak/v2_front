@@ -7,7 +7,6 @@ import Console from "./components/Console";
 import Split from "react-split";
 import Dropdown from "./components/Dropdown";
 
-
 import { PreprocessedCodesContext } from "../../context/PreProcessedCodesContext";
 
 // 성공 응답 타입 정의
@@ -26,7 +25,6 @@ const LeftSection = () => {
 
   return (
     <Fragment>
-
       <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         <div className={styles["top-bar"]}>
           <p className={styles["view-section-title"]}>코드 작성</p>
@@ -44,7 +42,6 @@ const LeftSection = () => {
           cursor="row-resize"
           style={{ display: "flex", flexDirection: "column", height: "94%", flex: 1, overflow: "hidden" }}
           className={styles.splitContainer}
-
         >
           <CodeEditor />
           <Console />
