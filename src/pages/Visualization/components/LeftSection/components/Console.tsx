@@ -25,7 +25,7 @@ const Console = () => {
           className={styles["input-area"]}
           value={inputData}
           onChange={(e) => handleConsoleTextChange(e)}
-          placeholder="input을 입력해주세요."
+            placeholder="input()을 사용하는 경우 입력해주세요."
         />
         <div className={styles["view-data"]}>
           <div className={styles.consoleText}>

@@ -72,7 +72,7 @@ const LeftSection = () => {
     <Fragment>
       <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         <div className={styles["top-bar"]}>
-          <p className={styles["view-section-title"]}>코드작성</p>
+          <p className={styles["view-section-title"]}>코드 작성</p>
           <div className="flex items-center gap-4">
             <button
               type="button"
@@ -81,7 +81,7 @@ const LeftSection = () => {
               disabled={mutation.isPending} // 로딩 중에는 버튼 비활성화
             >
               <img src="/image/icon_play_w.svg" alt="" />
-              코드실행
+              결과보기
             </button>
             <Dropdown />
           </div>
