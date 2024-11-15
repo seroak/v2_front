@@ -11,9 +11,6 @@ import Dropdown from "./components/Dropdown";
 import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
 
-import { useCustomAlert } from "@/pages/components/CustomAlert.tsx";
-
-
 import { PreprocessedCodesContext } from "../../context/PreProcessedCodesContext";
 
 // 성공 응답 타입 정의
@@ -38,7 +35,6 @@ const LeftSection = () => {
     throw new Error("CodeContext not found");
   }
   const { code } = codeContext;
-  const { openAlert, closeAlert, CustomAlert } = useCustomAlert();
   const mutation = useMutation({
     mutationFn: runCode,
     async onSuccess(data) {
@@ -71,13 +67,11 @@ const LeftSection = () => {
     },
   });
   const handleRunCode = () => {
-    openAlert('클릭했습니다')
     mutation.mutate({ code, inputData });
   };
 
   return (
     <Fragment>
-
       <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         <div className={styles["top-bar"]}>
           <p className={styles["view-section-title"]}>코드 작성</p>
@@ -104,7 +98,6 @@ const LeftSection = () => {
           cursor="row-resize"
           style={{ display: "flex", flexDirection: "column", height: "94%", flex: 1, overflow: "hidden" }}
           className={styles.splitContainer}
-
         >
           <CodeEditor />
           <Console />
