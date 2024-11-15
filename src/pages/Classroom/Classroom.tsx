@@ -129,14 +129,12 @@ const Classroom = () => {
         setData(newData);
         // setQueryData로 값 캐싱
         queryClient.setQueryData(["sse-data", classroomId], newData);
-        console.log("서버로 부터 데이터가 옴");
+
         guestDataRefetch();
         classroomDataRefetch();
       });
       // connection되면
-      eventSource.addEventListener("open", function () {
-        console.log("서버로 연결이 됨");
-      });
+      eventSource.addEventListener("open", function () {});
 
       return () => {
         eventSource.close();
