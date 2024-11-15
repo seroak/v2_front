@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect, useRef, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import { CodeContext } from "../../context/CodeContext";
 import { PreprocessedCodesContext } from "../../context/PreProcessedCodesContext";
 import Split from "react-split";
@@ -76,6 +77,7 @@ interface SuccessResponse {
   };
 }
 const RightSection = () => {
+  const location = useLocation();
   const [codeFlowList, setCodeFlowList] = useState<State[]>([
     {
       objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
@@ -93,6 +95,7 @@ const RightSection = () => {
 
   const setConsoleList = useConsoleStore((state) => state.setConsoleList);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
+  const setStepIdx = useConsoleStore((state) => state.setStepIdx);
   const { inputData } = useConsoleStore();
   const { preprocessedCodes, setPreprocessedCodes } = preprocessedCodesContext;
   const { code } = codeContext;
@@ -125,6 +128,11 @@ const RightSection = () => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
   };
+  useEffect(() => {
+    return () => {
+      setStepIdx(0);
+    };
+  }, [setStepIdx, location]);
   const mutation = useMutation<SuccessResponse, ApiError, Parameters<typeof visualize>[0]>({
     mutationFn: visualize,
     async onSuccess(data) {
