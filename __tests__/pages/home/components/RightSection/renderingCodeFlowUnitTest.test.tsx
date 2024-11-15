@@ -46,8 +46,8 @@ describe("renderingCodeFlow 함수", () => {
 
     const width = 100;
     const height = 100;
-
-    render(<>{renderingCodeFlow(mockCodeFlows, width, height)}</>);
+    const scrollTop = 100;
+    render(<>{renderingCodeFlow(mockCodeFlows, width, height, scrollTop)}</>);
 
     // ForBox가 렌더링되었는지 확인
     // 테스트를 위해 만든 가짜 ForBox 컴포넌트를 사용
@@ -98,7 +98,8 @@ describe("renderingCodeFlow 함수", () => {
     ];
     const width = 100;
     const height = 100;
-    render(<>{renderingCodeFlow(mockCodeFlows, width, height)}</>);
+    const scrollTop = 100;
+    render(<>{renderingCodeFlow(mockCodeFlows, width, height, scrollTop)}</>);
 
     // 외부 ForBox가 렌더링되었는지 확인
     const outerForBox = screen.getByText("For Box: 1");
