@@ -10,7 +10,12 @@ import { useMutation } from "@tanstack/react-query";
 import Dropdown from "./components/Dropdown";
 import { useConsoleStore, useCodeFlowLengthStore } from "@/store/console";
 import { useEditorStore } from "@/store/editor";
+
+import { useCustomAlert } from "@/pages/components/CustomAlert.tsx";
+
+
 import { PreprocessedCodesContext } from "../../context/PreProcessedCodesContext";
+
 // 성공 응답 타입 정의
 
 const LeftSection = () => {
@@ -33,6 +38,7 @@ const LeftSection = () => {
     throw new Error("CodeContext not found");
   }
   const { code } = codeContext;
+  const { openAlert, closeAlert, CustomAlert } = useCustomAlert();
   const mutation = useMutation({
     mutationFn: runCode,
     async onSuccess(data) {
@@ -48,7 +54,6 @@ const LeftSection = () => {
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
       } else if ((error as any).code === "CA-400006" || (error as any).code === "CA-400999") {
-        alert("지원하지 않는 코드가 포함되어 있습니다");
         return;
       } else if ((error as any).code === "CA-400002") {
         // 잘못된 문법 에러처리
@@ -66,10 +71,13 @@ const LeftSection = () => {
     },
   });
   const handleRunCode = () => {
+    openAlert('클릭했습니다')
     mutation.mutate({ code, inputData });
   };
+
   return (
     <Fragment>
+
       <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         <div className={styles["top-bar"]}>
           <p className={styles["view-section-title"]}>코드 작성</p>
