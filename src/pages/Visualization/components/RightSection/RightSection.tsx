@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect, useRef, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import { CodeContext } from "../../context/CodeContext";
 import { PreprocessedCodesContext } from "../../context/PreProcessedCodesContext";
 import Split from "react-split";
@@ -7,7 +8,6 @@ import ResizeObserver from "resize-observer-polyfill";
 import styles from "./RightSection.module.css";
 // components
 import Arrow from "./components/Arrow/Arrow";
-
 
 // 타입 정의
 
@@ -59,7 +59,6 @@ import { useArrowStore } from "@/store/arrow";
 import { runCode, visualize } from "@/services/api";
 import { CodeFlowVariableItem } from "../../types/codeFlow/codeFlowVariableItem";
 
-
 interface State {
   objects: any[];
 }
@@ -72,7 +71,6 @@ interface ApiError {
   message: string;
 }
 
-
 // 성공 응답 타입 정의
 interface SuccessResponse {
   result: {
@@ -81,6 +79,7 @@ interface SuccessResponse {
 }
 
 const RightSection = () => {
+  const location = useLocation();
   const [codeFlowList, setCodeFlowList] = useState<State[]>([
     {
       objects: [{ id: 0, type: "start", depth: 0, isLight: false, child: [] }],
@@ -151,7 +150,7 @@ const RightSection = () => {
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
       } else if (error.code === "CA-400006" || error.code === "CA-400999") {
-        alert("지원하지 않는 코드가 포함되어 있습니다.")
+        alert("지원하지 않는 코드가 포함되어 있습니다.");
         return;
       } else if (error.code === "CA-400002") {
         const linNumber = Number((error as any).result.lineNumber);
@@ -395,7 +394,7 @@ const RightSection = () => {
         usedId = usedId.filter((id) => id !== variable.id);
         accCodeFlow = { objects: deletedCodeFlow };
       }
-        // 자료구조 시각화 부분이 들어왔을 때
+      // 자료구조 시각화 부분이 들어왔을 때
       // 나타나고 바로 사라지는건 traking id와 depth를 사용하지 않는다
       else if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
         const callStackName = (preprocessedCode as VariablesDto).callStackName;
@@ -433,7 +432,7 @@ const RightSection = () => {
                 targetName,
                 accDataStructures,
                 variable as VariableExprArray,
-                callStackName,
+                callStackName
               );
             }
             // 처음 시각화해주는 자료구조인 경우
@@ -524,7 +523,7 @@ const RightSection = () => {
           highlightLine.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id);
 
           const toAddObject = createObjectToAdd(
-            preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto,
+            preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
           );
 
           // print 타입일 때 console창의 로그를 만드는 부분
@@ -634,7 +633,7 @@ const RightSection = () => {
           };
           return acc;
         },
-        {} as WrapperDataStructureItem,
+        {} as WrapperDataStructureItem
       );
 
       // 자료구조리스트에서 얕은 복사 문제가 생겨서 깊은 복사를 해준다
@@ -662,7 +661,9 @@ const RightSection = () => {
           <div className="flex items-center gap-4">
             <button
               type="button"
-              className={`${styles["playcode-btn"]} ${codeExecMutation.isPending ? styles["playcode-btn-loading"] : ""}`}
+              className={`${styles["playcode-btn"]} ${
+                codeExecMutation.isPending ? styles["playcode-btn-loading"] : ""
+              }`}
               onClick={handleRunCode}
               disabled={codeExecMutation.isPending} // 로딩 중에는 버튼 비활성화
             >
