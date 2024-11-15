@@ -289,6 +289,7 @@ export const fetchGuestActionRequest = async (req: any) => {
       body: JSON.stringify({
         classroomId: req.classroomId,
         action: req.action,
+        code: req.code
       }),
     });
 
