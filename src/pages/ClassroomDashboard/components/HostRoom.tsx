@@ -8,7 +8,6 @@ interface props {
   classData: ClassData;
 }
 const Room = ({ classData }: props) => {
-  console.log(classData);
   return (
     <li>
       <Link to={`/classroomdashboard/classroom/${classData.id}`}>
