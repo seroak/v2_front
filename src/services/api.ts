@@ -289,7 +289,7 @@ export const fetchGuestActionRequest = async (req: any) => {
       body: JSON.stringify({
         classroomId: req.classroomId,
         action: req.action,
-        code: req.code
+        code: req.code,
       }),
     });
 
@@ -366,4 +366,24 @@ export const fetchGptHint = async (code: string, lineNumber: number): Promise<Gp
     throw new Error("Network response was not ok");
   }
   return response.json();
+};
+
+export const getStudentCode = async (classroomAccountId: number) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/edupi-lms/v1/classroom/account/code?classroomAccountId=${classroomAccountId}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    if (!response.ok) {
+      throw await response.json();
+    }
+    return response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
