@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, useContext } from "react";
 import { CodeContext } from "@/pages/Visualization/context/CodeContext";
 import { useConsoleStore } from "@/store/console";
 import { basic_codes, control_codes, function_codes, input_codes } from "./exampleCode.ts";
+import { PreprocessedCodesContext } from "@/pages/Visualization/context/PreProcessedCodesContext.ts";
 const Dropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("샘플 코드");
@@ -29,13 +30,16 @@ const Dropdown = () => {
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
   };
-  const { setInputData } = useConsoleStore();
+  const { setInputData, resetConsole } = useConsoleStore();
+  const { setPreprocessedCodes } =  useContext(PreprocessedCodesContext);
 
   const updateOption = (optionText: string, code: string, input: string, event: React.MouseEvent) => {
     event.stopPropagation();
     setSelectedOption(optionText);
     setCode(code);
     setInputData(input);
+    resetConsole();
+    setPreprocessedCodes([]);
     setIsOpen(false);
   };
 
