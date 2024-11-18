@@ -6,7 +6,7 @@ export interface getUserProps {
     name: string;
     role: string;
     provider: string;
-  } | null;
+  };
 }
 
 export interface LoginProps {

@@ -5,17 +5,8 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { useAccessRightStore } from "@/store/accessRight";
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { getUserProps } from "@/types/apiTypes";
 
-export interface User {
-  code: string;
-  detail: string;
-  result: {
-    email: string;
-    name: string;
-    role: string;
-    provider: string;
-  } | null;
-}
 const LoggedInHeader = () => {
   const params = useParams();
   let isFixed = false;
@@ -23,7 +14,7 @@ const LoggedInHeader = () => {
 
   const isHost = useAccessRightStore((state) => state.isHost);
   const classroomId = Number(params.classroomId);
-  const { data: userData, refetch } = useQuery<User>({
+  const { data: userData, refetch } = useQuery<getUserProps>({
     queryKey: ["user"],
     queryFn: getUser,
     staleTime: 1000 * 60,
@@ -122,7 +113,7 @@ const LoggedInHeader = () => {
         <a href="https://forms.gle/fufPJjH4Gfmavtqw5" target="_blank" rel="noopener noreferrer">
           <button className="feedback-btn">피드백 남기기</button>
         </a>
-        {!userData ? (
+        {userData?.code !== "CM-200000" ? (
           <div>
             <Link to="/login" className={styles["login-btn"]}>
               로그인
