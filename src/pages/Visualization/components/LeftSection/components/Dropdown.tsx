@@ -1,7 +1,7 @@
 import styles from "../LeftSection.module.css";
 import { useEffect, useRef, useState, useContext } from "react";
 import { CodeContext } from "@/pages/Visualization/context/CodeContext";
-import { basic_codes, control_codes, function_codes } from "./exampleCode.ts";
+import { basic_codes, control_codes, function_codes, input_codes } from "./exampleCode.ts";
 const Dropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("샘플 코드");
@@ -62,6 +62,16 @@ const Dropdown = () => {
           <p className={styles.step1}>제어문</p>
           <ul className={styles["sub-options"]}>
             {control_codes.map(([title, code], index) => (
+              <li key={index}>
+                <button onClick={(e) => updateOption(title, code, e)}>{title}</button>
+              </li>
+            ))}
+          </ul>
+        </li>
+        <li className={styles["main-option"]}>
+          <p className={styles.step1}>입출력</p>
+          <ul className={styles["sub-options"]}>
+            {input_codes.map(([title, code], index) => (
               <li key={index}>
                 <button onClick={(e) => updateOption(title, code, e)}>{title}</button>
               </li>
