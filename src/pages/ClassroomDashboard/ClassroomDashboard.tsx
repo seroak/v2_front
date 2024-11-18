@@ -24,12 +24,11 @@ interface GroupData {
 
 const ClassroomDashboard = () => {
   const isMswReady = useMswReadyStore((state) => state.isMswReady);
-  const { data: userData } = useQuery<User | null>({
+  const { data: userData } = useQuery<User>({
     queryKey: ["user"],
     queryFn: getUser,
     staleTime: 1000 * 60,
     retry: 3,
-    placeholderData: null,
   });
   const { data, refetch } = useQuery<GroupData>({
     queryKey: ["classroomspace"],
@@ -75,11 +74,11 @@ const ClassroomDashboard = () => {
 
   // 검색어에 따른 필터링 적용
   const filteredHostClassRooms = hostClassRooms.filter((room) =>
-    room.name.toLowerCase().includes(searchHostTerm.toLowerCase()),
+    room.name.toLowerCase().includes(searchHostTerm.toLowerCase())
   );
 
   const filteredGuestClassRooms = guestClassRooms.filter((room) =>
-    room.name.toLowerCase().includes(searchGuestTerm.toLowerCase()),
+    room.name.toLowerCase().includes(searchGuestTerm.toLowerCase())
   );
 
   return (
@@ -98,8 +97,8 @@ const ClassroomDashboard = () => {
       <div className="group-data-wrap">
         <div className="group-data-left">
           <div className="user-info">
-            <p>{userData?.name}님</p>
-            <span>{userData?.email}</span>
+            <p>{userData?.result?.name}님</p>
+            <span>{userData?.result?.email}</span>
             <ul className="user-group-data">
               <li>
                 <p>강의방 수</p>
@@ -148,17 +147,14 @@ const ClassroomDashboard = () => {
                 <HostRoom key={item.id} classData={item} />
               ))}
             </ul>
+          ) : searchHostTerm !== "" ? (
+            <div className="section-empty-search-classrooom">
+              <img src="/image/img_empty_search_class.png" alt="empty host classroom" />
+            </div>
           ) : (
-            searchHostTerm !== "" ?
-              (
-                <div className="section-empty-search-classrooom">
-                <img src="/image/img_empty_search_class.png" alt="empty host classroom" />
-              </div>
-              ) : (
-                <div className="section-empty-classroom">
-                <img src="/image/img_none_host_classroom.png" alt="empty search host classroom" />
-              </div>
-              )
+            <div className="section-empty-classroom">
+              <img src="/image/img_none_host_classroom.png" alt="empty search host classroom" />
+            </div>
           )}
           <div className="section-title">
             <div className="title-left">
@@ -184,17 +180,14 @@ const ClassroomDashboard = () => {
                 <GuestRoom key={item.id} classData={item} />
               ))}
             </ul>
+          ) : searchHostTerm !== "" ? (
+            <div className="section-empty-search-classrooom">
+              <img src="/image/img_empty_search_class.png" alt="empty host classroom" />
+            </div>
           ) : (
-            searchHostTerm !== "" ?
-              (
-                <div className="section-empty-search-classrooom">
-                  <img src="/image/img_empty_search_class.png" alt="empty host classroom" />
-                </div>
-              ) : (
-                <div className="section-empty-classroom">
-                  <img src="/image/img_none_host_classroom.png" alt="empty search host classroom" />
-                </div>
-              )
+            <div className="section-empty-classroom">
+              <img src="/image/img_none_host_classroom.png" alt="empty search host classroom" />
+            </div>
           )}
         </div>
       </div>
