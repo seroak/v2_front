@@ -11,6 +11,7 @@ import {
   getClassAccessRightData,
 } from "@/services/api";
 import Header from "../components/Header";
+
 import ClassroomModal from "@/pages/Classroom/components/ClassroomModal.tsx";
 
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
