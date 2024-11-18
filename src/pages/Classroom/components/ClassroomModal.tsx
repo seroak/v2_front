@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getStudentCode } from "@/services/api";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import styles from "./ClassroomModal.module.css";
+import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 interface Props {
   isOpen: boolean;
@@ -58,11 +60,13 @@ const ClassroomModal = ({ isOpen, onClose, guest }: Props) => {
             {isLoading ? (
               <div>로딩중...</div>
             ) : studentCode ? (
-              <pre className={styles["popup__display__code"]}>
+              <pre className="highlighted-code">
                 {studentCode.result.split("\n").map((line, index) => (
                   <code key={index} className={styles["code__line"]}>
                     <span className={styles["line__number"]}>{index + 1}</span>
-                    <span className={styles["line__content"]}>{line}</span>
+                    <SyntaxHighlighter key={`code-${index}-${line}`} language={"python"} style={oneLight}>
+                      {line}
+                    </SyntaxHighlighter>
                   </code>
                 ))}
               </pre>
