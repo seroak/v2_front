@@ -33,7 +33,6 @@ body {
   margin: 0; /* 기본 마진 제거 */
   background-color: #f9fafb;
   height: 100%;
-  overflow: hidden;
 }
 #root {
   height: 100%;
