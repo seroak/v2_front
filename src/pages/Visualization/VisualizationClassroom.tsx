@@ -34,13 +34,10 @@ interface ClassAccessRightDataType {
 
 const VisualizationClassroom = () => {
   const [code, setCode] = useState<any>(
-    [
-      "# example\n" +
-        "for i in range(2, 10):\n" +
-        "   for j in range(1, 10):\n" +
-        '      print(f"{i} x {j} = {i * j}")\n' +
-        "   print()\n",
-    ].join("\n")
+      ["for i in range(2, 10):\n" +
+      "   for j in range(1, 10):\n" +
+      "      print(f\"{i} x {j} = {i * j}\")\n" +
+      "   print()\n"].join("\n")
   );
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   const navigate = useNavigate();

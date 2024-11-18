@@ -140,7 +140,7 @@ export const control_codes=[
 ]
 
 export const input_codes =[
-  ["사용자 입력 예제1", "# input()의 갯수만큼 콘솔에 입력을 추가해주세요.\n" +
+  ["입력 덧셈", "# input()의 갯수만큼 콘솔에 입력을 추가해주세요.\n" +
                     "a = input()\n" +
                     "b = input()\n" +
                     "\n" +
@@ -150,8 +150,12 @@ export const input_codes =[
                     "print(f\"sum of a and b : {sum_result}\")\n"
     , "12\n13"
   ],
-  [
-
+  ["입력 자기소개", "# input()의 갯수만큼 콘솔에 입력을 추가해주세요.\n" +
+                    "name = input()\n" +
+                    "age = input()\n" +
+                    "\n" +
+                    "print(f\"안녕하세요 저는 {age}살 {name}입니다.\")\n"
+    ,"홍길동\n24"
   ]
 ]
 
@@ -168,8 +172,7 @@ export const function_codes =[
                 "# main\n" +
                 "list1 = [1,2,3,4,5,6,7,8,9,10]\n" +
                 "result = sum_even_number(list1)\n" +
-                "print(f\"sum of numbers= {result}\")\n" +
-                "\n",
+                "print(f\"sum of numbers= {result}\")\n",
       ""
     ],
     [
