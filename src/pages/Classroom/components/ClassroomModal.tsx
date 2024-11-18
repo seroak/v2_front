@@ -51,7 +51,6 @@ const ClassroomModal = ({ isOpen, onClose, guest }: Props) => {
             <h2 className="popup__header__title">
               {guest?.name} ({guest?.email})
             </h2>
-            <p>{guest?.id}</p>
             <button className="popup__header__close" onClick={onClose}></button>
           </div>
           <div className={styles["popup__contents__group"]}>
