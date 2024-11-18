@@ -158,6 +158,7 @@ const Classroom = () => {
     setIsConsentInformationModalOpen(false);
   };
   const openConsentInformationModal = (guest: GuestType): void => {
+    if (guest.status === 1) return;
     setIsConsentInformationModalOpen(true);
     setOnClickGuest(guest);
   };

@@ -12,7 +12,7 @@ interface GuestProps {
 const Guest = ({ guest, onClick }: GuestProps) => {
   switch (guest.status) {
     case 1:
-      guest.status = "제출 중";
+      guest.status = "미제출";
       break;
     case 2:
       guest.status = "도움 요청";
@@ -26,8 +26,8 @@ const Guest = ({ guest, onClick }: GuestProps) => {
   return (
     <>
       <li onClick={onClick}>
-        <div>
-          {guest.status === "제출 중" ? (
+        <a style={{ cursor: "pointer" }}>
+          {guest.status === "미제출" ? (
             <>
               <div>
                 <p>{guest.name}</p>
@@ -57,7 +57,7 @@ const Guest = ({ guest, onClick }: GuestProps) => {
               </div>
             </>
           ) : null}
-        </div>
+        </a>
       </li>
     </>
   );
