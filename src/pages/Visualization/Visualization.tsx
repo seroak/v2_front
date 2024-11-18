@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Visualization.module.css";
 import "./gutter.css";
 
@@ -12,6 +12,7 @@ import Split from "react-split";
 import { ValidTypeDto } from "@/pages/Visualization/types/dto/ValidTypeDto";
 import { CodeContext } from "./context/CodeContext";
 import { PreprocessedCodesContext } from "./context/PreProcessedCodesContext";
+import { useConsoleStore } from "@/store/console";
 
 //zustand store
 import { useEditorStore } from "@/store/editor";
@@ -29,6 +30,12 @@ export default function Visualization() {
   );
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   // zustand store
+  const { resetInputData } = useConsoleStore();
+  useEffect(() => {
+    return () => {
+      resetInputData();
+    };
+  }, [resetInputData]);
 
   const { focus } = useEditorStore();
   const isGptToggle = useGptTooltipStore((state) => state.isGptToggle);
