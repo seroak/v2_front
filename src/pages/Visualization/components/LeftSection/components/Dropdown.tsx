@@ -2,7 +2,7 @@ import styles from "../LeftSection.module.css";
 import { useEffect, useRef, useState, useContext } from "react";
 import { CodeContext } from "@/pages/Visualization/context/CodeContext";
 import { useConsoleStore } from "@/store/console";
-import { basic_codes, control_codes, function_codes, input_codes } from "./exampleCode.ts";
+import { data_codes, string_codes, operation_codes, control_codes, list_codes, repeat_codes, function_codes } from "./exampleCode.ts";
 import { PreprocessedCodesContext } from "@/pages/Visualization/context/PreProcessedCodesContext.ts";
 const Dropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,14 +30,14 @@ const Dropdown = () => {
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
   };
-  const { setInputData, resetConsole } = useConsoleStore();
+  const { resetInputData, resetConsole } = useConsoleStore();
   const { setPreprocessedCodes } =  useContext(PreprocessedCodesContext);
 
-  const updateOption = (optionText: string, code: string, input: string, event: React.MouseEvent) => {
+  const updateOption = (optionText: string, code: string, event: React.MouseEvent) => {
     event.stopPropagation();
     setSelectedOption(optionText);
     setCode(code);
-    setInputData(input);
+    resetInputData();
     resetConsole();
     setPreprocessedCodes([]);
     setIsOpen(false);
@@ -56,11 +56,31 @@ const Dropdown = () => {
       </div>
       <ul className={styles["dropdown-menu"]} style={{ display: isOpen ? "block" : "none" }}>
         <li className={styles["main-option"]}>
-          <p className={styles.step1}>기초</p>
+          <p className={styles.step1}>자료형</p>
           <ul className={styles["sub-options"]}>
-            {basic_codes.map(([title, code, input], index) => (
+            {data_codes.map(([title, code], index) => (
               <li key={index}>
-                <button onClick={(e) => updateOption(title, code, input, e)}>{title}</button>
+                <button onClick={(e) => updateOption(title, code, e)}>{title}</button>
+              </li>
+            ))}
+          </ul>
+        </li>
+        <li className={styles["main-option"]}>
+          <p className={styles.step1}>문자열 다루기</p>
+          <ul className={styles["sub-options"]}>
+            {string_codes.map(([title, code], index) => (
+              <li key={index}>
+                <button onClick={(e) => updateOption(title, code, e)}>{title}</button>
+              </li>
+            ))}
+          </ul>
+        </li>
+        <li className={styles["main-option"]}>
+          <p className={styles.step1}>연산자</p>
+          <ul className={styles["sub-options"]}>
+            {operation_codes.map(([title, code], index) => (
+              <li key={index}>
+                <button onClick={(e) => updateOption(title, code, e)}>{title}</button>
               </li>
             ))}
           </ul>
@@ -68,19 +88,29 @@ const Dropdown = () => {
         <li className={styles["main-option"]}>
           <p className={styles.step1}>제어문</p>
           <ul className={styles["sub-options"]}>
-            {control_codes.map(([title, code, input], index) => (
+            {control_codes.map(([title, code], index) => (
               <li key={index}>
-                <button onClick={(e) => updateOption(title, code, input, e)}>{title}</button>
+                <button onClick={(e) => updateOption(title, code, e)}>{title}</button>
               </li>
             ))}
           </ul>
         </li>
         <li className={styles["main-option"]}>
-          <p className={styles.step1}>입출력</p>
+          <p className={styles.step1}>리스트</p>
           <ul className={styles["sub-options"]}>
-            {input_codes.map(([title, code, input], index) => (
+            {list_codes.map(([title, code], index) => (
               <li key={index}>
-                <button onClick={(e) => updateOption(title, code, input, e)}>{title}</button>
+                <button onClick={(e) => updateOption(title, code, e)}>{title}</button>
+              </li>
+            ))}
+          </ul>
+        </li>
+        <li className={styles["main-option"]}>
+          <p className={styles.step1}>반복문</p>
+          <ul className={styles["sub-options"]}>
+            {repeat_codes.map(([title, code], index) => (
+              <li key={index}>
+                <button onClick={(e) => updateOption(title, code, e)}>{title}</button>
               </li>
             ))}
           </ul>
@@ -88,9 +118,9 @@ const Dropdown = () => {
         <li className={styles["main-option"]}>
           <p className={styles.step1}>함수</p>
           <ul className={styles["sub-options"]}>
-            {function_codes.map(([title, code, input], index) => (
+            {function_codes.map(([title, code], index) => (
               <li key={index}>
-                <button onClick={(e) => updateOption(title, code, input, e)}>{title}</button>
+                <button onClick={(e) => updateOption(title, code, e)}>{title}</button>
               </li>
             ))}
           </ul>
