@@ -16,8 +16,7 @@ export const basic_codes = [
                 "\n" +
                 "# 3. 변수 사용\n" +
                 "total_height = height * 2  # 키를 두 배로 계산\n" +
-                "print(\"두 배 키:\", total_height)\n" +
-                "\n",
+                "print(\"두 배 키:\", total_height)\n",
       ""
     ],
 
