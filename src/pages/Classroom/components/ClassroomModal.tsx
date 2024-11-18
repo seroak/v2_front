@@ -21,7 +21,7 @@ interface studentCodeType {
 }
 
 const ClassroomModal = ({ isOpen, onClose, guest }: Props) => {
-  const { data: studentCode } = useQuery<studentCodeType>({
+  const { data: studentCode, isLoading } = useQuery<studentCodeType>({
     queryKey: ["studentData", guest],
     queryFn: () => getStudentCode(guest.id),
   });
@@ -56,14 +56,20 @@ const ClassroomModal = ({ isOpen, onClose, guest }: Props) => {
           </div>
           <div className={styles["popup__contents__group"]}>
             <div className={styles["popup__content__title"]}>제출 코드</div>
-            <pre className={styles["popup__display__code"]}>
-              {studentCode!.result.split("\n").map((line, index) => (
-                <code key={index} className={styles["code__line"]}>
-                  <span className={styles["line__number"]}>{index + 1}</span>
-                  <span className={styles["line__content"]}>{line}</span>
-                </code>
-              ))}
-            </pre>
+            {isLoading ? (
+              <div>로딩중...</div>
+            ) : studentCode ? (
+              <pre className={styles["popup__display__code"]}>
+                {studentCode.result.split("\n").map((line, index) => (
+                  <code key={index} className={styles["code__line"]}>
+                    <span className={styles["line__number"]}>{index + 1}</span>
+                    <span className={styles["line__content"]}>{line}</span>
+                  </code>
+                ))}
+              </pre>
+            ) : (
+              <div>코드가 없습니다</div>
+            )}
           </div>
         </div>
       </div>

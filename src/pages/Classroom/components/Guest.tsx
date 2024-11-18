@@ -26,7 +26,7 @@ const Guest = ({ guest, onClick }: GuestProps) => {
   return (
     <>
       <li onClick={onClick}>
-        <a href="#">
+        <div>
           {guest.status === "제출 중" ? (
             <>
               <div>
@@ -57,7 +57,7 @@ const Guest = ({ guest, onClick }: GuestProps) => {
               </div>
             </>
           ) : null}
-        </a>
+        </div>
       </li>
     </>
   );
