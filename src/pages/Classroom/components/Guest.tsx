@@ -5,10 +5,11 @@ interface GuestType {
   status: number | string;
   role: number;
 }
-interface props {
+interface GuestProps {
   guest: GuestType;
+  onClick: () => void;
 }
-const Guest = ({ guest }: props) => {
+const Guest = ({ guest, onClick }: GuestProps) => {
   switch (guest.status) {
     case 1:
       guest.status = "제출 중";
@@ -24,7 +25,7 @@ const Guest = ({ guest }: props) => {
   }
   return (
     <>
-      <li>
+      <li onClick={onClick}>
         <a href="#">
           {guest.status === "제출 중" ? (
             <>

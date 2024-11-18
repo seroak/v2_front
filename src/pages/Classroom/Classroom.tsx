@@ -57,7 +57,7 @@ const Classroom = () => {
   const classroomId = Number(params.classroomId);
   const setIsHost = useAccessRightStore((state) => state.setIsHost);
   const [isConsentInformationModalOpen, setIsConsentInformationModalOpen] = useState<boolean>(false);
-
+  const [onClickGuest, setOnClickGuest] = useState<GuestType | null>(null);
   const { data: guestData, refetch: guestDataRefetch } = useQuery<ClassroomDataType>({
     queryKey: ["classGuestData", classroomId],
     queryFn: () => getClassGuestDataWithoutDefaultAction(classroomId),
@@ -153,12 +153,22 @@ const Classroom = () => {
   };
 
   useSSE(`${BASE_URL}/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
-  const closeConsentInformationModal = (): void => setIsConsentInformationModalOpen(false);
+  const closeConsentInformationModal = (): void => {
+    setIsConsentInformationModalOpen(false);
+  };
+  const openConsentInformationModal = (guest: GuestType): void => {
+    setIsConsentInformationModalOpen(true);
+    setOnClickGuest(guest);
+  };
 
   return (
     <div>
       <Header />
-      <ClassroomModal isOpen={true} onClose={closeConsentInformationModal} userName={"송관석"} email={"kho6812@naver.com"} code={"a = 10\nprint(a)\n"}/>
+      <ClassroomModal
+        isOpen={isConsentInformationModalOpen}
+        onClose={closeConsentInformationModal}
+        guest={onClickGuest!}
+      />
       <div className="group-wrap">
         <div className="group-left">
           <img src="/image/icon_group.svg" alt="그룹" />
@@ -221,7 +231,7 @@ const Classroom = () => {
           {guests && guests.length > 0 ? (
             <ul className="section-data section-data01">
               {guests.map((guest) => (
-                <Guest key={guest.id} guest={guest} />
+                <Guest key={guest.id} guest={guest} onClick={() => openConsentInformationModal(guest)} />
               ))}
             </ul>
           ) : (

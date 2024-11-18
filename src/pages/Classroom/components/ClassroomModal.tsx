@@ -1,15 +1,30 @@
 import { useEffect } from "react";
-
+import { useQuery } from "@tanstack/react-query";
+import { getStudentCode } from "@/services/api";
 import styles from "./ClassroomModal.module.css";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  userName: string;
-  email: string;
-  code: string;
+  guest: {
+    id: number;
+    email: string;
+    name: string;
+    status: number;
+    role: number;
+  };
 }
-const ConsentInformationModal = ({ isOpen, onClose, userName, email, code }: Props) => {
+interface studentCodeType {
+  code: string;
+  detail: string;
+  result: string;
+}
+
+const ClassroomModal = ({ isOpen, onClose, guest }: Props) => {
+  const { data: studentCode } = useQuery<studentCodeType>({
+    queryKey: ["studentData", guest],
+    queryFn: () => getStudentCode(guest.id),
+  });
 
   useEffect(() => {
     if (isOpen) {
@@ -26,7 +41,7 @@ const ConsentInformationModal = ({ isOpen, onClose, userName, email, code }: Pro
     };
   }, [isOpen]);
 
-  // if (!isOpen) return null;
+  if (!isOpen) return null;
   return (
     <div id="popupModal02" className="popup__section is-open" onClick={onClose}>
       <div className="popup__dim"></div>
@@ -34,16 +49,15 @@ const ConsentInformationModal = ({ isOpen, onClose, userName, email, code }: Pro
         <div className="popup__container__group" onClick={(e) => e.stopPropagation()}>
           <div className="popup__header__group">
             <h2 className="popup__header__title">
-              {userName} ({email})
+              {guest?.name} ({guest?.email})
             </h2>
-            <button className="popup__header__close" onClick={onClose}>
-              <span className="screen-out">닫기</span>
-            </button>
+            <p>{guest?.id}</p>
+            <button className="popup__header__close" onClick={onClose}></button>
           </div>
           <div className={styles["popup__contents__group"]}>
             <div className={styles["popup__content__title"]}>제출 코드</div>
             <pre className={styles["popup__display__code"]}>
-              {code.split('\n').map((line, index) => (
+              {studentCode!.code.split("\n").map((line, index) => (
                 <code key={index} className={styles["code__line"]}>
                   <span className={styles["line__number"]}>{index + 1}</span>
                   <span className={styles["line__content"]}>{line}</span>
@@ -56,4 +70,4 @@ const ConsentInformationModal = ({ isOpen, onClose, userName, email, code }: Pro
     </div>
   );
 };
-export default ConsentInformationModal;
+export default ClassroomModal;
