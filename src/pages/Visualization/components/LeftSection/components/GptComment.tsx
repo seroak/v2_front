@@ -71,7 +71,7 @@ const GptComment = () => {
   };
 
   const gptCorrectMutation = useMutation({
-    mutationFn: fetchGptCorrect,
+    mutationFn: () => fetchGptCorrect(code, errorLine?.lineNumber || 1),
     async onSuccess(data) {
       console.log(data);
       setReason(data.result.reason);
@@ -145,7 +145,7 @@ const GptComment = () => {
     clearCurrentTimeout();
     setIsGptToggle(true);
     resetEditor();
-    gptCorrectMutation.mutate(code);
+    gptCorrectMutation.mutate();
   };
 
   const handleHint = () => {
