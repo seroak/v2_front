@@ -57,7 +57,7 @@ const ClassroomModal = ({ isOpen, onClose, guest }: Props) => {
           <div className={styles["popup__contents__group"]}>
             <div className={styles["popup__content__title"]}>제출 코드</div>
             <pre className={styles["popup__display__code"]}>
-              {studentCode!.code.split("\n").map((line, index) => (
+              {studentCode!.result.split("\n").map((line, index) => (
                 <code key={index} className={styles["code__line"]}>
                   <span className={styles["line__number"]}>{index + 1}</span>
                   <span className={styles["line__content"]}>{line}</span>
