@@ -2,6 +2,7 @@ import { useState, useRef, ChangeEvent, FormEvent, useContext, useEffect } from 
 import ConsentInformationModal from "./ConsentInformationModal";
 import TermsOfServiceModal from "./TermsOfServiceModal";
 import { useMutation } from "@tanstack/react-query";
+import { useCustomAlert } from "@/pages/components/CustomAlert";
 import { Link } from "react-router-dom";
 import { TrySignupContext } from "../Signup";
 import { signup } from "@/services/api";
@@ -48,6 +49,7 @@ const SignupWrap = () => {
     privacy: false,
     marketing: false,
   });
+  const { openAlert, CustomAlert } = useCustomAlert();
   const emailRef = useRef<HTMLInputElement>(null);
   const phoneNumberRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -217,7 +219,7 @@ const SignupWrap = () => {
         alert("중복 이메일입니다.");
         return;
       }
-      alert("회원가입 중 오류가 발생했습니다.");
+      openAlert("회원가입 중 오류가 발생했습니다.");
     },
   });
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -311,6 +313,7 @@ const SignupWrap = () => {
 
   return (
     <>
+      <CustomAlert />
       <TermsOfServiceModal isOpen={isTermsOfServiceModalOpen} onClose={closeTermsOfServiceModal} />
       <ConsentInformationModal isOpen={isConsentInformationModalOpen} onClose={closeConsentInformationModal} />
       <div className="login-wrap">
