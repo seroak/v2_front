@@ -16,7 +16,7 @@ import ClassroomModal from "@/pages/Classroom/components/ClassroomModal.tsx";
 
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
-interface GuestType {
+export interface GuestType {
   id: number;
   email: string;
   name: string;
