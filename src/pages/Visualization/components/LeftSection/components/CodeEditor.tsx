@@ -22,7 +22,7 @@ const CodeEditor = () => {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
   const errorLine = useEditorStore((state) => state.errorLine);
-
+  const resetErrorLine = useEditorStore((state) => state.resetErrorLine);
   const { setFocus } = useEditorStore();
   const setIsGptToggle = useGptTooltipStore((state) => state.setIsGptToggle);
   const { setGptTop, setGptLeft } = useGptTooltipStore();
@@ -55,6 +55,7 @@ const CodeEditor = () => {
     }
   }, [errorLine]);
   const handleResetEditor = () => {
+    resetErrorLine();
     setGptPin(false);
     setIsGptToggle(false);
     if (editorRef.current) {
