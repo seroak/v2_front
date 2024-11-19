@@ -29,7 +29,7 @@ const Console = () => {
   return (
     <div className={styles["console-wrapper"]}>
       <div className={styles["view-section1-2"]}>
-        <p className={styles["view-section-title"]}>Console</p>
+        <p className={styles["view-section-title"]}>콘솔</p>
         <textarea
           className={cx(styles["input-area"], isInputError && styles["input-error"])}
           value={inputData}

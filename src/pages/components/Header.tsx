@@ -104,9 +104,6 @@ const LoggedInHeader = () => {
       </div>
 
       <div className="login-header">
-        <a href="https://forms.gle/fufPJjH4Gfmavtqw5" target="_blank" rel="noopener noreferrer">
-          <button className="feedback-btn">피드백 남기기</button>
-        </a>
         {userData?.code !== "CM-200000" ? (
           <div>
             <Link to="/login" className={styles["login-btn"]}>

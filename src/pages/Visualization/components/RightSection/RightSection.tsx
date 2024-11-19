@@ -689,19 +689,6 @@ const RightSection = () => {
         <div className={styles["top-bar"]}>
           <p className={styles["view-section-title"]}>시각화</p>
           <div className={styles["play-wrap"]}>
-            <div className="flex items-center gap-4">
-              <button
-                type="button"
-                className={`${styles["playcode-btn"]} ${
-                  codeExecMutation.isPending ? styles["playcode-btn-loading"] : ""
-                }`}
-                onClick={handleRunCode}
-                disabled={codeExecMutation.isPending} // 로딩 중에는 버튼 비활성화
-              >
-                <img src="/image/icon_play_w.svg" alt="" />
-                코드실행
-              </button>
-            </div>
             <form onSubmit={handleSubmit}>
               <button
                 type="submit"
@@ -712,6 +699,19 @@ const RightSection = () => {
                 시각화
               </button>
             </form>
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                className={`${styles["playcode-btn"]} ${
+                  codeExecMutation.isPending ? styles["playcode-btn-loading"] : ""
+                }`}
+                onClick={handleRunCode}
+                disabled={codeExecMutation.isPending} // 로딩 중에는 버튼 비활성화
+              >
+                <img src="/image/icon_play_w.svg" alt="" />
+                결과보기
+              </button>
+            </div>
             <div>
               <button>
                 <img src="/image/icon_play_back.svg" onClick={onBack} alt="뒤로" />

@@ -6,7 +6,7 @@ import { data_codes, string_codes, operation_codes, control_codes, list_codes, r
 import { PreprocessedCodesContext } from "@/pages/Visualization/context/PreProcessedCodesContext.ts";
 const Dropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("샘플 코드");
+  const [selectedOption, setSelectedOption] = useState("커리큘럼");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const codeContext = useContext(CodeContext);
   if (!codeContext) {
@@ -47,7 +47,7 @@ const Dropdown = () => {
     <div className={styles["select-box"]} ref={dropdownRef}>
       <div
         className={`${styles["default-option"]} ${
-          selectedOption !== "샘플 코드" ? styles["is_selected"] : ""
+          selectedOption !== "커리큘럼" ? styles["is_selected"] : ""
         }`}
         onClick={toggleDropdown}
       >
