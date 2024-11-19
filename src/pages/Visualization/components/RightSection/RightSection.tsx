@@ -59,7 +59,7 @@ import { useArrowStore } from "@/store/arrow";
 //api
 import { runCode, visualize } from "@/services/api";
 import { CodeFlowVariableItem } from "../../types/codeFlow/codeFlowVariableItem";
-
+import { InputErrorContext } from "@/pages/Visualization/context/InputErrorContext";
 interface State {
   objects: any[];
 }
@@ -89,18 +89,23 @@ const RightSection = () => {
   const [StructuresList, setStructuresList] = useState<any>([]); // 변수 데이터 시각화 리스트의 변화과정을 담아두는 리스트
   const preprocessedCodesContext = useContext(PreprocessedCodesContext); // context API로 데이터 가져오기
   const codeContext = useContext(CodeContext);
+  const inputErrorContext = useContext(InputErrorContext);
+
   if (!preprocessedCodesContext) {
     throw new Error("preprocessedCodesContext not found"); //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
   }
   if (!codeContext) {
     throw new Error("CodeContext not found");
   }
-
+  if (!inputErrorContext) {
+    throw new Error("InputErrorContext not found");
+  }
   const setConsoleList = useConsoleStore((state) => state.setConsoleList);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
   const setStepIdx = useConsoleStore((state) => state.setStepIdx);
   const { inputData } = useConsoleStore();
   const { preprocessedCodes, setPreprocessedCodes } = preprocessedCodesContext;
+  const { setIsInputError } = inputErrorContext;
   const [arrowTextList, setArrowTextList] = useState<string[]>([]);
 
   const [, setRightSectionSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
@@ -205,6 +210,9 @@ const RightSection = () => {
       } else if ((error as any).code === "CA-400006" || (error as any).code === "CA-400999") {
         alert("지원하지 않는 코드가 포함되어 있습니다");
         return;
+      } else if ((error as any).code === "CA-400005") {
+        setIsInputError(true);
+        alert("입력된 input의 갯수가 적습니다.");
       } else if ((error as any).code === "CA-400002") {
         // 잘못된 문법 에러처리
         const linNumber = Number((error as any).result.lineNumber);
@@ -212,6 +220,7 @@ const RightSection = () => {
         setErrorLine({ lineNumber: linNumber, message: errorMessage });
         setConsoleList([errorMessage]);
         setPreprocessedCodes([]);
+
         return;
       } else if ((error as any).code == "CA-400007") {
         alert("코드의 실행 횟수가 너무 많습니다.");
