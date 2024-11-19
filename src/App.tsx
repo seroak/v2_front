@@ -16,9 +16,14 @@ import "./App.css";
 import { setupMSW } from "./mocks/setup";
 
 export interface User {
-  email: string;
-  name: string;
-  role: string;
+  code: string;
+  detail: string;
+  result: {
+    email: string;
+    name: string;
+    role: string;
+    provider: string;
+  } | null;
 }
 
 function App() {
