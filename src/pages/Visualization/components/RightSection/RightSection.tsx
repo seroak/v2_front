@@ -40,6 +40,7 @@ import { turnOffAllNodeLight } from "./services/turnOffAllNodeLight";
 import { findTargetChild } from "./services/findTargetChild";
 import { findDeleteUsedId } from "./services/findDeleteUsedId";
 import { unLightCodeFlow } from "./services/unLightCodeFlow";
+import { isNotServiceDtoType } from "./services/isNotServiceDtoType";
 //rendUtils에서 가져온 함수
 import { renderingStructure } from "./renderingStructure";
 import { renderingCodeFlow } from "./renderingCodeFlow";
@@ -58,7 +59,7 @@ import { useArrowStore } from "@/store/arrow";
 //api
 import { runCode, visualize } from "@/services/api";
 import { CodeFlowVariableItem } from "../../types/codeFlow/codeFlowVariableItem";
-
+import { InputErrorContext } from "@/pages/Visualization/context/InputErrorContext";
 interface State {
   objects: any[];
 }
@@ -88,18 +89,23 @@ const RightSection = () => {
   const [StructuresList, setStructuresList] = useState<any>([]); // 변수 데이터 시각화 리스트의 변화과정을 담아두는 리스트
   const preprocessedCodesContext = useContext(PreprocessedCodesContext); // context API로 데이터 가져오기
   const codeContext = useContext(CodeContext);
+  const inputErrorContext = useContext(InputErrorContext);
+
   if (!preprocessedCodesContext) {
     throw new Error("preprocessedCodesContext not found"); //context가 없을 경우 에러 출력 패턴 처리안해주면 에러 발생
   }
   if (!codeContext) {
     throw new Error("CodeContext not found");
   }
-
+  if (!inputErrorContext) {
+    throw new Error("InputErrorContext not found");
+  }
   const setConsoleList = useConsoleStore((state) => state.setConsoleList);
   const stepIdx = useConsoleStore((state) => state.stepIdx);
   const setStepIdx = useConsoleStore((state) => state.setStepIdx);
   const { inputData } = useConsoleStore();
   const { preprocessedCodes, setPreprocessedCodes } = preprocessedCodesContext;
+  const { setIsInputError } = inputErrorContext;
   const [arrowTextList, setArrowTextList] = useState<string[]>([]);
 
   const [, setRightSectionSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
@@ -137,10 +143,13 @@ const RightSection = () => {
   }, [setStepIdx, location]);
 
   const codeVizMutation = useMutation<SuccessResponse, ApiError, Parameters<typeof visualize>[0]>({
-
     mutationFn: visualize,
     async onSuccess(data) {
       // 타입 체크 함수
+      if (isNotServiceDtoType(data.result.code)) {
+        console.error("시각화를 지원하지 않는 코드가 포함되어 있습니다.");
+        throw new Error("시각화를 지원하지 않는 코드가 포함되어 있습니다.");
+      }
       if (isValidTypeDtoArray(data.result.code)) {
         resetConsole();
         setPreprocessedCodes(data.result.code);
@@ -158,6 +167,12 @@ const RightSection = () => {
         return;
       } else if (error.code === "CA-400006" || error.code === "CA-400999") {
         alert("지원하지 않는 코드가 포함되어 있습니다.");
+        return;
+      } else if ((error as any).code === "CA-400005") {
+        setIsInputError(true);
+        alert("입력된 input의 갯수가 적습니다.");
+      } else if (error.message === "시각화를 지원하지 않는 코드가 포함되어 있습니다.") {
+        alert("시각화를 지원하지 않는 코드가 포함되어 있습니다.");
         return;
       } else if (error.code === "CA-400002") {
         const linNumber = Number((error as any).result.lineNumber);
@@ -194,6 +209,9 @@ const RightSection = () => {
       } else if ((error as any).code === "CA-400006" || (error as any).code === "CA-400999") {
         alert("지원하지 않는 코드가 포함되어 있습니다");
         return;
+      } else if ((error as any).code === "CA-400005") {
+        setIsInputError(true);
+        alert("입력된 input의 갯수가 적습니다.");
       } else if ((error as any).code === "CA-400002") {
         // 잘못된 문법 에러처리
         const linNumber = Number((error as any).result.lineNumber);
@@ -201,6 +219,7 @@ const RightSection = () => {
         setErrorLine({ lineNumber: linNumber, message: errorMessage });
         setConsoleList([errorMessage]);
         setPreprocessedCodes([]);
+
         return;
       } else if ((error as any).code == "CA-400007") {
         alert("코드의 실행 횟수가 너무 많습니다.");
@@ -337,6 +356,7 @@ const RightSection = () => {
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
       }
+
       accDataStructures = Object.entries(accDataStructures).reduce((acc, [key, value]) => {
         acc[key] = {
           data: value.data.map((structure) => ({

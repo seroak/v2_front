@@ -26,7 +26,13 @@ interface CheckboxState {
   privacy: boolean;
   marketing: boolean;
 }
-
+interface errorType {
+  response: {
+    data: {
+      code: string;
+    };
+  };
+}
 const SignupWrap = () => {
   const [formData, setFormData] = useState<FormData>({
     username: "",
@@ -206,7 +212,7 @@ const SignupWrap = () => {
     },
     onError(error) {
       console.error("회원가입 에러", error);
-      const apiError = error as any;
+      const apiError = error as unknown as errorType;
       if (apiError.response.data.code == "AC-400003") {
         alert("중복 이메일입니다.");
         return;

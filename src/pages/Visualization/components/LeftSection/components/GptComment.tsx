@@ -25,7 +25,7 @@ const GptComment = () => {
   const context = useContext(CodeContext);
   const { setTimeoutId, clearCurrentTimeout } = useTimeoutStore();
   const { setIsGptToggle, gptPin, setGptPin, gptLeft, gptTop } = useGptTooltipStore();
-  const { resetEditor, errorLine } = useEditorStore();
+  const { resetErrorLine, errorLine } = useEditorStore();
   const { resetTrigger, setResetTrigger } = useResetEditor();
   const { openAlert, CustomAlert } = useCustomAlert();
   const {
@@ -71,9 +71,8 @@ const GptComment = () => {
   };
 
   const gptCorrectMutation = useMutation({
-    mutationFn: fetchGptCorrect,
-    async onSuccess(data) {
-      console.log(data);
+    mutationFn: () => fetchGptCorrect(code, errorLine?.lineNumber || 1),
+    onSuccess(data) {
       setReason(data.result.reason);
       const newModifiedCode = data.result.modified_codes.reduce((acc: ModifiedCode[], cur: ModifiedCode) => {
         if (acc.length === 0) {
@@ -129,7 +128,7 @@ const GptComment = () => {
     setGptPin(false);
     setIsGptToggle(false);
     resetState();
-    resetEditor();
+    resetErrorLine();
     setResetTrigger(!resetTrigger);
   };
 
@@ -144,8 +143,7 @@ const GptComment = () => {
     setGptPin(true);
     clearCurrentTimeout();
     setIsGptToggle(true);
-    resetEditor();
-    gptCorrectMutation.mutate(code);
+    gptCorrectMutation.mutate();
   };
 
   const handleHint = () => {

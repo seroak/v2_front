@@ -343,12 +343,12 @@ export const logout = async (): Promise<null> => {
   }
 };
 
-export const fetchGptCorrect = async (code: string): Promise<GptCorrectResponse> => {
+export const fetchGptCorrect = async (code: string, lineNumber: number): Promise<GptCorrectResponse> => {
   const response = await fetch(`${BASE_URL}/edupi-assist/v1/advice/correction`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ source_code: code }),
+    body: JSON.stringify({ line: lineNumber, source_code: code }),
   });
   if (!response.ok) {
     throw new Error("Network response was not ok");
