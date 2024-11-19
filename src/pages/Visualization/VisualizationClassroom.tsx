@@ -126,7 +126,7 @@ const VisualizationClassroom = () => {
               </Split>
               <div className="floating-buttons">
                 {guestStatus?.result === ActionType.HELP && (
-                  <button className="btn btn-complete-summit" disabled={true}>
+                  <button className="btn btn-complete-summit">
                     <img
                       src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6L6 18'%3E%3C/path%3E%3Cpath d='M6 6l12 12'%3E%3C/path%3E%3C/svg%3E"
                       alt="제출 완료 아이콘"
