@@ -120,7 +120,7 @@ const Modify = () => {
     mutationFn: deleteClassroom,
     onSuccess: () => {
       openAlert("클래스룸이 삭제되었습니다.");
-      navigate("/classdashboard");
+      navigate("/classroomdashboard");
     },
     onError: (error) => {
       console.error("An error occurred:", error);
