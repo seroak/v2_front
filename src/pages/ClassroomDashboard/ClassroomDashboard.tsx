@@ -97,6 +97,7 @@ const ClassroomDashboard = () => {
           </div>
           <img src="/image/img_copywriting.png" alt="클래스룸 이미지" />
         </div>
+
         <div className="group-data-wrap">
           <div className="group-data-left">
             <div className="user-info">
@@ -124,104 +125,74 @@ const ClassroomDashboard = () => {
                 <button onClick={submitCreateClassName}>생성</button>
               </div>
             </div>
-            <img src="/image/img_copywriting.png" alt="클래스룸 이미지" />
           </div>
-          <div className="group-data-wrap">
-            <div className="group-data-left">
-              <div className="user-info">
-                <p>{userData?.result?.name}님</p>
-                <span>{userData?.result?.email}</span>
-                <ul className="user-group-data">
-                  <li>
-                    <p>강의방 수</p>
-                    <p>{hostClassRooms.length}</p>
-                  </li>
-                  <li>
-                    <p>학습방 수</p>
-                    <p>{guestClassRooms.length}</p>
-                  </li>
-                </ul>
-                <label htmlFor="addgroup">클래스룸 생성</label>
-                <div>
+          <div className="group-right">
+            <div className="section-title">
+              <div className="title-left">
+                <h3>강의방</h3>
+              </div>
+              <div className="title-right">
+                <div className="search-wrap">
                   <input
                     type="text"
-                    id="addgroup"
-                    placeholder="클래스룸 이름"
-                    value={createClassName}
-                    onChange={changeCreateClassName} // 입력값 변경시 상태 업데이트
+                    placeholder="클래스룸 검색"
+                    value={searchHostTerm}
+                    onChange={(e) => setHostSearchTerm(e.target.value)} // 검색어 업데이트
                   />
-                  <button onClick={submitCreateClassName}>생성</button>
+                  <button>
+                    <img src="/image/icon_search.svg" alt="검색" />
+                  </button>
                 </div>
               </div>
             </div>
-            <div className="group-right">
-              <div className="section-title">
-                <div className="title-left">
-                  <h3>강의방</h3>
-                </div>
-                <div className="title-right">
-                  <div className="search-wrap">
-                    <input
-                      type="text"
-                      placeholder="클래스룸 검색"
-                      value={searchHostTerm}
-                      onChange={(e) => setHostSearchTerm(e.target.value)} // 검색어 업데이트
-                    />
-                    <button>
-                      <img src="/image/icon_search.svg" alt="검색" />
-                    </button>
-                  </div>
+            {filteredHostClassRooms && filteredHostClassRooms.length > 0 ? (
+              <ul className="section-data section-data04">
+                {filteredHostClassRooms.map((item) => (
+                  <HostRoom key={item.id} classData={item} />
+                ))}
+              </ul>
+            ) : searchHostTerm !== "" ? (
+              <div className="section-empty-search-classrooom">
+                <img src="/image/img_empty_search_class.png" alt="empty host classroom" />
+              </div>
+            ) : (
+              <div className="section-empty-classroom">
+                <img src="/image/img_none_host_classroom.png" alt="empty search host classroom" />
+              </div>
+            )}
+            <div className="section-title">
+              <div className="title-left">
+                <h3>학습방</h3>
+              </div>
+              <div className="title-right">
+                <div className="search-wrap">
+                  <input
+                    type="text"
+                    placeholder="클래스룸 검색"
+                    value={searchGuestTerm}
+                    onChange={(e) => setGuestSearchTerm(e.target.value)} // 검색어 업데이트
+                  />
+                  <button>
+                    <img src="/image/icon_search.svg" alt="검색" />
+                  </button>
                 </div>
               </div>
-              {filteredHostClassRooms && filteredHostClassRooms.length > 0 ? (
-                <ul className="section-data section-data04">
-                  {filteredHostClassRooms.map((item) => (
-                    <HostRoom key={item.id} classData={item} />
-                  ))}
-                </ul>
-              ) : searchHostTerm !== "" ? (
-                <div className="section-empty-search-classrooom">
-                  <img src="/image/img_empty_search_class.png" alt="empty host classroom" />
-                </div>
-              ) : (
-                <div className="section-empty-classroom">
-                  <img src="/image/img_none_host_classroom.png" alt="empty search host classroom" />
-                </div>
-              )}
-              <div className="section-title">
-                <div className="title-left">
-                  <h3>학습방</h3>
-                </div>
-                <div className="title-right">
-                  <div className="search-wrap">
-                    <input
-                      type="text"
-                      placeholder="클래스룸 검색"
-                      value={searchGuestTerm}
-                      onChange={(e) => setGuestSearchTerm(e.target.value)} // 검색어 업데이트
-                    />
-                    <button>
-                      <img src="/image/icon_search.svg" alt="검색" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-              {filteredGuestClassRooms && filteredGuestClassRooms.length > 0 ? (
-                <ul className="section-data section-data04">
-                  {filteredGuestClassRooms.map((item) => (
-                    <GuestRoom key={item.id} classData={item} />
-                  ))}
-                </ul>
-              ) : searchHostTerm !== "" ? (
-                <div className="section-empty-search-classrooom">
-                  <img src="/image/img_empty_search_class.png" alt="empty host classroom" />
-                </div>
-              ) : (
-                <div className="section-empty-classroom">
-                  <img src="/image/img_none_host_classroom.png" alt="empty search host classroom" />
-                </div>
-              )}
             </div>
+            {filteredGuestClassRooms && filteredGuestClassRooms.length > 0 ? (
+              <ul className="section-data section-data04">
+                {filteredGuestClassRooms.map((item) => (
+                  <GuestRoom key={item.id} classData={item} />
+                ))}
+              </ul>
+            ) : searchHostTerm !== "" ? (
+              <div className="section-empty-search-classrooom">
+                <img src="/image/img_empty_search_class.png" alt="empty host classroom" />
+              </div>
+            ) : (
+              <div className="section-empty-classroom">
+                <img src="/image/img_none_host_classroom.png" alt="empty search host classroom" />
+              </div>
+            )}
           </div>
         </div>
       </div>

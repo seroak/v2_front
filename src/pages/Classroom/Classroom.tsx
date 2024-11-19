@@ -182,6 +182,7 @@ const Classroom = () => {
             <h2 className="group-title">{classroomData?.result.className}</h2>
           </div>
         </div>
+
         <div className="s__container">
           <div className="s__row">
             <div className="progress-info">
@@ -216,73 +217,37 @@ const Classroom = () => {
                 </li>
               </ul>
             </div>
-          </div>
-          <div className="s__container">
-            <div className="s__row">
-              <div className="progress-info">
-                <ul className="progress-data">
-                  <li>
-                    <img src="/image/progress01.svg" alt="전체" />
-                    <div>
-                      <p>전체</p>
-                      <p>{actionInfo && actionInfo?.ing + actionInfo?.complete + actionInfo?.help}</p>
-                    </div>
-                  </li>
-                  <li>
-                    <img src="/image/progress02.svg" alt="미제출" />
-                    <div>
-                      <p>미제출</p>
-                      <p>{actionInfo?.ing}</p>
-                    </div>
-                  </li>
-                  <li>
-                    <img src="/image/progress03.svg" alt="성공" />
-                    <div>
-                      <p>제출 완료</p>
-                      <p>{actionInfo?.complete}</p>
-                    </div>
-                  </li>
-                  <li>
-                    <img src="/image/progress04.svg" alt="실패" />
-                    <div>
-                      <p>도움 요청</p>
-                      <p>{actionInfo?.help}</p>
-                    </div>
-                  </li>
-                </ul>
+            <div className="section-title">
+              <div className="title-left">
+                <h3>제출현황</h3>
               </div>
-              <div className="section-title">
-                <div className="title-left">
-                  <h3>제출현황</h3>
-                </div>
 
-                <div className="classroom-right">
-                  <div className="right-btns" style={{ marginRight: "15px" }}>
-                    <button className="red" onClick={handleClassOver}>
-                      <img src="/image/icon_on_off.svg" alt="그룹삭제" />
-                      수업 종료
-                    </button>
-                  </div>
-                  <select name="" id="" className="s__select">
-                    <option value="1">이름순</option>
-                    <option value="2">제출순</option>
-                    <option value="3">학번순</option>
-                  </select>
+              <div className="classroom-right">
+                <div className="right-btns" style={{ marginRight: "15px" }}>
+                  <button className="red" onClick={handleClassOver}>
+                    <img src="/image/icon_on_off.svg" alt="그룹삭제" />
+                    수업 종료
+                  </button>
                 </div>
+                <select name="" id="" className="s__select">
+                  <option value="1">이름순</option>
+                  <option value="2">제출순</option>
+                  <option value="3">학번순</option>
+                </select>
               </div>
             </div>
-            {guests && guests.length > 0 ? (
-              <ul className="section-data section-data01">
-                {guests.map((guest) => (
-                  <Guest key={guest.id} guest={guest} onClick={() => openConsentInformationModal(guest)} />
-                ))}
-              </ul>
-            ) : (
-              <div className="section-empty-progress">
-                <img src="/image/img_empty_progress.png" alt="empty guests" />
-              </div>
-            )}
           </div>
+          {guests && guests.length > 0 ? (
+            <ul className="section-data section-data01">
+              {guests.map((guest) => (
+                <Guest key={guest.id} guest={guest} onClick={() => openConsentInformationModal(guest)} />
+              ))}
+            </ul>
+          ) : (
+            <div className="section-empty-progress">
+              <img src="/image/img_empty_progress.png" alt="empty guests" />
+            </div>
+          )}
         </div>
       </div>
     </>
