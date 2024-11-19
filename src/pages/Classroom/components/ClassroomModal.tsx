@@ -59,9 +59,9 @@ const ClassroomModal = ({ isOpen, onClose, guest }: Props) => {
             <div className={styles["popup__content__title"]}>제출 코드</div>
             {isLoading ? (
               <div>로딩중...</div>
-            ) : studentCode ? (
+            ) : Object.keys(studentCode?.result!).length !== 0? (
               <pre className="highlighted-code">
-                {studentCode.result.split("\n").map((line, index) => (
+                {studentCode?.result.split("\n").map((line, index) => (
                   <code key={index} className={styles["code__line"]}>
                     <span className={styles["line__number"]}>{index + 1}</span>
                     <SyntaxHighlighter key={`code-${index}-${line}`} language={"python"} style={oneLight}>
@@ -71,7 +71,14 @@ const ClassroomModal = ({ isOpen, onClose, guest }: Props) => {
                 ))}
               </pre>
             ) : (
-              <div>코드가 없습니다</div>
+              <pre className="highlighted-code">
+                  <code key={0} className={styles["code__line"]}>
+                    <span className={styles["line__number"]}>{1}</span>
+                    <SyntaxHighlighter key={`code-${1}`} language={"python"} style={oneLight}>
+                      코드가 없습니다.
+                    </SyntaxHighlighter>
+                  </code>
+              </pre>
             )}
           </div>
         </div>
