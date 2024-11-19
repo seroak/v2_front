@@ -38,8 +38,11 @@ type Props = {
   width: number;
 };
 function CodeFlowListWrapper({ codeFlowListItem, height, width }: Props) {
-  const { expr, isLight } = codeFlowListItem;
-  const exprArray = expr?.slice(1, -1).split(",");
+  let { expr, isLight } = codeFlowListItem;
+  if(expr?.startsWith("[") && expr?.endsWith("]")) {
+    expr = expr?.slice(1, -1)
+  }
+  const exprArray = expr.split(",");
 
   return (
     <div className={cx("align-left", styles["fit-content"])}>
