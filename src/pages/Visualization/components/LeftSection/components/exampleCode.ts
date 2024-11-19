@@ -59,6 +59,7 @@ export const string_codes = [
   ["문자열 슬라이싱", "# 예제 2: 문자열 슬라이싱\n" +
                   "text = \"Hello, Edupi!\"\n" +
                   "\n" +
+                  "print(\"전체 문자열: \", text)\n" +
                   "print(\"처음 5글자:\", text[:5])      \n" +
                   "print(\"5번째부터 끝까지:\", text[5:])\n"],
   ["문자열 연산", "# 예제 4: 문자열 연산\n" +
@@ -128,15 +129,19 @@ export const control_codes = [
                     "elif grade >= 70:\n" +
                     "   print(\"C\")\n" +
                     "else:\n" +
-                    "   print(\"F\")\n",
+                    "   print(\"F\")\n" +
+                    "\n" +
+                    "print(\"END\")\n",
   ],
   ["중첩 if문", "# 예제 3: 중첩 if문\n" +
                 "age = 20\n" +
                 "if age >= 18:\n" +
                 "   if age >= 65:\n" +
-                "       print(\"Senior citizen\")\n" +
+                "      print(\"Senior citizen\")\n" +
                 "   else:\n" +
-                "       print(\"Adult\")\n",
+                "      print(\"Adult\")\n"+
+                "\n" +
+                "print(\"END\")\n",
   ],
 ];
 
@@ -172,36 +177,36 @@ export const list_codes = [
 export const repeat_codes = [
   ["for문 기본", "# 예제 1: for문 기본 사용\n" +
                 "for i in range(1, 10, 2):\n" +
-                "    print(i)\n"],
+                "   print(i)\n"],
   ["리스트 요소 반복", "# 예제 2: 리스트 요소 반복\n" +
                   "marks = [90, 25, 67, 45, 80]\n" +
                   "\n" +
                   "for number in range(len(marks)):\n" +
-                  "    if marks[number] < 60: \n" +
-                  "        continue\n" +
-                  "    print(f\"{number+1}번 학생 축하합니다. 합격입니다.\")\n",
+                  "   if marks[number] < 60: \n" +
+                  "      continue\n" +
+                  "   print(f\"{number+1}번 학생 축하합니다. 합격입니다.\")\n",
   ],
   ["while문 기본", "# 예제 3: while문 기본 사용\n" +
                   "count = 0\n" +
                   "while count < 3:\n" +
-                  "    print(count)\n" +
-                  "    count = count + 1\n" +
-                  "    \n" +
+                  "   print(count)\n" +
+                  "   count = count + 1\n" +
+                  "\n" +
                   "print(\"END\")\n",
   ],
   ["반복문에서 break", "# 예제 4: 반복문에서 break 사용\n" +
                         "for i in range(10):\n" +
-                        "    if i == 2:\n" +
-                        "        break\n" +
-                        "    print(i)\n" +
+                        "   if i == 2:\n" +
+                        "      break\n" +
+                        "   print(i)\n" +
                         "\n" +
                         "print(\"END\")\n",
   ],
   ["반복문에서 continue", "# 예제 5: 반복문에서 continue 사용\n" +
                             "for i in range(10):\n" +
-                            "    if i % 2 == 0:\n" +
-                            "        continue\n" +
-                            "    print(i)\n" +
+                            "   if i % 2 == 0:\n" +
+                            "      continue\n" +
+                            "   print(i)\n" +
                             "   \n" +
                             "print(\"END\")\n"],
 ];
@@ -211,7 +216,7 @@ export const function_codes = [
   [
     "기본 함수", "# 예제 1: 기본 함수\n" +
                 "def greet(name):\n" +
-                "    return f\"Hello, {name}!\"\n" +
+                "   return f\"Hello, {name}!\"\n" +
                 "\n" +
                 "result = greet(\"Alice\")\n" +
                 "print(result)\n",
@@ -219,8 +224,8 @@ export const function_codes = [
   [
     "지역 변수", "# 예제 2: 지역 변수\n" +
                 "def local_example():\n" +
-                "    x = 10  # 지역 변수\n" +
-                "    print(x)\n" +
+                "   x = 10  # 지역 변수\n" +
+                "   print(x)\n" +
                 "\n" +
                 "local_example()\n" +
                 "# print(x)  # 오류 발생 (x는 함수 외부에서 사용 불가)\n",
@@ -256,33 +261,22 @@ export const function_codes = [
                         "print(f\"Perimeter: {perimeter}\")\n",
   ],
   [
-    "두 점 사이의 거리", "# 두 점 사이의 x축 차이를 계산하는 함수\n" +
-                      "def delta_x(x1, x2):\n" +
-                      "   if x1 > x2:\n" +
-                      "      return x1 - x2\n" +
-                      "   else:\n" +
-                      "      return x2 - x1\n" +
-                      "\n" +
-                      "# 두 점 사이의 y축 차이를 계산하는 함수\n" +
-                      "def delta_y(y1, y2):\n" +
-                      "   if y1 > y2:\n" +
-                      "      return y1 - y2\n" +
-                      "   else:\n" +
-                      "      return y2 - y1\n" +
+    "두 점 사이의 거리", "# 제곱근 구하는 함수\n" +
+                      "def sqrt(a):\n" +
+                      "   return a**(1/2)\n" +
                       "\n" +
                       "# 두 점 사이의 거리를 계산하는 함수\n" +
-                      "def calculate_distance(x1, y1, x2, y2):\n" +
-                      "   dx = delta_x(x1, x2)\n" +
-                      "   dy = delta_y(y1, y2)\n" +
-                      "   return (dx**2 + dy**2)**0.5\n" +
+                      "def calculate_distance(point1, point2):\n" +
+                      "   x_dist = pow(point1[0] - point2[0], 2)\n" +
+                      "   y_dist = pow(point1[1] - point2[1], 2)\n" +
+                      "   distance = sqrt(x_dist + y_dist)\n" +
+                      "   return distance\n" +
                       "\n" +
                       "# 사용 예제\n" +
-                      "x1 = 1\n" +
-                      "y1 = 2\n" +
-                      "x2 = 4\n" +
-                      "y2 =6\n" +
+                      "point1 = [1, 2]\n" +
+                      "point2 = [4, 6]\n" +
                       "\n" +
-                      "distance = calculate_distance(x1, y1, x2, y2)\n" +
+                      "distance = calculate_distance(point1, point2)\n" +
                       "print(f\"Distance: {distance}\")\n",
   ],
 
