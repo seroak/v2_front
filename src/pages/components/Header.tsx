@@ -5,7 +5,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { useAccessRightStore } from "@/store/accessRight";
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { User } from "@/App";
+import { getUserProps } from "@/types/apiTypes";
 
 const LoggedInHeader = () => {
   const params = useParams();
@@ -14,12 +14,11 @@ const LoggedInHeader = () => {
 
   const isHost = useAccessRightStore((state) => state.isHost);
   const classroomId = Number(params.classroomId);
-  const { data: userData, refetch } = useQuery<User | null>({
+  const { data: userData, refetch } = useQuery<getUserProps>({
     queryKey: ["user"],
     queryFn: getUser,
     staleTime: 1000 * 60,
     retry: 3,
-    placeholderData: null,
   });
 
   const navigate = useNavigate();
@@ -55,10 +54,8 @@ const LoggedInHeader = () => {
         <Link className={styles["header-logo"]} to="/">
           <img src="/image/img_logo.png" alt="로고" />
         </Link>
-        {!userData ? (
-          <>
-            <Link to="/viz">시각화</Link>
-          </>
+        {userData && userData?.code !== "CM-200000" ? (
+          <></>
         ) : (
           <>
             {isInClassroomDashboarclassroomdUrl ? (
@@ -70,6 +67,12 @@ const LoggedInHeader = () => {
                 >
                   클래스룸
                 </NavLink>
+                <NavLink
+                  to={`/classroomdashboard/classroom/viz/${classroomId}`}
+                  className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+                >
+                  시각화
+                </NavLink>
                 {isHost && (
                   <NavLink
                     to={`/classroomdashboard/classroom/${classroomId}`}
@@ -80,12 +83,6 @@ const LoggedInHeader = () => {
                   </NavLink>
                 )}
 
-                <NavLink
-                  to={`/classroomdashboard/classroom/viz/${classroomId}`}
-                  className={({ isActive }) => (isActive ? styles["on_active"] : "")}
-                >
-                  시각화
-                </NavLink>
                 {isHost && (
                   <NavLink
                     to={`/classroomdashboard/classroom/manage/${classroomId}`}
@@ -100,10 +97,6 @@ const LoggedInHeader = () => {
                 <NavLink to="/classroomdashboard" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
                   클래스룸
                 </NavLink>
-
-                <NavLink to="/viz" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-                  시각화
-                </NavLink>
               </>
             )}
           </>
@@ -111,31 +104,24 @@ const LoggedInHeader = () => {
       </div>
 
       <div className="login-header">
-        <a
-            href="https://forms.gle/fufPJjH4Gfmavtqw5"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-          <button className="feedback-btn">
-            피드백 남기기
-          </button>
+        <a href="https://forms.gle/fufPJjH4Gfmavtqw5" target="_blank" rel="noopener noreferrer">
+          <button className="feedback-btn">피드백 남기기</button>
         </a>
-        {!userData ? (
-            <div>
-              <Link to="/login" className={styles["login-btn"]}>
-                로그인
-              </Link>
-              <Link to="/signup" className={styles["join-btn"]}>
-                회원가입
-              </Link>
-            </div>
+        {userData?.code !== "CM-200000" ? (
+          <div>
+            <Link to="/login" className={styles["login-btn"]}>
+              로그인
+            </Link>
+            <Link to="/signup" className={styles["join-btn"]}>
+              회원가입
+            </Link>
+          </div>
         ) : (
-
           <>
-            <span style={{ marginRight: "10px" }}>{userData.name}님</span>
-            <span onClick={handleLogout} className={styles["logout"]}>
+            <p style={{ marginRight: "10px" }}>{userData.result?.name}님</p>
+            <p onClick={handleLogout} className={styles["logout"]}>
               로그아웃
-            </span>
+            </p>
             </>
         )}
       </div>

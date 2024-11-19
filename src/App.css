@@ -226,7 +226,7 @@ input[type="checkbox"] {
   height: 100%;
   display: flex;
   flex-direction: column;
-  flex: 1;
+  padding-bottom: 100px;
 }
 
 .view-section-title {
@@ -1406,6 +1406,9 @@ header .group-btn {
 .btn-manual {
   background-color: #9a9a9a;
 }
+.btn-complete-summit {
+  background-color: #959595;
+}
 .btn img {
   width: 24px;
   height: 24px;
@@ -1724,8 +1727,8 @@ gpt-icon-small {
 }
 
 .code-flow-func > .code-flow-title-wrap {
-  left: -0.5px;
-  top: -46px;
+  left: -0.9px;
+  top: -46.5px;
   width: 100%;
 }
 .code-flow-func {

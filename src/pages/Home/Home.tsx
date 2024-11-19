@@ -33,9 +33,8 @@ const Home = () => {
         <h2>파이썬 공부를 더욱 쉽게!</h2>
         <p>edupi와 함께 파이썬 공부를 쉽고 재밌게 하세요.</p>
         <Link className={styles["btn_cta"]} to="/viz">
-          <p>무료로 시작하기</p>
+          <p>시각화 하러가기</p>
         </Link>
-        <img className={styles["down-arrow"]} src="/image/icon_down_arrow_w.svg" alt="" />
         <div className={styles["main-bg-bottom"]}></div>
       </section>
       <section className={styles["main02"]}>
@@ -97,8 +96,8 @@ const Home = () => {
           에듀파이와 함께하세요!
         </h2>
         <p>edupi와 함께 파이썬 공부를 쉽고 재밌게 하세요.</p>
-        <Link className={styles["btn_cta"]} to="/viz">
-          <p>무료로 시작하기</p>
+        <Link className={styles["btn_cta"]} to="/login">
+          <p>edupi 시작하기</p>
         </Link>
         <div className={styles["main-bg-bottom"]}></div>
       </section>

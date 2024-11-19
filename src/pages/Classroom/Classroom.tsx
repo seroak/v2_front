@@ -4,6 +4,7 @@ import { useMswReadyStore } from "@/store/mswReady";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { useAccessRightStore } from "@/store/accessRight";
+import { useCustomAlert } from "@/pages/components/CustomAlert";
 import {
   getClassGuestDataWithoutDefaultAction,
   getTotalActionInfo,
@@ -12,9 +13,11 @@ import {
 } from "@/services/api";
 import Header from "../components/Header";
 
+import ClassroomModal from "@/pages/Classroom/components/ClassroomModal.tsx";
+
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
-interface GuestType {
+export interface GuestType {
   id: number;
   email: string;
   name: string;
@@ -55,7 +58,8 @@ const Classroom = () => {
   const params = useParams();
   const classroomId = Number(params.classroomId);
   const setIsHost = useAccessRightStore((state) => state.setIsHost);
-
+  const [isConsentInformationModalOpen, setIsConsentInformationModalOpen] = useState<boolean>(false);
+  const [onClickGuest, setOnClickGuest] = useState<GuestType | null>(null);
   const { data: guestData, refetch: guestDataRefetch } = useQuery<ClassroomDataType>({
     queryKey: ["classGuestData", classroomId],
     queryFn: () => getClassGuestDataWithoutDefaultAction(classroomId),
@@ -94,6 +98,8 @@ const Classroom = () => {
     }
   }, [classroomData]);
 
+  const { openAlert, CustomAlert } = useCustomAlert();
+
   const classOverMutation = useMutation({
     mutationFn: ClassEnd,
     onSuccess: () => {
@@ -101,7 +107,7 @@ const Classroom = () => {
       navigate("/classroomdashboard");
     },
     onError: () => {
-      alert("정상적으로 수업이 종료되지 않았습니다");
+      openAlert("정상적으로 수업이 종료되지 않았습니다");
     },
   });
 
@@ -151,72 +157,90 @@ const Classroom = () => {
   };
 
   useSSE(`${BASE_URL}/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
-  return (
-    <div>
-      <Header />
-      <div className="group-wrap">
-        <div className="group-left">
-          <img src="/image/icon_group.svg" alt="그룹" />
-          <h2 className="group-title">{classroomData?.result.className}</h2>
-        </div>
-      </div>
-      <div className="s__container">
-        <div className="s__row">
-          <div className="progress-info">
-            <ul className="progress-data">
-              <li>
-                <img src="/image/progress01.svg" alt="전체" />
-                <div>
-                  <p>전체</p>
-                  <p>{actionInfo && actionInfo?.ing + actionInfo?.complete + actionInfo?.help}</p>
-                </div>
-              </li>
-              <li>
-                <img src="/image/progress02.svg" alt="미제출" />
-                <div>
-                  <p>미제출</p>
-                  <p>{actionInfo?.ing}</p>
-                </div>
-              </li>
-              <li>
-                <img src="/image/progress03.svg" alt="성공" />
-                <div>
-                  <p>제출 완료</p>
-                  <p>{actionInfo?.complete}</p>
-                </div>
-              </li>
-              <li>
-                <img src="/image/progress04.svg" alt="실패" />
-                <div>
-                  <p>도움 요청</p>
-                  <p>{actionInfo?.help}</p>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div className="section-title">
-            <div className="title-left">
-              <h3>제출현황</h3>
-            </div>
+  const closeConsentInformationModal = (): void => {
+    setIsConsentInformationModalOpen(false);
+  };
+  const openConsentInformationModal = (guest: GuestType): void => {
+    if (guest.status === 1) return;
+    setIsConsentInformationModalOpen(true);
+    setOnClickGuest(guest);
+  };
 
-            <div className="classroom-right">
-              <div className="right-btns" style={{ marginRight: "15px" }}>
-                <button className="red" onClick={handleClassOver}>
-                  <img src="/image/icon_on_off.svg" alt="그룹삭제" />
-                  수업 종료
-                </button>
+  return (
+    <>
+      <div>
+        <Header />
+        <CustomAlert />
+        <ClassroomModal
+          isOpen={isConsentInformationModalOpen}
+          onClose={closeConsentInformationModal}
+          guest={onClickGuest!}
+        />
+        <div className="group-wrap">
+          <div className="group-left">
+            <img src="/image/icon_group.svg" alt="그룹" />
+            <h2 className="group-title">{classroomData?.result.className}</h2>
+          </div>
+        </div>
+
+        <div className="s__container">
+          <div className="s__row">
+            <div className="progress-info">
+              <ul className="progress-data">
+                <li>
+                  <img src="/image/progress01.svg" alt="전체" />
+                  <div>
+                    <p>전체</p>
+                    <p>{actionInfo && actionInfo?.ing + actionInfo?.complete + actionInfo?.help}</p>
+                  </div>
+                </li>
+                <li>
+                  <img src="/image/progress02.svg" alt="미제출" />
+                  <div>
+                    <p>미제출</p>
+                    <p>{actionInfo?.ing}</p>
+                  </div>
+                </li>
+                <li>
+                  <img src="/image/progress03.svg" alt="성공" />
+                  <div>
+                    <p>제출 완료</p>
+                    <p>{actionInfo?.complete}</p>
+                  </div>
+                </li>
+                <li>
+                  <img src="/image/progress04.svg" alt="실패" />
+                  <div>
+                    <p>도움 요청</p>
+                    <p>{actionInfo?.help}</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div className="section-title">
+              <div className="title-left">
+                <h3>제출현황</h3>
               </div>
-              <select name="" id="" className="s__select">
-                <option value="1">이름순</option>
-                <option value="2">제출순</option>
-                <option value="3">학번순</option>
-              </select>
+
+              <div className="classroom-right">
+                <div className="right-btns" style={{ marginRight: "15px" }}>
+                  <button className="red" onClick={handleClassOver}>
+                    <img src="/image/icon_on_off.svg" alt="그룹삭제" />
+                    수업 종료
+                  </button>
+                </div>
+                <select name="" id="" className="s__select">
+                  <option value="1">이름순</option>
+                  <option value="2">제출순</option>
+                  <option value="3">학번순</option>
+                </select>
+              </div>
             </div>
           </div>
           {guests && guests.length > 0 ? (
             <ul className="section-data section-data01">
               {guests.map((guest) => (
-                <Guest key={guest.id} guest={guest} />
+                <Guest key={guest.id} guest={guest} onClick={() => openConsentInformationModal(guest)} />
               ))}
             </ul>
           ) : (
@@ -226,7 +250,7 @@ const Classroom = () => {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 export default Classroom;

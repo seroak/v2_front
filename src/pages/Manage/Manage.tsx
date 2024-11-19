@@ -6,6 +6,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 //zustand store
 import { useAccessRightStore } from "@/store/accessRight";
 import { ErrorResponse } from "@/types/apiTypes";
+import { useCustomAlert } from "@/pages/components/CustomAlert";
 import {
   getClassGuestData,
   deleteClassroom,
@@ -21,6 +22,7 @@ interface GuestType {
   name: string;
   status: number;
 }
+
 interface ActionInfoType {
   ing: number;
   complete: number;
@@ -32,18 +34,21 @@ interface ClassroomData {
     guests: GuestType[];
   };
 }
+
 interface GetTotalActionInfoType {
   result: {
     className: string;
     actionInfo: ActionInfoType;
   };
 }
+
 interface ClassAccessRightDataType {
   isAccess: boolean;
   isHost: boolean;
 }
 
 const Modify = () => {
+  const { openAlert, CustomAlert } = useCustomAlert();
   const params = useParams();
   const classroomId = Number(params.classroomId);
   const [guests, setGuests] = useState<GuestType[]>();
@@ -90,10 +95,10 @@ const Modify = () => {
     onError(error) {
       const apiError = error as unknown as ErrorResponse;
       if (apiError.code === "LM-400006") {
-        alert("이미 등록된 학생입니다.");
+        openAlert("이미 등록된 학생입니다.");
       }
       if (apiError.code === "LM-400005") {
-        alert("해당 하는 학생이 없습니다.");
+        openAlert("해당 하는 학생이 없습니다.");
       }
     },
   });
@@ -114,12 +119,12 @@ const Modify = () => {
   const deleteClassroomMutation = useMutation({
     mutationFn: deleteClassroom,
     onSuccess: () => {
-      alert("클래스룸이 삭제되었습니다.");
+      openAlert("클래스룸이 삭제되었습니다.");
       navigate("/classdashboard");
     },
     onError: (error) => {
       console.error("An error occurred:", error);
-      alert("클래스룸 삭제에 실패했습니다.");
+      openAlert("클래스룸 삭제에 실패했습니다.");
     },
   });
 
@@ -131,68 +136,71 @@ const Modify = () => {
   const filterGuests = guests?.filter((guest) => guest.name.toLowerCase().includes(searchGuestTerm.toLowerCase()));
 
   return (
-    <div className="bg">
-      <Header />
-      <div id="header02" className="bg-blue"></div>
-      <div className="group-wrap">
-        <div className="group-left">
-          <img src="/image/icon_group.svg" alt="그룹" />
-          <h2 className="group-title">{classroomData?.result.className}</h2>
-        </div>
-        <div className="group-link">
-          <p className="link-name">클래스룸 초대</p>
-          <div className="invite-wrap">
-            <input className="invite-input" value={guestEmail} onChange={changeGuestEmail}></input>
-            <button className="invite-button" onClick={submitInviteGuest}>
-              <p>초대하기</p>
-            </button>
+    <>
+      <CustomAlert />
+      <div className="bg">
+        <Header />
+        <div id="header02" className="bg-blue"></div>
+        <div className="group-wrap">
+          <div className="group-left">
+            <img src="/image/icon_group.svg" alt="그룹" />
+            <h2 className="group-title">{classroomData?.result.className}</h2>
+          </div>
+          <div className="group-link">
+            <p className="link-name">클래스룸 초대</p>
+            <div className="invite-wrap">
+              <input className="invite-input" value={guestEmail} onChange={changeGuestEmail}></input>
+              <button className="invite-button" onClick={submitInviteGuest}>
+                <p>초대하기</p>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="s__container">
-        <div className="modify-s__row">
-          <div className="section-title">
-            <div className="title-left">
-              <h3>가입된 학생</h3>
-            </div>
-            <div className="title-right">
-              <div className="search-wrap">
-                <input
-                  type="text"
-                  placeholder="학생 검색"
-                  value={searchGuestTerm}
-                  onChange={(e) => setGuestSearchTerm(e.target.value)} // 검색어 업데이트
-                />
-                <button>
-                  <img src="/image/icon_search.svg" alt="검색" />
-                </button>
+        <div className="s__container">
+          <div className="modify-s__row">
+            <div className="section-title">
+              <div className="title-left">
+                <h3>가입된 학생</h3>
+              </div>
+              <div className="title-right">
+                <div className="search-wrap">
+                  <input
+                    type="text"
+                    placeholder="학생 검색"
+                    value={searchGuestTerm}
+                    onChange={(e) => setGuestSearchTerm(e.target.value)} // 검색어 업데이트
+                  />
+                  <button>
+                    <img src="/image/icon_search.svg" alt="검색" />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-          {filterGuests && filterGuests.length > 0 ? (
-            <ul className="section-data section-data03">
-              {filterGuests.map((guest) => (
-                <Guest key={guest.id} guest={guest} getClassroomRefetch={getClassroomRefetch} />
-              ))}
-            </ul>
-          ) : searchGuestTerm !== "" ? (
-            <div className="section-empty-progress">
-              <img src="/image/img_empty_search_guest.png" alt="empty guests" />
+            {filterGuests && filterGuests.length > 0 ? (
+              <ul className="section-data section-data03">
+                {filterGuests.map((guest) => (
+                  <Guest key={guest.id} guest={guest} getClassroomRefetch={getClassroomRefetch} />
+                ))}
+              </ul>
+            ) : searchGuestTerm !== "" ? (
+              <div className="section-empty-progress">
+                <img src="/image/img_empty_search_guest.png" alt="empty guests" />
+              </div>
+            ) : (
+              <div className="section-empty-classroom">
+                <img src="/image/img_empty_guest.png" alt="empty search host classroom" />
+              </div>
+            )}
+            <div className="right-btns">
+              <button className="red" onClick={handleDeleteClassroom}>
+                <img src="/image/icon_delete.svg" alt="그룹삭제" />
+                클래스룸 삭제
+              </button>
             </div>
-          ) : (
-            <div className="section-empty-classroom">
-              <img src="/image/img_empty_guest.png" alt="empty search host classroom" />
-            </div>
-          )}
-          <div className="right-btns">
-            <button className="red" onClick={handleDeleteClassroom}>
-              <img src="/image/icon_delete.svg" alt="그룹삭제" />
-              클래스룸 삭제
-            </button>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 export default Modify;

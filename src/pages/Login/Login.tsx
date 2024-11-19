@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { getUser, login } from "@/services/api";
 import Header from "@/pages/components/Header";
+import { useCustomAlert } from "@/pages/components/CustomAlert";
 const BACK_BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 const FRONT_BASE_URL = import.meta.env.VITE_APP_FRONT_BASE_URL;
 const Login = () => {
@@ -23,11 +24,12 @@ const Login = () => {
       navigate("/");
     },
     onError(error) {
-      alert("아이디 또는 비밀번호가 틀렸습니다.");
+      openAlert("아이디 또는 비밀번호가 틀렸습니다.");
       console.error("Login error:", error);
     },
   });
 
+  const { openAlert, CustomAlert } = useCustomAlert();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     mutation.mutate({ userId, userPassword });
@@ -48,13 +50,14 @@ const Login = () => {
   useEffect(() => {
     const errorMessage = new URLSearchParams(location.search).get("error");
     if (errorMessage) {
-      alert("이미 존재하는 회원입니다");
+      openAlert("이미 존재하는 회원입니다");
       // 에러 메시지 표시 후 쿼리 파라미터 제거
       navigate(location.pathname, { replace: true });
     }
   }, [location.search, navigate]);
   return (
     <Fragment>
+      <CustomAlert />
       <div className={"bg-gray"}>
         <Header />
 
