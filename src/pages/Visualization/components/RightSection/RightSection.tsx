@@ -172,9 +172,9 @@ const RightSection = () => {
         return;
       } else if ((error as any).code === "CA-400005") {
         setIsInputError(true);
-        alert("입력된 input의 갯수가 적습니다.");
+        openAlert("입력된 input의 갯수가 적습니다.");
       } else if (error.message === "시각화를 지원하지 않는 코드가 포함되어 있습니다.") {
-        alert("시각화를 지원하지 않는 코드가 포함되어 있습니다.");
+        openAlert("시각화를 지원하지 않는 코드가 포함되어 있습니다.");
         return;
       } else if (error.code === "CA-400002") {
         const linNumber = Number((error as any).result.lineNumber);
@@ -213,7 +213,7 @@ const RightSection = () => {
         return;
       } else if ((error as any).code === "CA-400005") {
         setIsInputError(true);
-        alert("입력된 input의 갯수가 적습니다.");
+        openAlert("입력된 input의 갯수가 적습니다.");
       } else if ((error as any).code === "CA-400002") {
         // 잘못된 문법 에러처리
         const linNumber = Number((error as any).result.lineNumber);
@@ -423,7 +423,7 @@ const RightSection = () => {
         usedId = usedId.filter((id) => id !== variable.id);
         accCodeFlow = { objects: deletedCodeFlow };
       }
-        // 자료구조 시각화 부분이 들어왔을 때
+      // 자료구조 시각화 부분이 들어왔을 때
       // 나타나고 바로 사라지는건 traking id와 depth를 사용하지 않는다
       else if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
         const callStackName = (preprocessedCode as VariablesDto).callStackName;
@@ -461,7 +461,7 @@ const RightSection = () => {
                 targetName,
                 accDataStructures,
                 variable as VariableExprArray,
-                callStackName,
+                callStackName
               );
             }
             // 처음 시각화해주는 자료구조인 경우
@@ -552,7 +552,7 @@ const RightSection = () => {
           highlightLine.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id);
 
           const toAddObject = createObjectToAdd(
-            preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto,
+            preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
           );
 
           // print 타입일 때 console창의 로그를 만드는 부분
@@ -662,7 +662,7 @@ const RightSection = () => {
           };
           return acc;
         },
-        {} as WrapperDataStructureItem,
+        {} as WrapperDataStructureItem
       );
 
       // 자료구조리스트에서 얕은 복사 문제가 생겨서 깊은 복사를 해준다

@@ -216,7 +216,7 @@ const SignupWrap = () => {
       console.error("회원가입 에러", error);
       const apiError = error as unknown as errorType;
       if (apiError.response.data.code == "AC-400003") {
-        alert("중복 이메일입니다.");
+        openAlert("중복 이메일입니다.");
         return;
       }
       openAlert("회원가입 중 오류가 발생했습니다.");
