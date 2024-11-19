@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Visualization.module.css";
 import "./gutter.css";
 
@@ -13,6 +13,9 @@ import { ValidTypeDto } from "@/pages/Visualization/types/dto/ValidTypeDto";
 import { CodeContext } from "./context/CodeContext";
 import { PreprocessedCodesContext } from "./context/PreProcessedCodesContext";
 import { InputErrorContext } from "./context/InputErrorContext";
+import { useConsoleStore } from "@/store/console";
+
+
 //zustand store
 import { useEditorStore } from "@/store/editor";
 import { useGptTooltipStore } from "@/store/gptTooltip";
@@ -21,7 +24,6 @@ import { Link } from "react-router-dom";
 export default function Visualization() {
   const [code, setCode] = useState<any>(
     [
-      "# example\n" +
         "for i in range(2, 10):\n" +
         "   for j in range(1, 10):\n" +
         '      print(f"{i} x {j} = {i * j}")\n' +
@@ -29,7 +31,17 @@ export default function Visualization() {
     ].join("\n")
   );
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
+
   const [isInputError, setIsInputError] = useState(false);
+
+  // zustand store
+  const { resetInputData } = useConsoleStore();
+  useEffect(() => {
+    return () => {
+      resetInputData();
+    };
+  }, [resetInputData]);
+
 
   // zustand store
   const { focus } = useEditorStore();
