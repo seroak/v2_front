@@ -1,7 +1,12 @@
 export interface getUserProps {
-  email: string;
-  name: string;
-  role: string;
+  code: string;
+  detail: string;
+  result: {
+    email: string;
+    name: string;
+    role: string;
+    provider: string;
+  };
 }
 
 export interface LoginProps {

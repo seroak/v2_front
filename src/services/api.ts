@@ -1,7 +1,7 @@
 import axios from "axios";
 import {
-  LoginProps,
   getUserProps,
+  LoginProps,
   SignupProps,
   inviteClassroomProps,
   GptCorrectResponse,
@@ -49,7 +49,7 @@ export const runCode = async ({ code, inputData }: codeInputProps) => {
     throw error;
   }
 };
-export const getUser = async (): Promise<getUserProps | null> => {
+export const getUser = async (): Promise<getUserProps> => {
   try {
     const response = await fetch(`${BASE_URL}/edupi-user/v1/account/login/info`, {
       method: "GET",
@@ -60,17 +60,17 @@ export const getUser = async (): Promise<getUserProps | null> => {
     });
 
     if (!response.ok) {
-      console.error("Fetch error:", response.status, response.statusText);
-      return null;
+      throw await response.json();
     }
 
     const data = await response.json();
     return data;
   } catch (error) {
     console.error("Network or fetch error:", error);
-    return null;
+    throw error;
   }
 };
+
 export const login = (req: LoginProps) =>
   axios.post(`${BASE_URL}/edupi-user/v1/account/login`, req, {
     headers: { "Content-Type": "application/json" },
@@ -289,6 +289,7 @@ export const fetchGuestActionRequest = async (req: any) => {
       body: JSON.stringify({
         classroomId: req.classroomId,
         action: req.action,
+        code: req.code,
       }),
     });
 
@@ -365,4 +366,24 @@ export const fetchGptHint = async (code: string, lineNumber: number): Promise<Gp
     throw new Error("Network response was not ok");
   }
   return response.json();
+};
+
+export const getStudentCode = async (classroomAccountId: number) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/edupi-lms/v1/classroom/account/code?classroomAccountId=${classroomAccountId}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    if (!response.ok) {
+      throw await response.json();
+    }
+    return response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };

@@ -1,0 +1,142 @@
+.popup__section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: none;
+}
+
+.popup__section.is-open {
+  display: block;
+}
+
+.popup__dim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.popup__inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 600px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.popup__inner.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.popup__container__group {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.popup__header__group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.popup__header__title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+.popup__header__close {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+.popup__header__close::before,
+.popup__header__close::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 2px;
+  background-color: #666;
+  top: 50%;
+  left: 50%;
+}
+
+.popup__header__close::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.popup__header__close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.screen-out {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.popup__contents__group {
+  padding: 20px;
+}
+
+.popup__content__title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.popup__display__code {
+  background-color: #f8f9fa;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 16px;
+  margin: 0;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.code__line {
+  display: flex;
+  min-height: 24px;
+}
+
+.line__number {
+  color: #999;
+  text-align: right;
+  padding-right: 16px;
+  min-width: 40px;
+  user-select: none;
+}
+
+.line__content {
+  flex: 1;
+  white-space: pre;
+}

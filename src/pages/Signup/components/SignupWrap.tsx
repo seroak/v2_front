@@ -73,9 +73,9 @@ const SignupWrap = () => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const trimmedValue = value.replace(/\s/g, "");
-    if(trimmedValue === "") {
+    if (trimmedValue === "") {
       setValidName(CheckType.Red);
-    }else{
+    } else {
       setValidName(CheckType.Green);
     }
 
@@ -207,8 +207,8 @@ const SignupWrap = () => {
     onError(error) {
       console.error("회원가입 에러", error);
       const apiError = error as any;
-      if (apiError.response.data.code == "AC-400003"){
-        alert("중복 이메일입니다.")
+      if (apiError.response.data.code == "AC-400003") {
+        alert("중복 이메일입니다.");
         return;
       }
       alert("회원가입 중 오류가 발생했습니다.");
@@ -217,7 +217,7 @@ const SignupWrap = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if(isValidName === CheckType.Red || isValidPhoneNumber === CheckType.Gray) {
+    if (isValidName === CheckType.Red || isValidPhoneNumber === CheckType.Gray) {
       emailRef.current?.focus();
       setValidName(CheckType.Red);
     }

@@ -12,9 +12,11 @@ import {
 } from "@/services/api";
 import Header from "../components/Header";
 
+import ClassroomModal from "@/pages/Classroom/components/ClassroomModal.tsx";
+
 const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
-interface GuestType {
+export interface GuestType {
   id: number;
   email: string;
   name: string;
@@ -55,7 +57,8 @@ const Classroom = () => {
   const params = useParams();
   const classroomId = Number(params.classroomId);
   const setIsHost = useAccessRightStore((state) => state.setIsHost);
-
+  const [isConsentInformationModalOpen, setIsConsentInformationModalOpen] = useState<boolean>(false);
+  const [onClickGuest, setOnClickGuest] = useState<GuestType | null>(null);
   const { data: guestData, refetch: guestDataRefetch } = useQuery<ClassroomDataType>({
     queryKey: ["classGuestData", classroomId],
     queryFn: () => getClassGuestDataWithoutDefaultAction(classroomId),
@@ -151,9 +154,23 @@ const Classroom = () => {
   };
 
   useSSE(`${BASE_URL}/edupi-lms/v1/progress/connect?classroomId=${classroomId}`);
+  const closeConsentInformationModal = (): void => {
+    setIsConsentInformationModalOpen(false);
+  };
+  const openConsentInformationModal = (guest: GuestType): void => {
+    if (guest.status === 1) return;
+    setIsConsentInformationModalOpen(true);
+    setOnClickGuest(guest);
+  };
+
   return (
     <div>
       <Header />
+      <ClassroomModal
+        isOpen={isConsentInformationModalOpen}
+        onClose={closeConsentInformationModal}
+        guest={onClickGuest!}
+      />
       <div className="group-wrap">
         <div className="group-left">
           <img src="/image/icon_group.svg" alt="그룹" />
@@ -216,7 +233,7 @@ const Classroom = () => {
           {guests && guests.length > 0 ? (
             <ul className="section-data section-data01">
               {guests.map((guest) => (
-                <Guest key={guest.id} guest={guest} />
+                <Guest key={guest.id} guest={guest} onClick={() => openConsentInformationModal(guest)} />
               ))}
             </ul>
           ) : (
