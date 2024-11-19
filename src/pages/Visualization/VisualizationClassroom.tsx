@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import styles from "./Visualization.module.css";
 import "./gutter.css";
+import { getUser } from "@/services/api";
 
 import LeftSection from "./components/LeftSection/LeftSection";
 import RightSection from "./components/RightSection/RightSection";
@@ -21,7 +22,7 @@ import { useEditorStore } from "@/store/editor";
 import { useMswReadyStore } from "@/store/mswReady";
 import { useGptTooltipStore } from "@/store/gptTooltip";
 import Header from "../components/Header";
-
+import { getUserProps } from "@/types/apiTypes";
 enum ActionType {
   ING = 1,
   COMPLETE = 2,
@@ -35,15 +36,22 @@ interface ClassAccessRightDataType {
 
 const VisualizationClassroom = () => {
   const [code, setCode] = useState<any>(
-      ["for i in range(2, 10):\n" +
-      "   for j in range(1, 10):\n" +
-      "      print(f\"{i} x {j} = {i * j}\")\n" +
-      "   print()\n"].join("\n")
+    [
+      "for i in range(2, 10):\n" +
+        "   for j in range(1, 10):\n" +
+        '      print(f"{i} x {j} = {i * j}")\n' +
+        "   print()\n",
+    ].join("\n")
   );
   const [preprocessedCodes, setPreprocessedCodes] = useState<ValidTypeDto[]>([]);
   const [isInputError, setIsInputError] = useState(false);
   const navigate = useNavigate();
-
+  const { data: userData } = useQuery<getUserProps>({
+    queryKey: ["user"],
+    queryFn: getUser,
+    staleTime: 1000 * 60,
+    retry: 3,
+  });
   // zustand store
   const { focus } = useEditorStore();
   const isGptToggle = useGptTooltipStore((state) => state.isGptToggle);
@@ -61,7 +69,7 @@ const VisualizationClassroom = () => {
     staleTime: 1000 * 60 * 60,
   });
   const { data: guestStatus, refetch } = useQuery({
-    queryKey: ["vizclassroom", classroomId],
+    queryKey: ["vizclassroom", classroomId, userData?.result.email],
     queryFn: () => getGuestStatus(classroomId),
     enabled: isMswReady && !classAccessRightData?.isHost,
     staleTime: 1000 * 60 * 60,
