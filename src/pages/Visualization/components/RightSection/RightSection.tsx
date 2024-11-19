@@ -40,6 +40,7 @@ import { turnOffAllNodeLight } from "./services/turnOffAllNodeLight";
 import { findTargetChild } from "./services/findTargetChild";
 import { findDeleteUsedId } from "./services/findDeleteUsedId";
 import { unLightCodeFlow } from "./services/unLightCodeFlow";
+import { isNotServiceDtoType } from "./services/isNotServiceDtoType";
 //rendUtils에서 가져온 함수
 import { renderingStructure } from "./renderingStructure";
 import { renderingCodeFlow } from "./renderingCodeFlow";
@@ -137,10 +138,13 @@ const RightSection = () => {
   }, [setStepIdx, location]);
 
   const codeVizMutation = useMutation<SuccessResponse, ApiError, Parameters<typeof visualize>[0]>({
-
     mutationFn: visualize,
     async onSuccess(data) {
       // 타입 체크 함수
+      if (isNotServiceDtoType(data.result.code)) {
+        console.error("시각화를 지원하지 않는 코드가 포함되어 있습니다.");
+        throw new Error("시각화를 지원하지 않는 코드가 포함되어 있습니다.");
+      }
       if (isValidTypeDtoArray(data.result.code)) {
         resetConsole();
         setPreprocessedCodes(data.result.code);
@@ -158,6 +162,9 @@ const RightSection = () => {
         return;
       } else if (error.code === "CA-400006" || error.code === "CA-400999") {
         alert("지원하지 않는 코드가 포함되어 있습니다.");
+        return;
+      } else if (error.message === "시각화를 지원하지 않는 코드가 포함되어 있습니다.") {
+        alert("시각화를 지원하지 않는 코드가 포함되어 있습니다.");
         return;
       } else if (error.code === "CA-400002") {
         const linNumber = Number((error as any).result.lineNumber);
@@ -180,6 +187,10 @@ const RightSection = () => {
   const codeExecMutation = useMutation({
     mutationFn: runCode,
     async onSuccess(data) {
+      if (isNotServiceDtoType(data.result.code)) {
+        console.error("지원하지 않는 코드가 포함되어 있습니다");
+        throw new Error("지원하지 않는 코드가 포함되어 있습니다");
+      }
       setPreprocessedCodes([]);
       setCodeFlowLength(0);
       setStepIdx(0);
@@ -337,6 +348,7 @@ const RightSection = () => {
       if (preprocessedCode.type.toLowerCase() === "whiledefine") {
         continue;
       }
+
       accDataStructures = Object.entries(accDataStructures).reduce((acc, [key, value]) => {
         acc[key] = {
           data: value.data.map((structure) => ({
