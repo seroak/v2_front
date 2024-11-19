@@ -168,6 +168,9 @@ const RightSection = () => {
       } else if (error.code === "CA-400006" || error.code === "CA-400999") {
         alert("지원하지 않는 코드가 포함되어 있습니다.");
         return;
+      } else if ((error as any).code === "CA-400005") {
+        setIsInputError(true);
+        alert("입력된 input의 갯수가 적습니다.");
       } else if (error.message === "시각화를 지원하지 않는 코드가 포함되어 있습니다.") {
         alert("시각화를 지원하지 않는 코드가 포함되어 있습니다.");
         return;
