@@ -2,6 +2,7 @@ import { useState, useContext, useEffect, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { CodeContext } from "../../context/CodeContext";
 import { PreprocessedCodesContext } from "../../context/PreProcessedCodesContext";
+import { useCustomAlert } from "@/pages/components/CustomAlert";
 import Split from "react-split";
 import _ from "lodash";
 import ResizeObserver from "resize-observer-polyfill";
@@ -80,6 +81,7 @@ interface SuccessResponse {
 }
 
 const RightSection = () => {
+  const { openAlert, CustomAlert } = useCustomAlert();
   const location = useLocation();
   const [codeFlowList, setCodeFlowList] = useState<State[]>([
     {
@@ -166,7 +168,7 @@ const RightSection = () => {
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
       } else if (error.code === "CA-400006" || error.code === "CA-400999") {
-        alert("지원하지 않는 코드가 포함되어 있습니다.");
+        openAlert("지원하지 않는 코드가 포함되어 있습니다.");
         return;
       } else if ((error as any).code === "CA-400005") {
         setIsInputError(true);
@@ -182,7 +184,7 @@ const RightSection = () => {
         setPreprocessedCodes([]);
         return;
       } else if (error.code == "CA-400007") {
-        alert("코드의 실행 횟수가 너무 많습니다.");
+        openAlert("코드의 실행 횟수가 너무 많습니다.");
 
         return;
       }
@@ -207,7 +209,7 @@ const RightSection = () => {
       if (error.message === "데이터 형식이 올바르지 않습니다") {
         return;
       } else if ((error as any).code === "CA-400006" || (error as any).code === "CA-400999") {
-        alert("지원하지 않는 코드가 포함되어 있습니다");
+        openAlert("지원하지 않는 코드가 포함되어 있습니다");
         return;
       } else if ((error as any).code === "CA-400005") {
         setIsInputError(true);
@@ -222,7 +224,7 @@ const RightSection = () => {
 
         return;
       } else if ((error as any).code == "CA-400007") {
-        alert("코드의 실행 횟수가 너무 많습니다.");
+        openAlert("코드의 실행 횟수가 너무 많습니다.");
         return;
       }
       setConsoleList([]);
@@ -421,7 +423,7 @@ const RightSection = () => {
         usedId = usedId.filter((id) => id !== variable.id);
         accCodeFlow = { objects: deletedCodeFlow };
       }
-      // 자료구조 시각화 부분이 들어왔을 때
+        // 자료구조 시각화 부분이 들어왔을 때
       // 나타나고 바로 사라지는건 traking id와 depth를 사용하지 않는다
       else if (preprocessedCode.type.toLowerCase() === "assign".toLowerCase()) {
         const callStackName = (preprocessedCode as VariablesDto).callStackName;
@@ -459,7 +461,7 @@ const RightSection = () => {
                 targetName,
                 accDataStructures,
                 variable as VariableExprArray,
-                callStackName
+                callStackName,
               );
             }
             // 처음 시각화해주는 자료구조인 경우
@@ -550,7 +552,7 @@ const RightSection = () => {
           highlightLine.push((preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto).id);
 
           const toAddObject = createObjectToAdd(
-            preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto
+            preprocessedCode as ForDto | PrintDto | IfElseChangeDto | CodeFlowVariableDto,
           );
 
           // print 타입일 때 console창의 로그를 만드는 부분
@@ -660,7 +662,7 @@ const RightSection = () => {
           };
           return acc;
         },
-        {} as WrapperDataStructureItem
+        {} as WrapperDataStructureItem,
       );
 
       // 자료구조리스트에서 얕은 복사 문제가 생겨서 깊은 복사를 해준다
@@ -681,96 +683,99 @@ const RightSection = () => {
   }, [preprocessedCodes]);
 
   return (
-    <div id="split-2" ref={rightSectionRef} style={{ display: "flex", flexDirection: "column", flex: "1" }}>
-      <div className={styles["top-bar"]}>
-        <p className={styles["view-section-title"]}>시각화</p>
-        <div className={styles["play-wrap"]}>
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              className={`${styles["playcode-btn"]} ${
-                codeExecMutation.isPending ? styles["playcode-btn-loading"] : ""
-              }`}
-              onClick={handleRunCode}
-              disabled={codeExecMutation.isPending} // 로딩 중에는 버튼 비활성화
-            >
-              <img src="/image/icon_play_w.svg" alt="" />
-              코드실행
-            </button>
-          </div>
-          <form onSubmit={handleSubmit}>
-            <button
-              type="submit"
-              className={`${styles["view-btn"]} ${codeVizMutation.isPending ? styles["view-btn-loading"] : ""}`}
-              disabled={codeVizMutation.isPending} // 로딩 중에는 버튼 비활성화
-            >
-              <img src="/image/icon_play_w.svg" alt="" />
-              시각화
-            </button>
-          </form>
-          <div>
-            <button>
-              <img src="/image/icon_play_back.svg" onClick={onBack} alt="뒤로" />
-            </button>
-            <button className="ml8">
-              {isPlaying ? (
-                <img src="/image/icon_play_stop.svg" onClick={onPlay} alt="일시정지" />
-              ) : (
-                <img src="/image/icon_play.svg" onClick={onPlay} alt="재생" />
-              )}
-            </button>
-            <button className="ml8" onClick={onForward}>
-              <img src="/image/icon_play_next.svg" alt="다음" />
-            </button>
-            <p className="ml14 fz14">
-              ({consoleIdx}/{codeFlowLength - 1 == -1 ? 0 : codeFlowLength - 1})
-            </p>
-            <p className="ml24 fz14">Play Speed</p>
-            <select name="" id="" className="s__select ml14" value={selectedValue} onChange={handleChange}>
-              <option value="0.5x">0.5X</option>
-              <option value="1x">1X</option>
-              <option value="2x">2X</option>
-              <option value="3x">3X</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <Arrow code={arrowTextList[stepIdx]} />
-      <Split
-        sizes={[50, 50]}
-        minSize={100}
-        expandToMin={false}
-        gutterSize={10}
-        gutterAlign="center"
-        snapOffset={30}
-        dragInterval={1}
-        direction="horizontal"
-        cursor="col-resize"
-        style={{ display: "flex", flexDirection: "row", height: "100%", flex: 1, overflow: "hidden" }}
-        className="split-container"
-      >
-        <div id="split-2-1" className="view-section2-1">
-          <div className="view-data" onScroll={handleScrollCodeFlow}>
-            <p className="data-name">코드흐름</p>
-            <div style={{ width: "600px", display: "flex", flexDirection: "column", flex: 1 }}>
-              {codeFlowList?.length > 0 &&
-                stepIdx >= 0 &&
-                renderingCodeFlow(codeFlowList[stepIdx].objects[0].child, width, height, codeFlowScrollTop)}
+    <>
+      <CustomAlert />
+      <div id="split-2" ref={rightSectionRef} style={{ display: "flex", flexDirection: "column", flex: "1" }}>
+        <div className={styles["top-bar"]}>
+          <p className={styles["view-section-title"]}>시각화</p>
+          <div className={styles["play-wrap"]}>
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                className={`${styles["playcode-btn"]} ${
+                  codeExecMutation.isPending ? styles["playcode-btn-loading"] : ""
+                }`}
+                onClick={handleRunCode}
+                disabled={codeExecMutation.isPending} // 로딩 중에는 버튼 비활성화
+              >
+                <img src="/image/icon_play_w.svg" alt="" />
+                코드실행
+              </button>
+            </div>
+            <form onSubmit={handleSubmit}>
+              <button
+                type="submit"
+                className={`${styles["view-btn"]} ${codeVizMutation.isPending ? styles["view-btn-loading"] : ""}`}
+                disabled={codeVizMutation.isPending} // 로딩 중에는 버튼 비활성화
+              >
+                <img src="/image/icon_play_w.svg" alt="" />
+                시각화
+              </button>
+            </form>
+            <div>
+              <button>
+                <img src="/image/icon_play_back.svg" onClick={onBack} alt="뒤로" />
+              </button>
+              <button className="ml8">
+                {isPlaying ? (
+                  <img src="/image/icon_play_stop.svg" onClick={onPlay} alt="일시정지" />
+                ) : (
+                  <img src="/image/icon_play.svg" onClick={onPlay} alt="재생" />
+                )}
+              </button>
+              <button className="ml8" onClick={onForward}>
+                <img src="/image/icon_play_next.svg" alt="다음" />
+              </button>
+              <p className="ml14 fz14">
+                ({consoleIdx}/{codeFlowLength - 1 == -1 ? 0 : codeFlowLength - 1})
+              </p>
+              <p className="ml24 fz14">Play Speed</p>
+              <select name="" id="" className="s__select ml14" value={selectedValue} onChange={handleChange}>
+                <option value="0.5x">0.5X</option>
+                <option value="1x">1X</option>
+                <option value="2x">2X</option>
+                <option value="3x">3X</option>
+              </select>
             </div>
           </div>
         </div>
-        <div id="split-2-2" className="view-section2-2" ref={rightSection2Ref}>
-          <div className="view-data" onScroll={handleScrollStructures}>
-            <p className="data-name">콜스택</p>
-            <ul className="var-list">
-              {StructuresList?.length > 0 &&
-                stepIdx >= 0 &&
-                renderingStructure(StructuresList[stepIdx], width, height, structuresScrollTop)}
-            </ul>
+        <Arrow code={arrowTextList[stepIdx]} />
+        <Split
+          sizes={[50, 50]}
+          minSize={100}
+          expandToMin={false}
+          gutterSize={10}
+          gutterAlign="center"
+          snapOffset={30}
+          dragInterval={1}
+          direction="horizontal"
+          cursor="col-resize"
+          style={{ display: "flex", flexDirection: "row", height: "100%", flex: 1, overflow: "hidden" }}
+          className="split-container"
+        >
+          <div id="split-2-1" className="view-section2-1">
+            <div className="view-data" onScroll={handleScrollCodeFlow}>
+              <p className="data-name">코드흐름</p>
+              <div style={{ width: "600px", display: "flex", flexDirection: "column", flex: 1 }}>
+                {codeFlowList?.length > 0 &&
+                  stepIdx >= 0 &&
+                  renderingCodeFlow(codeFlowList[stepIdx].objects[0].child, width, height, codeFlowScrollTop)}
+              </div>
+            </div>
           </div>
-        </div>
-      </Split>
-    </div>
+          <div id="split-2-2" className="view-section2-2" ref={rightSection2Ref}>
+            <div className="view-data" onScroll={handleScrollStructures}>
+              <p className="data-name">콜스택</p>
+              <ul className="var-list">
+                {StructuresList?.length > 0 &&
+                  stepIdx >= 0 &&
+                  renderingStructure(StructuresList[stepIdx], width, height, structuresScrollTop)}
+              </ul>
+            </div>
+          </div>
+        </Split>
+      </div>
+    </>
   );
 };
 
