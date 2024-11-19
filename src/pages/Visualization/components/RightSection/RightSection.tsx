@@ -195,10 +195,6 @@ const RightSection = () => {
   const codeExecMutation = useMutation({
     mutationFn: runCode,
     async onSuccess(data) {
-      if (isNotServiceDtoType(data.result.code)) {
-        console.error("지원하지 않는 코드가 포함되어 있습니다");
-        throw new Error("지원하지 않는 코드가 포함되어 있습니다");
-      }
       setPreprocessedCodes([]);
       setCodeFlowLength(0);
       setStepIdx(0);
