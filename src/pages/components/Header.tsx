@@ -55,9 +55,7 @@ const LoggedInHeader = () => {
           <img src="/image/img_logo.png" alt="로고" />
         </Link>
         {userData && userData?.code !== "CM-200000" ? (
-          <>
-            <Link to="/viz">시각화</Link>
-          </>
+          <></>
         ) : (
           <>
             {isInClassroomDashboarclassroomdUrl ? (
@@ -69,6 +67,12 @@ const LoggedInHeader = () => {
                 >
                   클래스룸
                 </NavLink>
+                <NavLink
+                  to={`/classroomdashboard/classroom/viz/${classroomId}`}
+                  className={({ isActive }) => (isActive ? styles["on_active"] : "")}
+                >
+                  시각화
+                </NavLink>
                 {isHost && (
                   <NavLink
                     to={`/classroomdashboard/classroom/${classroomId}`}
@@ -79,12 +83,6 @@ const LoggedInHeader = () => {
                   </NavLink>
                 )}
 
-                <NavLink
-                  to={`/classroomdashboard/classroom/viz/${classroomId}`}
-                  className={({ isActive }) => (isActive ? styles["on_active"] : "")}
-                >
-                  시각화
-                </NavLink>
                 {isHost && (
                   <NavLink
                     to={`/classroomdashboard/classroom/manage/${classroomId}`}
@@ -98,10 +96,6 @@ const LoggedInHeader = () => {
               <>
                 <NavLink to="/classroomdashboard" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
                   클래스룸
-                </NavLink>
-
-                <NavLink to="/viz" className={({ isActive }) => (isActive ? styles["on_active"] : "")}>
-                  시각화
                 </NavLink>
               </>
             )}
@@ -124,11 +118,11 @@ const LoggedInHeader = () => {
           </div>
         ) : (
           <>
-            <span style={{ marginRight: "10px" }}>{userData.result?.name}님</span>
-            <span onClick={handleLogout} className={styles["logout"]}>
+            <p style={{ marginRight: "10px" }}>{userData.result?.name}님</p>
+            <p onClick={handleLogout} className={styles["logout"]}>
               로그아웃
-            </span>
-          </>
+            </p>
+            </>
         )}
       </div>
     </header>
