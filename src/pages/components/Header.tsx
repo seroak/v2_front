@@ -1,6 +1,6 @@
 import styles from "./LoggedInHeader.module.css";
 import { logout, getUser } from "@/services/api";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useAccessRightStore } from "@/store/accessRight";
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
@@ -11,10 +11,10 @@ const LoggedInHeader = () => {
   const params = useParams();
   let isFixed = false;
   let isInClassroomDashboarclassroomdUrl = false;
-
+  const queryClient = useQueryClient();
   const isHost = useAccessRightStore((state) => state.isHost);
   const classroomId = Number(params.classroomId);
-  const { data: userData, refetch } = useQuery<getUserProps>({
+  const { data: userData } = useQuery<getUserProps>({
     queryKey: ["user"],
     queryFn: getUser,
     staleTime: 1000 * 60,
@@ -34,9 +34,9 @@ const LoggedInHeader = () => {
   // 로그아웃 mutation
   const logoutMuation = useMutation({
     mutationFn: logout,
-    onSuccess: () => {
+    onSuccess: async () => {
       // 로그아웃 시 user 쿼리 캐시를 null로 설정
-      refetch();
+      await queryClient.invalidateQueries();
       navigate("/");
     },
     onError: (error) => {
@@ -119,7 +119,7 @@ const LoggedInHeader = () => {
             <p onClick={handleLogout} className={styles["logout"]}>
               로그아웃
             </p>
-            </>
+          </>
         )}
       </div>
     </header>
