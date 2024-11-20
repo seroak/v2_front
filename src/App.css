@@ -698,6 +698,7 @@ var-list {
 }
 .section-data01 {
   grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding-bottom: 130px;
 }
 .section-data01 li a {
   padding: 30px 24px;
