@@ -172,7 +172,7 @@ const RightSection = () => {
         return;
       } else if ((error as any).code === "CA-400005") {
         setIsInputError(true);
-        openAlert("입력된 input의 갯수가 적습니다.");
+        openAlert("입력된 input의 개수가 적습니다.");
       } else if (error.message === "시각화를 지원하지 않는 코드가 포함되어 있습니다.") {
         openAlert("시각화를 지원하지 않는 코드가 포함되어 있습니다.");
         return;
