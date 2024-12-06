@@ -82,6 +82,12 @@ const VisualizationClassroom = () => {
       description: "input을 입력할 수 있는 창과 코드의 결과가 나오는 콘솔 창.",
     },
   ];
+  useEffect(() => {
+    // 첫 방문 확인 로직
+    if (!cookies.firstVisit) {
+      setIsTutorialVisible(true);
+    }
+  }, [cookies, setCookie]);
   const navigate = useNavigate();
   const { data: userData } = useQuery<getUserProps>({
     queryKey: ["user"],
