@@ -1437,18 +1437,6 @@ header .group-btn {
   }
 }
 
-/* 네브바 버튼*/
-.nav-button {
-  color: #7353ea;
-  box-shadow: none;
-  height: 38px;
-  font-weight: 600;
-  font-size: 0.875rem;
-  padding: 5px 15px;
-  border-radius: 8px;
-  line-height: 1.75;
-}
-
 .spinner {
   width: 22px;
   height: 22px;
@@ -1946,7 +1934,14 @@ gpt-icon-small {
 }
 
 .nav-button {
-  padding: 10px 20px;
+  color: #7353ea;
+  box-shadow: none;
+  height: 38px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 10px 20px 30px 20px;
+  border-radius: 8px;
+  line-height: 1.75;
   border: none;
   border-radius: 5px;
   cursor: pointer;

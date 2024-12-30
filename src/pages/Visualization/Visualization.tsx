@@ -90,6 +90,13 @@ export default function Visualization() {
       setIsTutorialVisible(false);
     }
   };
+  const exitOnboarding = () => {
+    setCookie("firstVisit", "true", {
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60, // 7일(초 단위)
+    });
+    setIsTutorialVisible(false);
+  };
 
   const prevStep = () => {
     if (currentStep > 0) {
@@ -154,6 +161,13 @@ export default function Visualization() {
                       left: `${tutorialPosition.left}px`,
                     }}
                   >
+                    <img
+                      src="/image/icon_close.svg"
+                      style={{ marginLeft: "auto", marginRight: 0, cursor: "pointer" }}
+                      alt="온보딩 종료"
+                      onClick={exitOnboarding}
+                    />
+
                     <div className="tutorial-content">
                       <h2>{steps[currentStep].title}</h2>
                       <p>{steps[currentStep].description}</p>
