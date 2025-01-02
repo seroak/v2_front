@@ -31,7 +31,6 @@
   border-radius: 4px;
   border: 1px solid var(--gray01, #dddee4);
   background: var(--white, #fff);
-  z-index: 10;
 }
 
 .select-box ul li {
@@ -141,7 +140,7 @@
   background-color: #fff;
   border: 1px solid var(--gray01, #dddee4);
 
-  z-index: 20;
+  z-index: 100;
 }
 .select-box ul.sub-options li:hover {
   color: #fff;
