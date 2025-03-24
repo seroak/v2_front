@@ -130,7 +130,7 @@ export default function Visualization() {
 
               <Split
                 sizes={[30, 70]}
-                minSize={[300, 700]}
+                minSize={[300, 701]}
                 expandToMin={false}
                 gutterSize={10}
                 gutterAlign="center"
