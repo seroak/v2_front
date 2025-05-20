@@ -42,22 +42,22 @@ function App() {
     initializeMSW();
   }, [setIsMswReady]);
 
-  if (import.meta.env.VITE_APP_NODE_PRODUCTION === "production") {
-    // Disable all console methods
-    console = {
-      ...console,
-      log: () => {},
-      warn: () => {},
-      error: () => {},
-      info: () => {},
-      debug: () => {},
-      trace: () => {},
-    };
+  // if (import.meta.env.VITE_APP_NODE_PRODUCTION === "production") {
+  //   // Disable all console methods
+  //   console = {
+  //     ...console,
+  //     log: () => {},
+  //     warn: () => {},
+  //     error: () => {},
+  //     info: () => {},
+  //     debug: () => {},
+  //     trace: () => {},
+  //   };
 
-    // Suppress any uncaught errors in production
-    window.onerror = () => true;
-    window.onunhandledrejection = () => true;
-  }
+  //   // Suppress any uncaught errors in production
+  //   window.onerror = () => true;
+  //   window.onunhandledrejection = () => true;
+  // }
 
   return (
     <Router>
