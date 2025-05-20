@@ -15,6 +15,7 @@ const BASE_URL = import.meta.env.VITE_APP_BACKEND_BASE_URL;
 
 export const visualize = async ({ code, inputData }: codeInputProps) => {
   try {
+    console.log(BASE_URL);
     const response = await fetch(`${BASE_URL}/edupi-assist/v1/execute/visualize`, {
       method: "POST",
       headers: {
